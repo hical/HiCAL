@@ -9,11 +9,11 @@
 
 using namespace std;
 
-vector<SparseFeatureVector> doc_features;
+vector<SfSparseVector> doc_features;
 unordered_map<string, int> doc_ids_inv_map;
 
-vector<SparseFeatureVector> parse_doc_features(string fname){
-    vector<SparseFeatureVector> sparse_feature_vectors;
+vector<SfSparseVector> parse_doc_features(string fname){
+    vector<SfSparseVector> sparse_feature_vectors;
     ifstream doc_features_file(fname);
 
     string line;
@@ -28,7 +28,7 @@ vector<SparseFeatureVector> parse_doc_features(string fname){
         for(int i = 0;moving_chr[i]!=' ';i++)
             doc_id.push_back(moving_chr[i]);
 
-        vector<Feature> features;
+        vector<FeatureValuePair> features;
         while(moving_chr < line_chr + len){
             moving_chr = strchr(moving_chr, ' ');
             if(moving_chr == NULL)
@@ -41,7 +41,7 @@ vector<SparseFeatureVector> parse_doc_features(string fname){
 
             features.push_back({feature_id, feature_weight});
         }
-        sparse_feature_vectors.push_back(SparseFeatureVector(doc_id, features));
+        sparse_feature_vectors.push_back(SfSparseVector(doc_id, features));
     }
     doc_features_file.close();
     return sparse_feature_vectors;
@@ -72,8 +72,8 @@ void score_docs(const vector<float> &weights,
         if(iterator != judgments.end() && *iterator == i)
             continue;
         float score = 0;
-        for(auto feature: doc_features[i]._vector){
-            score += weights[feature.id] * feature.weight;
+        for(auto feature: doc_features[i].features_){
+            score += weights[feature.id_] * feature.value_;
         }
 
         int idx = num_top_docs-1;

@@ -61,6 +61,18 @@ SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
         PushPair(feature_value_pair.id_, feature_value_pair.value_);
 }
 
+SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector)
+  : y_(0.0), 
+    a_(0.0),
+    squared_norm_(0.0),
+    group_id_(""),
+    doc_id(doc_id)
+{
+    SetBias();
+    for(auto feature_value_pair: feature_vector)
+        PushPair(feature_value_pair.id_, feature_value_pair.value_);
+}
+
 SfSparseVector::SfSparseVector(const SfSparseVector& a,
 				 const SfSparseVector& b,
 				 float y) 

@@ -65,6 +65,7 @@ class SfSparseVector {
   // No bias term is used.
   SfSparseVector(const char* in_string);
   SfSparseVector(const vector<FeatureValuePair> &feature_vector);
+  SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector);
 
   // Constructs a new vector from a string, as above, but also sets the bias
   // term to 1 iff use_bias_term is set to true.
@@ -101,6 +102,15 @@ class SfSparseVector {
   // other information unchanged.
   void ClearFeatures() { features_.clear(); squared_norm_ = 0; }
 
+  // comment_ can be any string-based comment.
+  string comment_;
+  string doc_id;
+
+  // Typically, only non-zero valued features are stored.  This vector is assumed
+  // to hold feature id, feature value pairs in order sorted by feature id.  The
+  // special feature id 0 is always set to 1, encoding bias.
+  vector<FeatureValuePair> features_;
+
  private:
   void AddToSquaredNorm(float addend) { squared_norm_ += addend; }
 
@@ -118,10 +128,6 @@ class SfSparseVector {
   void DieFormat(const string& reason);
 
   // Members.
-  // Typically, only non-zero valued features are stored.  This vector is assumed
-  // to hold feature id, feature value pairs in order sorted by feature id.  The
-  // special feature id 0 is always set to 1, encoding bias.
-  vector<FeatureValuePair> features_;
 
   // y_ is the class label.  We store this as a float, rather than an int,
   // so that this class may be used for regression problems, etc., if desired.
@@ -138,8 +144,6 @@ class SfSparseVector {
   // this is set to 0.
   string group_id_;
 
-  // comment_ can be any string-based comment.
-  string comment_;
 };
 
 #endif // SF_SPARSE_VECTOR_H__

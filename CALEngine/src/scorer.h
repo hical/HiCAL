@@ -4,24 +4,25 @@
 #include<string>
 #include<vector>
 #include<unordered_map>
+#include "sofiaml/sf-sparse-vector.h"
 
-struct Feature{
-    int id;
-    float weight;
-};
+/* struct Feature{ */
+/*     int id; */
+/*     float weight; */
+/* }; */
 
-struct SparseFeatureVector{
-    std::string doc_id;
-    std::vector<Feature> _vector;
+/* struct SparseFeatureVector{ */
+/*     std::string doc_id; */
+/*     std::vector<Feature> _vector; */
 
-    SparseFeatureVector(std::string _doc_id, std::vector<Feature> __vector):
-    doc_id(_doc_id),_vector(__vector){}
-};
+/*     SparseFeatureVector(std::string _doc_id, std::vector<Feature> __vector): */
+/*     doc_id(_doc_id),_vector(__vector){} */
+/* }; */
 
-extern std::vector<SparseFeatureVector> doc_features;
+extern std::vector<SfSparseVector> doc_features;
 extern std::unordered_map<std::string, int> doc_ids_inv_map;
 
-std::vector<SparseFeatureVector> parse_doc_features(std::string fname);
+std::vector<SfSparseVector> parse_doc_features(std::string fname);
 
 std::vector<float> parse_model_file(std::string fname);
 
