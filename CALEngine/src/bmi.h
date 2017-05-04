@@ -11,7 +11,6 @@
 #include<cassert>
 #include "scorer.h"
 #include "sofiaml/sofia-ml-methods.h"
-#include "sofiaml/sf-sparse-vector.h"
 #include "sofiaml/sf-data-set.h"
 
 using namespace std;
@@ -21,18 +20,11 @@ unordered_set<int> pending_judgments;
 
 mutex judgment_queue_mutex;
 mutex pending_judgments_mutex;;
-SfSparseVector to_sf_sparse_vector(SparseFeatureVector &sfv, float y=0){
-    vector<FeatureValuePair> feature_vector;
-    for(auto feature: sfv._vector){
-        feature_vector.push_back({feature.id, feature.weight});
-    }
-    return SfSparseVector(feature_vector);
-}
 
-string get_feature_string(SparseFeatureVector &sfv, int judgment){
+string get_feature_string(SfSparseVector &sfv, int judgment){
     string ret = to_string(judgment);
-    for(auto feature: sfv._vector){
-        ret += " " + to_string(feature.id) + ":" + to_string(feature.weight);
+    for(auto feature: sfv.features_){
+        ret += " " + to_string(feature.id_) + ":" + to_string(feature.value_);
     }
     return ret;
 }
@@ -41,9 +33,9 @@ void randomize_non_rel_docs(SfDataSet &training_data){
     for(int i = 1;i<=100;i++){
         int idx = rand() % doc_features.size();
         if(training_data.NumExamples() < i+1){
-            training_data.AddLabeledVector(to_sf_sparse_vector(doc_features[idx]), -1);
+            training_data.AddLabeledVector(doc_features[idx], -1);
         }else{
-            training_data.ModifyLabeledVector(i, to_sf_sparse_vector(doc_features[idx]), -1);
+            training_data.ModifyLabeledVector(i, doc_features[idx], -1);
         }
     }
 }
@@ -54,7 +46,7 @@ SfDataSet get_initial_training_data(string fname){
     auto sparse_feature_vectors = parse_doc_features(fname);
     cout<<sparse_feature_vectors.size()<<endl;
     assert(sparse_feature_vectors.size() == 1);
-    training_data.AddLabeledVector(to_sf_sparse_vector(sparse_feature_vectors[0]), 1);
+    training_data.AddLabeledVector(sparse_feature_vectors[0], 1);
     return training_data;
 }
 
@@ -114,7 +106,7 @@ SfDataSet training_data(true);
 void record_judgment(string doc_id, int judgment){
     ofstream fout("judgments", ios_base::app | ios_base::out);
     int id = doc_ids_inv_map[doc_id];
-    training_data.AddLabeledVector(to_sf_sparse_vector(doc_features[id]), judgment);
+    training_data.AddLabeledVector(doc_features[id], judgment);
     lock_guard<mutex> lock(pending_judgments_mutex);
     pending_judgments.erase(id);
 }
@@ -139,8 +131,8 @@ void run_bmi(string doc_features_path,
     cerr<<"Read "<<doc_features.size()<<" docs in "<<duration.count()<<"ms"<<endl;
     int dimensionality = 0;
     for(auto &feature_vec: doc_features){
-        for(auto feature: feature_vec._vector)
-            dimensionality = max(dimensionality, feature.id);
+        for(auto feature: feature_vec.features_)
+            dimensionality = max(dimensionality, feature.id_);
     }
     dimensionality++;
 
