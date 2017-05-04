@@ -52,7 +52,7 @@ int main(int argc, char **argv){
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--topic-id", "Topic id for parsing qrel", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
-    AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --num-iterations", bool(false));
+    AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
     AddFlag("--help", "Show Help", bool(false));
 
