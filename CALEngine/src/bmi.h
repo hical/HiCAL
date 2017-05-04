@@ -1,8 +1,6 @@
 #include<iostream>
 #include<chrono>
 #include<algorithm>
-#include<fstream>
-#include<cstdlib>
 #include<queue>
 #include<mutex>
 #include<chrono>
@@ -104,7 +102,6 @@ void wait_for_judgments(){
 
 SfDataSet training_data(true);
 void record_judgment(string doc_id, int judgment){
-    ofstream fout("judgments", ios_base::app | ios_base::out);
     int id = doc_ids_inv_map[doc_id];
     training_data.AddLabeledVector(doc_features[id], judgment);
     lock_guard<mutex> lock(pending_judgments_mutex);
@@ -118,10 +115,6 @@ void run_bmi(string doc_features_path,
         int max_iterations,
         int max_effort)
 {
-    {
-        ofstream judgment_file("judgments");
-    }
-
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
     set_doc_features(doc_features_path);
