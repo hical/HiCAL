@@ -1,0 +1,689 @@
+
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+}
+
+/*
+ * Typography
+ */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+
+h1 {
+  margin-bottom: 20px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  border-right: 1px solid #eee;
+}
+
+/* Sidebar navigation */
+.sidebar {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar .nav {
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+  width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+  margin-left: 0;
+}
+
+.sidebar .nav-link {
+  border-radius: 0;
+}
+
+/*
+ * Dashboard
+ */
+
+ /* Placeholders */
+.placeholders {
+  padding-bottom: 3rem;
+}
+
+.placeholder img {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.alert-debug {
+  color: black;
+  background-color: white;
+  border-color: #d6e9c6;
+}
+
+.alert-error {
+  color: #b94a48;
+  background-color: #f2dede;
+  border-color: #eed3d7;
+}
+
+/* This is a fix for the bootstrap4 alpha release */
+@media (max-width: 47.9em) {
+  .navbar-nav .nav-item {
+    float: none;
+    width: 100%;
+    display: inline-block;
+  }
+
+  .navbar-nav .nav-item + .nav-item {
+    margin-left: 0;
+  }
+
+  .nav.navbar-nav.pull-xs-right {
+    float: none !important;
+  }
+}
+
+/* Display django-debug-toolbar.
+   See https://github.com/django-debug-toolbar/django-debug-toolbar/issues/742
+   and https://github.com/pydanny/cookiecutter-django/issues/317
+*/
+[hidden][style="display: block;"] {
+  display: block !important;
+}
+
+
+
+.center-text{
+  text-align: center;
+}
+
+
+.display-inline{
+    display: inline;
+}
+
+.display-inline-flex{
+    display: inline-flex;
+}
+
+.display-table-caption{
+    display: table-caption;
+}
+
+.display-block{
+    display: block;
+}
+
+.page-link{
+    cursor: hand;
+}
+
+.right-border {
+    border-right: 2px solid #ccc;
+}
+
+.right-margin {
+    margin-right: 40px;
+}
+
+.left-border {
+    border-left: 1px solid #ccc;
+}
+
+.no-decoration,
+.no-decoration a,
+.no-decoration a:hover {
+    text-decoration: none;
+}
+
+.no-border {
+    border: none;
+}
+
+.no-padding{
+  padding: 0;
+}
+
+.left-padding {
+    padding-left: 2.0em;
+}
+
+.right-padding {
+    padding-right : 2.0em;
+}
+
+.no-margin{
+    margin: 0;
+}
+
+.left-margin {
+    margin-left: 1.0em;
+}
+
+.right-margin {
+    margin-right: 1.0em;
+}
+
+.extra-left-margin {
+    margin-left: 2.0em;
+}
+
+.extra-right-margin {
+    margin-right: 2.0em;
+}
+
+.top-margin {
+    margin-top: 1.0rem;
+}
+
+.extra-top-margin {
+    margin-top: 2.0rem;
+}
+
+.double-extra-top-margin {
+    margin-top: 7.0rem;
+}
+
+.bottom-margin {
+    margin-bottom: 1.0rem;
+}
+
+.extra-bottom-margin {
+    margin-bottom: 2.0rem;
+}
+
+.double-extra-bottom-margin {
+    margin-bottom: 7.0rem;
+}
+
+.top-bottom-margin {
+    margin: 1.0rem 0;
+}
+
+.extra-top-bottom-margin {
+    margin: 2.0rem 0;
+}
+
+.double-extra-top-bottom-margin {
+    margin: 7.0rem 0;
+}
+
+.triple-extra-top-bottom-margin {
+    margin: 10.0rem 0;
+}
+
+.little-padding {
+    padding: 2.0rem;
+}
+
+.extra-padding {
+    padding: 4.0rem;
+}
+
+.extra-padding-left-right {
+    padding: 0 4.0rem;
+}
+
+.double-extra-padding {
+    padding: 7.0rem;
+}
+
+.double-extra-padding-left-right {
+    padding: 0 7.0rem;
+}
+
+.double-extra-padding-both-side {
+    padding: 9.0rem 7rem;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+.display-5 {
+  font-size: 2.5rem;
+  font-weight: 300;
+}
+
+.light-gray-text {
+    color: #cdcdcd;
+}
+
+.light-gray-text a,
+.gray-text a {
+    color: inherit;
+    text-decoration: none;
+
+}
+
+.light-gray-text a:focus,
+.light-gray-text a:hover,
+.gray-text a:focus,
+.gray-text a:hover {
+    color: #787878;
+    text-decoration: none;
+}
+
+.gray-text {
+    color: #888;
+}
+
+.gray-background {
+    background-color: #ccc;
+}
+
+.light-gray-background {
+    background-color: #fafafa;
+}
+
+.almost-white-background {
+    background-color: #FBFBFB;
+}
+
+.text-overflow {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+table.vertical-align > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #eee;
+}
+
+.form-information h1,
+.form-information h2,
+.form-information h3,
+.form-information h4 {
+    color: #0275d8;
+}
+
+.form-information p{
+    color: #888;
+}
+
+.right-corner-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px 5px 3px 8px;
+    border-radius: 0 3px 0 3px;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.right-corner-button:hover {
+    background-color: #888888;
+    border: none;
+    color: white;
+}
+
+.features-container .feature-icon {
+    text-align: center;
+}
+
+.borderd-circle {
+    padding: 2px;
+    border: 1px solid rgba(2, 117, 216, .5);
+}
+
+.btn-circle {
+    width: 85px;
+    height: 85px;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 50%;
+}
+
+.btn-primary-bordered {
+    color: #0275d8;
+    background-color: #fff;
+    border: 5px solid #0275d8;
+}
+
+.btn-primary-bordered:hover {
+    color: #fff;
+    background-color: #0275d8;
+}
+
+.btn-primary-bordered.active {
+    color: #fff;
+    background-color: #0275d8;
+}
+
+
+.btn-primary-bordered-inverse {
+    color: #fff;
+    background-color: #0275d8;
+    border: 5px solid #fff;
+}
+
+.btn-primary-bordered-inverse:hover {
+    color: #0275d8;
+    background-color: #fff;
+}
+
+.btn-primary-bordered-inverse.active {
+    color: #0275d8;
+    background-color: #fff;
+}
+
+
+input.date-radio-button[type="radio"] {
+    display: none;
+}
+
+input.date-radio-button[type="radio"]:checked {
+    color: #fff;
+    background-color: #0275d8;
+}
+
+.used-by-slider-items {
+    padding: 20px 0;
+}
+
+.btn-circle-strong {
+    display: block;
+    font-size: large;
+}
+
+.date-circle .day {
+    display: block;
+    margin: 10px 0;
+}
+
+.normal-cursor {
+    cursor: wait;
+}
+
+.navButton {
+    font-size: 4em;
+    cursor: pointer;
+}
+
+.small-navButton {
+    font-size: 2.5em;
+    cursor: pointer;
+}
+
+.prevDateButton {
+    margin-top: -50px;
+}
+
+.nextDateButton {
+    margin-top: -50px;
+}
+
+.font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.font-sans{
+    font-family: sans-serif;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.thin {
+    font-weight: 200;
+}
+
+.nav-bar-padding{
+  padding: 0rem 1rem;
+}
+
+.nav-link{
+    transition-duration: 0.3s;
+    transition-property: color;
+    text-decoration: none;
+}
+
+.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+}
+
+.nav-justified .nav-item {
+    float: none;
+}
+
+.nav-justified .nav-link {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.nav-justified > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+}
+
+@media (min-width: 544px) {
+    .nav-justified .nav-item {
+        display: table-cell;
+        width: 1%;
+    }
+
+    .nav-justified .nav-link {
+        margin-bottom: 0;
+    }
+}
+
+.nav-justified .nav-link {
+    margin-right: 0;
+    border-radius: 0.25rem;
+}
+
+.nav-justified .nav-link.active,
+.nav-justified .nav-link.active:hover,
+.nav-justified .nav-link.active:focus {
+    border: none;
+}
+
+@media (min-width: 544px) {
+    .nav-justified .nav-link {
+        border-radius: 0.25rem;
+    }
+
+    .nav-justified .nav-link.active,
+    .nav-justified .nav-link.active:hover,
+    .nav-justified .nav-link.active:focus {
+
+    }
+}
+
+.colorRadioLabel {
+    margin-bottom: 0px;
+}
+
+input[type=text],
+input[type=password],
+input[type=radio],
+input[type=checkbox]{
+    transition-duration: .3s;
+}
+
+
+input[type=radio].with-font {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+input[type=radio].with-font ~ label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f111";
+    letter-spacing: 10px;
+    font-size: 1.5em;
+    width: 1.7em;
+}
+
+input[type=radio].with-font:checked ~ label:before {
+    content: '\f058';
+    font-size: 1.5em;
+    letter-spacing: 5px;
+}
+
+input[type=radio].with-font:focus ~ label:before,
+input[type=radio].with-font:focus ~ label {
+
+}
+
+.tooltip.bs-tether-element-attached-left .tooltip-inner::before,
+.tooltip.tooltip-right .tooltip-inner::before {
+    display: none;
+}
+
+a.dropdown-item {
+    cursor: pointer;
+}
+
+.vsmall {
+    font-size: 65%
+}
+
+.vvsmall {
+    font-size: 85%
+}
+
+.vbig {
+    font-size: 2em;
+}
+
+.vvbig {
+    font-size: 185%;
+}
+
+
+@media (min-width: 768px) {
+  .col-md-0-5 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 3.333333%;
+    -ms-flex: 0 0 3.333333%;
+    flex: 0 0 3.333333%;
+    max-width: 3.333333%;
+  }
+  .offset-md-0-5 {
+    margin-left: 3.333333%;
+  }
+}
+
+
+
+.document {
+    padding: 10px 10px;
+    margin: 5px 0px 5px 10px;
+    max-width: 600px;
+    min-height: 100px;
+}
+
+.document:hover{
+   background-color: #F5F5F5;
+}
+
+.document .title{
+    color: #2735D4;
+    font-size: 18px;
+}
+
+.document .purple-title{
+    color: #600090;
+    font-size: 18px;
+}
+
+
+.document .url{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: #009030;
+}
+
+.document .snippet{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    color: black;
+}
+
+.document .snippet strong{
+    color: black;
+}
+
+.document-cal{
+    font-family: georgia,"times new roman",times,serif;
+}
+
+.sidebar-nav-fixed {
+  position: fixed;
+}
+
+
+
+mark {
+  padding: 0;
+  background: yellow;
+}
+
+mark.current {
+  background: orange;
+}
+
+
+.cal-search{
+  display: inline-flex;
+}
+
+.input-xs {
+  height: 22px;
+  padding: 2px 5px;
+  font-size: 12px;
+  line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
+  border-radius: 3px;
+}
+
