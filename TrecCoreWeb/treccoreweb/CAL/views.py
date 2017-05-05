@@ -8,7 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class CALHomePageView(generic.TemplateView):
+class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'CAL/CAL.html'
 
     def get_context_data(self, **kwargs):
@@ -25,7 +25,8 @@ class CALHomePageView(generic.TemplateView):
         return context
 
 
-class DocAJAXView(views.CsrfExemptMixin, views.JsonRequestResponseMixin,
+class DocAJAXView(views.LoginRequiredMixin,
+                  views.CsrfExemptMixin, views.JsonRequestResponseMixin,
                   views.AjaxResponseMixin, generic.View):
     """
     View to get a list of documents to judge from CAL
@@ -40,7 +41,8 @@ class DocAJAXView(views.CsrfExemptMixin, views.JsonRequestResponseMixin,
         return self.render_json_response(docs_ids_to_judge)
 
 
-class JudgmentAJAXView(views.CsrfExemptMixin, views.JsonRequestResponseMixin,
+class JudgmentAJAXView(views.LoginRequiredMixin,
+                       views.CsrfExemptMixin, views.JsonRequestResponseMixin,
                        generic.View):
     require_json = False
 
@@ -79,7 +81,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.JsonRequestResponseMixin,
         if isFromCAL:
             # TODO: return next 5 documents to judge
             next_patch = CALFunctions.send_judgment(self.request.user.current_topic.uuid,
-                                                    5)
+                                                    doc_id)
             context[u"next_docs"] = next_patch
             return self.render_json_response(context)
         else:

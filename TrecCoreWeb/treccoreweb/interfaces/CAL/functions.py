@@ -15,7 +15,7 @@ def send_judgment(session, doc_id, next_batch_size=5):
     # testing solution
     from uuid import uuid4
     doc_ids = [str(uuid4().hex[0:5]) for _ in range(next_batch_size)]
-    return DocEngine.dummy_get_documents(doc_ids, "dummy")  # temp solution
+    return DocEngine.dummy_get_documents(doc_ids, "Batch from " + doc_id)  # temp solution
 
 
 # TODO: complete this function

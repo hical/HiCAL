@@ -290,22 +290,10 @@ LOGGING = {
             'filename': 'logs/web.log',
             'formatter': 'verbose'
         },
-        'server': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'logs/server.log',
-            'formatter': 'verbose'
-
-        },
     },
     'loggers': {
         'treccoreweb': {  # for web
             'handlers': ['treccoreweb'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'django': {  # for all django-internal messages
-            'handlers': ['server'],
             'level': 'INFO',
             'propagate': True,
         },

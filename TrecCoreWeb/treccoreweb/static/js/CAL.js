@@ -13,10 +13,10 @@ Mousetrap.bind(['k', '/', 'd'], function(e, key) {
         send_judgment(current_doc_id, false, false, true);
 
 
-    if(queue.getLength() == 0){
-        console.log("Getting the next patch of documents to judge");
-        update_documents_to_judge_list()
-    }
+    //if(queue.getLength() == 0){
+    //    console.log("Getting the next patch of documents to judge");
+    //    update_documents_to_judge_list();
+    //}
 
     updateTimer();
     updateCounter(key);

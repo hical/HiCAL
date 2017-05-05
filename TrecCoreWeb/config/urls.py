@@ -4,18 +4,19 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-    url(r'^search/$', TemplateView.as_view(template_name='pages/search.html'), name='search'),
+    url(r'^search/$', login_required(TemplateView.as_view(template_name='pages/search.html')), name='search'),
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
 
     # User management
     url(r'^users/', include('treccoreweb.users.urls', namespace='users')),
-    url(r'^sessions/$', TemplateView.as_view(template_name='pages/sessions.html'), name='sessions'),
+    url(r'^sessions/$', login_required(TemplateView.as_view(template_name='pages/sessions.html')), name='sessions'),
 
     url(r'^accounts/', include('allauth.urls')),
 
