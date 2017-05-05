@@ -11,7 +11,8 @@ $ g++ -O2 -pthread bmi_cli.cc scorer.cc sofiaml/sf-sparse-vector.cc sofiaml/sf-d
 ```
 $ ./bmi_cli --help
 Command line flag options: 
-      --async-mode                  Enable greedy async mode for classifier and rescorer, overrides --judgments-per-iteration
+      --async-mode                  Enable greedy async mode for classifier and rescorer,
+                                    overrides --judgments-per-iteration and --num-iterations
       --doc-features                Path of the file with list of document features
       --help                        Show Help
       --judgment-logpath            Path to log judgments

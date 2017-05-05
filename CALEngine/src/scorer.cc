@@ -10,6 +10,7 @@ using namespace std;
 
 vector<SfSparseVector> doc_features;
 unordered_map<string, int> doc_ids_inv_map;
+int dimensionality;
 
 vector<SfSparseVector> parse_doc_features(string fname){
     vector<SfSparseVector> sparse_feature_vectors;
@@ -62,9 +63,9 @@ void score_docs(const vector<float> &weights,
         int end, 
         pair<float, int> *top_docs,
         int num_top_docs,
-        const vector<int> &judgments)
+        const set<int> &judgments)
 {
-    auto iterator = lower_bound(judgments.begin(), judgments.end(), st);
+    auto iterator = judgments.lower_bound(st);
     for(int i = st;i<end; i++){
         while(iterator != judgments.end() && *iterator < i)
             iterator++;
@@ -89,7 +90,7 @@ void score_docs(const vector<float> &weights,
 void rescore_documents(const vector<float> &weights,
         int num_threads, 
         int top_docs_per_thread,
-        const vector<int> &judgments,
+        const set<int> &judgments,
         vector<int> &top_docs_results)
 {
     vector<thread> t;
@@ -125,4 +126,11 @@ void set_doc_features(string fname){
     for(size_t i = 0; i < doc_features.size(); i++){
         doc_ids_inv_map[doc_features[i].doc_id] = i;
     }
+
+    dimensionality = 0;
+    for(auto &feature_vec: doc_features){
+        for(auto feature: feature_vec.features_)
+            dimensionality = max(dimensionality, feature.id_);
+    }
+    dimensionality++;
 }

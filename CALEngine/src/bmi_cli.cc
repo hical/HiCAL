@@ -52,7 +52,7 @@ int main(int argc, char **argv){
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--topic-id", "Topic id for parsing qrel", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
-    AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration", bool(false));
+    AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
     AddFlag("--help", "Show Help", bool(false));
 
@@ -80,13 +80,20 @@ int main(int argc, char **argv){
         }
     }
 
-    auto t = thread(run_bmi,
-            CMD_LINE_STRINGS["--doc-features"],
-            CMD_LINE_STRINGS["--query-features"],
+    // Load docs
+    auto start = std::chrono::steady_clock::now();
+    cerr<<"Loading document features on memory"<<endl;
+    set_doc_features(CMD_LINE_STRINGS["--doc-features"]);
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
+        (std::chrono::steady_clock::now() - start);
+    cerr<<"Read "<<doc_features.size()<<" docs in "<<duration.count()<<"ms"<<endl;
+
+    BMI bmi(CMD_LINE_STRINGS["--query-features"],
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--num-iterations"],
-            CMD_LINE_INTS["--max-effort"]);
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"]);
+    auto t = thread(&BMI::run, &bmi);
 
     auto get_judgment = get_judgment_stdin;
     if(CMD_LINE_STRINGS["--qrel"] != ""){
@@ -95,9 +102,9 @@ int main(int argc, char **argv){
 
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"]);
     string doc_id;
-    while((doc_id = get_doc_to_judge()) != ""){
+    while((doc_id = bmi.get_doc_to_judge()) != ""){
         int judgment = get_judgment(CMD_LINE_STRINGS["--topic-id"], doc_id);
-        record_judgment(doc_id, judgment);
+        bmi.record_judgment(doc_id, judgment);
         logfile << doc_id <<" "<< (judgment == -1?0:judgment)<<endl;
     }
     logfile.close();
