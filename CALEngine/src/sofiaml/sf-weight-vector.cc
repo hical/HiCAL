@@ -123,7 +123,9 @@ float SfWeightVector::InnerProduct(const SfSparseVector& x,
 				    float x_scale) const {
   float inner_product = 0.0;
   for (int i = 0; i < x.NumFeatures(); ++i) {
+    /* std::cout<<"++ "<<i<<" "<<x.FeatureAt(i)<<" "<<x.ValueAt(i)<<std::endl; */
     inner_product += weights_[x.FeatureAt(i)] * x.ValueAt(i);
+    /* std::cout<<"-- "<<i<<" "<<x.FeatureAt(i)<<" "<<x.ValueAt(i)<<std::endl; */
   }
   inner_product *= x_scale;
   inner_product *= scale_;

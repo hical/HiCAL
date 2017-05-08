@@ -29,6 +29,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <random>
 
 // The MIN_SCALING_FACTOR is used to protect against combinations of
 // lambda * eta > 1.0, which will cause numerical problems for regularization
@@ -41,17 +42,20 @@ namespace sofia_ml {
   //         Helper functions (Not exposed in API)
   // --------------------------------------------------- //
 
+  thread_local std::mt19937 rand_generator;
   int RandInt(int num_vals) {
-    return static_cast<int>(rand()) % num_vals;
+    std::uniform_int_distribution<int> distribution(0, num_vals-1);
+    return distribution(rand_generator);
   }
 
   float RandFloat() {
-    return static_cast<float>(rand()) / RAND_MAX;
+    std::uniform_real_distribution<float> distribution(0, 1);
+    return distribution(rand_generator);
   }
 
   const SfSparseVector& RandomExample(const SfDataSet& data_set) {
     int num_examples = data_set.NumExamples();
-    int i = static_cast<int>(rand()) % num_examples;
+    int i = RandInt(num_examples);
     if (i < 0) {
       i += num_examples;
     }
@@ -89,7 +93,7 @@ namespace sofia_ml {
 			   int num_iters,
 			   SfWeightVector* w) {
     for (int i = 1; i <= num_iters; ++i) {
-      int random_example = static_cast<int>(rand()) % training_set.NumExamples();
+      int random_example = RandInt(training_set.NumExamples());
       const SfSparseVector& x = training_set.VectorAt(random_example);
       float eta = GetEta(eta_type, lambda, i);
       OneLearnerStep(learner_type, x, eta, c, lambda, w);
@@ -191,7 +195,7 @@ namespace sofia_ml {
       } else {
 	// Take a classification step.
 	int random_example =
-	  static_cast<int>(rand()) % training_set.NumExamples();
+	  RandInt(training_set.NumExamples());
 	const SfSparseVector& x = training_set.VectorAt(random_example);
 	float eta = GetEta(eta_type, lambda, i);
 	OneLearnerStep(learner_type, x, eta, c, lambda, w);      
@@ -244,7 +248,7 @@ namespace sofia_ml {
       } else {
 	// Take a classification step.
 	int random_example =
-	  static_cast<int>(rand()) % training_set.NumExamples();
+	  RandInt(training_set.NumExamples());
 	const SfSparseVector& x = training_set.VectorAt(random_example);
 	float eta = GetEta(eta_type, lambda, i);
 	OneLearnerStep(learner_type, x, eta, c, lambda, w);

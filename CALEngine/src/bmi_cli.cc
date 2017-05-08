@@ -59,12 +59,13 @@ vector<pair<string, SfSparseVector>> generate_seed_queries(string fname){
 void begin_bmi_helper(pair<string, SfSparseVector> seed_query){
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
+    cout<<seed_query.second.FeatureAt(0)<<endl;;
     BMI bmi(seed_query.second,
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"]);
-    auto t = thread(&BMI::run, &bmi);
+    auto t = thread(&BMI::run, ref(bmi));
 
     auto get_judgment = get_judgment_stdin;
     if(CMD_LINE_STRINGS["--qrel"] != ""){
@@ -135,9 +136,10 @@ int main(int argc, char **argv){
 
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
-        jobs.push_back(thread(begin_bmi_helper, ref(seed_query)));
+        jobs.push_back(thread(begin_bmi_helper, seed_query));
         /* jobs.back().join(); */
     }
+
     for(auto &t: jobs)
         t.join();
 }

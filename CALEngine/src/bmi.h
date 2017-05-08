@@ -1,4 +1,5 @@
 #include<iostream>
+#include<random>
 #include<chrono>
 #include<algorithm>
 #include<queue>
@@ -26,6 +27,8 @@ class BMI{
     vector<int> judgment_list;
     // A set of document ids which have already been judged
     set<int> finished_judgments;
+
+    mt19937 rand_generator;
 
     // Current of dataset being used to train the classifier
     SfDataSet training_data;
@@ -75,9 +78,9 @@ BMI::BMI(SfSparseVector &seed,
 }
 
 void BMI::randomize_non_rel_docs(){
-    /* uniform_int_distribution<int> distribution(0, doc_features.size()-1); */
+    uniform_int_distribution<int> distribution(0, doc_features.size()-1);
     for(int i = 1;i<=100;i++){
-        int idx = rand() % doc_features.size();
+        int idx = distribution(rand_generator);
         if(training_data.NumExamples() < i+1)
             training_data.AddLabeledVector(doc_features[idx], -1);
         else
@@ -171,7 +174,7 @@ vector<int> BMI::perform_training_iteration(){
     auto start = std::chrono::steady_clock::now();
 
     SfWeightVector w(dimensionality);
-    /* train(w); */
+    train(w);
 
     auto weights = w.AsFloatVector();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
