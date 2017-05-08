@@ -44,14 +44,14 @@ class BMI{
     // the training_data.features_ to be the random non-rel docs
     void randomize_non_rel_docs();
     // Initializes training_data with seed query
-    static SfDataSet get_initial_training_data(string fname);
+    static SfDataSet get_initial_training_data(SfSparseVector &seed);
     void train(SfWeightVector &w);
     void add_to_judgment_list(const vector<int> &ids);
     void wait_for_judgments();
     vector<int> perform_training_iteration();
 
     public:
-    BMI(string seed_path,
+    BMI(SfSparseVector &seed,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
@@ -61,19 +61,21 @@ class BMI{
     void run();
 };
 
-BMI::BMI(string seed_path,
+BMI::BMI(SfSparseVector &seed,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
         int max_iterations)
-    :training_data(get_initial_training_data(seed_path)),
+    :training_data(get_initial_training_data(seed)),
     num_threads(num_threads),
     judgments_per_iteration(judgments_per_iteration),
     max_effort(max_effort),
     max_iterations(max_iterations)
 {
 }
+
 void BMI::randomize_non_rel_docs(){
+    /* uniform_int_distribution<int> distribution(0, doc_features.size()-1); */
     for(int i = 1;i<=100;i++){
         int idx = rand() % doc_features.size();
         if(training_data.NumExamples() < i+1)
@@ -83,12 +85,10 @@ void BMI::randomize_non_rel_docs(){
     }
 }
 
-SfDataSet BMI::get_initial_training_data(string fname){
+SfDataSet BMI::get_initial_training_data(SfSparseVector &seed){
     // Todo generalize seed docs (support multiple rel/non-rel seeds)
     SfDataSet training_data = SfDataSet(true);
-    auto sparse_feature_vectors = parse_doc_features(fname);
-    assert(sparse_feature_vectors.size() == 1);
-    training_data.AddLabeledVector(sparse_feature_vectors[0], 1);
+    training_data.AddLabeledVector(seed, 1);
     return training_data;
 }
 
@@ -171,7 +171,7 @@ vector<int> BMI::perform_training_iteration(){
     auto start = std::chrono::steady_clock::now();
 
     SfWeightVector w(dimensionality);
-    train(w);
+    /* train(w); */
 
     auto weights = w.AsFloatVector();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
@@ -182,7 +182,7 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    rescore_documents(weights, 1, judgments_per_iteration, finished_judgments, results);
+    rescore_documents(weights, num_threads, judgments_per_iteration, finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;

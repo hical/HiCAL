@@ -22,7 +22,6 @@
 // Implementation of sf-weight-vector.h
 
 #include <cmath>
-#include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string>
