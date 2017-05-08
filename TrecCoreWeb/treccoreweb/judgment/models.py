@@ -4,6 +4,10 @@ from treccoreweb.topic.models import Topic
 
 
 class Judgement(models.Model):
+    LOGGING_MESSAGES = {
+        "create": "New judgment."
+    }
+
     user = models.ForeignKey(User)
     doc_id = models.CharField(null=False,
                               blank=False,
@@ -17,6 +21,8 @@ class Judgement(models.Model):
     notsure = models.BooleanField(null=False, blank=False)
     time_to_judge = models.CharField(null=True, blank=True, max_length=512)
     isFromCAL = models.BooleanField(null=False, blank=False)
+    fromMouse = models.BooleanField(null=False, blank=False)
+    fromKeyboard = models.BooleanField(null=False, blank=False)
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)

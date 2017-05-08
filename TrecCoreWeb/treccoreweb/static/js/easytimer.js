@@ -129,6 +129,19 @@ var Timer = (
 
                 return stringTime;
             };
+
+            /**
+             * [toSeconds returns the current time in seconds]
+             * @returns {number}
+             */
+            this.toSeconds = function(){
+                var seconds = this.seconds;
+                seconds += this.secondTenths/10.0;
+                seconds += this.minutes * 60;
+                seconds += this.hours * 3600;
+                seconds += this.days * 86400;
+                return seconds;
+            }
         }
 
         /**

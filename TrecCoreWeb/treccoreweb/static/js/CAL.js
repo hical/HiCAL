@@ -6,11 +6,11 @@ updateTimer();
 Mousetrap.bind(['k', '/', 'd'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
     if(key == 'k')
-        send_judgment(current_doc_id, true, false, false);
+        send_judgment(current_doc_id, true, false, false, false, true);
     else if(key == 'd')
-        send_judgment(current_doc_id, false, true, false);
+        send_judgment(current_doc_id, false, true, false, false, true);
     else if(key == '/')
-        send_judgment(current_doc_id, false, false, true);
+        send_judgment(current_doc_id, false, false, true, false, true);
 
 
     //if(queue.getLength() == 0){
@@ -19,12 +19,12 @@ Mousetrap.bind(['k', '/', 'd'], function(e, key) {
     //}
 
     updateTimer();
-    updateCounter(key);
 
 });
 
 Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
     e.preventDefault();
+    post_ctrlf();
     $( "#search_content" ).focus();
     return false;
 });
@@ -33,6 +33,7 @@ var search_content_form = document.getElementById('search_content');
 var search_content_form_mousetrap = new Mousetrap(search_content_form);
 search_content_form_mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
     $( "#search_content" ).focus();
+    post_ctrlf();
     return false;
 });
 
@@ -53,9 +54,6 @@ function updateTimer(){
     timer.start({precision: 'secondTenths', callback: function (values) {
         $('#nav_timer_header').html(values.toString(['hours', 'minutes', 'seconds', 'secondTenths']));
     }});
-    timer.addEventListener('secondsUpdated', function (e) {
-        $('#nav_timer_header .values').html(timer.getTimeValues().toString(['hours', 'minutes', 'seconds', 'secondTenths']));
-    });
 }
 
 function  updateCounter(key){

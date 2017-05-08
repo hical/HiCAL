@@ -6,7 +6,11 @@ from django.urls import reverse_lazy
 from django.views import generic
 from treccoreweb.topic.models import Topic
 from treccoreweb.topic.forms import TopicForm
+from treccoreweb.topic.logging_messages import LOGGING_MESSAGES as TOPIC_LOGGING_MESSAGES
+import logging
+logger = logging.getLogger(__name__)
 
+from braces import views
 
 class TopicView(LoginRequiredMixin, generic.DetailView):
     model = Topic
@@ -46,6 +50,36 @@ class TopicView(LoginRequiredMixin, generic.DetailView):
                               )
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+class TopicVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                         views.JsonRequestResponseMixin,
+                         generic.View):
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time", None)
+            type = self.request_json.get("type", None)
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time."}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "message": TOPIC_LOGGING_MESSAGES.get("visit").get(type, None),
+                "page_visit": True,
+                "page_file": "{}.html".format(type),
+                "page_title": "Topics {}".format(type)
+            }
+        }
+
+        logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your visit has been recorded."}
+        return self.render_json_response(context)
 
 
 class TopicCreateView(LoginRequiredMixin, generic.CreateView):
