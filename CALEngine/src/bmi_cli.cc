@@ -71,11 +71,11 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query){
         get_judgment = get_judgment_qrel;
     }
 
-    string doc_id;
-    while((doc_id = bmi.get_doc_to_judge()) != ""){
-        int judgment = get_judgment(seed_query.first, doc_id);
-        bmi.record_judgment(doc_id, judgment);
-        logfile << seed_query.first <<" "<< doc_id <<" "<< (judgment == -1?0:judgment)<<endl;
+    vector<string> doc_ids;
+    while((doc_ids = bmi.get_doc_to_judge()).size() > 0){
+        int judgment = get_judgment(seed_query.first, doc_ids[0]);
+        bmi.record_judgment(doc_ids[0], judgment);
+        logfile << seed_query.first <<" "<< doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
     }
     t.join();
     logfile.close();

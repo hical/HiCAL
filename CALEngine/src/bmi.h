@@ -47,24 +47,24 @@ class BMI{
     // the training_data.features_ to be the random non-rel docs
     void randomize_non_rel_docs();
     // Initializes training_data with seed query
-    static SfDataSet get_initial_training_data(SfSparseVector &seed);
+    static SfDataSet get_initial_training_data(const SfSparseVector &seed);
     void train(SfWeightVector &w);
     void add_to_judgment_list(const vector<int> &ids);
     void wait_for_judgments();
     vector<int> perform_training_iteration();
 
     public:
-    BMI(SfSparseVector &seed,
+    BMI(const SfSparseVector &seed,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
         int max_iterations);
-    string get_doc_to_judge();
+    vector<string> get_doc_to_judge(int count);
     void record_judgment(string doc_id, int judgment);
     void run();
 };
 
-BMI::BMI(SfSparseVector &seed,
+BMI::BMI(const SfSparseVector &seed,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
@@ -88,7 +88,7 @@ void BMI::randomize_non_rel_docs(){
     }
 }
 
-SfDataSet BMI::get_initial_training_data(SfSparseVector &seed){
+SfDataSet BMI::get_initial_training_data(const SfSparseVector &seed){
     // Todo generalize seed docs (support multiple rel/non-rel seeds)
     SfDataSet training_data = SfDataSet(true);
     training_data.AddLabeledVector(seed, 1);
@@ -105,21 +105,30 @@ void BMI::train(SfWeightVector &w){
             &w);
 }
 
-string BMI::get_doc_to_judge(){
+vector<string> BMI::get_doc_to_judge(int count=1){
     while(true){
         {
             lock_guard<mutex> lock(judgment_list_mutex);
             lock_guard<mutex> lock2(training_cache_mutex);
             lock_guard<mutex> lock3(finished_judgments_mutex);
-            for(int id: judgment_list){
-                // poison value
-                if(id == -1){
-                    return "";
+            if(judgment_list.size() > 0){
+                vector<string> ret;
+                for(int id: judgment_list){
+                    if(id == -1 || ret.size() >= count)
+                        break;
+                    ret.push_back(doc_features[id].doc_id);
                 }
-                if(finished_judgments.find(id) == finished_judgments.end() \
-                        && training_cache.find(id) == training_cache.end())
-                    return doc_features[id].doc_id;
+                return ret;
             }
+            /* for(int id: judgment_list){ */
+            /*     // poison value */
+            /*     if(id == -1){ */
+            /*         return {}; */
+            /*     } */
+            /*     if(finished_judgments.find(id) == finished_judgments.end() \ */
+            /*             && training_cache.find(id) == training_cache.end()) */
+            /*         return doc_features[id].doc_id; */
+            /* } */
         }
         this_thread::sleep_for(chrono::milliseconds(100));
     }
