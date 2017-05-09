@@ -84,8 +84,8 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query){
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
     AddFlag("--df", "Path of the file with document frequency of each term", string(""));
-    AddFlag("--query", "Path of the file with queries (odd lines containing topic-id and even lines containing \
-        respective query string)", string(""));
+    AddFlag("--query", string("Path of the file with queries (odd lines containing topic-id and even lines containing")+\
+            string("respective query string)"), string(""));
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
     AddFlag("--num-iterations", "Set max number of training iterations", int(-1));
     AddFlag("--max-effort", "Set max effort", int(-1));
