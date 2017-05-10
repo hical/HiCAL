@@ -47,18 +47,17 @@ def add_session(session, seed_query):
                               body=body,
                               headers={'Content-Type': 'application/json; charset=UTF-8'},
                               method="POST")
-    print(resp, content)
-    print(json.dumps(body))
+    if resp and resp['status'] != '200':
+        # TODO: Stop the creation of this topic
+        pass
 
 
-# TODO: complete this function
 def get_documents(session, num_docs, query):
     """
     :param session: current session
     :param num_docs: number of documents to return
     :return: return JSON list of documents_ids to judge
     """
-    #  TODO: write this function
     h = httplib2.Http()
     url = "http://{}:{}/CAL/get_docs?"
 

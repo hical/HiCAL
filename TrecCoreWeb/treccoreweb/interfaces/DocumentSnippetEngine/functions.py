@@ -13,7 +13,6 @@ def get_documents(doc_ids, query):
     """
     h = httplib2.Http()
     url = "http://{}:{}/fetch?"
-    print(doc_ids)
     parameters = {'docid': " ".join(doc_ids)}
     parameters = urllib.parse.urlencode(parameters)
     resp, content = h.request(url.format(DOCUMENT_SNIPPET_ENGINE_SERVER_IP,
@@ -29,7 +28,7 @@ def get_documents(doc_ids, query):
 
             document = {
                 'doc_id': doc['doc_id'],
-                'title': doc['result']['title'],
+                'title': doc['result']['title'] + " " + doc['doc_id'],
                 'content': doc['result']['content'],
             }
             result.append(document)
@@ -38,17 +37,3 @@ def get_documents(doc_ids, query):
         print(resp, content)
 
     return result
-
-    #
-    # from django.utils import lorem_ipsum
-    #
-    # for i in range(len(doc_ids)):
-    #     document = {
-    #         'doc_id': doc_ids[i],
-    #         'title': query + " " + doc_ids[i],
-    #         'content': lorem_ipsum.paragraphs(1, common=False)[0],
-    #     }
-    #
-    #     result.append(document)
-    #
-    # return result

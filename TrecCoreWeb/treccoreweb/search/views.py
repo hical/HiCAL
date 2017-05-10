@@ -44,6 +44,8 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
 
         documents_values, document_ids = get_documents(search_input)
         if document_ids:
+            document_ids = helpers.padder(document_ids)
+
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
                                                       self.request.user.current_topic)
