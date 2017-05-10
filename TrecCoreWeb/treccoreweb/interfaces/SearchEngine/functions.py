@@ -30,7 +30,7 @@ def get_documents(query, start=0, numdisplay=10):
         for doc in xmlResult:
             parsed_doc = {
                 "rank": doc["rank"],
-                "docno": doc["docno"],
+                "docno": doc["docno"].zfill(7),
                 "title": doc["title"],
                 "snippet": doc["snippet"]
             }

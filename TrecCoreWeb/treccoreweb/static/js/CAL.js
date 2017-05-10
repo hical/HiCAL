@@ -5,13 +5,15 @@ updateTimer();
 /* Mousetraps keyboard shortcuts */
 Mousetrap.bind(['k', '/', 'd'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
-    if(key == 'k')
+    if(key == 'k') {
         send_judgment(current_doc_id, true, false, false, false, true);
-    else if(key == 'd')
+    }
+    else if(key == 'd') {
         send_judgment(current_doc_id, false, true, false, false, true);
-    else if(key == '/')
+    }
+    else if(key == '/') {
         send_judgment(current_doc_id, false, false, true, false, true);
-
+    }
 
     //if(queue.getLength() == 0){
     //    console.log("Getting the next patch of documents to judge");
@@ -38,12 +40,19 @@ search_content_form_mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
 });
 
 
+function document_isEmpty(){
+    var current_doc_id = $('#cal-document').data("doc-id");
+    if(current_doc_id == ''){
+        return true;
+    }
+    return false;
+}
 
 
 function updateDocument(id, title, content){
     $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
-    $("#document_title").text(title);
-    $("#document_content").text(content);
+    $("#document_title").html(title);
+    $("#document_content").html(content);
 }
 
 

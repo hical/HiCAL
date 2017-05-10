@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block pagetitle %}Search{% endblock %}
 
@@ -46,8 +47,8 @@
             <h3>TrecSearch</h3>
         </div>
         <div class="col-lg-9">
-          <form class="input-group">
-              <input type="text" class="form-control" placeholder="Search" id="search_input"
+          <form class="input-group" id="search_form">
+              <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
                    name="search_input">
               <span class="input-group-btn">
                 <button class="btn btn-outline-primary" type="submit"
@@ -80,11 +81,34 @@
 
 {% block extra_scripts %}
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
-    <script>
-        $(".btn").mouseup(function(){
-            $(this).blur();
-        })
+    <script src="{% static 'js/mousetrap.min.js' %}"></script>
 
+    <script>
+
+        $( "#search_input" ).focus(function() {
+            var now = + new Date();
+            console.log("Search input is focused", now);
+        });
+
+        $( "#search_input").blur(function() {
+            var now = + new Date();
+            console.log("Search input is unfocused", now);
+        });
+
+        var form = document.getElementById('search_form');
+        var formSubmit = form.submit; //save reference to original submit function
+
+        form.onsubmit = function(e) {
+            alert('Handler for .submit() called.');
+        };
+
+
+        Mousetrap.prototype.handleKey = function handleKey(character, modifiers, event){
+            var now = + new Date();
+            if(event.type == "keydown"){
+                console.log(character, now);
+            }
+        };
 
         function send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard) {
             var now = + new Date();
