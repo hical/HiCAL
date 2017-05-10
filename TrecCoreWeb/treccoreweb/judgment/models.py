@@ -4,8 +4,12 @@ from treccoreweb.topic.models import Topic
 
 
 class Judgement(models.Model):
+    class Meta:
+        unique_together = ['user', 'doc_id', 'topic']
+
     LOGGING_MESSAGES = {
-        "create": "New judgment."
+        "create": "New judgment.",
+        "update": "Updated judgment."
     }
 
     user = models.ForeignKey(User)
