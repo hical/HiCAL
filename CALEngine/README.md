@@ -1,6 +1,7 @@
 # C++ Implementation of [Auto-TAR BMI](http://plg.uwaterloo.ca/~gvcormac/total-recall/)
 
 ### Build and Run
+Needs libfcgi to compile
 
 ```bash
 $ ./build.sh

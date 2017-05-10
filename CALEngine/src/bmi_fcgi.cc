@@ -3,7 +3,7 @@
 #include "simple-cmd-line-helper.h"
 #include "bmi.h"
 #include "features.cc"
-#include "fcgio/fcgio.h"
+#include "fcgio.h"
 
 unordered_map<string, BMI*> SESSIONS;
 unordered_map<string, thread> SESSION_THREADS;
