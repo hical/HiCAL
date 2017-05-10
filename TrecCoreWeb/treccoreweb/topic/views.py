@@ -7,6 +7,8 @@ from django.views import generic
 from treccoreweb.topic.models import Topic
 from treccoreweb.topic.forms import TopicForm
 from treccoreweb.topic.logging_messages import LOGGING_MESSAGES as TOPIC_LOGGING_MESSAGES
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -95,6 +97,7 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.username = self.request.user
         self.object.save()
+        CALFunctions.add_session(str(self.object.uuid), self.object.seed_query)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -124,7 +127,24 @@ class TopicActivateView(LoginRequiredMixin, generic.DetailView):
         request.user.current_topic = topic
         request.user.save()
         messages.add_message(request,
-                                     messages.SUCCESS,
-                                     'Your active topic has been updated.')
+                             messages.SUCCESS,
+                             'Your active topic has been updated.')
         return HttpResponseRedirect(self.get_success_url())
+
+
+class TopicDeleteView(LoginRequiredMixin, generic.DetailView):
+    model = Topic
+
+    def get_success_url(self):
+        return reverse_lazy('topic:list')
+
+    def post(self, request, *args, **kwargs):
+        topic_id = request.POST.get("topic_id")
+        topic = Topic.objects.get(id=topic_id, username=request.user)
+        topic.delete()
+        messages.add_message(request,
+                             messages.SUCCESS,
+                             'Your topic has been deleted.')
+        return HttpResponseRedirect(self.get_success_url())
+
 

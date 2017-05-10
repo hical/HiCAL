@@ -1,8 +1,6 @@
 from braces import views
 from django.db.models import Count, Case, When
-from django.core import serializers
 
-from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
 from treccoreweb.judgment.models import Judgement
@@ -27,6 +25,7 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         context["total_notsure"] = counters["total_notsure"]
 
         return context
+
 
 class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
@@ -54,6 +53,7 @@ class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         context = {u"message": u"Your event has been recorded"}
         return self.render_json_response(context)
+
 
 class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
@@ -94,7 +94,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     def get_ajax(self, request, *args, **kwargs):
         session = self.request.user.current_topic.uuid
         seed_query = self.request.user.current_topic.seed_query
-        docs_ids_to_judge = CALFunctions.get_documents(session, 5, seed_query)
+        docs_ids_to_judge = CALFunctions.get_documents(str(session), 5, seed_query)
 
         return self.render_json_response(docs_ids_to_judge)
 
