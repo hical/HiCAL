@@ -1,15 +1,9 @@
 # C++ Implementation of [Auto-TAR BMI](http://plg.uwaterloo.ca/~gvcormac/total-recall/)
 
-### Build and Run
-Needs libfcgi to compile
-
-```bash
-$ ./build.sh
-```
-
-### Usage
+### Command Line Tool
 
 ```
+$ ./build.sh cli
 $ ./bmi_cli --help
 Command line flag options: 
       --async-mode          Enable greedy async mode for classifier and rescorer, overrides
@@ -27,10 +21,18 @@ Command line flag options:
       --threads             Number of threads to use for scoring
 ```
 
-### Using as a web server
-The build script also generates the `bmi_fcgi` binary. It uses FastCGI to communicate with any FastCGI capable web
-server like nginx (use the `fcgi_config/nginx.conf` and `fcgi_config/fastcgi.conf`). Install `spawn-fcgi`
-and run `spawn-fcgi -p 9888 -n -- bmi_fcgi --doc_features /path/to/doc/features --df /path/to/df`
+### FastCGI based web server
+```
+$ ./build.sh fcgi
+```
+
+`fcgi` libraries needs to be present in the system. `bmi_fcgi` uses `libfcgi` to communicate
+with any FastCGI capable web server like nginx (use the `fcgi_config/nginx.conf` and
+`fcgi_config/fastcgi.conf`). Install `spawn-fcgi` in your system and run 
+
+```
+$ spawn-fcgi -p 9888 -n -- bmi_fcgi --doc_features /path/to/doc/features --df /path/to/df
+```
 
 ### HTTP API Specs [1](https://gist.github.com/iros/3426278)
 
