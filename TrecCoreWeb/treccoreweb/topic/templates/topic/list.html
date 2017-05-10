@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %}Topics list{% endblock %}
+
+{% block main %}
+<h3 class="text-primary">Current active topic</h3>
+
+{% if user.current_topic %}
+<div class="card top-margin">
+    <div class="card-block">
+        <a href="{% url 'topic:detail' pk=user.current_topic.id %}">
+            <div class="row">
+                <div class="col-md-2 text-primary">
+                    {{ user.current_topic.title }}
+                </div>
+                <div class="col-md-8 gray-text">
+                    {{ user.current_topic.seed_query }}
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" name="topic_id" value="{{ user.current_topic.topic.id }}" class="btn btn-primary disabled">Activated <small>(current)</small></button>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<div class="row extra-top-margin">
+    <div class="col-md-8">
+        <h3 class="text-primary">Your created topics</h3>
+    </div>
+</div>
+
+{% for topic in object_list %}
+{% if topic == user.current_topic %}{% else %}
+<div class="card top-margin">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-md-2 text-primary">
+                {{ topic.title }}
+            </div>
+            <div class="col-md-7 gray-text">
+                {{ topic.seed_query }}
+            </div>
+            <div class="col-md-3" style="display: inherit">
+                <form method="POST" action="{% url 'topic:delete' %}">
+                    {% csrf_token %}
+                    <button type="submit" name="topic_id" value="{{ topic.id }}" class="btn btn-primary">Delete</button>
+                </form>
+                <form class="left-margin" method="POST" action="{% url 'topic:activate' %}">
+                    {% csrf_token %}
+                    <button type="submit" name="topic_id" value="{{ topic.id }}" class="btn btn-primary">Activate</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+    <script>
+        // Nofity server of page visit on pageload
+        window.onload = function () {
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'topic:post_visit' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'type': "list",
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {}
+            });
+        };
+    </script>
+{% endblock %}

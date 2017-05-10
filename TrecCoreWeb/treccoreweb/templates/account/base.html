@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{% block head_title %}{% endblock head_title %}{% endblock title %}
+
+{% block sidebar %}{% endblock %}
+{% block nav-header %}
+    <li class="nav-item active">
+        <span class="nav-link gray-text">Welcome to TrecCoreWeb</span>
+    </li>
+{% endblock %}
+{% block nav-right%}
+{% endblock %}
+
+
+{% block main %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    {% block inner %}{% endblock %}
+  </div>
+</div>
+{% endblock %}
+{% endblock %}

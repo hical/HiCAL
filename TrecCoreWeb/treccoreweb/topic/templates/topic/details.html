@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block pagetitle %}Topic detail{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-8">
+        <h3 class="text-primary">Your current topic</h3>
+    </div>
+    <div class="col-md-4">
+        <a  href="{% url 'topic:list' %}" class="btn btn-primary">List created topics</a>
+        <a  href="{% url 'topic:create' %}" class="btn btn-primary">Add new topic</a>
+    </div>
+</div>
+<hr>
+<div class="row top-bottom-margin">
+    <div class="col-md-12">
+        <form method="POST">
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+    <script>
+        // Nofity server of page visit on pageload
+        window.onload = function () {
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'topic:post_visit' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'type': "details",
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {}
+            });
+        };
+    </script>
+{% endblock %}
