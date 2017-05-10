@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Search{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link active bold" href="{% url 'treccoreweb.search' %}">S<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
+    </li>
+{% endblock %}
+
+{% block nav-header-title %}
+    <li class="nav-item active">
+        <span class="nav-link thin text-primary">
+           <strong>TrecSearch:</strong>
+        </span>
+    </li>
+{% endblock %}
+
+{% block main %}
+<div class="row flex-items-lg-middle">
+    <div class="col-lg-2 mt-1 text-primary font-montserrat">
+        <h3>TrecSearch</h3>
+    </div>
+    <div class="col-lg-9">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search">
+      <span class="input-group-btn">
+        <button class="btn btn-outline-primary" type="button">Search</button>
+      </span>
+        </div>
+    </div>
+
+    <div class="extra-top-margin">
+
+        {% for _ in "xxxxxxxxxxxxxxxxxxxx" %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="document">
+                        <div class="title">{% lorem 3 w random %}</div>
+                        <div class="url">http://www.url.com</div>
+                        <div class="snippet">  {% lorem 30 w random %}  </div>
+                    </div>
+                </div>
+                <div class="offset-md-0-5 col-md-3 mt-5 center-text">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-sm btn-success">
+                            Relevant
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger">Not
+                            Relevant
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning">Not
+                            sure
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-5 col-md-2 align-right gray-text">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block pagetitle %}Search{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link active bold" href="{% url 'search:main' %}">S<span
+                class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
+    </li>
+{% endblock %}
+
+{% block nav-header %}
+    {% block nav-header-title %}{% endblock %}
+    <li class="nav-item active">
+    <span class="nav-link thin text-primary">
+       <strong>TrecSearch:</strong>
+    </span>
+    </li>
+    <li class="nav-item active">
+    <span class="nav-link thin gray-text">
+       <strong>Document judged: </strong><span class="badge badge-success"
+                                               id="nav_stats_rel_header">{{ total_relevant }}</span> <span
+            class="badge badge-danger"
+            id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span
+            class="badge badge-warning"
+            id="nav_stats_notsure_header">{{ total_notsure }}</span>
+    </span>
+    </li>
+    <li class="nav-item active" style="width: 200px">
+    <span class="nav-link thin gray-text">
+        <strong>Time spent:</strong>
+        <div id="nav_timer_header" class="display-inline">
+            <span class="values" id="timer_counter">counters</span>
+        </div>
+    </span>
+    </li>
+{% endblock %}
+
+{% block main %}
+    <div class="row flex-items-lg-middle">
+        <div class="col-lg-2 mt-1 text-primary font-montserrat">
+            <h3>TrecSearch</h3>
+        </div>
+        <div class="col-lg-9">
+          <form class="input-group">
+              <input type="text" class="form-control" placeholder="Search" id="search_input"
+                   name="search_input">
+              <span class="input-group-btn">
+                <button class="btn btn-outline-primary" type="submit"
+                        ic-indicator="#searchSpinner" ic-target="#search_result"
+                        ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
+                        tabindex="-1">Search
+                </button>
+              </span>
+          </form>
+        </div>
+    </div>
+
+    <div class="row center-text">
+        <div class="col-md-12" style="position: absolute">
+            <span class="text-muted">
+                <i id="searchSpinner" style="display: none;"
+                   class="fa fa-refresh fa-spin text-primary"></i></span>
+        </div>
+    </div>
+    <div class="extra-top-margin">
+    <div class="double-extra-padding-left-right">
+
+    </div>
+        <div id="search_result">
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
+    <script>
+        $(".btn").mouseup(function(){
+            $(this).blur();
+        })
+
+
+        function send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard) {
+            var now = + new Date();
+
+            console.log("Sending judgment call to backend for document id: " + doc_id);
+
+            var data = {
+                'doc_id': doc_id,
+                'relevant': rel,
+                'nonrelevant': non,
+                'notsure': notsure,
+                'time_to_judge': "NA",
+                'isFromCAL': false,
+                'client_time': now,
+                'fromMouse': isMouse,
+                'fromKeyboard': isKeyboard,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            };
+
+
+            $.ajax({
+                url: '{% url 'judgment:post_judgment' %}',
+                method: 'POST',
+                data: JSON.stringify(data),
+                success: function (result) {
+                    console.log(result['message']);
+                    update_doc_status(doc_id, rel, non, notsure);
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+
+
+            return false;
+        }
+
+        function update_doc_status(doc_id, rel, non, notsure){
+            console.log("Updating document " + doc_id + " status");
+            if(rel){
+                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-success' aria-hidden='true'></i>").hide().fadeIn();
+            }else if(non){
+                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-danger' aria-hidden='true'></i>").hide().fadeIn();
+            }else if(notsure){
+                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-warning' aria-hidden='true'></i>").hide().fadeIn();
+            }
+        }
+//doc_{{ document_values.docno }}_status
+    </script>
+{% endblock %}

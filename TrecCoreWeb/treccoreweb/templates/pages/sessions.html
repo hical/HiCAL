@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+<div class="row top-bottom-margin">
+    <div class="col-md-12">
+        <ul class="nav nav-pills nav-justified" role="tablist" id="eventTabs">
+            <li class="center-text nav-item">
+                    <a class="nav-link active" data-toggle="tab"
+                       href="#remaining" role="tab">
+                        Remaining topics
+                    </a>
+
+            </li>
+            <li class="center-text nav-item">
+                    <a class="nav-link" data-toggle="tab"
+                       href="#completed" role="tab">
+                        Completed sessions
+                    </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<hr>
+<div class="tab-content">
+    <div class="tab-pane active extra-top-bottom-margin" id="remaining"
+         role="tabpanel">
+
+        {% for _ in "__________" %}
+        <div class="row top-margin">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-2 text-primary">
+                                <h6>Title of topic here</h6>
+                            </div>
+                                <div class="col-md-9 gray-text">
+                                <h6 class="text-primary">Desc of topic here</h6>
+                                    <p>{% lorem 15 w random %}</p>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="tab-pane extra-top-bottom-margin" id="completed" role="tabpanel">
+
+        {% for _ in "__________" %}
+        <div class="row top-margin">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-2 text-primary">
+                                <h6>Title of topic here</h6>
+                            </div>
+                                <div class="col-md-9 gray-text">
+                                <h6 class="text-primary">Desc of topic here</h6>
+                                    <p>{% lorem 15 w random %}</p>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-block small">
+                        <p class="gray-text">Total time spent: 100 seconds</p>
+                        <div class="gray-text"><strong>Judgments:</strong></div>
+                        <div class="gray-text">Relevant docs: 32 docs</div>
+                        <div class="gray-text">Non-relevant docs: 45 docs</div>
+                        <div class="gray-text">Not-sure docs: 2 docs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

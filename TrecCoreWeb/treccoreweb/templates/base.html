@@ -1,0 +1,125 @@
+{% load staticfiles i18n %}{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>TrecCore - {% block pagetitle %}home{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+<nav class="navbar nav-bar-padding navbar-toggleable-md bg-faded fixed-top border-bottom">
+    <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button"
+            data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand font-montserrat" href="/"><strong>TrecCore</strong></a>
+    <div class="collapse navbar-collapse font-montserrat" id="navbarsExampleDefault">
+        <ul class="navbar-nav mt-2">
+            <li class="nav-item text-truncate" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;">
+                <span class="small gray-text">Topic: {{ user.current_topic.title }}</span>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav mx-auto small mt-1">
+            {% block nav-header %}
+            {% block nav-header-title %}{% endblock %}
+            <li class="nav-item active">
+                <span class="nav-link thin gray-text" >
+                   <strong>Document judged: </strong><span class="badge badge-success" id="nav_stats_rel_header">{{ total_relevant }}</span> <span class="badge badge-danger" id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span class="badge badge-warning" id="nav_stats_notsure_header">{{ total_notsure }}</span>
+                </span>
+            </li>
+            <li class="nav-item active" style="width: 200px">
+                <span class="nav-link thin gray-text">
+                    <strong>Time spent:</strong>
+                    <div id="nav_timer_header" class="display-inline">
+                        <span class="values" id="timer_counter">counters</span>
+                    </div>
+                </span>
+            </li>
+            {% endblock %}
+        </ul>
+        <div class="form-inline mt-2 mt-md-0">
+            <ul class="navbar-nav mr-auto">
+                {% block nav-right%}
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'topic:detail' pk=user.current_topic.id %}">Topic</a>
+                </li>
+                {% endif %}
+                {% endblock %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-2 col-md-0-5 hidden-xs-down sidebar bg-faded font-open-sans">
+            <ul class="nav nav-pills flex-column center-text">
+                {% block sidebar %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'search:main' %}">S</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
+                </li>
+                {% endblock %}
+            </ul>
+
+        </nav>
+
+        <main class="col-sm-10 offset-sm-1 col-md-11 offset-md-0-5 pt-3 top-margin extra-padding">
+            {% block messages %}
+                {% if messages %}
+                    <div class="alert alert-success"
+                         role="alert">
+                        <button type="button" class="close" data-dismiss="alert"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {% for message in messages %}
+                            <p class="no-margin">
+                                <strong>Done</strong> {{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endblock %}
+            {% block main %}
+                MAIN CONTENT HERE
+            {% endblock %}
+        </main>
+
+        {% block extra_body %}{% endblock %}
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="{% static 'js/jquery.mark.min.js' %}"></script>
+<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

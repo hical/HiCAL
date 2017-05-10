@@ -58,6 +58,7 @@ LOCAL_APPS = [
     'treccoreweb.CAL',
     'treccoreweb.topic',
     'treccoreweb.judgment',
+    'treccoreweb.search',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -303,10 +304,12 @@ LOGGING = {
 
 # CORE TREC COMPONENTS IPS (Required)
 # ------------------------------------------------------------------------------
-CAL_SERVER_IP = ''
-CAL_SERVER_PORT = ''
+CAL_SERVER_IP = '129.97.84.14'
+CAL_SERVER_PORT = '80'
 DOCUMENT_SNIPPET_ENGINE_SERVER_IP = ''
-SEARCH_SERVER_IP = ''
+DOCUMENT_SNIPPET_ENGINE_SERVER_PORT = ''
+SEARCH_SERVER_IP = '129.97.25.37'
+SEARCH_SERVER_PORT = '80'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------

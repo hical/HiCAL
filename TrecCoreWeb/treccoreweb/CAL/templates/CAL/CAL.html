@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block pagetitle %}CAL{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'search:main' %}">S</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
+                class="sr-only">(current)</span></a>
+    </li>
+{% endblock %}
+
+{% block nav-header-title %}
+    <li class="nav-item">
+        <span class="nav-link thin text-primary">
+           <strong>CAL:</strong>
+        </span>
+    </li>
+{% endblock %}
+
+
+{% block main %}
+    <div class="extra-bottom-margin">
+
+        <div class="row">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-block document-cal" id="cal-document"
+                         data-doc-id="None">
+                        <h1 id="document_title"></h1>
+                        <div id="document_content">
+                            <p></p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-2">
+                <nav class="sidebar-nav-fixed bg-faded font-open-sans">
+                    <ul class="nav nav-pills flex-column little-padding">
+                        <div class="cal-search">
+
+                            <li class=" top-margin">
+                                <span class="gray-text align-left">Search content:</span>
+                                <form id="searchContentForm" class="top-margin">
+                                    <div class="input-group">
+                                        <input id="search_content" type="search"
+                                               class="form-control" placeholder="Search">
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-search="next" id="searchNext"
+                                            type="button">&darr;</button>
+                                  </span>
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-search="prev"
+                                            type="button">&uarr;</button>
+                                  </span>
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-search="clear" type="button">✖
+                                    </button>
+                                  </span>
+                                    </div>
+                                </form>
+                            </li>
+                        </div>
+
+                        <li class="nav-item extra-top-margin">
+                            <span class="gray-text align-left">Judge document:</span>
+
+                            <div class="btn-group top-margin" role="group"
+                                 aria-label="Basic example">
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), true, false, false, true, false);" class="btn btn-sm btn-success">
+                                    Relevant
+                                </a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), false, true, false, true, false);" class="btn btn-sm btn-danger">Not
+                                    relevant
+                                </a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), false, false, true, true, false);" class="btn btn-sm btn-warning">Not
+                                    sure
+                                </a>
+                            </div>
+                        </li>
+
+                        <div class="extra-top-margin align-left">
+                            <span class="gray-text">Keyboard shortcuts:</span>
+                            <li class="nav-item top-margin">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-success">k</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Mark as relevant
+                                        </small>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="nav-item ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-danger">d</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Mark as non-relevant
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-warning">/</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Mark as not sure
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+
+                    </ul>
+
+                </nav>
+
+            </div>
+            <!--/span-->
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+    <script src="{% static 'js/Queue.src.js' %}"></script>
+
+    <script>
+        // Nofity server of page visit on pageload
+        window.onload = function () {
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'CAL:post_visit' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+        };
+
+        var queue = new Queue();
+        var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
+        var relCounter = parseInt("{{ total_relevant }}");
+        var nonRelCounter = parseInt("{{ total_nonrelevant }}");
+        var notSureCounter = parseInt("{{ total_notsure }}");
+
+        $.ajax({
+            url: '{% url 'CAL:get_docs' %}',
+            method: 'GET',
+            success: function (result) {
+                if (result.length) {
+                    for (var i = 0; i < result.length; i++) {
+                        queue.enqueue(result[i]);
+                    }
+                    if(!queue.isEmpty()){
+                        var next_doc = queue.dequeue();
+                        updateDocument(
+                                next_doc["doc_id"],
+                                next_doc["title"],
+                                next_doc["content"]
+                        );
+                    }
+                }
+            }
+        });
+
+        function update_documents_to_judge_list() {
+            $.ajax({
+                url: '{% url 'CAL:get_docs' %}',
+                method: 'GET',
+                data: JSON.stringify({csrfmiddlewaretoken: '{{ csrf_token }}'}),
+                success: function (result) {
+                    if (result.length) {
+                        for (var i = 0; i < result.length; i++) {
+                            queue.enqueue(result[i]);
+                        }
+                    }
+                }
+            });
+        }
+
+        function send_judgment(current_doc_id, rel, non, notsure, isMouse, isKeyboard) {
+            var time_to_judge = timer.getTimeValues().toSeconds();
+            var now = + new Date();
+
+            if(queue.isEmpty()){
+                console.log("The queue of documents to judge is empty. Please wait");
+                alert("The queue of documents to judge is empty. Please wait");
+                return;
+            }
+
+            console.log("Saving '"+current_doc_id+"' to judged_docs JS dict");
+            judged_docs[current_doc_id] = true;
+
+            console.log("Sending judgment call to backend for document id: " + current_doc_id);
+
+            var data = {
+                'doc_id': current_doc_id,
+                'relevant': rel,
+                'nonrelevant': non,
+                'notsure': notsure,
+                'time_to_judge': time_to_judge,
+                'isFromCAL': true,
+                'client_time': now,
+                'fromMouse': isMouse,
+                'fromKeyboard': isKeyboard,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            };
+
+
+            $.ajax({
+                url: '{% url 'judgment:post_judgment' %}',
+                method: 'POST',
+                data: JSON.stringify(data),
+                success: function (result) {
+                    console.log(result['message']);
+                    console.log("Updating the queue after sending judgment of document: " + data["doc_id"]);
+                    // console.log("next batch: " + JSON.stringify(result['next_docs']));
+                    queue = new Queue();
+                    for(var i = 0; i < result['next_docs'].length; i++){
+                        queue.enqueue(result['next_docs'][i]);
+                    }
+
+                    console.log("Updating nav-bar counters");
+                    if(rel){
+                        updateCounter("k");
+                    }else if(non){
+                        updateCounter("d");
+                    }else if (notsure){
+                        updateCounter("/");
+                    }
+
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+
+            while(!queue.isEmpty()){
+                var next_doc = queue.dequeue();
+                if(!(next_doc["doc_id"] in judged_docs)){
+                    break;
+                }else if(queue.isEmpty()){
+                    next_doc["doc_id"] = "Error";
+                    next_doc["title"] = "Error (EmptyQueue)";
+                    next_doc["content"] = "Error (EmptyQueue)";
+                }
+            }
+
+            updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["content"]);
+        }
+
+
+
+    function show_doc_view(doc){
+        $('#cal-document').attr("data-doc-id", doc["doc_id"]).data("doc-id", doc["doc_id"]);
+        $("#document_title").text(doc["title"]);
+        $("#document_content").html(doc["content"]);
+    }
+
+    function reset_doc_view(){
+        $('#cal-document').attr("data-doc-id", "None").data("doc-id", "None");
+        $("#document_title").text("");
+        $("#document_content").text("");
+    }
+
+
+    function post_ctrlf(){
+        var now = + new Date();
+        $.ajax({
+            url: '{% url 'CAL:post_ctrlf' %}',
+            method: 'POST',
+            data: JSON.stringify({
+                'client_time': now,
+                'search_field_value': $("#search_content").val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            }),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
+    }
+
+    </script>
+    <script src="{% static 'js/jquery.mark.min.js' %}"></script>
+    <script src="{% static 'js/mousetrap.min.js' %}"></script>
+    <script src="{% static 'js/easytimer.js' %}"></script>
+    <script src="{% static 'js/CAL.js' %}"></script>
+
+{% endblock %}

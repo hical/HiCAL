@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-    url(r'^search/$', login_required(TemplateView.as_view(template_name='pages/search.html')), name='search'),
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
@@ -22,7 +21,9 @@ urlpatterns = [
 
     # Custom urls includes go here
     url(r'^CAL/', include('treccoreweb.CAL.urls', namespace='CAL')),
+    url(r'^search/', include('treccoreweb.search.urls', namespace='search')),
     url(r'^topic/', include('treccoreweb.topic.urls', namespace='topic')),
+    url(r'^judgment/', include('treccoreweb.judgment.urls', namespace='judgment')),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
