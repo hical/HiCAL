@@ -36,6 +36,8 @@ $ spawn-fcgi -p 9888 -n -- bmi_fcgi --doc_features /path/to/doc/features --df /p
 
 ### HTTP API Specs [1](https://gist.github.com/iros/3426278)
 
+Server: `129.97.84.14/CAL`
+
 #### Begin a session
 * **URL**
 
