@@ -3,7 +3,8 @@
 #include "simple-cmd-line-helper.h"
 #include "bmi.h"
 #include "features.cc"
-#include "fcgio.h"
+#include <fcgio.h>
+#include <curl/curl.h>
 
 unordered_map<string, BMI*> SESSIONS;
 unordered_map<string, thread> SESSION_THREADS;
@@ -94,13 +95,18 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
         return;
     }
 
+    if(session_id.size() == 0 || query.size() == 0){
+        write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id and query required\"}");
+    }
+
     SESSIONS[session_id] = new BMI(get_features(query, doc_features.size()),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"]);
 
-    SESSION_THREADS[session_id] = thread(&BMI::run, ref(*SESSIONS[session_id]));
+     auto t = thread(&BMI::run, ref(*SESSIONS[session_id]));
+     t.detach();
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
@@ -125,7 +131,7 @@ string get_docs(string session_id, int max_count){
 // Handler for /get_docs
 void get_docs_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id;
-    int max_count;
+    int max_count = 2;
 
     for(auto kv: params){
         if(kv.first == "session_id"){
@@ -133,6 +139,10 @@ void get_docs_view(const FCGX_Request & request, const vector<pair<string, strin
         }else if(kv.first == "max_count"){
             max_count = stoi(kv.second);
         }
+    }
+
+    if(session_id.size() == 0){
+        write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id required\"}");
     }
 
     if(SESSIONS.find(session_id) == SESSIONS.end()){
@@ -146,7 +156,7 @@ void get_docs_view(const FCGX_Request & request, const vector<pair<string, strin
 // Handler for /judge
 void judge_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, doc_id;
-    int rel = 0;
+    int rel = -2;
 
     for(auto kv: params){
         if(kv.first == "session_id"){
@@ -156,6 +166,10 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
         }else if(kv.first == "rel"){
             rel = stoi(kv.second);
         }
+    }
+
+    if(session_id.size() == 0 || doc_id.size() == 0){
+        write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id and doc_id required\"}");
     }
 
     if(SESSIONS.find(session_id) == SESSIONS.end()){
@@ -179,15 +193,27 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
     write_response(request, 200, "application/json", get_docs(session_id, 5));
 }
 
+void log_request(const FCGX_Request & request, const vector<pair<string, string>> &params){
+    cerr<<string(FCGX_GetParam("RELATIVE_URI", request.envp))<<endl;
+    cerr<<FCGX_GetParam("REQUEST_METHOD", request.envp)<<endl;
+    for(auto kv: params){
+        cerr<<kv.first<<" "<<kv.second<<endl;
+    }
+    cerr<<endl;
+}
+
 void process_request(const FCGX_Request & request) {
     string action = parse_action_from_uri(FCGX_GetParam("RELATIVE_URI", request.envp));
     string method = FCGX_GetParam("REQUEST_METHOD", request.envp);
+
     vector<pair<string, string>> params;
 
     if(method == "GET")
         params = parse_query_string(FCGX_GetParam("QUERY_STRING", request.envp));
     else if(method == "POST")
         params = parse_query_string(read_content(request));
+
+    log_request(request, params);
 
     if(action == "begin"){
         if(method == "POST"){
