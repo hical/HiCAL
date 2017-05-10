@@ -4,7 +4,6 @@
 
 ```bash
 $ ./build.sh
-$ ./bmi_cli
 ```
 
 ### Usage
@@ -12,7 +11,8 @@ $ ./bmi_cli
 ```
 $ ./bmi_cli --help
 Command line flag options: 
-      --async-mode          Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations
+      --async-mode          Enable greedy async mode for classifier and rescorer, overrides
+                            --judgment-per-iteration and --num-iterations
       --df                  Path of the file with document frequency of each term
       --doc-features        Path of the file with list of document features
       --help                Show Help
@@ -21,9 +21,16 @@ Command line flag options:
       --max-effort          Set max effort
       --num-iterations      Set max number of training iterations
       --qrel                Use the qrel file for judgment
-      --query               Path of the file with queries (odd lines containing topic-id and even lines containingrespective query string)
+      --query               Path of the file with queries (odd lines containing topic-id and
+                            even lines containingrespective query string)
       --threads             Number of threads to use for scoring
 ```
+
+### Using as a web server
+The build script also generates the `bmi_fcgi` binary. It uses FastCGI to communicate with any FastCGI capable web
+server like nginx (use the `fcgi_config/nginx.conf` and `fcgi_config/fastcgi.conf`). Install `spawn-fcgi`
+and run `spawn-fcgi -p 9888 -n -- bmi_fcgi --doc_features /path/to/doc/features --df /path/to/df`
+
 ### HTTP API Specs [1](https://gist.github.com/iros/3426278)
 
 #### Begin a session
