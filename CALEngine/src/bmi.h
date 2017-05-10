@@ -23,6 +23,12 @@ class BMI{
     int judgments_per_iteration;
     int max_effort;
     int max_iterations;
+    bool is_bmi;
+
+    struct{
+        int cur_iteration = 0;
+        int cur_num_judgments = 0;
+    }state;
     // Stores an ordered list of documents to judge based on the classifier scores
     vector<int> judgment_list;
     // A set of document ids which have already been judged
@@ -51,6 +57,7 @@ class BMI{
     void train(SfWeightVector &w);
     void add_to_judgment_list(const vector<int> &ids);
     void wait_for_judgments();
+    void perform_iteration();
     vector<int> perform_training_iteration();
 
     public:

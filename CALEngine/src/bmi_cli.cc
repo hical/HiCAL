@@ -72,7 +72,7 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query){
     }
 
     vector<string> doc_ids;
-    while((doc_ids = bmi.get_doc_to_judge()).size() > 0){
+    while((doc_ids = bmi.get_doc_to_judge(1)).size() > 0){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi.record_judgment(doc_ids[0], judgment);
         logfile << seed_query.first <<" "<< doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
