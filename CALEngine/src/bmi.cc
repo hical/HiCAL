@@ -1,5 +1,10 @@
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <algorithm>
 #include "bmi.h"
 
+using namespace std;
 BMI::BMI(const SfSparseVector &seed,
         int _num_threads,
         int _judgments_per_iteration,
