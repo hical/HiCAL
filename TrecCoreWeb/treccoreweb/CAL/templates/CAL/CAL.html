@@ -142,6 +142,10 @@
 
 {% block extra_scripts %}
     <script src="{% static 'js/Queue.src.js' %}"></script>
+    <script src="{% static 'js/jquery.mark.min.js' %}"></script>
+    <script src="{% static 'js/mousetrap.min.js' %}"></script>
+    <script src="{% static 'js/easytimer.js' %}"></script>
+    <script src="{% static 'js/CAL.js' %}"></script>
 
     <script>
         // Nofity server of page visit on pageload
@@ -170,6 +174,7 @@
             url: '{% url 'CAL:get_docs' %}',
             method: 'GET',
             success: function (result) {
+                console.log(JSON.stringify(result));
                 if (result.length) {
                     for (var i = 0; i < result.length; i++) {
                         queue.enqueue(result[i]);
@@ -204,12 +209,16 @@
         function send_judgment(current_doc_id, rel, non, notsure, isMouse, isKeyboard) {
             var time_to_judge = timer.getTimeValues().toSeconds();
             var now = + new Date();
-
-            if(queue.isEmpty()){
-                console.log("The queue of documents to judge is empty. Please wait");
-                alert("The queue of documents to judge is empty. Please wait");
-                return;
+            console.log(current_doc_id, rel, non, notsure, isMouse, isKeyboard);
+            if(current_doc_id == ""){
+                return false;
             }
+
+{#            if(queue.isEmpty()){#}
+{#                console.log("The queue of documents to judge is empty. Please wait");#}
+{#                alert("The queue of documents to judge is empty. Please wait");#}
+{#                return;#}
+{#            }#}
 
             console.log("Saving '"+current_doc_id+"' to judged_docs JS dict");
             judged_docs[current_doc_id] = true;
@@ -243,6 +252,26 @@
                         queue.enqueue(result['next_docs'][i]);
                     }
 
+                    var isempty_view = document_isEmpty();
+                    if(isempty_view){
+                        console.log("Empty view. Updating the view with a document.");
+                        if(queue.isEmpty()){
+                            updateDocument(
+                                    "",
+                                    "No documents received for judging",
+                                    "CAL has not returned a new " +
+                                    "set of documents to return. Please try refreshing."
+                            );
+                        }else{
+                            var next_doc = queue.dequeue();
+                            updateDocument(
+                                    next_doc["doc_id"],
+                                    next_doc["title"],
+                                    next_doc["content"]
+                            );
+                        }
+                    }
+
                     console.log("Updating nav-bar counters");
                     if(rel){
                         updateCounter("k");
@@ -251,6 +280,8 @@
                     }else if (notsure){
                         updateCounter("/");
                     }
+
+
 
                 },
                 error: function (result) {
@@ -263,9 +294,9 @@
                 if(!(next_doc["doc_id"] in judged_docs)){
                     break;
                 }else if(queue.isEmpty()){
-                    next_doc["doc_id"] = "Error";
-                    next_doc["title"] = "Error (EmptyQueue)";
-                    next_doc["content"] = "Error (EmptyQueue)";
+                    next_doc["doc_id"] = "";
+                    next_doc["title"] = "Please Wait.";
+                    next_doc["content"] = "Please wait.";
                 }
             }
 
@@ -304,9 +335,5 @@
     }
 
     </script>
-    <script src="{% static 'js/jquery.mark.min.js' %}"></script>
-    <script src="{% static 'js/mousetrap.min.js' %}"></script>
-    <script src="{% static 'js/easytimer.js' %}"></script>
-    <script src="{% static 'js/CAL.js' %}"></script>
 
 {% endblock %}

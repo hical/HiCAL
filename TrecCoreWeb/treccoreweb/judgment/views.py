@@ -1,7 +1,9 @@
 from braces import views
 from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
+from interfaces.DocumentSnippetEngine import functions as DocEngine
 from treccoreweb.judgment.models import Judgement
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -55,7 +57,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "topic_id": self.request.user.current_topic.id,
-                        "session": self.request.user.current_topic.uuid,
+                        "session": str(self.request.user.current_topic.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
@@ -93,7 +95,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "topic_id": self.request.user.current_topic.id,
-                        "session": self.request.user.current_topic.uuid,
+                        "session": str(self.request.user.current_topic.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
@@ -111,9 +113,13 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
         if isFromCAL:
             # TODO: return next 5 documents to judge
+            rel = 1 if relevant else -1 if nonrelevant else 0
             next_patch = CALFunctions.send_judgment(self.request.user.current_topic.uuid,
-                                                    doc_id)
-            context[u"next_docs"] = next_patch
+                                                    doc_id,
+                                                    rel)
+            documents = DocEngine.get_documents(next_patch,
+                                                self.request.user.current_topic.seed_query)
+            context[u"next_docs"] = documents
             return self.render_json_response(context)
         else:
             return self.render_json_response(context)

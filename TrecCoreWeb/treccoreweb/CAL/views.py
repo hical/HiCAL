@@ -5,6 +5,8 @@ from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
 from treccoreweb.judgment.models import Judgement
 from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
+from interfaces.DocumentSnippetEngine import functions as DocEngine
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -95,7 +97,5 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         session = self.request.user.current_topic.uuid
         seed_query = self.request.user.current_topic.seed_query
         docs_ids_to_judge = CALFunctions.get_documents(str(session), 5, seed_query)
-
-        return self.render_json_response(docs_ids_to_judge)
-
-
+        documents = DocEngine.get_documents(docs_ids_to_judge, seed_query)
+        return self.render_json_response(documents)
