@@ -6,21 +6,13 @@
 #include<cmath>
 #include<algorithm>
 #include "porter.c"
-#include "sofiaml/sf-sparse-vector.h"
+
+#include "features.h"
 using namespace std;
 
-struct TermInfo{
-    int id;
-    int df;
-};
+unordered_map<string, features::TermInfo> features::dictionary;
 
-unordered_map<string, TermInfo> dictionary;
-
-bool is_valid(char ch){
-    return isalpha(ch) || isdigit(ch);
-}
-
-vector<string> tokenize(string &text){
+vector<string> features::tokenize(string &text){
     vector<string> words;
     int st = 0;
     while(st < (int)text.length()){
@@ -36,7 +28,7 @@ vector<string> tokenize(string &text){
     return words;
 }
 
-vector<string> get_stemmed_words(const string &str){
+vector<string> features::get_stemmed_words(const string &str){
     char temp_str[str.length()];
     strcpy(temp_str, str.c_str());
     int st = 0, end = 0;
@@ -63,7 +55,7 @@ vector<string> get_stemmed_words(const string &str){
     return tokenize(stemmed_text);
 }
 
-void init(string fname){
+void features::init(string fname){
     int df;
     string term;
     int idx = 0;
@@ -77,7 +69,7 @@ void init(string fname){
     }
 }
 
-unordered_map<string, int> get_tf(vector<string> words){
+unordered_map<string, int> features::get_tf(vector<string> words){
     unordered_map<string, int> tf_map;
     for(string word: words){
         if(tf_map.find(word) == tf_map.end())
@@ -87,7 +79,7 @@ unordered_map<string, int> get_tf(vector<string> words){
     return tf_map;
 }
 
-SfSparseVector get_features(string &text, int N){
+SfSparseVector features::get_features(string &text, int N){
     vector<FeatureValuePair> features;
     vector<pair<int, double>> tmp_features;
 
@@ -109,9 +101,3 @@ SfSparseVector get_features(string &text, int N){
     sort(features.begin(), features.end(), [](auto &a, auto &b) -> bool{return a.id_ < b.id_;});
     return SfSparseVector("Q", features);
 }
-
-/* int main(){ */
-/*     init("/home/nghelani/CAL/Corpus/athome1.df"); */
-/*     string str = "School and Preschool Funding"; */
-/*     get_features(str, 290099); */
-/* } */
