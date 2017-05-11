@@ -1,5 +1,8 @@
+import json
+
 from braces import views
 from django.db.models import Count, Case, When
+from django.http import HttpResponseBadRequest, HttpResponse
 
 from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
@@ -93,9 +96,25 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     """
     require_json = False
 
+    def render_timeout_request_response(self, error_dict=None):
+        if error_dict is None:
+            error_dict = self.error_response_dict
+        json_context = json.dumps(
+            error_dict,
+            cls=self.json_encoder_class,
+            **self.get_json_dumps_kwargs()
+        ).encode('utf-8')
+        return HttpResponse(
+            json_context, content_type=self.get_content_type(), status=502)
+
     def get_ajax(self, request, *args, **kwargs):
         session = self.request.user.current_topic.uuid
         seed_query = self.request.user.current_topic.seed_query
-        docs_ids_to_judge = CALFunctions.get_documents(str(session), 5, seed_query)
-        documents = DocEngine.get_documents(docs_ids_to_judge, seed_query)
+        try:
+            docs_ids_to_judge = CALFunctions.get_documents(str(session), 5, seed_query)
+            documents = DocEngine.get_documents(docs_ids_to_judge, seed_query)
+        except TimeoutError:
+            error_dict = {u"message": u"Timeout error. Please check status of servers."}
+            return self.render_timeout_request_response(error_dict)
+
         return self.render_json_response(documents)
