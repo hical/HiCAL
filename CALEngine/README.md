@@ -3,7 +3,7 @@
 ### Command Line Tool
 
 ```
-$ ./build.sh cli
+$ make cli
 $ ./bmi_cli --help
 Command line flag options: 
       --async-mode          Enable greedy async mode for classifier and rescorer, overrides
@@ -23,7 +23,7 @@ Command line flag options:
 
 ### FastCGI based web server
 ```
-$ ./build.sh fcgi
+$ make fcgi
 ```
 
 `fcgi` libraries needs to be present in the system. `bmi_fcgi` uses `libfcgi` to communicate
