@@ -122,4 +122,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             context[u"next_docs"] = documents
             return self.render_json_response(context)
         else:
+            rel = 1 if relevant else -1 if nonrelevant else 0
+            CALFunctions.send_judgment(self.request.user.current_topic.uuid,
+                                       doc_id,
+                                       rel)
             return self.render_json_response(context)
