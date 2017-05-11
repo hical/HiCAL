@@ -1,8 +1,11 @@
+#include<iostream>
 #include<fstream>
 #include<thread>
 #include "simple-cmd-line-helper.h"
 #include "bmi.h"
-#include "features.cc"
+#include "features.h"
+
+using namespace std;
 
 int get_judgment_stdin(string topic_id, string doc_id){
     cout<<"Judge "<<doc_id<<" (y/n)"<<": ";

@@ -35,7 +35,7 @@ class BMI{
     }state;
 
     // Stores an ordered list of documents to judge based on the classifier scores
-    vector<int> judgment_list;
+    std::vector<int> judgment_list;
 
     // A set of document ids which have already been judged
     std::set<int> finished_judgments;
@@ -68,7 +68,7 @@ class BMI{
     void train(SfWeightVector &w);
 
     // Add the ids to the judgment list
-    void add_to_judgment_list(const vector<int> &ids);
+    void add_to_judgment_list(const std::vector<int> &ids);
 
     // blocks the thread until all the judgments are done
     void wait_for_judgments();
@@ -77,20 +77,21 @@ class BMI{
     void perform_iteration();
 
     // Handler for performing a training iteration
-    vector<int> perform_training_iteration();
+    std::vector<int> perform_training_iteration();
 
     public:
     BMI(const SfSparseVector &seed,
+        Scorer *scorer,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
         int max_iterations);
 
     // Get upto `count` number of documents from `judgment_list`
-    vector<string> get_doc_to_judge(int count);
+    std::vector<std::string> get_doc_to_judge(int count);
 
     // Record judgment (-1 or 1) for a given doc_id
-    void record_judgment(string doc_id, int judgment);
+    void record_judgment(std::string doc_id, int judgment);
 
     // Begin CAL
     void run();
