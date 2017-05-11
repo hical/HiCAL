@@ -28,19 +28,25 @@
                     sure
                 </a>
             </div>
-
+            {% if document_values.isJudged %}
+            <span class="gray-text top-margin small">Document has been judged before.</span>
+            {% endif %}
         </div>
 
             <div class="mt-5 col-md-2 align-right gray-text" id="doc_{{ document_values.docno }}_status">
                 {% if document_values.isJudged %}
                     {% if document_values.relevance_judgment.relevant %}
                         <i class="fa fa-check text-success" aria-hidden="true"></i>
+                        <span>Relevant</span>
                     {% elif document_values.relevance_judgment.nonrelevant %}
                         <i class="fa fa-check text-danger" aria-hidden="true"></i>
+                        <span>Not relevant</span>
                     {% elif document_values.relevance_judgment.notsure %}
                         <i class="fa fa-check text-warning" aria-hidden="true"></i>
+                        <span>Not Sure</span>
                     {% endif %}
                 {% endif %}
+                <i class="fa fa-check text-warning" aria-hidden="true"></i>
             </div>
 
     </div>
