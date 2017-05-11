@@ -11,6 +11,8 @@
 class BMI{
     private:
 
+    Scorer *scorer;
+
     // Number of threads used for rescoring docs
     int num_threads;
 

@@ -6,6 +6,7 @@
 
 using namespace std;
 BMI::BMI(const SfSparseVector &seed,
+        Scorer *_scorer,
         int _num_threads,
         int _judgments_per_iteration,
         int _max_effort,
@@ -14,6 +15,7 @@ BMI::BMI(const SfSparseVector &seed,
     judgments_per_iteration(_judgments_per_iteration),
     max_effort(_max_effort),
     max_iterations(_max_iterations),
+    scorer(_scorer),
     training_data(get_initial_training_data(seed))
 {
     /* is_bmi = (judgments_per_iteration == -1); */
@@ -42,13 +44,13 @@ void BMI::perform_iteration(){
 }
 
 void BMI::randomize_non_rel_docs(){
-    uniform_int_distribution<int> distribution(0, doc_features.size()-1);
+    uniform_int_distribution<int> distribution(0, scorer->doc_features.size()-1);
     for(int i = 1;i<=100;i++){
         int idx = distribution(rand_generator);
         if(training_data.NumExamples() < i+1)
-            training_data.AddLabeledVector(doc_features[idx], -1);
+            training_data.AddLabeledVector(scorer->doc_features[idx], -1);
         else
-            training_data.ModifyLabeledVector(i, doc_features[idx], -1);
+            training_data.ModifyLabeledVector(i, scorer->doc_features[idx], -1);
     }
 }
 
@@ -80,7 +82,7 @@ vector<string> BMI::get_doc_to_judge(int count=1){
                 for(int id: judgment_list){
                     if(id == -1 || ret.size() >= count)
                         break;
-                    ret.push_back(doc_features[id].doc_id);
+                    ret.push_back(scorer->doc_features[id].doc_id);
                 }
                 return ret;
             }
@@ -117,7 +119,7 @@ void BMI::wait_for_judgments(){
 }
 
 void BMI::record_judgment(string doc_id, int judgment){
-    int id = doc_ids_inv_map[doc_id];
+    int id = scorer->doc_ids_inv_map[doc_id];
     {
         lock_guard<mutex> lock(training_cache_mutex);
         training_cache[id] = judgment;
@@ -137,7 +139,7 @@ vector<int> BMI::perform_training_iteration(){
         lock_guard<mutex> lock(training_cache_mutex);
         lock_guard<mutex> lock2(finished_judgments_mutex);
         for(pair<int, int> training: training_cache){
-            training_data.AddLabeledVector(doc_features[training.first], training.second);
+            training_data.AddLabeledVector(scorer->doc_features[training.first], training.second);
             finished_judgments.insert(training.first);
         }
         training_cache.clear();
@@ -146,7 +148,7 @@ vector<int> BMI::perform_training_iteration(){
     // Training
     auto start = std::chrono::steady_clock::now();
 
-    SfWeightVector w(dimensionality);
+    SfWeightVector w(scorer->dimensionality);
     train(w);
 
     auto weights = w.AsFloatVector();
@@ -158,10 +160,10 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    rescore_documents(weights, num_threads, judgments_per_iteration, finished_judgments, results);
+    scorer->rescore_documents(weights, num_threads, judgments_per_iteration, finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Rescored "<<doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Rescored "<<scorer->doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
 
     return results;
 }

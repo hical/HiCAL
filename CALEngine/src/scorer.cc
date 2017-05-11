@@ -8,10 +8,6 @@
 
 using namespace std;
 
-vector<SfSparseVector> doc_features;
-unordered_map<string, int> doc_ids_inv_map;
-int dimensionality;
-
 vector<SfSparseVector> parse_doc_features(string fname){
     vector<SfSparseVector> sparse_feature_vectors;
     ifstream doc_features_file(fname);
@@ -47,18 +43,7 @@ vector<SfSparseVector> parse_doc_features(string fname){
     return sparse_feature_vectors;
 }
 
-vector<float> parse_model_file(string fname){
-    ifstream model_file(fname);
-    vector<float> weights;
-    float weight;
-    while(model_file >> weight){
-        weights.push_back(weight);
-    }
-    model_file.close();
-    return weights;
-}
-
-void score_docs(const vector<float> &weights, 
+void Scorer::score_docs(const vector<float> &weights, 
         int st,
         int end, 
         pair<float, int> *top_docs,
@@ -87,7 +72,7 @@ void score_docs(const vector<float> &weights,
     }
 }
 
-void rescore_documents(const vector<float> &weights,
+void Scorer::rescore_documents(const vector<float> &weights,
         int num_threads, 
         int top_docs_per_thread,
         const set<int> &judgments,
@@ -103,7 +88,8 @@ void rescore_documents(const vector<float> &weights,
     for(int i = 0; i< num_threads;i++){
         t.push_back(
             thread(
-                score_docs,
+                &Scorer::score_docs,
+                this,
                 ref(weights),
                 i * doc_features.size()/num_threads,
                 (i == num_threads - 1)?doc_features.size():(i+1) * doc_features.size()/num_threads,
@@ -121,7 +107,7 @@ void rescore_documents(const vector<float> &weights,
         top_docs_results.push_back(top_docs[i].second);
 }
 
-void set_doc_features(string fname){
+Scorer::Scorer(string fname){
     doc_features = parse_doc_features(fname);
     for(size_t i = 0; i < doc_features.size(); i++){
         doc_ids_inv_map[doc_features[i].doc_id] = i;

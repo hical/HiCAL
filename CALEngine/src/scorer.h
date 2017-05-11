@@ -7,39 +7,37 @@
 #include<unordered_map>
 #include "sofiaml/sf-sparse-vector.h"
 
-/* struct Feature{ */
-/*     int id; */
-/*     float weight; */
-/* }; */
+class Scorer {
+    // This method will:
+    // 1. Compute inner product of `weights` with each document from
+    //    `doc_features[st] to doc_features[end]`
+    // 2. Select top `num_top_docs` and place the respective {score, doc_id} in `top_docs`
+    void score_docs(const std::vector<float> &weights, 
+            int st,
+            int end, 
+            std::pair<float, int> *top_docs,
+            int num_top_docs,
+            const std::set<int> &judgments);
 
-/* struct SparseFeatureVector{ */
-/*     std::string doc_id; */
-/*     std::vector<Feature> _vector; */
+    public:
+    // List of all document features
+    std::vector<SfSparseVector> doc_features;
 
-/*     SparseFeatureVector(std::string _doc_id, std::vector<Feature> __vector): */
-/*     doc_id(_doc_id),_vector(__vector){} */
-/* }; */
+    // Number of features
+    int dimensionality;
 
-extern std::vector<SfSparseVector> doc_features;
-extern std::unordered_map<std::string, int> doc_ids_inv_map;
+    // Inverted map of all document ids to their indices
+    std::unordered_map<std::string, int> doc_ids_inv_map;
 
-std::vector<SfSparseVector> parse_doc_features(std::string fname);
-std::vector<float> parse_model_file(std::string fname);
-extern int dimensionality;
+    // Construct the object using the feature file in svm light format
+    Scorer(std::string fname);
 
-void score_docs(const std::vector<float> &weights, 
-        int st,
-        int end, 
-        std::pair<float, int> *top_docs,
-        int num_top_docs,
-        const std::set<int> &judgments);
+    // Rescore all documents given the weights, and return the top documents
+    void rescore_documents(const std::vector<float> &weights,
+            int num_threads, 
+            int top_docs_per_thread,
+            const std::set<int> &judgments,
+            std::vector<int> &top_docs_results);
+};
 
-void rescore_documents(const std::vector<float> &weights,
-        int num_threads, 
-        int top_docs_per_thread,
-        const std::set<int> &judgments,
-        std::vector<int> &top_docs_results);
-
-void set_doc_features(std::string fname);
-
-#endif
+#endif // SCORER_H
