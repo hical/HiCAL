@@ -34,7 +34,7 @@ def add_session(session, seed_query):
     Adds session to CAL backend server
     :param session:
     :param seed_query
-    :return:
+    :return: true if succeeded, otherwise false
     """
     h = httplib2.Http()
     url = "http://{}:{}/CAL/begin"
@@ -48,8 +48,9 @@ def add_session(session, seed_query):
                               headers={'Content-Type': 'application/json; charset=UTF-8'},
                               method="POST")
     if resp and resp['status'] != '200':
-        # TODO: Stop the creation of this topic
-        pass
+        return False
+
+    return True
 
 
 def get_documents(session, num_docs, query):

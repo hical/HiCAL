@@ -10,6 +10,4 @@ urlpatterns = [
     url(r'^activate/$', views.TopicActivateView.as_view(), name='activate'),
     url(r'^delete/$', views.TopicDeleteView.as_view(), name='delete'),
     url(r'^post_visit/$', views.TopicVisitAJAXView.as_view(), name='post_visit'),
-
-
 ]

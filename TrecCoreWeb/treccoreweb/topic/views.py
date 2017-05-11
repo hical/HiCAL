@@ -96,8 +96,19 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.username = self.request.user
-        self.object.save()
-        CALFunctions.add_session(str(self.object.uuid), self.object.seed_query)
+
+        if CALFunctions.add_session(str(self.object.uuid), self.object.seed_query):
+            self.object.save()
+            messages.add_message(self.request,
+                                 messages.SUCCESS,
+                                 'Your topic has been created but it\'s not active. '
+                                 'Activate it to start working under it')
+        else:
+            messages.add_message(self.request,
+                                 messages.ERROR,
+                                 'Failed to create session. CAL backend failed to add  '
+                                 'session')
+
         return HttpResponseRedirect(self.get_success_url())
 
 
