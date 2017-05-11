@@ -26,8 +26,11 @@
 {% endif %}
 
 <div class="row extra-top-margin">
-    <div class="col-md-8">
+    <div class="col-md-10">
         <h3 class="text-primary">Your created topics</h3>
+    </div>
+    <div class="col-md-2">
+        <a  href="{% url 'topic:create' %}" class="btn btn-outline-primary">Add new topic</a>
     </div>
 </div>
 
@@ -45,11 +48,11 @@
             <div class="col-md-3" style="display: inherit">
                 <form method="POST" action="{% url 'topic:delete' %}">
                     {% csrf_token %}
-                    <button type="submit" name="topic_id" value="{{ topic.id }}" class="btn btn-primary">Delete</button>
+                    <button type="submit" name="topic_id" value="{{ topic.id }}" class="btn btn-danger">Delete</button>
                 </form>
                 <form class="left-margin" method="POST" action="{% url 'topic:activate' %}">
                     {% csrf_token %}
-                    <button type="submit" name="topic_id" value="{{ topic.id }}" class="btn btn-primary">Activate</button>
+                    <button type="submit" name="topic_id" value="{{ topic.id }}" class="btn btn-success">Activate</button>
                 </form>
             </div>
         </div>

@@ -31,9 +31,9 @@
                 <div class="card">
                     <div class="card-block document-cal" id="cal-document"
                          data-doc-id="None">
-                        <h1 id="document_title">Loading</h1>
+                        <h1 id="document_title"><span class="text-danger">Loading</span></h1>
                         <div id="document_content">
-                            <p>Please wait.</p>
+                            <p>Please wait...</p>
                         </div>
                     </div>
 
@@ -187,6 +187,12 @@
                                 next_doc["content"]
                         );
                     }
+                }else{
+                    updateDocument(
+                                "",
+                                "<span class='text-danger'>Server returned empty list.</span>",
+                                "Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
+                        );
                 }
             }
         });
@@ -209,8 +215,8 @@
         function send_judgment(current_doc_id, rel, non, notsure, isMouse, isKeyboard) {
             var time_to_judge = timer.getTimeValues().toSeconds();
             var now = + new Date();
-            console.log(current_doc_id, rel, non, notsure, isMouse, isKeyboard);
             if(current_doc_id == ""){
+                console.log("Please wait...");
                 return false;
             }
 
@@ -244,9 +250,8 @@
                 method: 'POST',
                 data: JSON.stringify(data),
                 success: function (result) {
-                    console.log(result['message']);
-                    console.log("Updating the queue after sending judgment of document: " + data["doc_id"]);
-                    // console.log("next batch: " + JSON.stringify(result['next_docs']));
+                    console.log(result['message'], " - Updating the queue after sending judgment of document: " + data["doc_id"]);
+                    console.log(result);
                     queue = new Queue();
                     for(var i = 0; i < result['next_docs'].length; i++){
                         queue.enqueue(result['next_docs'][i]);
@@ -272,7 +277,7 @@
                         }
                     }
 
-                    console.log("Updating nav-bar counters");
+                    // console.log("Updating nav-bar counters");
                     if(rel){
                         updateCounter("k");
                     }else if(non){
@@ -293,14 +298,25 @@
                 var next_doc = queue.dequeue();
                 if(!(next_doc["doc_id"] in judged_docs)){
                     break;
-                }else if(queue.isEmpty()){
-                    next_doc["doc_id"] = "";
-                    next_doc["title"] = "Please Wait.";
-                    next_doc["content"] = "Please wait.";
                 }
             }
 
-            updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["content"]);
+            if(next_doc != undefined){
+                console.log("Size of queue: " + queue.getLength());
+                updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["content"]);
+            }else{
+                updateDocument("",
+                        "<span class='text-danger'>Please wait..</sapn>",
+                        "The queue is empty.");
+{#                if(!queue.isEmpty()){#}
+{#                    var next_doc = queue.dequeue();#}
+{#                    updateDocument(#}
+{#                            next_doc["doc_id"],#}
+{#                            next_doc["title"],#}
+{#                            next_doc["content"]#}
+{#                    );#}
+{#                }#}
+            }
         }
 
 

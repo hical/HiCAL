@@ -13,6 +13,17 @@ Moved to settings_.
 Basic Commands
 --------------
 
+
+
+
+Setting Up The Server
+^^^^^^^^^^^^^^^^^^^^^
+
+* Install postgres and run it, make sure you create a db called `treccoreweb`
+*
+* Create a python3 virtual env, and pip install
+
+
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 

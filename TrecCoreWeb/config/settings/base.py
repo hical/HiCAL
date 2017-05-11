@@ -8,6 +8,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 import environ
+from django.contrib.messages import constants as messages
 
 ROOT_DIR = environ.Path(__file__) - 3  # (treccoreweb/config/settings/base.py - 3 = treccoreweb/)
 APPS_DIR = ROOT_DIR.path('treccoreweb')
@@ -299,6 +300,13 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+
+# DJANGO MESSIGIN
+# ------------------------------------------------------------------------------
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
 }
 
 
