@@ -31,7 +31,8 @@ class BMI{
     // The current state of CAL
     struct{
         int cur_iteration = 0;
-        int cur_num_judgments = 0;
+        int next_iteration_target = 0;
+        bool finished = false;
     }state;
 
     // Stores an ordered list of documents to judge based on the classifier scores
@@ -55,11 +56,15 @@ class BMI{
     std::mutex judgment_list_mutex;
     std::mutex finished_judgments_mutex;
     std::mutex training_cache_mutex;
+    std::mutex state_mutex;
 
     // samples 100 documents from the corpus to be used as non relevant examples
     // for training. NOTE: current method is hacky and assumes indices 1-100 in
     // the training_data.features_ to be the random non-rel docs
     void randomize_non_rel_docs();
+
+    // Tasks to perform in order to finish the session
+    void finish_session();
 
     // Initializes training_data with seed query
     static SfDataSet get_initial_training_data(const SfSparseVector &seed);

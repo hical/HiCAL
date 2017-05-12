@@ -68,7 +68,6 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer){
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"]);
-    auto t = thread(&BMI::run, ref(bmi));
 
     auto get_judgment = get_judgment_stdin;
     if(CMD_LINE_STRINGS["--qrel"] != ""){
@@ -81,7 +80,6 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer){
         bmi.record_judgment(doc_ids[0], judgment);
         logfile << seed_query.first <<" "<< doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
     }
-    t.join();
     logfile.close();
 }
 

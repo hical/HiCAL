@@ -11,36 +11,40 @@ BMI::BMI(const SfSparseVector &seed,
         int _judgments_per_iteration,
         int _max_effort,
         int _max_iterations)
-    :num_threads(_num_threads),
+    :scorer(_scorer),
+    num_threads(_num_threads),
     judgments_per_iteration(_judgments_per_iteration),
     max_effort(_max_effort),
     max_iterations(_max_iterations),
-    scorer(_scorer),
     training_data(get_initial_training_data(seed))
 {
-    /* is_bmi = (judgments_per_iteration == -1); */
-    /* if(is_bmi) */
-    /*     judgments_per_iteration = 1; */
-    /* perform_iteration(); */
+    is_bmi = (judgments_per_iteration == -1);
+    if(is_bmi)
+        judgments_per_iteration = 1;
+    perform_iteration();
+}
+
+void BMI::finish_session(){
+    add_to_judgment_list({-1});
+    state.finished = true;
 }
 
 void BMI::perform_iteration(){
-    if(max_iterations != -1 && state.cur_iteration >= max_iterations)
-        add_to_judgment_list({-1});
-
-    {
-        lock_guard<mutex> lock(judgment_list_mutex);
-        if(judgment_list.size() > 0 && judgment_list.back() == -1)
-            return;
+    if(max_iterations != -1 && state.cur_iteration >= max_iterations){
+        finish_session();
     }
 
-    cerr<<"Beginning Iteration "<<state.cur_iteration<<endl;
-    auto results = perform_training_iteration();
-    cerr<<"Fetched "<<results.size()<<" documents"<<endl;
-    add_to_judgment_list(results);
-    if(is_bmi)
-        judgments_per_iteration += (judgments_per_iteration + 9)/10;
-    state.cur_iteration++;
+    if(!state.finished){
+        lock_guard<mutex> lock(state_mutex);
+        cerr<<"Beginning Iteration "<<state.cur_iteration<<endl;
+        auto results = perform_training_iteration();
+        cerr<<"Fetched "<<results.size()<<" documents"<<endl;
+        add_to_judgment_list(results);
+        state.next_iteration_target += judgments_per_iteration;
+        if(is_bmi)
+            judgments_per_iteration += (judgments_per_iteration + 9)/10;
+        state.cur_iteration++;
+    }
 }
 
 void BMI::randomize_non_rel_docs(){
@@ -130,6 +134,12 @@ void BMI::record_judgment(string doc_id, int judgment){
         if(it != judgment_list.end())
             judgment_list.erase(it);
     }
+
+    {
+        if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target){
+            perform_iteration();
+        }
+    }
 }
 
 vector<int> BMI::perform_training_iteration(){
@@ -160,7 +170,7 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    scorer->rescore_documents(weights, num_threads, judgments_per_iteration, finished_judgments, results);
+    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+2, finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<scorer->doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
@@ -176,9 +186,7 @@ void BMI::run()
 
     for(int cur_iteration = 0;;cur_iteration++){
         if(max_iterations != -1 && cur_iteration >= max_iterations){
-            vector<int> results;
-            results.push_back(-1);
-            add_to_judgment_list(results);
+            add_to_judgment_list({-1});
         }
 
         {

@@ -77,6 +77,7 @@ void write_response(const FCGX_Request & request, int status, string content_typ
                     << "Content-type: " << content_type << "\r\n"
                     << "\r\n"
                     << content << "\n";
+    cerr<<"Wrote response: "<<content<<endl;
 }
 
 // Handler for API endpoint /begin
@@ -106,9 +107,6 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"]);
-
-     auto t = thread(&BMI::run, ref(*SESSIONS[session_id]));
-     t.detach();
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
