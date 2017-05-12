@@ -1,3 +1,4 @@
+import httplib2
 from braces import views
 from django.db.models import Count, Case, When
 from django.http import HttpResponse
@@ -41,8 +42,13 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
         except KeyError:
             rendered_template = template.render({})
             return HttpResponse(rendered_template, content_type='text/html')
+        context = {}
+        documents_values, document_ids = None, None
+        try:
+            documents_values, document_ids = get_documents(search_input)
+        except (TimeoutError, httplib2.HttpLib2Error):
+            context['error'] = "Error happened. Please check search server."
 
-        documents_values, document_ids = get_documents(search_input)
         if document_ids:
             document_ids = helpers.padder(document_ids)
 
@@ -50,9 +56,7 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
                                                       self.request.user,
                                                       self.request.user.current_topic)
 
-        context = {
-            "documents": documents_values
-        }
+        context["documents"] = documents_values
 
         rendered_template = template.render(context)
         return HttpResponse(rendered_template, content_type='text/html')

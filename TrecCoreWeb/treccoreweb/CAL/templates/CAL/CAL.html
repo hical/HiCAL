@@ -30,7 +30,7 @@
             <div class="col-md-10">
                 <div class="card">
                     <div class="card-block document-cal" id="cal-document"
-                         data-doc-id="None">
+                         data-doc-id="">
                         <h1 id="document_title"><span class="text-danger">Loading</span></h1>
                         <div id="document_content">
                             <p>Please wait...</p>
@@ -165,6 +165,7 @@
         };
 
         var queue = new Queue();
+        var timer = new Timer();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
         var relCounter = parseInt("{{ total_relevant }}");
         var nonRelCounter = parseInt("{{ total_nonrelevant }}");
@@ -186,6 +187,7 @@
                                 next_doc["title"],
                                 next_doc["content"]
                         );
+                        updateTimer();
                     }
                 }else{
                     updateDocument(
@@ -193,6 +195,23 @@
                                 "<span class='text-danger'>Server returned empty list.</span>",
                                 "Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
                         );
+                }
+            },
+            error: function (result){
+                if(document_isEmpty()){
+                    updateDocument("",
+                    "<span class='text-danger'>Failed to retrieve..</sapn>",
+                    result['message']);
+                }
+            },
+            statusCode: {
+                502: function (xhr) {
+                    if(document_isEmpty()){
+                        updateDocument("",
+                        "<span class='text-danger'>Failed to retrieve docs..</sapn>",
+                        xhr.responseText);
+                    }
+                    console.log("Failed to get docs. Error message: "+xhr.responseText);
                 }
             }
         });
@@ -289,8 +308,26 @@
 
 
                 },
-                error: function (result) {
-                    console.log(result);
+                error: function (result){
+                    if(document_isEmpty()){
+                        updateDocument("",
+                        "<span class='text-danger'>Something went wrong..</sapn>",
+                        result['message']);
+                    }
+
+                    console.log("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['message'])
+                },
+                statusCode: {
+                    502: function (xhr) {
+                        if(document_isEmpty()){
+                            updateDocument("",
+                            "<span class='text-danger'>Something went wrong..</sapn>",
+                            xhr.responseText);
+                        }
+                        console.log("Something went wrong. Timeout error." +
+                            "Judgment may have not been recorded to CAL.", xhr.responseText);
+                    }
                 }
             });
 

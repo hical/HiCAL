@@ -1,7 +1,3 @@
-var timer = new Timer();
-updateTimer();
-
-
 /* Mousetraps keyboard shortcuts */
 Mousetrap.bind(['k', '/', 'd'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
@@ -42,7 +38,7 @@ search_content_form_mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
 
 function document_isEmpty(){
     var current_doc_id = $('#cal-document').data("doc-id");
-    if(current_doc_id == ''){
+    if(current_doc_id == '' || current_doc_id == 'None'){
         return true;
     }
     return false;

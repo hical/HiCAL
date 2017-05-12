@@ -1,10 +1,14 @@
+import json
+
 from braces import views
+from django.http import HttpResponse
 from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 from treccoreweb.judgment.models import Judgement
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,6 +16,17 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):
     require_json = False
+
+    def render_timeout_request_response(self, error_dict=None):
+        if error_dict is None:
+            error_dict = self.error_response_dict
+        json_context = json.dumps(
+            error_dict,
+            cls=self.json_encoder_class,
+            **self.get_json_dumps_kwargs()
+        ).encode('utf-8')
+        return HttpResponse(
+            json_context, content_type=self.get_content_type(), status=502)
 
     def post(self, request, *args, **kwargs):
         try:
@@ -114,12 +129,29 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         if isFromCAL:
             # TODO: return next 5 documents to judge
             rel = 1 if relevant else -1 if nonrelevant else 0
-            next_patch = CALFunctions.send_judgment(self.request.user.current_topic.uuid,
-                                                    doc_id,
-                                                    rel)
-            documents = DocEngine.get_documents(next_patch,
-                                                self.request.user.current_topic.seed_query)
+            try:
+                next_patch = CALFunctions.send_judgment(
+                    self.request.user.current_topic.uuid,
+                    doc_id,
+                    rel)
+                documents = DocEngine.get_documents(next_patch,
+                                                    self.request.user.current_topic.seed_query)
+            except TimeoutError:
+                error_dict = {u"message": u"Timeout error. "
+                                          u"Please check status of servers."}
+                return self.render_timeout_request_response(error_dict)
+
             context[u"next_docs"] = documents
             return self.render_json_response(context)
         else:
+            rel = 1 if relevant else -1 if nonrelevant else 0
+            try:
+                CALFunctions.send_judgment(self.request.user.current_topic.uuid,
+                                           doc_id,
+                                           rel)
+            except TimeoutError:
+                error_dict = {u"message": u"Timeout error. "
+                                          u"Please check status of servers."}
+                return self.render_timeout_request_response(error_dict)
+
             return self.render_json_response(context)
