@@ -232,12 +232,12 @@
         }
 
         function send_judgment(current_doc_id, rel, non, notsure, isMouse, isKeyboard) {
-            var time_to_judge = timer.getTimeValues().toSeconds();
-            var now = + new Date();
-            if(current_doc_id == ""){
+            if(current_doc_id == "") {
                 console.log("Please wait...");
                 return false;
             }
+            var time_to_judge = timer.getTimeValues().toSeconds();
+            var now = + new Date();
 
 {#            if(queue.isEmpty()){#}
 {#                console.log("The queue of documents to judge is empty. Please wait");#}
@@ -293,6 +293,8 @@
                                     next_doc["title"],
                                     next_doc["content"]
                             );
+                            updateTimer();
+
                         }
                     }
 
@@ -339,20 +341,13 @@
             }
 
             if(next_doc != undefined){
-                console.log("Size of queue: " + queue.getLength());
+                // console.log("Size of queue: " + queue.getLength());
                 updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["content"]);
+                updateTimer();
             }else{
                 updateDocument("",
                         "<span class='text-danger'>Please wait..</sapn>",
                         "The queue is empty.");
-{#                if(!queue.isEmpty()){#}
-{#                    var next_doc = queue.dequeue();#}
-{#                    updateDocument(#}
-{#                            next_doc["doc_id"],#}
-{#                            next_doc["title"],#}
-{#                            next_doc["content"]#}
-{#                    );#}
-{#                }#}
             }
         }
 

@@ -6,6 +6,7 @@ from treccoreweb.topic.models import Topic
 class Judgement(models.Model):
     class Meta:
         unique_together = ['user', 'doc_id', 'topic']
+        index_together = ['user', 'doc_id', 'topic']
 
     LOGGING_MESSAGES = {
         "create": "New judgment.",

@@ -15,9 +15,6 @@ Mousetrap.bind(['k', '/', 'd'], function(e, key) {
     //    console.log("Getting the next patch of documents to judge");
     //    update_documents_to_judge_list();
     //}
-
-    updateTimer();
-
 });
 
 Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
