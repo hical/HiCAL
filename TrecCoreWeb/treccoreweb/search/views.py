@@ -104,10 +104,12 @@ class SearchKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             client_time = self.request_json.get(u"client_time")
             page_title = self.request_json.get(u"page_title")
             character = self.request_json.get(u"character")
+            isSearchbarFocused = self.request_json.get(u"isSearchbarFocused")
             search_bar_value = self.request_json.get(u"search_bar_value")
         except KeyError:
             error_dict = {u"message": u"your input must include client_time,"
-                                      u" page title, character, and search bar value."}
+                                      u" page title, character, isSearchbarFocused,"
+                                      u" and search bar value."}
             return self.render_bad_request_response(error_dict)
 
         log_body = {
@@ -117,6 +119,7 @@ class SearchKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "message": SEARCH_LOGGING_MESSAGES.get("keystroke", None),
                 "character": character,
                 "search_bar_value": search_bar_value,
+                "isSearchbarFocused": isSearchbarFocused,
                 "page_title": page_title
             }
         }

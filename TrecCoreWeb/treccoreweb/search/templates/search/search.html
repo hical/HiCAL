@@ -159,6 +159,7 @@
                         'page_title': document.title,
                         'character': character,
                         'search_bar_value': $("#search_input").val(),
+                        'isSearchbarFocused': $("#search_input").is(':focus'),
                         'csrfmiddlewaretoken': '{{ csrf_token }}'
                     }),
                     success: function (result) {
