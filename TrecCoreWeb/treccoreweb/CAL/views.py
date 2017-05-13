@@ -41,6 +41,7 @@ class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         try:
             client_time = self.request_json.get(u"client_time")
             search_field_value = self.request_json.get(u"search_field_value")
+            page_title = self.request_json.get(u"page_title")
         except KeyError:
             error_dict = {u"message": u"your input must include client_time, "
                                       u"and search_field_value"}
@@ -51,7 +52,8 @@ class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             "client_time": client_time,
             "result": {
                 "message": CAL_LOGGING_MESSAGES.get("ctrlf", None),
-                "searchfield_input": search_field_value
+                "searchfield_input": search_field_value,
+                "page_title": page_title
             }
         }
         logger.info("[{}]".format(log_body))
@@ -68,8 +70,9 @@ class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     def post(self, request, *args, **kwargs):
         try:
             client_time = self.request_json.get(u"client_time")
+            page_title = self.request_json.get(u"page_title")
         except KeyError:
-            error_dict = {u"message": u"your input must include client_time"}
+            error_dict = {u"message": u"your input must include client_time, page_title"}
             return self.render_bad_request_response(error_dict)
 
         log_body = {
@@ -79,7 +82,7 @@ class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "message": CAL_LOGGING_MESSAGES.get("visit", None),
                 "page_visit": True,
                 "page_file": "CAL.html",
-                "page_title": "CAL"
+                "page_title": page_title
             }
         }
         logger.info("[{}]".format(log_body))

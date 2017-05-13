@@ -84,15 +84,60 @@
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
 
     <script>
+        // Nofity server of page visit on pageload
+        window.onload = function () {
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'search:post_visit' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'page_title': document.title,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+        };
 
         $( "#search_input" ).focus(function() {
             var now = + new Date();
-            console.log("Search input is focused", now);
+            $.ajax({
+                url: '{% url 'search:post_search_status' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'isFocused': true,
+                    'search_bar_value': $("#search_input").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+
+            console.log("Search input is focused.", now);
         });
 
         $( "#search_input").blur(function() {
             var now = + new Date();
-            console.log("Search input is unfocused", now);
+            $.ajax({
+                url: '{% url 'search:post_search_status' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'isFocused': false,
+                    'search_bar_value': $("#search_input").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+            console.log("Search input is unfocused.", now);
         });
 
         var form = document.getElementById('search_form');
@@ -104,9 +149,25 @@
 
 
         Mousetrap.prototype.handleKey = function handleKey(character, modifiers, event){
-            var now = + new Date();
             if(event.type == "keydown"){
-                console.log(character, now);
+                var now = + new Date();
+                $.ajax({
+                    url: '{% url 'search:post_keystroke' %}',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        'client_time': now,
+                        'page_title': document.title,
+                        'character': character,
+                        'search_bar_value': $("#search_input").val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    }),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+
+                console.log("Character pressed: ", character, now);
+
             }
         };
 
@@ -125,7 +186,8 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'page_title': document.title
             };
 
 

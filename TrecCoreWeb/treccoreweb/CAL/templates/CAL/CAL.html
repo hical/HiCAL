@@ -156,6 +156,7 @@
                 method: 'POST',
                 data: JSON.stringify({
                     'client_time': now,
+                    'page_title': document.title,
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 }),
                 success: function (result) {
@@ -191,9 +192,9 @@
                     }
                 }else{
                     updateDocument(
-                                "",
-                                "<span class='text-danger'>Server returned empty list.</span>",
-                                "Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
+                            "",
+                            "<span class='text-danger'>Server returned empty list.</span>",
+                            "Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
                         );
                 }
             },
@@ -260,7 +261,8 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'page_title': document.title,
             };
 
 
@@ -373,6 +375,7 @@
             method: 'POST',
             data: JSON.stringify({
                 'client_time': now,
+                'page_title': document.title,
                 'search_field_value': $("#search_content").val(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             }),
