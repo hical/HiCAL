@@ -114,8 +114,13 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         session = self.request.user.current_topic.uuid
         seed_query = self.request.user.current_topic.seed_query
         try:
-            docs_ids_to_judge = CALFunctions.get_documents(str(session), 5, seed_query)
-            documents = DocEngine.get_documents(docs_ids_to_judge, seed_query)
+            docs_ids_to_judge, top_terms = CALFunctions.get_documents(str(session), 5,
+                                                                      seed_query)
+            if not docs_ids_to_judge:
+                return self.render_json_response([])
+            documents = DocEngine.get_documents_with_snippet(docs_ids_to_judge,
+                                                             seed_query,
+                                                             top_terms)
         except TimeoutError:
             error_dict = {u"message": u"Timeout error. Please check status of servers."}
             return self.render_timeout_request_response(error_dict)

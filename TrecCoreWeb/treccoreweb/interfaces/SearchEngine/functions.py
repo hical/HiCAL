@@ -7,7 +7,7 @@ import xmltodict
 from config.settings.base import SEARCH_SERVER_IP, SEARCH_SERVER_PORT
 
 
-def get_documents(query, start=0, numdisplay=10):
+def get_documents(query, start=0, numdisplay=20):
     h = httplib2.Http()
     url = "http://{}:{}/treccore/websearchapi/search.php?{}"
 

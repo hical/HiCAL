@@ -21,12 +21,12 @@ def send_judgment(session, doc_id, rel, next_batch_size=5):
 
     if resp and resp['status'] == '200':
         content = json.loads(content)
-        return content['docs']
+        return content['docs'], content['top-terms']
     else:
         # TODO: Complete this function
-        pass
+        print("CAL server returend something not 200. ", resp)
 
-    return []
+    return [], None
 
 
 def add_session(session, seed_query):
@@ -70,9 +70,9 @@ def get_documents(session, num_docs, query):
 
     if resp and resp['status'] == '200':
         content = json.loads(content)
-        return content['docs']
+        return content['docs'], content['top-terms']
     else:
         # TODO: update this else condition
-        print("CAL server returend something not 200")
+        print("CAL server returend something not 200. ", resp)
 
-    return []
+    return [], None
