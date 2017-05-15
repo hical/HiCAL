@@ -1,13 +1,13 @@
 /* Mousetraps keyboard shortcuts */
-Mousetrap.bind(['k', '/', 'd'], function(e, key) {
+Mousetrap.bind(['s', 'h', 'k'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
-    if(key == 'k') {
+    if(key == 's') {
         send_judgment(current_doc_id, true, false, false, false, true);
     }
-    else if(key == 'd') {
+    else if(key == 'h') {
         send_judgment(current_doc_id, false, true, false, false, true);
     }
-    else if(key == '/') {
+    else if(key == 'k') {
         send_judgment(current_doc_id, false, false, true, false, true);
     }
 
@@ -60,11 +60,11 @@ function updateTimer(){
 }
 
 function  updateCounter(key){
-    if(key == "k"){
+    if(key == "s"){
         $("#nav_stats_rel_header").hide().fadeIn().html(++relCounter);
-    }else if(key == "d"){
+    }else if(key == "h"){
         $("#nav_stats_nonrel_header").hide().fadeIn().html(++nonRelCounter);
-    }else if (key == "/"){
+    }else if (key == "k"){
         $("#nav_stats_notsure_header").hide().fadeIn().html(++notSureCounter);
     }
 }

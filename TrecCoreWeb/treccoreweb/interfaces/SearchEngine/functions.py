@@ -28,14 +28,15 @@ def get_documents(query, start=0, numdisplay=10):
         doc_ids = []
         result = OrderedDict()
         for doc in xmlResult:
+            docno = doc["docno"].zfill(7)
             parsed_doc = {
                 "rank": doc["rank"],
-                "docno": doc["docno"].zfill(7),
+                "docno": docno,
                 "title": doc["title"],
                 "snippet": doc["snippet"]
             }
-            result[doc["docno"]] = parsed_doc
-            doc_ids.append(doc["docno"])
+            result[docno] = parsed_doc
+            doc_ids.append(docno)
 
         return result, doc_ids
 

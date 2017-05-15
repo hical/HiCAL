@@ -94,7 +94,7 @@
                             <li class="nav-item top-margin">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span class="badge badge-success">k</span>
+                                        <span class="badge badge-success">s</span>
                                     </div>
                                     <div class="col-md-9">
                                         <small class="left-margin">Mark as relevant
@@ -106,7 +106,7 @@
                             <li class="nav-item ">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span class="badge badge-danger">d</span>
+                                        <span class="badge badge-danger">h</span>
                                     </div>
                                     <div class="col-md-9">
                                         <small class="left-margin">Mark as non-relevant
@@ -117,7 +117,7 @@
                             <li class="nav-item">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span class="badge badge-warning">/</span>
+                                        <span class="badge badge-warning">k</span>
                                     </div>
                                     <div class="col-md-9">
                                         <small class="left-margin">Mark as not sure
@@ -262,7 +262,7 @@
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'page_title': document.title,
+                'page_title': document.title
             };
 
 
@@ -302,11 +302,11 @@
 
                     // console.log("Updating nav-bar counters");
                     if(rel){
-                        updateCounter("k");
+                        updateCounter("s");
                     }else if(non){
-                        updateCounter("d");
+                        updateCounter("h");
                     }else if (notsure){
-                        updateCounter("/");
+                        updateCounter("k");
                     }
 
 

@@ -148,11 +148,11 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
 
         if document_ids:
             document_ids = helpers.padder(document_ids)
-
+            print(document_ids)
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
                                                       self.request.user.current_topic)
-
+            print(documents_values)
         context["documents"] = documents_values
 
         rendered_template = template.render(context)

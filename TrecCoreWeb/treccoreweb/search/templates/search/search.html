@@ -198,13 +198,13 @@
                 data: JSON.stringify(data),
                 success: function (result) {
                     console.log(result['message']);
-                    update_doc_status(doc_id, rel, non, notsure);
                 },
                 error: function (result) {
                     console.log(result);
                 }
             });
 
+            update_doc_status(doc_id, rel, non, notsure);
 
             return false;
         }
@@ -212,13 +212,13 @@
         function update_doc_status(doc_id, rel, non, notsure){
             console.log("Updating document " + doc_id + " status");
             if(rel){
-                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-success' aria-hidden='true'></i>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
-                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-danger' aria-hidden='true'></i>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(notsure){
-                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-warning' aria-hidden='true'></i>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
+            document.getElementById("isJudged_"+doc_id).style.display = "inherit";
         }
-//doc_{{ document_values.docno }}_status
     </script>
 {% endblock %}
