@@ -1,9 +1,9 @@
 #ifndef BMI_H
 #define BMI_H
 
-#include<random>
-#include<mutex>
-#include<set>
+#include <random>
+#include <mutex>
+#include <set>
 #include "scorer.h"
 #include "sofiaml/sofia-ml-methods.h"
 #include "sofiaml/sf-data-set.h"

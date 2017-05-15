@@ -1,6 +1,6 @@
-#include<iostream>
-#include<fstream>
-#include<thread>
+#include <iostream>
+#include <fstream>
+#include <thread>
 #include "simple-cmd-line-helper.h"
 #include "bmi.h"
 #include "features.h"

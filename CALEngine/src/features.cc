@@ -1,10 +1,10 @@
-#include<fstream>
-#include<string>
-#include<cstring>
-#include<vector>
-#include<unordered_map>
-#include<cmath>
-#include<algorithm>
+#include <fstream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <unordered_map>
+#include <cmath>
+#include <algorithm>
 #include "porter.c"
 
 #include "features.h"

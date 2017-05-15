@@ -1,6 +1,6 @@
-#include<iostream>
-#include<chrono>
-#include<algorithm>
+#include <iostream>
+#include <chrono>
+#include <algorithm>
 #include "scorer.h"
 using namespace std;
 

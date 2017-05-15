@@ -1,9 +1,9 @@
-#include<vector>
-#include<fstream>
-#include<cstring>
-#include<thread>
-#include<algorithm>
-#include<unordered_map>
+#include <vector>
+#include <fstream>
+#include <cstring>
+#include <thread>
+#include <algorithm>
+#include <unordered_map>
 #include "scorer.h"
 
 using namespace std;

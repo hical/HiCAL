@@ -1,10 +1,10 @@
 #ifndef SCORER_H
 #define SCORER_H
 
-#include<string>
-#include<vector>
-#include<set>
-#include<unordered_map>
+#include <string>
+#include <vector>
+#include <set>
+#include <unordered_map>
 #include "sofiaml/sf-sparse-vector.h"
 
 class Scorer {
