@@ -65,13 +65,13 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="overflow: auto; max-height: 700px;">
+                <div class="modal-body" style="overflow: auto; min-height: 400px; max-height: 700px;">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="document-{{ document_values.docno }}-modal-content" id="document-{{ document_values.docno }}-modal-content"
                                  data-doc-id="">
-                                <div id="document_{{ document_values.docno }}_content">
-                                    <p>{% lorem 10 %}</p>
+                                <div class="document_content" id="document_{{ document_values.docno }}_content">
+                                    <p><span class="text-danger">Fetching document. Please wait...</span></p>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +184,29 @@
             isModalOpen = false;
             currentOpenedModalDocId = null;
         });
+
         $('#doc-{{ document_values.docno }}-modal').on('shown.bs.modal', function (e) {
+
+            var modal = $(this);
+            if(!('{{ document_values.docno }}' in loaded_docs)){
+                $.ajax({
+                    url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}&query={{ query }}',
+                    method: 'GET',
+                    success: function (result) {
+                        modal.find('.document_content').html(result[0]['content']);
+                        loaded_docs['{{ document_values.docno }}'] = true;
+                    },
+                    error: function (result){
+                        modal.find('.document_content').html("Failed to get doc. Error message: "+result);
+                    },
+                    statusCode: {
+                        502: function (xhr) {
+                            modal.find('.document_content').html("502 Failed to get doc. Error message: "+xhr.responseText);
+                        }
+                    }
+                });
+            }
+
             console.log("model has been shown");
             isModalOpen = true;
             currentOpenedModalDocId = '{{ document_values.docno }}';

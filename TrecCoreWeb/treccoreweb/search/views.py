@@ -1,3 +1,5 @@
+import json
+
 import httplib2
 from braces import views
 from django.db.models import Count, Case, When
@@ -11,6 +13,7 @@ import logging
 
 from treccoreweb.search.logging_messages import LOGGING_MESSAGES as SEARCH_LOGGING_MESSAGES
 from treccoreweb.interfaces.SearchEngine.functions import get_documents
+from interfaces.DocumentSnippetEngine import functions as DocEngine
 
 logger = logging.getLogger(__name__)
 
@@ -148,13 +151,42 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
 
         if document_ids:
             document_ids = helpers.padder(document_ids)
-            print(document_ids)
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
                                                       self.request.user.current_topic)
-            print(documents_values)
         context["documents"] = documents_values
+        context["query"] = search_input
 
         rendered_template = template.render(context)
         return HttpResponse(rendered_template, content_type='text/html')
 
+
+class SearchGetDocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                          views.JsonRequestResponseMixin,
+                          views.AjaxResponseMixin, generic.View):
+
+    require_json = False
+
+    def render_timeout_request_response(self, error_dict=None):
+        if error_dict is None:
+            error_dict = self.error_response_dict
+        json_context = json.dumps(
+            error_dict,
+            cls=self.json_encoder_class,
+            **self.get_json_dumps_kwargs()
+        ).encode('utf-8')
+        return HttpResponse(
+            json_context, content_type=self.get_content_type(), status=502)
+
+    def get_ajax(self, request, *args, **kwargs):
+        docid = request.GET.get('docid')
+        query = request.GET.get('query')
+        if not docid:
+            return self.render_json_response([])
+        try:
+            document = DocEngine.get_documents([docid], query)
+        except TimeoutError:
+            error_dict = {u"message": u"Timeout error. Please check status of servers."}
+            return self.render_timeout_request_response(error_dict)
+
+        return self.render_json_response(document)

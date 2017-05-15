@@ -9,7 +9,7 @@ from config.settings.base import DOCUMENT_SNIPPET_ENGINE_SERVER_IP,\
 def get_documents(doc_ids, query):
     """
     :param doc_ids: the ids of documents to return
-    :return: lorem-based list of documents
+    :return: documents content
     """
     h = httplib2.Http()
     url = "http://{}:{}/fetch?"
@@ -34,6 +34,6 @@ def get_documents(doc_ids, query):
             result.append(document)
     else:
         # TODO: complete this case: returned non 200 error
-        print(resp, content)
+        print("Error getting document from DocEngine: {} {}".format(resp, content))
 
     return result

@@ -86,6 +86,8 @@
 
     <script>
 
+        var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
+
         // flag to check if a modal is currently opened
         var isModalOpen = false;
         var currentOpenedModalDocId = null;
