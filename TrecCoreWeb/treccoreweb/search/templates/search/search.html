@@ -82,8 +82,14 @@
 {% block extra_scripts %}
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
     <script>
+
+        // flag to check if a modal is currently opened
+        var isModalOpen = false;
+        var currentOpenedModalDocId = null;
+
         // Nofity server of page visit on pageload
         window.onload = function () {
             var now = + new Date();
@@ -143,13 +149,14 @@
         var form = document.getElementById('search_form');
         var formSubmit = form.submit; //save reference to original submit function
 
+        // TODO: currently not working. Need to log when submit is fired.
         form.onsubmit = function(e) {
             alert('Handler for .submit() called.');
         };
 
-
-        Mousetrap.prototype.handleKey = function handleKey(character, modifiers, event){
-            if(event.type == "keydown"){
+        var search_form = document.querySelector('search_form');
+        Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
+            if(event.type == "keydown" && $("#search_input").is(':focus')){
                 var now = + new Date();
                 $.ajax({
                     url: '{% url 'search:post_keystroke' %}',
@@ -166,11 +173,46 @@
                         console.log(result['message']);
                     }
                 });
-
                 console.log("Character pressed: ", character, now);
-
             }
         };
+
+        Mousetrap.bind(['s', 'h', 'k'], function(e, key) {
+            var current_doc_id = get_current_opened_modal_doc_id();
+            if(current_doc_id == null){
+                return;
+            }
+
+            if(key == 's') {
+                send_judgment_and_hide_modal(current_doc_id, true, false, false, false, true);
+            }
+            else if(key == 'h') {
+                send_judgment_and_hide_modal(current_doc_id, false, true, false, false, true);
+            }
+            else if(key == 'k') {
+                send_judgment_and_hide_modal(current_doc_id, false, false, true, false, true);
+            }
+
+        });
+
+        Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
+            console.log("in cntrf", isModalOpen, currentOpenedModalDocId);
+            e.preventDefault();
+
+            if(!isModalOpen){
+                return;
+            }
+            var docid = get_current_opened_modal_doc_id();
+            $( "#search_content_doc_"+docid).focus();
+            return false;
+        });
+
+        function get_current_opened_modal_doc_id(){
+            if(isModalOpen){
+                return currentOpenedModalDocId;
+            }
+            else return null;
+        }
 
         function send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard) {
             var now = + new Date();
@@ -219,6 +261,17 @@
                 $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
+        }
+
+        function hide_modal(doc_id){
+            console.log("hiding modal: ", doc_id);
+             $('#doc-'+doc_id+'-modal').modal('hide');
+        }
+
+        function send_judgment_and_hide_modal(doc_id, rel, non, notsure, isMouse, isKeyboard){
+            send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard);
+            hide_modal(doc_id);
+            return false;
         }
     </script>
 {% endblock %}
