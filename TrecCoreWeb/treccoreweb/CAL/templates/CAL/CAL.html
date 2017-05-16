@@ -185,7 +185,7 @@
                         updateDocument(
                                 next_doc["doc_id"],
                                 next_doc["title"],
-                                next_doc["content"]
+                                next_doc["snippet"]
                         );
                         updateTimer();
                     }
@@ -292,7 +292,7 @@
                             updateDocument(
                                     next_doc["doc_id"],
                                     next_doc["title"],
-                                    next_doc["content"]
+                                    next_doc["snippet"]
                             );
                             updateTimer();
 
@@ -341,7 +341,7 @@
 
             if(next_doc != undefined){
                 // console.log("Size of queue: " + queue.getLength());
-                updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["content"]);
+                updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["snippet"]);
                 updateTimer();
             }else{
                 updateDocument("",
@@ -355,7 +355,7 @@
     function show_doc_view(doc){
         $('#cal-document').attr("data-doc-id", doc["doc_id"]).data("doc-id", doc["doc_id"]);
         $("#document_title").text(doc["title"]);
-        $("#document_content").html(doc["content"]);
+        $("#document_content").html(doc["snippet"]);
     }
 
     function reset_doc_view(){
