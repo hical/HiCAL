@@ -50,7 +50,7 @@ def get_documents_with_snippet(doc_ids, query, top_terms):
     url = "http://{}:{}/snippet?"
     body = {'docid': doc_ids,
             'query': query,
-            'top_terms': top_terms}
+            'top-terms': top_terms}
     body = dumps(body)
     resp, content = h.request(url.format(DOCUMENT_SNIPPET_ENGINE_SERVER_IP,
                                          DOCUMENT_SNIPPET_ENGINE_SERVER_PORT),
