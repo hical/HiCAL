@@ -687,3 +687,9 @@ mark.current {
   border-radius: 3px;
 }
 
+
+@media (min-width: 992px) {
+  .modal-xlg {
+    max-width: 1200px;
+  }
+}

@@ -130,12 +130,16 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             # TODO: return next 5 documents to judge
             rel = 1 if relevant else -1 if nonrelevant else 0
             try:
-                next_patch = CALFunctions.send_judgment(
+                next_patch, top_terms = CALFunctions.send_judgment(
                     self.request.user.current_topic.uuid,
                     doc_id,
                     rel)
-                documents = DocEngine.get_documents(next_patch,
-                                                    self.request.user.current_topic.seed_query)
+                if not next_patch:
+                    return self.render_json_response([])
+
+                documents = DocEngine.get_documents_with_snippet(next_patch,
+                                                    self.request.user.current_topic.seed_query,
+                                                    top_terms)
             except TimeoutError:
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}

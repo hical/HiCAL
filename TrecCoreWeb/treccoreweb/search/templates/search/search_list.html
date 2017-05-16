@@ -7,8 +7,25 @@
 {% endif %}
 
 {% for doc_id, document_values in documents.items %}
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row flex-items-md-middle">
+        <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 15px;">
+            {% if document_values.isJudged %}
+                {% if document_values.relevance_judgment.relevant %}
+                    <div class="bg-success" style="height: 100%; padding: 5px;" >
+                        <i class="fa" aria-hidden="true"></i>
+                    </div>
+                {% elif document_values.relevance_judgment.nonrelevant %}
+                    <div class="bg-danger" style="height: 100%; padding: 5px;">
+                        <i class="fa" aria-hidden="true"></i>
+                    </div>
+                {% elif document_values.relevance_judgment.notsure %}
+                    <div class="bg-warning" style="height: 100%; padding: 5px;">
+                        <i class="fa" aria-hidden="true"></i>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-md-6"  data-toggle="modal" data-target=".doc-{{ document_values.docno }}-modal" style="cursor: pointer; cursor: hand;">
             <div class="document" data-rank="{{ document_values.rank }}">
                 <div class="title">{{ document_values.title|safe }}</div>
                 <div class="url">doc_id: {{ document_values.docno }}</div>
@@ -18,37 +35,279 @@
         <div class="offset-md-0-5 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group"
                  aria-label="Basic example">
-                <a href="#" onclick="return send_judgment('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
                     Relevant
                 </a>
-                <a href="#" onclick="return send_judgment('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
                     relevant
                 </a>
-                <a href="#" onclick="return send_judgment('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Not
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Not
                     sure
                 </a>
             </div>
-            {% if document_values.isJudged %}
-            <span class="gray-text top-margin small">Document has been judged before.</span>
-            {% endif %}
+            <span class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</span>
         </div>
-
-            <div class="mt-5 col-md-2 align-right gray-text" id="doc_{{ document_values.docno }}_status">
-                {% if document_values.isJudged %}
-                    {% if document_values.relevance_judgment.relevant %}
-                        <i class="fa fa-check text-success" aria-hidden="true"></i>
-                        <span>Relevant</span>
-                    {% elif document_values.relevance_judgment.nonrelevant %}
-                        <i class="fa fa-check text-danger" aria-hidden="true"></i>
-                        <span>Not relevant</span>
-                    {% elif document_values.relevance_judgment.notsure %}
-                        <i class="fa fa-check text-warning" aria-hidden="true"></i>
-                        <span>Not Sure</span>
-                    {% endif %}
-                {% endif %}
-                <i class="fa fa-check text-warning" aria-hidden="true"></i>
-            </div>
-
     </div>
+
+
+
+    <!-- DOCUMENT {{ document_values.docno }} MODAL  -->
+    <div class="modal fade doc-{{ document_values.docno }}-modal" id="doc-{{ document_values.docno }}-modal" tabindex="-1"
+         role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xlg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">
+                        {{ document_values.title|safe }}
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="overflow: auto; min-height: 400px; max-height: 700px;">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="document-{{ document_values.docno }}-modal-content" id="document-{{ document_values.docno }}-modal-content"
+                                 data-doc-id="">
+                                <div class="document_content" id="document_{{ document_values.docno }}_content">
+                                    <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <nav class="sidebar-nav-fixed bg-faded font-open-sans">
+                                <ul class="nav nav-pills flex-column little-padding">
+                                    <div class="cal-search">
+                                        <li class=" top-margin">
+                                            <span class="gray-text align-left">Search content:</span>
+                                            <form id="searchContentForm_doc_{{ document_values.docno }}" class="top-margin">
+                                                <div class="input-group">
+                                                    <input id="search_content_doc_{{ document_values.docno }}" type="search"
+                                                           class="form-control" placeholder="Search">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-secondary"
+                                                        data-search="next" id="searchNextDoc{{ document_values.docno }}"
+                                                        type="button">&darr;</button>
+                                              </span>
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-secondary"
+                                                        data-search="prev"
+                                                        type="button">&uarr;</button>
+                                              </span>
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-secondary"
+                                                        data-search="clear" type="button">✖
+                                                </button>
+                                              </span>
+                                                </div>
+                                            </form>
+                                        </li>
+                                    </div>
+
+                                    <li class="nav-item extra-top-margin">
+                                        <span class="gray-text align-left">Judge document:</span>
+
+                                        <div class="btn-group top-margin" role="group"
+                                             aria-label="Basic example">
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
+                                                Relevant
+                                            </a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
+                                                relevant
+                                            </a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Not
+                                                sure
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <div class="extra-top-margin align-left">
+                                        <span class="gray-text">Keyboard shortcuts:</span>
+                                        <li class="nav-item top-margin">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <span class="badge badge-success">s</span>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <small class="left-margin">Mark as relevant
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                        </li>
+                                        <li class="nav-item ">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <span class="badge badge-danger">h</span>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <small class="left-margin">Mark as non-relevant
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <span class="badge badge-warning">k</span>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <small class="left-margin">Mark as not sure
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+
+                                </ul>
+
+                            </nav>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EVENT TRIGGERS -->
+    <script>
+        $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
+            console.log("model has been hidden");
+            isModalOpen = false;
+            currentOpenedModalDocId = null;
+        });
+
+        $('#doc-{{ document_values.docno }}-modal').on('shown.bs.modal', function (e) {
+
+            var modal = $(this);
+            if(!('{{ document_values.docno }}' in loaded_docs)){
+                $.ajax({
+                    url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}&query={{ query }}',
+                    method: 'GET',
+                    success: function (result) {
+                        modal.find('.document_content').html(result[0]['content']);
+                        loaded_docs['{{ document_values.docno }}'] = true;
+                    },
+                    error: function (result){
+                        modal.find('.document_content').html("Failed to get doc. Error message: "+result);
+                    },
+                    statusCode: {
+                        502: function (xhr) {
+                            modal.find('.document_content').html("502 Failed to get doc. Error message: "+xhr.responseText);
+                        }
+                    }
+                });
+            }
+
+            console.log("model has been shown");
+            isModalOpen = true;
+            currentOpenedModalDocId = '{{ document_values.docno }}';
+        });
+    </script>
+
+
+
+
+    <!-- MODAL SEARCH CONTENT -->
+    <script>
+
+        $('#searchContentForm_doc_{{ document_values.docno }}').submit(function (e) {
+            e.preventDefault();
+            $("#searchNextDoc{{ document_values.docno }}").click();
+            return false;
+        });
+
+        $(function() {
+
+          // the input field
+          var $input = $("#search_content_doc_{{ document_values.docno }}"),
+            // clear button
+            $clearBtn = $("button[data-search='clear']"),
+            // prev button
+            $prevBtn = $("button[data-search='prev']"),
+            // next button
+            $nextBtn = $("button[data-search='next']"),
+            // the context where to search
+            $content = $(".document-{{ document_values.docno }}-modal-content"),
+            // jQuery object to save <mark> elements
+            $results = "",
+            // the class that will be appended to the current
+            // focused element
+            currentClass = "current",
+            // top offset for the jump (the search bar)
+            offsetTop = 50,
+            // the current index of the focused element
+            currentIndex = 0;
+
+          /**
+           * Jumps to the element matching the currentIndex
+           */
+          function jumpTo() {
+            if ($results.length) {
+              var position,
+                $current = $results.eq(currentIndex);
+              $results.removeClass(currentClass);
+              if ($current.length) {
+                $current.addClass(currentClass);
+                position = $current.offset().top - offsetTop;
+                window.scrollTo(0, position);
+              }
+            }
+          }
+
+          /**
+           * Searches for the entered keyword in the
+           * specified context on input
+           */
+          $input.on("input", function() {
+            var searchVal = this.value;
+            $content.unmark({
+              done: function() {
+                $content.mark(searchVal, {
+                  separateWordSearch: true,
+                  done: function() {
+                    $results = $content.find("mark");
+                    currentIndex = 0;
+                    jumpTo();
+                  }
+                });
+              }
+            });
+          });
+
+          /**
+           * Clears the search
+           */
+          $clearBtn.on("click", function() {
+            $content.unmark();
+            $input.val("").focus();
+          });
+
+          /**
+           * Next and previous search jump to
+           */
+          $nextBtn.add($prevBtn).on("click", function() {
+            if ($results.length) {
+              currentIndex += $(this).is($prevBtn) ? -1 : 1;
+              if (currentIndex < 0) {
+                currentIndex = $results.length - 1;
+              }
+              if (currentIndex > $results.length - 1) {
+                currentIndex = 0;
+              }
+              jumpTo();
+            }
+          });
+        });
+
+    </script>
     <hr>
 {% endfor %}

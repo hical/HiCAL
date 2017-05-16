@@ -94,7 +94,7 @@
                             <li class="nav-item top-margin">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span class="badge badge-success">k</span>
+                                        <span class="badge badge-success">s</span>
                                     </div>
                                     <div class="col-md-9">
                                         <small class="left-margin">Mark as relevant
@@ -106,7 +106,7 @@
                             <li class="nav-item ">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span class="badge badge-danger">d</span>
+                                        <span class="badge badge-danger">h</span>
                                     </div>
                                     <div class="col-md-9">
                                         <small class="left-margin">Mark as non-relevant
@@ -117,7 +117,7 @@
                             <li class="nav-item">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <span class="badge badge-warning">/</span>
+                                        <span class="badge badge-warning">k</span>
                                     </div>
                                     <div class="col-md-9">
                                         <small class="left-margin">Mark as not sure
@@ -132,7 +132,6 @@
                 </nav>
 
             </div>
-            <!--/span-->
         </div>
     </div>
 
@@ -156,6 +155,7 @@
                 method: 'POST',
                 data: JSON.stringify({
                     'client_time': now,
+                    'page_title': document.title,
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 }),
                 success: function (result) {
@@ -191,9 +191,9 @@
                     }
                 }else{
                     updateDocument(
-                                "",
-                                "<span class='text-danger'>Server returned empty list.</span>",
-                                "Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
+                            "",
+                            "<span class='text-danger'>Server returned empty list.</span>",
+                            "Something went wrong.. Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
                         );
                 }
             },
@@ -232,12 +232,12 @@
         }
 
         function send_judgment(current_doc_id, rel, non, notsure, isMouse, isKeyboard) {
-            var time_to_judge = timer.getTimeValues().toSeconds();
-            var now = + new Date();
-            if(current_doc_id == ""){
+            if(current_doc_id == "") {
                 console.log("Please wait...");
                 return false;
             }
+            var time_to_judge = timer.getTimeValues().toSeconds();
+            var now = + new Date();
 
 {#            if(queue.isEmpty()){#}
 {#                console.log("The queue of documents to judge is empty. Please wait");#}
@@ -260,7 +260,8 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'page_title': document.title
             };
 
 
@@ -293,19 +294,19 @@
                                     next_doc["title"],
                                     next_doc["content"]
                             );
+                            updateTimer();
+
                         }
                     }
 
                     // console.log("Updating nav-bar counters");
                     if(rel){
-                        updateCounter("k");
+                        updateCounter("s");
                     }else if(non){
-                        updateCounter("d");
+                        updateCounter("h");
                     }else if (notsure){
-                        updateCounter("/");
+                        updateCounter("k");
                     }
-
-
 
                 },
                 error: function (result){
@@ -339,20 +340,13 @@
             }
 
             if(next_doc != undefined){
-                console.log("Size of queue: " + queue.getLength());
+                // console.log("Size of queue: " + queue.getLength());
                 updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["content"]);
+                updateTimer();
             }else{
                 updateDocument("",
                         "<span class='text-danger'>Please wait..</sapn>",
                         "The queue is empty.");
-{#                if(!queue.isEmpty()){#}
-{#                    var next_doc = queue.dequeue();#}
-{#                    updateDocument(#}
-{#                            next_doc["doc_id"],#}
-{#                            next_doc["title"],#}
-{#                            next_doc["content"]#}
-{#                    );#}
-{#                }#}
             }
         }
 
@@ -378,6 +372,7 @@
             method: 'POST',
             data: JSON.stringify({
                 'client_time': now,
+                'page_title': document.title,
                 'search_field_value': $("#search_content").val(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             }),

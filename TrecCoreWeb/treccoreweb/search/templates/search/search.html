@@ -82,33 +82,139 @@
 {% block extra_scripts %}
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
     <script>
 
+        var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
+
+        // flag to check if a modal is currently opened
+        var isModalOpen = false;
+        var currentOpenedModalDocId = null;
+
+        // Nofity server of page visit on pageload
+        window.onload = function () {
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'search:post_visit' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'page_title': document.title,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+        };
+
         $( "#search_input" ).focus(function() {
             var now = + new Date();
-            console.log("Search input is focused", now);
+            $.ajax({
+                url: '{% url 'search:post_search_status' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'isFocused': true,
+                    'search_bar_value': $("#search_input").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+
+            console.log("Search input is focused.", now);
         });
 
         $( "#search_input").blur(function() {
             var now = + new Date();
-            console.log("Search input is unfocused", now);
+            $.ajax({
+                url: '{% url 'search:post_search_status' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'isFocused': false,
+                    'search_bar_value': $("#search_input").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+            console.log("Search input is unfocused.", now);
         });
 
         var form = document.getElementById('search_form');
         var formSubmit = form.submit; //save reference to original submit function
 
+        // TODO: currently not working. Need to log when submit is fired.
         form.onsubmit = function(e) {
             alert('Handler for .submit() called.');
         };
 
-
-        Mousetrap.prototype.handleKey = function handleKey(character, modifiers, event){
-            var now = + new Date();
-            if(event.type == "keydown"){
-                console.log(character, now);
+        var search_form = document.querySelector('search_form');
+        Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
+            if(event.type == "keydown" && $("#search_input").is(':focus')){
+                var now = + new Date();
+                $.ajax({
+                    url: '{% url 'search:post_keystroke' %}',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        'client_time': now,
+                        'page_title': document.title,
+                        'character': character,
+                        'search_bar_value': $("#search_input").val(),
+                        'isSearchbarFocused': $("#search_input").is(':focus'),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    }),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+                console.log("Character pressed: ", character, now);
             }
         };
+
+        Mousetrap.bind(['s', 'h', 'k'], function(e, key) {
+            var current_doc_id = get_current_opened_modal_doc_id();
+            if(current_doc_id == null){
+                return;
+            }
+
+            if(key == 's') {
+                send_judgment_and_hide_modal(current_doc_id, true, false, false, false, true);
+            }
+            else if(key == 'h') {
+                send_judgment_and_hide_modal(current_doc_id, false, true, false, false, true);
+            }
+            else if(key == 'k') {
+                send_judgment_and_hide_modal(current_doc_id, false, false, true, false, true);
+            }
+
+        });
+
+        Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
+            console.log("in cntrf", isModalOpen, currentOpenedModalDocId);
+            e.preventDefault();
+
+            if(!isModalOpen){
+                return;
+            }
+            var docid = get_current_opened_modal_doc_id();
+            $( "#search_content_doc_"+docid).focus();
+            return false;
+        });
+
+        function get_current_opened_modal_doc_id(){
+            if(isModalOpen){
+                return currentOpenedModalDocId;
+            }
+            else return null;
+        }
 
         function send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard) {
             var now = + new Date();
@@ -125,7 +231,8 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'page_title': document.title
             };
 
 
@@ -135,13 +242,13 @@
                 data: JSON.stringify(data),
                 success: function (result) {
                     console.log(result['message']);
-                    update_doc_status(doc_id, rel, non, notsure);
                 },
                 error: function (result) {
                     console.log(result);
                 }
             });
 
+            update_doc_status(doc_id, rel, non, notsure);
 
             return false;
         }
@@ -149,13 +256,24 @@
         function update_doc_status(doc_id, rel, non, notsure){
             console.log("Updating document " + doc_id + " status");
             if(rel){
-                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-success' aria-hidden='true'></i>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
-                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-danger' aria-hidden='true'></i>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(notsure){
-                $("#doc_"+doc_id+"_status").html("<i class='fa fa-check text-warning' aria-hidden='true'></i>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
+            document.getElementById("isJudged_"+doc_id).style.display = "inherit";
         }
-//doc_{{ document_values.docno }}_status
+
+        function hide_modal(doc_id){
+            console.log("hiding modal: ", doc_id);
+             $('#doc-'+doc_id+'-modal').modal('hide');
+        }
+
+        function send_judgment_and_hide_modal(doc_id, rel, non, notsure, isMouse, isKeyboard){
+            send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard);
+            hide_modal(doc_id);
+            return false;
+        }
     </script>
 {% endblock %}

@@ -48,7 +48,7 @@
                 <span class="nav-link thin gray-text">
                     <strong>Time spent:</strong>
                     <div id="nav_timer_header" class="display-inline">
-                        <span class="values" id="timer_counter">counters</span>
+                        <span class="values" id="timer_counter">0:0:0</span>
                     </div>
                 </span>
             </li>
@@ -87,7 +87,7 @@
         <main class="col-sm-10 offset-sm-1 col-md-11 offset-md-0-5 pt-3 top-margin extra-padding">
             {% block messages %}
                 {% if messages %}
-                    <div class="alert alert-alert-{{ message.tags }}"
+                    <div class="alert alert-primary"
                          role="alert">
                         <button type="button" class="close" data-dismiss="alert"
                                 aria-label="Close">
