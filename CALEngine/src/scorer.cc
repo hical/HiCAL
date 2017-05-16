@@ -107,6 +107,17 @@ void Scorer::rescore_documents(const vector<float> &weights,
         top_docs_results.push_back(top_docs[i].second);
 }
 
+vector<pair<int, float>> Scorer::get_top_terms(const vector<float> &weights, string doc_id, int num_top_terms){
+    vector<pair<int, float>> feature_weights;
+    int doc_idx = doc_ids_inv_map[doc_id];
+    for(auto feature: doc_features[doc_idx].features_){
+        feature_weights.push_back({feature.id_, weights[feature.id_]});
+    }
+    sort(feature_weights.begin(), feature_weights.end(),
+            [](const pair<int, float> &a, const pair<int, float> &b)->bool{return a.second > b.second;});
+    return vector<pair<int, float>>(feature_weights.begin(),feature_weights.begin() + min(num_top_terms, (int)feature_weights.size()));
+}
+
 Scorer::Scorer(string fname){
     doc_features = parse_doc_features(fname);
     for(size_t i = 0; i < doc_features.size(); i++){

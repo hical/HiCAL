@@ -33,6 +33,7 @@ class BMI{
         int cur_iteration = 0;
         int next_iteration_target = 0;
         bool finished = false;
+        vector<float> weights;
     }state;
 
     // Stores an ordered list of documents to judge based on the classifier scores
@@ -97,6 +98,9 @@ class BMI{
 
     // Record judgment (-1 or 1) for a given doc_id
     void record_judgment(std::string doc_id, int judgment);
+
+    // Get latest classifier weights, make it thread safe someday
+    vector<float> get_weights(){ return state.weights; }
 
     // Begin CAL
     void run();

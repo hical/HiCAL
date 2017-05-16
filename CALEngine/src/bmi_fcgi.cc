@@ -112,20 +112,40 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
 }
 
+string get_top_terms_json(string doc_id, string session_id, int num_top_terms){
+    vector<pair<int, float>> top_terms 
+        = scorer->get_top_terms(SESSIONS[session_id]->get_weights(), doc_id, num_top_terms);
+
+    string top_terms_json = "{";
+    for(auto top_term: top_terms){
+        if(top_terms_json.length() > 1)
+            top_terms_json.push_back(',');
+        top_terms_json += "\"" + to_string(top_term.first) + "\"" + ":" + to_string(top_term.second);
+    }
+    top_terms_json.push_back('}');
+    return top_terms_json;
+}
+
 // Fetch doc-ids in JSON
-string get_docs(string session_id, int max_count){
+string get_docs(string session_id, int max_count, int num_top_terms = 10){
     BMI *bmi = SESSIONS[session_id];
     vector<string> doc_ids = bmi->get_doc_to_judge(max_count);
 
     string doc_json = "[";
+    string top_terms_json = "{";
     for(string doc_id: doc_ids){
         if(doc_json.length() > 1)
             doc_json.push_back(',');
+        if(top_terms_json.length() > 1)
+            top_terms_json.push_back(',');
         doc_json += "\"" + doc_id + "\"";
+        top_terms_json += "\"" + doc_id + "\": " + get_top_terms_json(doc_id, session_id, num_top_terms);
     }
     doc_json.push_back(']');
+    top_terms_json.push_back('}');
 
-    return "{\"session-id\": \"" + session_id + "\", \"docs\": " + doc_json + "}";
+    return "{\"session-id\": \"" + session_id + "\", \"docs\": " + doc_json
+        + ",\"top-terms\": " + top_terms_json + "}";
 }
 
 // Handler for /get_docs

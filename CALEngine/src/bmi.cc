@@ -80,7 +80,6 @@ vector<string> BMI::get_doc_to_judge(int count=1){
         {
             lock_guard<mutex> lock(judgment_list_mutex);
             lock_guard<mutex> lock2(training_cache_mutex);
-            lock_guard<mutex> lock3(finished_judgments_mutex);
             if(judgment_list.size() > 0){
                 vector<string> ret;
                 for(int id: judgment_list){
@@ -170,10 +169,12 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+2, finished_judgments, results);
+    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+9, finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<scorer->doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
+
+    state.weights = weights;
 
     return results;
 }

@@ -38,6 +38,8 @@ class Scorer {
             int top_docs_per_thread,
             const std::set<int> &judgments,
             std::vector<int> &top_docs_results);
+
+    std::vector<std::pair<int, float>> get_top_terms(const std::vector<float> &weights, std::string doc_id, int num_top_terms);
 };
 
 #endif // SCORER_H
