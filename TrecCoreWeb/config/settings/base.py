@@ -117,7 +117,7 @@ DATABASES = {
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
-
+ALLOWED_HOSTS = ["*"]
 # GENERAL CONFIGURATION
 # ------------------------------------------------------------------------------
 # Local time zone for this installation. Choices can be found here:
@@ -312,8 +312,8 @@ MESSAGE_TAGS = {
 
 # CORE TREC COMPONENTS IPS (Required)
 # ------------------------------------------------------------------------------
-CAL_SERVER_IP = '129.97.84.14'
-CAL_SERVER_PORT = '80'
+CAL_SERVER_IP = '127.0.0.1'
+CAL_SERVER_PORT = '9001'
 DOCUMENT_SNIPPET_ENGINE_SERVER_IP = '129.97.186.125'
 DOCUMENT_SNIPPET_ENGINE_SERVER_PORT = '5050'
 SEARCH_SERVER_IP = '129.97.25.37'
