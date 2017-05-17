@@ -127,8 +127,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
         if isFromCAL:
-            # TODO: return next 5 documents to judge
-            rel = 1 if relevant else -1 if nonrelevant else 0
+            # mark on topic documents as relevant only to CAL.
+            rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 next_patch, top_terms = CALFunctions.send_judgment(
                     self.request.user.current_topic.uuid,

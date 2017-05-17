@@ -33,13 +33,13 @@
                          data-doc-id="">
                         <h1 id="document_title"><span class="text-danger">Loading</span></h1>
                         <small id="document_date"></small>
-                        <div id="document_content">
+                        <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
+                        <hr style="border-top: 5px solid rgba(0,0,0,.1);">
+                        <div id="document_content"></div>
                     </div>
-
                 </div>
-
             </div>
 
             <div class="col-md-2">
@@ -186,7 +186,9 @@
                         updateDocument(
                                 next_doc["doc_id"],
                                 next_doc["title"],
-                                next_doc["snippet"]
+                                next_doc["date"],
+                                next_doc["snippet"],
+                                next_doc["content"]
                         );
                         updateTimer();
                     }
@@ -194,7 +196,9 @@
                     updateDocument(
                             "",
                             "<span class='text-danger'>Server returned empty list.</span>",
-                            "Something went wrong.. Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic."
+                            "",
+                            "Something went wrong.. Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic.",
+                            ""
                         );
                 }
             },
@@ -202,7 +206,9 @@
                 if(document_isEmpty()){
                     updateDocument("",
                     "<span class='text-danger'>Failed to retrieve...</span>",
-                    result['status'] + " " +result['statusText']);
+                    "",
+                    result['status'] + " " +result['statusText'],
+                    "");
                 }
                 console.log("Error occurred: " + JSON.stringify(result));
             },
@@ -211,7 +217,9 @@
                     if(document_isEmpty()){
                         updateDocument("",
                         "<span class='text-danger'>Failed to retrieve docs..</sapn>",
-                        xhr.responseText);
+                        "",
+                        xhr.responseText,
+                        "");
                     }
                     console.log("Failed to get docs. Error message: "+xhr.responseText);
                 }
@@ -286,8 +294,10 @@
                             updateDocument(
                                     "",
                                     "No documents received for judging",
+                                    "",
                                     "CAL has not returned a new " +
-                                    "set of documents to return. Please try refreshing."
+                                    "set of documents to return. Please try refreshing.",
+                                    ""
                             );
                         }else{
                             var next_doc = false;
@@ -303,7 +313,9 @@
                                 updateDocument(
                                         next_doc["doc_id"],
                                         next_doc["title"],
-                                        next_doc["snippet"]
+                                        next_doc["date"],
+                                        next_doc["snippet"],
+                                        next_doc["content"]
                                 );
                             }
                             updateTimer();
@@ -325,7 +337,9 @@
                     if(document_isEmpty()){
                         updateDocument("",
                         "<span class='text-danger'>Something went wrong..</sapn>",
-                        result['message']);
+                        "",
+                        result['message'],
+                        "");
                     }
 
                     console.log("Something went wrong. " +
@@ -336,7 +350,9 @@
                         if(document_isEmpty()){
                             updateDocument("",
                             "<span class='text-danger'>Something went wrong..</sapn>",
-                            xhr.responseText);
+                            "",
+                            xhr.responseText,
+                            "");
                         }
                         console.log("Something went wrong. Timeout error." +
                             "Judgment may have not been recorded to CAL.", xhr.responseText);
@@ -356,12 +372,22 @@
 
             if(next_doc !== false){
                 // console.log("Size of queue: " + queue.getLength());
-                updateDocument(next_doc["doc_id"], next_doc["title"], next_doc["snippet"]);
+                updateDocument(
+                        next_doc["doc_id"],
+                        next_doc["title"],
+                        next_doc["date"],
+                        next_doc["snippet"],
+                        next_doc["content"]
+                );
+
                 updateTimer();
             }else{
-                updateDocument("",
+                updateDocument(
+                        "",
                         "<span class='text-danger'>Please wait..</span>",
-                        "The queue is empty.");
+                        "",
+                        "The queue is empty.",
+                        "");
             }
             console.log(judged_docs);
         }
