@@ -23,7 +23,7 @@ def join_judgments(document_values, document_ids, user, topic):
             document_values[key]['relevance_judgment'] = {
                 "relevant": judgedment.relevant,
                 "nonrelevant": judgedment.nonrelevant,
-                "notsure": judgedment.notsure,
+                "ontopic": judgedment.ontopic,
             }
         document_values[key]['isJudged'] = isJudged
     return document_values

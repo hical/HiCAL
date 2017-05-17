@@ -18,27 +18,29 @@
     {% block nav-header-title %}{% endblock %}
     <li class="nav-item active">
     <span class="nav-link thin text-primary">
-       <strong>TrecSearch:</strong>
+       <strong>TrecSearch</strong>
     </span>
     </li>
-{#    <li class="nav-item active">#}
-{#    <span class="nav-link thin gray-text">#}
-{#       <strong>Document judged: </strong><span class="badge badge-success"#}
-{#                                               id="nav_stats_rel_header">{{ total_relevant }}</span> <span#}
-{#            class="badge badge-danger"#}
-{#            id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span#}
-{#            class="badge badge-warning"#}
-{#            id="nav_stats_notsure_header">{{ total_notsure }}</span>#}
-{#    </span>#}
-{#    </li>#}
-{#    <li class="nav-item active" style="width: 200px">#}
-{#    <span class="nav-link thin gray-text">#}
-{#        <strong>Time spent:</strong>#}
-{#        <div id="nav_timer_header" class="display-inline">#}
-{#            <span class="values" id="timer_counter">counters</span>#}
-{#        </div>#}
-{#    </span>#}
-{#    </li>#}
+    {% comment %}
+    <li class="nav-item active">
+    <span class="nav-link thin gray-text">
+       <strong>Document judged: </strong><span class="badge badge-success"
+                                               id="nav_stats_rel_header">{{ total_relevant }}</span> <span
+            class="badge badge-danger"
+            id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span
+            class="badge badge-warning"
+            id="nav_stats_ontopic_header">{{ total_ontopic }}</span>
+    </span>
+    </li>
+    <li class="nav-item active" style="width: 200px">
+    <span class="nav-link thin gray-text">
+        <strong>Time spent:</strong>
+        <div id="nav_timer_header" class="display-inline">
+            <span class="values" id="timer_counter">counters</span>
+        </div>
+    </span>
+    </li>
+    {% endcomment %}
 {% endblock %}
 
 {% block main %}
@@ -216,7 +218,7 @@
             else return null;
         }
 
-        function send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard) {
+        function send_judgment(doc_id, rel, non, ontopic, isMouse, isKeyboard) {
             var now = + new Date();
 
             console.log("Sending judgment call to backend for document id: " + doc_id);
@@ -225,7 +227,7 @@
                 'doc_id': doc_id,
                 'relevant': rel,
                 'nonrelevant': non,
-                'notsure': notsure,
+                'ontopic': ontopic,
                 'time_to_judge': "NA",
                 'isFromCAL': false,
                 'client_time': now,
@@ -248,18 +250,18 @@
                 }
             });
 
-            update_doc_status(doc_id, rel, non, notsure);
+            update_doc_status(doc_id, rel, non, ontopic);
 
             return false;
         }
 
-        function update_doc_status(doc_id, rel, non, notsure){
+        function update_doc_status(doc_id, rel, non, ontopic){
             console.log("Updating document " + doc_id + " status");
             if(rel){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
-            }else if(notsure){
+            }else if(ontopic){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
@@ -270,8 +272,8 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, rel, non, notsure, isMouse, isKeyboard){
-            send_judgment(doc_id, rel, non, notsure, isMouse, isKeyboard);
+        function send_judgment_and_hide_modal(doc_id, rel, non, ontopic, isMouse, isKeyboard){
+            send_judgment(doc_id, rel, non, ontopic, isMouse, isKeyboard);
             hide_modal(doc_id);
             return false;
         }

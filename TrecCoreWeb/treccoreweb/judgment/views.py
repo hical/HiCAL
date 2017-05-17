@@ -33,7 +33,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             doc_id = self.request_json[u"doc_id"]
             relevant = self.request_json[u"relevant"]
             nonrelevant = self.request_json[u"nonrelevant"]
-            notsure = self.request_json[u"notsure"]
+            ontopic = self.request_json[u"ontopic"]
             time_to_judge = self.request_json[u"time_to_judge"]
             isFromCAL = self.request_json[u"isFromCAL"]
             fromMouse = self.request_json[u"fromMouse"]
@@ -42,7 +42,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             client_time = self.request_json.get(u"client_time", None)
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, relevant, "
-                                      u"nonrelevant, notsure, time_to_judge, "
+                                      u"nonrelevant, ontopic, time_to_judge, "
                                       u"etc.."}
             return self.render_bad_request_response(error_dict)
 
@@ -56,7 +56,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.query = query
             exists.relevant = relevant
             exists.nonrelevant = nonrelevant
-            exists.notsure = notsure
+            exists.ontopic = ontopic
             exists.time_to_judge = time_to_judge
             exists.isFromCAL = isFromCAL
             exists.fromMouse = fromMouse
@@ -76,7 +76,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
-                        "notsure": notsure,
+                        "ontopic": ontopic,
                         "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
                         "fromMouse": fromMouse,
@@ -94,7 +94,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 query=query,
                 relevant=relevant,
                 nonrelevant=nonrelevant,
-                notsure=notsure,
+                ontopic=ontopic,
                 time_to_judge=time_to_judge,
                 isFromCAL=isFromCAL,
                 fromMouse=fromMouse,
@@ -114,7 +114,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
-                        "notsure": notsure,
+                        "ontopic": ontopic,
                         "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
                         "fromMouse": fromMouse,
@@ -148,7 +148,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             context[u"next_docs"] = documents
             return self.render_json_response(context)
         else:
-            rel = 1 if relevant else -1 if nonrelevant else 0
+            # mark on topic documents as relevant only to CAL.
+            rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 CALFunctions.send_judgment(self.request.user.current_topic.uuid,
                                            doc_id,

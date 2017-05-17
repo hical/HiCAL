@@ -65,7 +65,7 @@ function  updateCounter(key){
     }else if(key == "h"){
         $("#nav_stats_nonrel_header").hide().fadeIn().html(++nonRelCounter);
     }else if (key == "k"){
-        $("#nav_stats_notsure_header").hide().fadeIn().html(++notSureCounter);
+        $("#nav_stats_ontopic_header").hide().fadeIn().html(++onTopicCounter);
     }
 }
 
