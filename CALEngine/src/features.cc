@@ -29,7 +29,7 @@ vector<string> features::tokenize(string &text){
 }
 
 vector<string> features::get_stemmed_words(const string &str){
-    char temp_str[str.length()];
+    char temp_str[str.length()+1];
     strcpy(temp_str, str.c_str());
     int st = 0, end = 0;
     string stemmed_text;
