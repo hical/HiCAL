@@ -12,7 +12,7 @@ using namespace std;
 
 unordered_map<string, features::TermInfo> features::dictionary;
 
-vector<string> features::tokenize(string &text){
+vector<string> features::tokenize(const string &text){
     vector<string> words;
     int st = 0;
     while(st < (int)text.length()){
@@ -55,7 +55,7 @@ vector<string> features::get_stemmed_words(const string &str){
     return tokenize(stemmed_text);
 }
 
-void features::init(string fname){
+void features::init(const string &fname){
     int df;
     string term;
     int idx = 0;
@@ -69,7 +69,7 @@ void features::init(string fname){
     }
 }
 
-unordered_map<string, int> features::get_tf(vector<string> words){
+unordered_map<string, int> features::get_tf(const vector<string> &words){
     unordered_map<string, int> tf_map;
     for(string word: words){
         if(tf_map.find(word) == tf_map.end())
@@ -79,7 +79,7 @@ unordered_map<string, int> features::get_tf(vector<string> words){
     return tf_map;
 }
 
-SfSparseVector features::get_features(string &text, int N){
+SfSparseVector features::get_features(const string &text, int N){
     vector<FeatureValuePair> features;
     vector<pair<int, double>> tmp_features;
 

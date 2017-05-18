@@ -18,14 +18,14 @@ namespace features{
         return isalpha(ch) || isdigit(ch);
     }
 
-    std::vector<std::string> tokenize(std::string &text);
+    std::vector<std::string> tokenize(const std::string &text);
     std::vector<std::string> get_stemmed_words(const std::string &str);
 
-    void init(std::string fname);
+    void init(const std::string &fname);
 
-    std::unordered_map<std::string, int> get_tf(vector<std::string> words);
+    std::unordered_map<std::string, int> get_tf(const vector<std::string> &words);
 
-    SfSparseVector get_features(std::string &text, int N);
+    SfSparseVector get_features(const std::string &text, int N);
 }
 
 #endif // FEATURES_H
