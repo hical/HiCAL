@@ -41,7 +41,7 @@
             {% block nav-header-title %}{% endblock %}
             <li class="nav-item active">
                 <span class="nav-link thin gray-text" >
-                   <strong>Document judged: </strong><span class="badge badge-success" id="nav_stats_rel_header">{{ total_relevant }}</span> <span class="badge badge-danger" id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span class="badge badge-warning" id="nav_stats_notsure_header">{{ total_notsure }}</span>
+                   <strong>Document judged: </strong><span class="badge badge-success" id="nav_stats_rel_header">{{ total_relevant }}</span> <span class="badge badge-danger" id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span class="badge badge-warning" id="nav_stats_ontopic_header">{{ total_ontopic }}</span>
                 </span>
             </li>
             <li class="nav-item active" style="width: 200px">
@@ -87,7 +87,7 @@
         <main class="col-sm-10 offset-sm-1 col-md-11 offset-md-0-5 pt-3 top-margin extra-padding">
             {% block messages %}
                 {% if messages %}
-                    <div class="alert alert-primary"
+                    <div class="alert alert-info"
                          role="alert">
                         <button type="button" class="close" data-dismiss="alert"
                                 aria-label="Close">

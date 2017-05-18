@@ -42,10 +42,12 @@ function document_isEmpty(){
 }
 
 
-function updateDocument(id, title, content){
+function updateDocument(id, title, date, snippet, content){
     console.log("Updating document view for document id: " + id);
     $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
     $("#document_title").html(title);
+    $("#document_date").html(date);
+    $("#document_snippet").html(snippet);
     $("#document_content").html(content);
 }
 
@@ -65,7 +67,7 @@ function  updateCounter(key){
     }else if(key == "h"){
         $("#nav_stats_nonrel_header").hide().fadeIn().html(++nonRelCounter);
     }else if (key == "k"){
-        $("#nav_stats_notsure_header").hide().fadeIn().html(++notSureCounter);
+        $("#nav_stats_ontopic_header").hide().fadeIn().html(++onTopicCounter);
     }
 }
 

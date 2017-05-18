@@ -23,11 +23,11 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
                                     topic=self.request.user.current_topic).aggregate(
             total_relevant=Count(Case(When(relevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-            total_notsure=Count(Case(When(notsure=True, then=1)))
+            total_ontopic=Count(Case(When(ontopic=True, then=1)))
         )
         context["total_relevant"] = counters["total_relevant"]
         context["total_nonrelevant"] = counters["total_nonrelevant"]
-        context["total_notsure"] = counters["total_notsure"]
+        context["total_ontopic"] = counters["total_ontopic"]
 
         return context
 

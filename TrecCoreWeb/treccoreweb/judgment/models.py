@@ -23,7 +23,7 @@ class Judgement(models.Model):
                              max_length=512)
     relevant = models.BooleanField(null=False, blank=False)
     nonrelevant = models.BooleanField(null=False, blank=False)
-    notsure = models.BooleanField(null=False, blank=False)
+    ontopic = models.BooleanField(null=False, blank=False)
     time_to_judge = models.CharField(null=True, blank=True, max_length=512)
     isFromCAL = models.BooleanField(null=False, blank=False)
     fromMouse = models.BooleanField(null=False, blank=False)

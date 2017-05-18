@@ -18,7 +18,7 @@
                     <div class="bg-danger" style="height: 100%; padding: 5px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
-                {% elif document_values.relevance_judgment.notsure %}
+                {% elif document_values.relevance_judgment.ontopic %}
                     <div class="bg-warning" style="height: 100%; padding: 5px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
@@ -38,11 +38,11 @@
                 <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
                     Relevant
                 </a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
+                    topic
+                </a>
                 <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
                     relevant
-                </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Not
-                    sure
                 </a>
             </div>
             <span class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</span>
@@ -114,11 +114,11 @@
                                             <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
                                                 Relevant
                                             </a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
+                                                topic
+                                            </a>
                                             <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
                                                 relevant
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Not
-                                                sure
                                             </a>
                                         </div>
                                     </li>
@@ -137,6 +137,17 @@
                                             </div>
 
                                         </li>
+                                        <li class="nav-item">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <span class="badge badge-warning">k</span>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <small class="left-margin">Mark as on topic
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </li>
                                         <li class="nav-item ">
                                             <div class="row">
                                                 <div class="col-md-3">
@@ -144,17 +155,6 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <small class="left-margin">Mark as non-relevant
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="nav-item">
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <span class="badge badge-warning">k</span>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <small class="left-margin">Mark as not sure
                                                     </small>
                                                 </div>
                                             </div>
