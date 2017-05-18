@@ -62,7 +62,7 @@ def get_documents(session, num_docs, query):
     h = httplib2.Http()
     url = "http://{}:{}/CAL/get_docs?"
 
-    parameters = {'session_id': str(session), 'max_count': 5}
+    parameters = {'session_id': str(session), 'max_count': 10}
     parameters = urllib.parse.urlencode(parameters)
     resp, content = h.request(url.format(CAL_SERVER_IP,
                                          CAL_SERVER_PORT) + parameters,
