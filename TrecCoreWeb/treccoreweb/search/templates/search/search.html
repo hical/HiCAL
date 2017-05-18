@@ -218,18 +218,23 @@
             else return null;
         }
 
-        function send_judgment(doc_id, rel, non, ontopic, isMouse, isKeyboard) {
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal) {
             var now = + new Date();
 
             console.log("Sending judgment call to backend for document id: " + doc_id);
 
             var data = {
                 'doc_id': doc_id,
+                'doc_title': current_doc_title,
+                'doc_CAL_snippet': "",
+                'doc_search_snippet': current_doc_snippet,
                 'relevant': rel,
                 'nonrelevant': non,
                 'ontopic': ontopic,
                 'time_to_judge': "NA",
                 'isFromCAL': false,
+                'isFromSearch': true,
+                'isFromSearchModal': isFromSearchModal,
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
@@ -272,8 +277,8 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, rel, non, ontopic, isMouse, isKeyboard){
-            send_judgment(doc_id, rel, non, ontopic, isMouse, isKeyboard);
+        function send_judgment_and_hide_modal(doc_id, doc_title, rel, non, ontopic, isMouse, isKeyboard){
+            send_judgment(doc_id, doc_title, rel, non, ontopic, isMouse, isKeyboard, true);
             hide_modal(doc_id);
             return false;
         }

@@ -15,7 +15,6 @@ urlpatterns = [
 
     # User management
     url(r'^users/', include('treccoreweb.users.urls', namespace='users')),
-    url(r'^sessions/$', login_required(TemplateView.as_view(template_name='pages/sessions.html')), name='sessions'),
 
     url(r'^accounts/', include('allauth.urls')),
 

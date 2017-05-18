@@ -1,14 +1,18 @@
 /* Mousetraps keyboard shortcuts */
-Mousetrap.bind(['s', 'h', 'k'], function(e, key) {
+Mousetrap.bind(['s', 'h', 'k', 'u'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
+    var doc_title = $('#document_title').text();
+    var doc_snippet = $('#document_snippet').html();
     if(key == 's') {
-        send_judgment(current_doc_id, true, false, false, false, true);
+        send_judgment(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
     }
     else if(key == 'h') {
-        send_judgment(current_doc_id, false, true, false, false, true);
+        send_judgment(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
     }
     else if(key == 'k') {
-        send_judgment(current_doc_id, false, false, true, false, true);
+        send_judgment(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
+    }else if(key == 'u') {
+        $('#reviewDocsModal').modal('toggle');
     }
 
     //if(queue.getLength() == 0){
@@ -45,6 +49,7 @@ function document_isEmpty(){
 function updateDocument(id, title, date, snippet, content){
     console.log("Updating document view for document id: " + id);
     $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
+    $("#document_id").html("docno: " + id);
     $("#document_title").html(title);
     $("#document_date").html(date);
     $("#document_snippet").html(snippet);

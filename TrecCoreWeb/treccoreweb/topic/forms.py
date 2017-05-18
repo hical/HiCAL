@@ -14,13 +14,14 @@ class TopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        fields = ['title', 'seed_query', 'description']
+        fields = ['title', 'number', 'seed_query', 'description']
 
     def __init__(self, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
             self.fields['seed_query'].widget.attrs['readonly'] = True
+            self.fields['number'].widget.attrs['readonly'] = True
 
         self.helper = FormHelper(self)
         self.helper.layout.append(

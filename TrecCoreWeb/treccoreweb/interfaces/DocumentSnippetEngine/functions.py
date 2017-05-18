@@ -36,6 +36,7 @@ def get_documents(doc_ids, query):
                 'doc_id': doc['doc_id'],
                 'title': doc['result']['title'] + " " + doc['doc_id'],
                 'content': doc['result']['content'],
+                'date': doc['result']['date']
             }
             result.append(document)
     else:
@@ -67,7 +68,7 @@ def get_documents_with_snippet(doc_ids, query, top_terms):
 
             document = {
                 'doc_id': doc['doc_id'],
-                'title': doc['result']['title'] + " " + doc['doc_id'],
+                'title': doc['result']['title'],
                 'content': doc['result']['content'],
                 'snippet': doc['result']['snippet'],
                 'date': doc['result']['date']

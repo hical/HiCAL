@@ -1,0 +1,24 @@
+{% for doc in latest_judged_docs %}
+<a href="#" onclick="show_prev_judged_doc_and_hide_modal('{{ doc.doc_id }}', '{{ doc.doc_title|escapejs }}', '{{ doc.doc_CAL_snippet|escapejs }}')">
+    <div class="row top-margin">
+        <div class="col-md-1" style="min-width: 15px;">
+            {% if doc.relevant %}
+                <div class="bg-success" style="height: 100%;">
+                    <i class="fa" aria-hidden="true"></i>
+                </div>
+            {% elif doc.nonrelevant %}
+                <div class="bg-danger" style="height: 100%;">
+                    <i class="fa" aria-hidden="true"></i>
+                </div>
+            {% elif doc.ontopic %}
+                <div class="bg-warning" style="height: 100%;">
+                    <i class="fa" aria-hidden="true"></i>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-11 text-truncate" style="font-family: georgia,'times new roman',times,serif">
+            {{ doc.doc_title }}
+        </div>
+    </div>
+</a>
+{% endfor %}

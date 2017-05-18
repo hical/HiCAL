@@ -2,6 +2,7 @@ import json
 
 from braces import views
 from django.http import HttpResponse
+from django.template import loader
 from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
@@ -31,22 +32,27 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     def post(self, request, *args, **kwargs):
         try:
             doc_id = self.request_json[u"doc_id"]
+            doc_title = self.request_json[u"doc_title"]
+            doc_CAL_snippet = self.request_json[u"doc_CAL_snippet"]
+            doc_search_snippet = self.request_json[u"doc_search_snippet"]
             relevant = self.request_json[u"relevant"]
             nonrelevant = self.request_json[u"nonrelevant"]
             ontopic = self.request_json[u"ontopic"]
             time_to_judge = self.request_json[u"time_to_judge"]
             isFromCAL = self.request_json[u"isFromCAL"]
+            isFromSearch = self.request_json[u"isFromSearch"]
+            isFromSearchModal = self.request_json[u"isFromSearchModal"]
             fromMouse = self.request_json[u"fromMouse"]
             fromKeyboard = self.request_json[u"fromKeyboard"]
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
         except KeyError:
-            error_dict = {u"message": u"your input must include doc_id, relevant, "
-                                      u"nonrelevant, ontopic, time_to_judge, "
-                                      u"etc.."}
+            error_dict = {u"message": u"your input must include doc_id, doc_title, "
+                                      u"relevant, nonrelevant, ontopic, time_to_judge, "
+                                      u"doc_CAL_snippet, doc_search_snippet, etc.."}
             return self.render_bad_request_response(error_dict)
 
-        # TODO: Save judgment and update CAL
+        # Check if a judgment exists already, if so, update the db row.
         exists = Judgement.objects.filter(user=self.request.user,
                                           doc_id=doc_id,
                                           topic=self.request.user.current_topic)
@@ -54,11 +60,18 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         if exists:
             exists = exists.first()
             exists.query = query
+            exists.doc_title = doc_title
+            if doc_CAL_snippet != "":
+                exists.doc_CAL_snippet = doc_CAL_snippet
+            if doc_search_snippet != "":
+                exists.doc_search_snippet = doc_search_snippet
             exists.relevant = relevant
             exists.nonrelevant = nonrelevant
             exists.ontopic = ontopic
             exists.time_to_judge = time_to_judge
             exists.isFromCAL = isFromCAL
+            exists.isFromSearch = isFromSearch
+            exists.isFromSearchModal = isFromSearchModal
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
             exists.save()
@@ -71,6 +84,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "action": "update",
                     "doc_judgment": {
                         "doc_id": doc_id,
+                        "doc_title": doc_title,
                         "topic_id": self.request.user.current_topic.id,
                         "session": str(self.request.user.current_topic.uuid),
                         "query": query,
@@ -79,6 +93,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "ontopic": ontopic,
                         "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
+                        "isFromSearch": isFromSearch,
+                        "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard
                     }
@@ -90,6 +106,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             Judgement.objects.create(
                 user=self.request.user,
                 doc_id=doc_id,
+                doc_title=doc_title,
+                doc_CAL_snippet=doc_CAL_snippet,
+                doc_search_snippet=doc_search_snippet,
                 topic=self.request.user.current_topic,
                 query=query,
                 relevant=relevant,
@@ -97,6 +116,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 ontopic=ontopic,
                 time_to_judge=time_to_judge,
                 isFromCAL=isFromCAL,
+                isFromSearch=isFromSearch,
+                isFromSearchModal=isFromSearchModal,
                 fromMouse=fromMouse,
                 fromKeyboard=fromKeyboard
             )
@@ -109,6 +130,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "action": "create",
                     "doc_judgment": {
                         "doc_id": doc_id,
+                        "doc_title": doc_title,
                         "topic_id": self.request.user.current_topic.id,
                         "session": str(self.request.user.current_topic.uuid),
                         "query": query,
@@ -117,6 +139,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "ontopic": ontopic,
                         "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
+                        "isFromSearch": isFromSearch,
+                        "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard
                     }
@@ -160,3 +184,37 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 return self.render_timeout_request_response(error_dict)
 
             return self.render_json_response(context)
+
+
+class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
+
+    def get(self, request, number_of_docs_to_show, *args, **kwargs):
+        try:
+            number_of_docs_to_show = int(number_of_docs_to_show)
+        except ValueError:
+            return self.render_json_response([])
+
+        latest = Judgement.objects.filter(
+                    user=self.request.user,
+                    topic=self.request.user.current_topic,
+                    isFromCAL=True
+                 ).order_by('-updated_at')[:number_of_docs_to_show]
+        result = []
+        for judgment in latest:
+            result.append(
+                {
+                    "doc_id": judgment.doc_id,
+                    "doc_title": judgment.doc_title,
+                    "doc_date": "",
+                    "doc_CAL_snippet": judgment.doc_CAL_snippet,
+                    "doc_content": "",
+                    "relevant": judgment.relevant,
+                    "nonrelevant": judgment.nonrelevant,
+                    "ontopic": judgment.ontopic,
+                }
+            )
+
+        return self.render_json_response(result)

@@ -25,6 +25,25 @@ function Queue(){
     return (queue.length - offset);
   }
 
+  // Returns queue list
+  this.getList = function(){
+    return queue;
+  }
+
+  // Returns queue offset
+  this.getOffset = function(){
+    return offset;
+  }
+
+  /* Sets the queue list. The parameter is:
+  *
+  * list - the list of the queue
+  *
+  */
+  this.setList = function(list){
+    queue = list;
+  }
+
   // Returns true if the queue is empty, and false otherwise.
   this.isEmpty = function(){
     return (queue.length == 0);
@@ -54,6 +73,23 @@ function Queue(){
       queue  = queue.slice(offset);
       offset = 0;
     }
+
+    // return the dequeued item
+    return item;
+
+  }
+
+  /* Dequeues an item , frees space and returns it.
+   */
+  this.dequeueForce = function(){
+
+    // if the queue is empty, return immediately
+    if (queue.length == 0) return undefined;
+
+    // store the item at the front of the queue
+    var item = queue[offset];
+
+    queue  = queue.slice(1);
 
     // return the dequeued item
     return item;

@@ -17,6 +17,13 @@ class Judgement(models.Model):
     doc_id = models.CharField(null=False,
                               blank=False,
                               max_length=512)
+    doc_title = models.CharField(null=False,
+                                 blank=False,
+                                 max_length=512)
+    doc_CAL_snippet = models.TextField(null=False,
+                                       blank=False)
+    doc_search_snippet = models.TextField(null=False,
+                                          blank=False)
     topic = models.ForeignKey(Topic)
     query = models.CharField(null=True,
                              blank=True,
@@ -26,6 +33,8 @@ class Judgement(models.Model):
     ontopic = models.BooleanField(null=False, blank=False)
     time_to_judge = models.CharField(null=True, blank=True, max_length=512)
     isFromCAL = models.BooleanField(null=False, blank=False)
+    isFromSearch = models.BooleanField(null=False, blank=False)
+    isFromSearchModal = models.BooleanField(null=False, blank=False)
     fromMouse = models.BooleanField(null=False, blank=False)
     fromKeyboard = models.BooleanField(null=False, blank=False)
 
@@ -34,7 +43,8 @@ class Judgement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "{} on {}".format(self.user, self.doc_id)
+        judgment = 1 if self.relevant else -1 if self.nonrelevant else 0
+        return "{} on {}: {}".format(self.user, self.doc_id, judgment)
 
     def __str__(self):
         return self.__unicode__()

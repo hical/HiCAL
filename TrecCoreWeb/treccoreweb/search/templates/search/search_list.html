@@ -35,21 +35,19 @@
         <div class="offset-md-0-5 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group"
                  aria-label="Basic example">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false);" class="btn btn-sm btn-success">
                     Relevant
                 </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false);" class="btn btn-sm btn-warning">On
                     topic
                 </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false);" class="btn btn-sm btn-danger">Not
                     relevant
                 </a>
             </div>
             <span class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</span>
         </div>
     </div>
-
-
 
     <!-- DOCUMENT {{ document_values.docno }} MODAL  -->
     <div class="modal fade doc-{{ document_values.docno }}-modal" id="doc-{{ document_values.docno }}-modal" tabindex="-1"
@@ -108,21 +106,19 @@
 
                                     <li class="nav-item extra-top-margin">
                                         <span class="gray-text align-left">Judge document:</span>
-
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', true, false, false, true, false);" class="btn btn-sm btn-success">
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">
                                                 Relevant
                                             </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
                                                 topic
                                             </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
                                                 relevant
                                             </a>
                                         </div>
                                     </li>
-
                                     <div class="extra-top-margin align-left">
                                         <span class="gray-text">Keyboard shortcuts:</span>
                                         <li class="nav-item top-margin">
@@ -135,7 +131,6 @@
                                                     </small>
                                                 </div>
                                             </div>
-
                                         </li>
                                         <li class="nav-item">
                                             <div class="row">

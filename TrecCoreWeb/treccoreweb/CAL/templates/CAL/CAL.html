@@ -22,8 +22,51 @@
     </li>
 {% endblock %}
 
+{% block nav-right%}
+    {% if request.user.is_authenticated %}
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="modal" data-target="#reviewDocsModal" href="#"
+            id="reviewDocs">Latest judgments</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_topic.id %}">Topic</a>
+    </li>
+    {% endif %}
+{% endblock %}
 
 {% block main %}
+    <!-- Modal -->
+    <div class="modal" id="reviewDocsModal" tabindex="-1" role="dialog"
+         aria-labelledby="reviewDocsModalTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest CAL judged
+                        docs.</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="reviewCAL">
+                        <div class="row">
+                            <div class="col-md-12 center-text">
+                                <i id="reviewSpinner" style="display: none;"
+                                class="fa fa-refresh fa-spin text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="extra-bottom-margin">
 
         <div class="row">
@@ -32,7 +75,14 @@
                     <div class="card-block document-cal" id="cal-document"
                          data-doc-id="">
                         <h1 id="document_title"><span class="text-danger">Loading</span></h1>
-                        <small id="document_date"></small>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small id="document_date"></small>
+                            </div>
+                            <div class="col-md-6 small align-right">
+                                <code id="document_id"></code>
+                            </div>
+                        </div>
                         <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
@@ -78,13 +128,13 @@
 
                             <div class="btn-group top-margin" role="group"
                                  aria-label="Basic example">
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), true, false, false, true, false);" class="btn btn-sm btn-success">
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">
                                     Relevant
                                 </a>
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), false, false, true, true, false);" class="btn btn-sm btn-warning">On
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-warning">On
                                     topic
                                 </a>
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), false, true, false, true, false);" class="btn btn-sm btn-danger">Not
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-danger">Not
                                     relevant
                                 </a>
                             </div>
@@ -126,6 +176,18 @@
                                     </div>
                                 </div>
                             </li>
+                            <hr>
+                            <li class="nav-item ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-primary">u</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Show latest judged docs
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
                         </div>
 
                     </ul>
@@ -142,7 +204,8 @@
 
 {% block extra_scripts %}
     <script src="{% static 'js/Queue.src.js' %}"></script>
-    <script src="{% static 'js/jquery.mark.min.js' %}"></script>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>#}
+{#    <script src="{% static 'js/jquery.mark.min.js' %}"></script>#}
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/easytimer.js' %}"></script>
     <script src="{% static 'js/CAL.js' %}"></script>
@@ -166,12 +229,15 @@
         };
 
         var queue = new Queue();
+        var latestJudgedDocsQueue = new Queue();
         var timer = new Timer();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
         var relCounter = parseInt("{{ total_relevant }}");
         var nonRelCounter = parseInt("{{ total_nonrelevant }}");
         var onTopicCounter = parseInt("{{ total_ontopic }}");
 
+
+        // Get initial document at page visit
         $.ajax({
             url: '{% url 'CAL:get_docs' %}',
             method: 'GET',
@@ -226,6 +292,21 @@
             }
         });
 
+
+        // Get populate prev judged document queue
+        $.ajax({
+            url: '{% url 'judgment:get_latest' number_of_docs_to_show=10 %}',
+            method: 'GET',
+            success: function (result) {
+                for(var i = 0; i < result.length; i++){
+                    latestJudgedDocsQueue.enqueue(
+                        result[i]
+                    );
+                }
+                update_latest_judged_doc_view();
+            }
+        });
+
         function update_documents_to_judge_list() {
             $.ajax({
                 url: '{% url 'CAL:get_docs' %}',
@@ -241,11 +322,16 @@
             });
         }
 
-        function send_judgment(current_doc_id, rel, non, ontopic, isMouse, isKeyboard) {
+        function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
+                               rel, non, ontopic, isMouse, isKeyboard) {
+
             if(current_doc_id == "") {
                 console.log("Please wait...");
                 return false;
             }
+            var current_doc_content = $("#document_content").html();
+            var current_doc_date = $("#document_date").html();
+
             var time_to_judge = timer.getTimeValues().toSeconds();
             var now = + new Date();
 
@@ -262,11 +348,16 @@
 
             var data = {
                 'doc_id': current_doc_id,
+                'doc_title': current_doc_title,
+                'doc_CAL_snippet': current_doc_snippet,
+                'doc_search_snippet': "",
                 'relevant': rel,
                 'nonrelevant': non,
                 'ontopic': ontopic,
                 'time_to_judge': time_to_judge,
                 'isFromCAL': true,
+                'isFromSearch': false,
+                'isFromSearchModal': false,
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
@@ -281,7 +372,6 @@
                 data: JSON.stringify(data),
                 success: function (result) {
                     console.log(result['message'], " - Updating the queue after sending judgment of document: " + data["doc_id"]);
-                    console.log(result);
                     queue = new Queue();
                     for(var i = 0; i < result['next_docs'].length; i++){
                         queue.enqueue(result['next_docs'][i]);
@@ -389,7 +479,56 @@
                         "The queue is empty.",
                         "");
             }
-            console.log(judged_docs);
+
+            console.log(latestJudgedDocsQueue.getLength());
+            // Update latest judged queue
+            if(latestJudgedDocsQueue.getLength() == 10){
+                console.log("Latest judged docs queue reached its limit. Dequeuing");
+                var d = latestJudgedDocsQueue.dequeueForce();
+                console.log("Dequeued: ", d);
+                var doc = {
+                    "doc_id": current_doc_id,
+                    "doc_title": current_doc_title,
+                    "doc_date": current_doc_date,
+                    "doc_snippet": current_doc_snippet,
+                    "doc_content": current_doc_content,
+                    "relevant": rel,
+                    "nonrelevant": non,
+                    "ontopic": ontopic
+                };
+                console.log("Enqueuing: ", doc);
+                latestJudgedDocsQueue.enqueue(doc);
+            }else{
+                // check if doc_id already in latestJudgedDocsQueue
+                var isInLatestJudgedDocsQueue = false;
+                var list = latestJudgedDocsQueue.getList();
+                for(var i = 0; i < latestJudgedDocsQueue.getLength();i++){
+                    if(list[i]['doc_id'] == current_doc_id){
+                        isInLatestJudgedDocsQueue = true;
+                        console.log("Already judged doc");
+                        break;
+                    }
+                }
+
+                if(isInLatestJudgedDocsQueue){
+                    list.splice(i, 1);
+                }
+
+                var doc = {
+                    "doc_id": current_doc_id,
+                    "doc_title": current_doc_title,
+                    "doc_date": current_doc_date,
+                    "doc_snippet": current_doc_snippet,
+                    "doc_content": current_doc_content,
+                    "relevant": rel,
+                    "nonrelevant": non,
+                    "ontopic": ontopic
+                };
+                latestJudgedDocsQueue.enqueue(doc);
+
+            }
+
+            update_latest_judged_doc_view();
         }
 
 
@@ -422,6 +561,98 @@
                 console.log(result['message']);
             }
         });
+    }
+
+
+    function show_prev_judged_doc_and_hide_modal(doc_index){
+        var list = latestJudgedDocsQueue.getList();
+        var doc = list[doc_index];
+        var doFetch = false;
+
+        var doc_id = doc['doc_id'];
+        var doc_title = doc['doc_title'];
+        var doc_date = doc['doc_date'];
+        if (doc_date == ""){
+            doFetch = true;
+            doc_date = "Fetching date..."
+        }
+        var doc_snippet = doc['doc_CAL_snippet'];
+        var doc_content = doc['doc_content'];
+        if (doc_content == ""){
+            doc_content = "<span class='text-danger'>Please wait.. fetching doc content.</span>"
+        }
+
+        $('#reviewDocsModal').modal('hide');
+
+        updateDocument(
+            doc_id,
+            doc_title,
+            doc_date,
+            doc_snippet,
+            doc_content
+        );
+
+        // Reset queue
+        queue = new Queue();
+
+        if(doFetch){
+            $.ajax({
+                url: '{% url 'search:get_doc' %}?docid='+doc_id+'&query=',
+                method: 'GET',
+                success: function (result) {
+                    updateDocument(
+                        doc_id,
+                        doc_title,
+                        result[0]['date'],
+                        doc_snippet,
+                        result[0]['content']
+                    );
+
+                    // update instance so that we don't make another call.
+                    doc['doc_date'] = result[0]['date'];
+                    doc['doc_content'] = result[0]['content'];
+                }
+            });
+        }
+
+    }
+
+    function update_latest_judged_doc_view(){
+        console.log("Updating latest judged docs modal view");
+
+        // empty content of modal
+        $("#reviewCAL").html("");
+
+
+        var list = latestJudgedDocsQueue.getList();
+        for(var i = latestJudgedDocsQueue.getLength() - 1; i >= 0; i--){
+            var doc = list[i];
+
+            if(doc == undefined) break;
+
+            var doc_status_div = "";
+
+            if (doc["relevant"]){
+                doc_status_div = '<div class="bg-success" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+            }else if(doc["nonrelevant"]){
+                doc_status_div = '<div class="bg-danger" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+            }else if(doc["ontopic"]){
+                doc_status_div = '<div class="bg-warning" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+            }
+
+            var doc_div = '' +
+            '<a href="#" onclick="show_prev_judged_doc_and_hide_modal(' + i + ')"> \n\
+                <div class="row top-margin"> \n\
+                    <div class="col-md-1" style="min-width: 15px;"> \n\
+                        ' + doc_status_div + ' \n\
+                    </div> \n\
+                    <div class="col-md-11 text-truncate" style="font-family: georgia"> \n\
+                        ' + doc["doc_title"] + ' \n\
+                    </div> \n\
+                </div> \n\
+            </a>';
+            $( "#reviewCAL" ).append( doc_div );
+        }
     }
 
     </script>
