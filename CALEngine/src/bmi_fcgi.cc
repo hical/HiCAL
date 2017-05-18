@@ -106,7 +106,8 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"]);
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_BOOLS["--async-mode"]);
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
@@ -210,7 +211,7 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
     BMI *bmi = SESSIONS[session_id];
     bmi->record_judgment(doc_id, rel);
 
-    write_response(request, 200, "application/json", get_docs(session_id, 5));
+    write_response(request, 200, "application/json", get_docs(session_id, 20));
 }
 
 void log_request(const FCGX_Request & request, const vector<pair<string, string>> &params){

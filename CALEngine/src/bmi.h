@@ -25,6 +25,11 @@ class BMI{
     // Maximum number of training iterations allowed before exiting
     int max_iterations;
 
+    int extra_judgment_docs = 20;
+
+    // Async Mode
+    bool async_mode;
+
     // If true, the judgments_per_iteration grows with every iteration
     bool is_bmi;
 
@@ -55,7 +60,8 @@ class BMI{
 
     // Mutexes to control access to certain objects
     std::mutex judgment_list_mutex;
-    std::mutex finished_judgments_mutex;
+    std::mutex training_mutex;
+    std::mutex async_training_mutex;
     std::mutex training_cache_mutex;
     std::mutex state_mutex;
 
@@ -76,11 +82,18 @@ class BMI{
     // Add the ids to the judgment list
     void add_to_judgment_list(const std::vector<int> &ids);
 
+    // Add to training_cache
+    void add_to_training_cache(int id, int judgment);
+
+    // Remove document from judgment_list
+    void remove_from_judgment_list(int id);
+
     // blocks the thread until all the judgments are done
     void wait_for_judgments();
 
     // Handler for performing an iteration
     void perform_iteration();
+    void perform_iteration_async();
 
     // Handler for performing a training iteration
     std::vector<int> perform_training_iteration();
@@ -91,7 +104,8 @@ class BMI{
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
-        int max_iterations);
+        int max_iterations,
+        bool async_mode);
 
     // Get upto `count` number of documents from `judgment_list`
     std::vector<std::string> get_doc_to_judge(int count);
