@@ -31,7 +31,7 @@ with any FastCGI capable web server like nginx (use the `fcgi_config/nginx.conf`
 `fcgi_config/fastcgi.conf`). Install `spawn-fcgi` in your system and run 
 
 ```
-$ spawn-fcgi -p 9888 -n -- bmi_fcgi --doc_features /path/to/doc/features --df /path/to/df --async-mode
+$ spawn-fcgi -p 9888 -n -- bmi_fcgi --doc-features /path/to/doc/features --df /path/to/df --async-mode
 $ # Optional - restoring sessions
 $ cd ../TrecCoreWeb
 $ # Switch to virtualenv
