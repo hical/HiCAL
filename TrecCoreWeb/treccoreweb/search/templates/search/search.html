@@ -186,15 +186,17 @@
             if(current_doc_id == null){
                 return;
             }
+            var doc_title = $("#doc-"+current_doc_id+"-title").html();
+            var doc_snippet = $("#doc-"+current_doc_id+"-snippet").html();
 
             if(key == 's') {
-                send_judgment_and_hide_modal(current_doc_id, true, false, false, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
             }
             else if(key == 'h') {
-                send_judgment_and_hide_modal(current_doc_id, false, true, false, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
             }
             else if(key == 'k') {
-                send_judgment_and_hide_modal(current_doc_id, false, false, true, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
             }
 
         });
@@ -277,8 +279,8 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, rel, non, ontopic, isMouse, isKeyboard){
-            send_judgment(doc_id, doc_title, rel, non, ontopic, isMouse, isKeyboard, true);
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard){
+            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true);
             hide_modal(doc_id);
             return false;
         }

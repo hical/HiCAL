@@ -27,9 +27,9 @@
         </div>
         <div class="col-md-6"  data-toggle="modal" data-target=".doc-{{ document_values.docno }}-modal" style="cursor: pointer; cursor: hand;">
             <div class="document" data-rank="{{ document_values.rank }}">
-                <div class="title">{{ document_values.title|safe }}</div>
+                <div class="title" id="doc-{{ document_values.docno }}-title">{{ document_values.title|safe }}</div>
                 <div class="url">doc_id: {{ document_values.docno }}</div>
-                <div class="snippet"> {{ document_values.snippet|safe }} </div>
+                <div class="snippet" id="doc-{{ document_values.docno }}-snippet"> {{ document_values.snippet|safe }} </div>
             </div>
         </div>
         <div class="offset-md-0-5 col-md-3 mt-5 center-text">
