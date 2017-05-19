@@ -233,6 +233,8 @@
 
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
+        var latestJudgedDocsViewAlreadyEmpty = true;
+
         var timer = new Timer();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
         var relCounter = parseInt("{{ total_relevant }}");
@@ -301,7 +303,7 @@
             url: '{% url 'judgment:get_latest' number_of_docs_to_show=10 %}',
             method: 'GET',
             success: function (result) {
-                for(var i = 0; i < result.length; i++){
+                for(var i = result.length - 1; i >= 0; i--){
                     latestJudgedDocsQueue.enqueue(
                         result[i]
                     );
@@ -579,7 +581,7 @@
         );
 
         // Reset queue
-        // queue = new Queue();
+        queue = new Queue();
 
         if(doFetch){
             $.ajax({
@@ -597,6 +599,31 @@
                     // update instance so that we don't make another call.
                     doc['doc_date'] = result[0]['date'];
                     doc['doc_content'] = result[0]['content'];
+                },
+                error: function (result){
+                    if(document_isEmpty()){
+                        updateDocument("",
+                        "<span class='text-danger'>Something went wrong..</sapn>",
+                        "",
+                        result['message'],
+                        "");
+                    }
+
+                    console.log("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['message'])
+                },
+                statusCode: {
+                    502: function (xhr) {
+                        if(document_isEmpty()){
+                            updateDocument("",
+                            "<span class='text-danger'>Something went wrong..</sapn>",
+                            "",
+                            xhr.responseText,
+                            "");
+                        }
+                        console.log("Something went wrong. Timeout error." +
+                            "Judgment may have not been recorded to CAL.", xhr.responseText);
+                    }
                 }
             });
         }
