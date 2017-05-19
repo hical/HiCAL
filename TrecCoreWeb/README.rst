@@ -22,6 +22,7 @@ Setting Up The Server
 * Install postgres and run it, make sure you create a db called `treccoreweb`
 *
 * Create a python3 virtual env, and pip install
+* For running a uwsgi instance, `uwsgi --socket 127.0.0.1:8001 --module config.wsgi --master --process 2 --threads 4`
 
 
 Setting Up Your Users
