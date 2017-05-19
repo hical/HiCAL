@@ -28,6 +28,9 @@
         <a class="nav-link" data-toggle="modal" data-target="#reviewDocsModal" href="#"
             id="reviewDocs">Latest judgments</a>
     </li>
+{#    <li class="nav-item">#}
+{#        <a class="nav-link" href="{% url 'judgment:get_all' %}">All judgments</a>#}
+{#    </li>#}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'topic:detail' pk=user.current_topic.id %}">Topic</a>
     </li>

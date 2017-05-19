@@ -218,3 +218,17 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             )
 
         return self.render_json_response(result)
+
+
+class GetAllView(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = 'judgment/all.html'
+
+    def get_context_data(self, **kwargs):
+        context = {
+            "judgments_list": Judgement.objects.filter(
+                    user=self.request.user,
+                    topic=self.request.user.current_topic,
+                 ).order_by('-updated_at')
+        }
+
+        return context

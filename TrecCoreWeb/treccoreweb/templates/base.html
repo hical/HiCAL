@@ -56,11 +56,14 @@
         <div class="form-inline mt-2 mt-md-0">
             <ul class="navbar-nav mr-auto">
                 {% block nav-right%}
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'topic:detail' pk=user.current_topic.id %}">Topic</a>
-                </li>
-                {% endif %}
+                    {% if request.user.is_authenticated %}
+{#                    <li class="nav-item">#}
+{#                        <a class="nav-link" href="{% url 'judgment:get_all' %}">All judgments</a>#}
+{#                    </li>#}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_topic.id %}">Topic</a>
+                    </li>
+                    {% endif %}
                 {% endblock %}
             </ul>
         </div>
