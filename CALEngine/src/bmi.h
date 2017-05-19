@@ -51,7 +51,8 @@ class BMI{
     std::mt19937 rand_generator;
 
     // Current of dataset being used to train the classifier
-    SfDataSet training_data;
+    SfSparseVector seed;
+    std::unordered_map<int, int> judgments;
 
     // Whenever judgements are received, they are put into training_cache,
     // to prevent any race condition in case training_data is being used by the

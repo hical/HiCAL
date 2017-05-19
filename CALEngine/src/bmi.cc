@@ -5,7 +5,7 @@
 #include "bmi.h"
 
 using namespace std;
-BMI::BMI(const SfSparseVector &seed,
+BMI::BMI(const SfSparseVector &_seed,
         Scorer *_scorer,
         int _num_threads,
         int _judgments_per_iteration,
@@ -18,7 +18,7 @@ BMI::BMI(const SfSparseVector &seed,
     max_effort(_max_effort),
     max_iterations(_max_iterations),
     async_mode(_async_mode),
-    training_data(get_initial_training_data(seed))
+    seed(_seed)
 {
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
@@ -70,17 +70,6 @@ void BMI::perform_iteration_async(){
     }
 }
 
-void BMI::randomize_non_rel_docs(){
-    uniform_int_distribution<int> distribution(0, scorer->doc_features.size()-1);
-    for(int i = 1;i<=100;i++){
-        int idx = distribution(rand_generator);
-        if(training_data.NumExamples() < i+1)
-            training_data.AddLabeledVector(scorer->doc_features[idx], -1);
-        else
-            training_data.ModifyLabeledVector(i, scorer->doc_features[idx], -1);
-    }
-}
-
 SfDataSet BMI::get_initial_training_data(const SfSparseVector &seed){
     // Todo generalize seed docs (support multiple rel/non-rel seeds)
     SfDataSet training_data = SfDataSet(true);
@@ -89,7 +78,25 @@ SfDataSet BMI::get_initial_training_data(const SfSparseVector &seed){
 }
 
 void BMI::train(SfWeightVector &w){
-    sofia_ml::StochasticRocLoop(training_data,
+    vector<const SfSparseVector*> positives, negatives;
+    positives.push_back(&seed);
+    // Sampling random non_rel documents
+    uniform_int_distribution<int> distribution(0, scorer->doc_features.size()-1);
+    for(int i = 1;i<=100;i++){
+        int idx = distribution(rand_generator);
+        negatives.push_back(&scorer->doc_features[idx]);
+    }
+
+    for(pair<int, int> judgment: judgments){
+        if(judgment.second > 0)
+            positives.push_back(&scorer->doc_features[judgment.first]);
+        else
+            negatives.push_back(&scorer->doc_features[judgment.first]);
+    }
+    cout<<positives.size()<<" "<<negatives.size()<<endl;
+    
+    sofia_ml::StochasticRocLoop(positives,
+            negatives,
             sofia_ml::LOGREG_PEGASOS,
             sofia_ml::PEGASOS_ETA,
             0.0001,
@@ -172,12 +179,11 @@ void BMI::record_judgment(string doc_id, int judgment){
 
 vector<int> BMI::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
-    randomize_non_rel_docs();
 
     {
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
-            training_data.AddLabeledVector(scorer->doc_features[training.first], training.second);
+            judgments[training.first] = training.second;
             finished_judgments.insert(training.first);
         }
         training_cache.clear();
