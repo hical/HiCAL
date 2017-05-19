@@ -32,6 +32,10 @@ with any FastCGI capable web server like nginx (use the `fcgi_config/nginx.conf`
 
 ```
 $ spawn-fcgi -p 9888 -n -- bmi_fcgi --doc_features /path/to/doc/features --df /path/to/df
+$ # Optional - restoring sessions
+$ cd ../TrecCoreWeb
+$ # Switch to virtualenv
+$ python restore.py
 ```
 
 ### HTTP API Specs [1](https://gist.github.com/iros/3426278)
