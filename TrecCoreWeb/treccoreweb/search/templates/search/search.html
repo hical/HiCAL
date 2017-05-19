@@ -186,8 +186,8 @@
             if(current_doc_id == null){
                 return;
             }
-            var doc_title = $("#doc_"+current_doc_id+"title").html();
-            var doc_snippet = $("#doc_"+current_doc_id+"snippet").html();
+            var doc_title = $("#doc-"+current_doc_id+"-title").html();
+            var doc_snippet = $("#doc-"+current_doc_id+"-snippet").html();
 
             if(key == 's') {
                 send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
