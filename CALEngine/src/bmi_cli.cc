@@ -67,7 +67,8 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer){
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"]);
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"]);
 
     auto get_judgment = get_judgment_stdin;
     if(CMD_LINE_STRINGS["--qrel"] != ""){
