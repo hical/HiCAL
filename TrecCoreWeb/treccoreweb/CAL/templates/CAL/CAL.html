@@ -483,48 +483,35 @@
                         "");
             }
 
-            // Update latest judged queue
-            if(latestJudgedDocsQueue.getLength() == 10){
+            // check if doc_id already in latestJudgedDocsQueue
+            var isInLatestJudgedDocsQueue = false;
+            var list = latestJudgedDocsQueue.getList();
+            for(var i = 0; i < latestJudgedDocsQueue.getLength();i++){
+                if(list[i]['doc_id'] == current_doc_id){
+                    isInLatestJudgedDocsQueue = true;
+                    break;
+                }
+            }
+            var doc = {
+                "doc_id": current_doc_id,
+                "doc_title": current_doc_title,
+                "doc_date": current_doc_date,
+                "doc_snippet": current_doc_snippet,
+                "doc_content": current_doc_content,
+                "relevant": rel,
+                "nonrelevant": non,
+                "ontopic": ontopic
+            };
+
+            if(isInLatestJudgedDocsQueue){
+                list.splice(i, 1);
+                latestJudgedDocsQueue.enqueue(doc);
+            }else if(latestJudgedDocsQueue.getLength() == 10){
                 console.log("Latest judged docs queue reached its limit. Dequeuing then enquing");
-                var d = latestJudgedDocsQueue.dequeueForce();
-                var doc = {
-                    "doc_id": current_doc_id,
-                    "doc_title": current_doc_title,
-                    "doc_date": current_doc_date,
-                    "doc_snippet": current_doc_snippet,
-                    "doc_content": current_doc_content,
-                    "relevant": rel,
-                    "nonrelevant": non,
-                    "ontopic": ontopic
-                };
+                latestJudgedDocsQueue.dequeueForce();
                 latestJudgedDocsQueue.enqueue(doc);
             }else{
-                // check if doc_id already in latestJudgedDocsQueue
-                var isInLatestJudgedDocsQueue = false;
-                var list = latestJudgedDocsQueue.getList();
-                for(var i = 0; i < latestJudgedDocsQueue.getLength();i++){
-                    if(list[i]['doc_id'] == current_doc_id){
-                        isInLatestJudgedDocsQueue = true;
-                        break;
-                    }
-                }
-
-                if(isInLatestJudgedDocsQueue){
-                    list.splice(i, 1);
-                }
-
-                var doc = {
-                    "doc_id": current_doc_id,
-                    "doc_title": current_doc_title,
-                    "doc_date": current_doc_date,
-                    "doc_snippet": current_doc_snippet,
-                    "doc_content": current_doc_content,
-                    "relevant": rel,
-                    "nonrelevant": non,
-                    "ontopic": ontopic
-                };
                 latestJudgedDocsQueue.enqueue(doc);
-
             }
 
             update_latest_judged_doc_view();
@@ -592,7 +579,7 @@
         );
 
         // Reset queue
-        queue = new Queue();
+        // queue = new Queue();
 
         if(doFetch){
             $.ajax({
