@@ -54,6 +54,9 @@ function updateDocument(id, title, date, snippet, content){
     $("#document_date").html(date);
     $("#document_snippet").html(snippet);
     $("#document_content").html(content);
+
+    $( "#document_content" ).trigger( "updated" );
+
 }
 
 
@@ -144,6 +147,25 @@ $(function() {
       }
     });
   });
+
+   $content.on( "updated", function() {
+      var searchVal = $input.val();
+       if(searchVal != undefined){
+           $content.unmark({
+              done: function () {
+                  $content.mark(searchVal, {
+                      separateWordSearch: true,
+                      done: function () {
+                          $results = $content.find("mark");
+                          currentIndex = 0;
+                      }
+                  });
+              }
+          });
+       }
+
+    });
+
 
   /**
    * Clears the search

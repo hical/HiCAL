@@ -480,12 +480,10 @@
                         "");
             }
 
-            console.log(latestJudgedDocsQueue.getLength());
             // Update latest judged queue
             if(latestJudgedDocsQueue.getLength() == 10){
-                console.log("Latest judged docs queue reached its limit. Dequeuing");
+                console.log("Latest judged docs queue reached its limit. Dequeuing then enquing");
                 var d = latestJudgedDocsQueue.dequeueForce();
-                console.log("Dequeued: ", d);
                 var doc = {
                     "doc_id": current_doc_id,
                     "doc_title": current_doc_title,
@@ -496,7 +494,6 @@
                     "nonrelevant": non,
                     "ontopic": ontopic
                 };
-                console.log("Enqueuing: ", doc);
                 latestJudgedDocsQueue.enqueue(doc);
             }else{
                 // check if doc_id already in latestJudgedDocsQueue
@@ -505,7 +502,6 @@
                 for(var i = 0; i < latestJudgedDocsQueue.getLength();i++){
                     if(list[i]['doc_id'] == current_doc_id){
                         isInLatestJudgedDocsQueue = true;
-                        console.log("Already judged doc");
                         break;
                     }
                 }
