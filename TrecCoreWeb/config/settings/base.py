@@ -60,6 +60,7 @@ LOCAL_APPS = [
     'treccoreweb.topic',
     'treccoreweb.judgment',
     'treccoreweb.search',
+    'treccoreweb.stats',
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

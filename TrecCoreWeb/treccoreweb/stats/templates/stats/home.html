@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block pagetitle %}Judgments{% endblock %}
+
+{% block extra_head %}{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'search:main' %}">S</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
+    </li>
+{% endblock %}
+
+{% block nav-header %}
+    {% block nav-header-title %}{% endblock %}
+    <li class="nav-item active">
+    <span class="nav-link thin text-primary">
+       <strong>Stats</strong>
+    </span>
+    </li>
+{% endblock %}
+
+
+{% block main %}
+<div class="row">
+   <div class="col-md-6">
+       <div class="card">
+           <div class="card-block center-text" id="first">
+               sdsd
+           </div>
+       </div>
+   </div>
+   <div class="col-md-6">
+       <div class="card">
+           <div class="card-block">
+               hhh
+           </div>
+       </div>
+   </div>
+</div>
+
+<div class="row extra-top-margin">
+   <div class="col-md-6">
+       <div class="card">
+           <div class="card-block">
+               hhh
+           </div>
+       </div>
+   </div>
+   <div class="col-md-6">
+       <div class="card">
+           <div class="card-block">
+               hhh
+           </div>
+       </div>
+   </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+
+{% endblock %}

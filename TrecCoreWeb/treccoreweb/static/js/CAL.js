@@ -56,7 +56,7 @@ function updateDocument(id, title, date, snippet, content){
     $("#document_content").html(content);
 
     $( "#document_content" ).trigger( "updated" );
-
+    window.scrollTo(0, 0);
 }
 
 
