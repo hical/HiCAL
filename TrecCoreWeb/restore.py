@@ -1,7 +1,5 @@
 import os
 import django
-import httplib2
-import urllib.parse
 
 os.environ["DJANGO_SETTINGS_MODULE"] = 'config.settings.local'
 django.setup()
@@ -9,6 +7,8 @@ django.setup()
 from treccoreweb.judgment.models import Judgement
 from config.settings.base import CAL_SERVER_IP, CAL_SERVER_PORT
 
+import httplib2
+import urllib.parse
 
 judgments = {}
 
@@ -23,32 +23,28 @@ for row in Judgement.objects.all():
 
 for session_id, seed_query in judgments:
     h = httplib2.Http()
-    url = "http://{}:{}/CAL/begin"
+    url = "http://{}:{}/CAL/begin".format(CAL_SERVER_IP, CAL_SERVER_PORT)
 
     body = {'session_id': session_id,
             'seed_query': seed_query}
-    resp, _ = h.request(url.format(CAL_SERVER_IP,
-                                   CAL_SERVER_PORT),
+    body = urllib.parse.urlencode(body)
+    resp, _ = h.request(url,
                         body=body,
-                        headers={
-                            'Content-Type': 'text/parameters; charset=UTF-8'
-                        },
+                        headers={'Content-Type': 'text/parameters; charset=UTF-8'},
                         method="POST")
 
     if resp and resp['status'] != '200':
         print("Session {}-'{}' already exists".format(session_id, seed_query))
     else:
+        print("Restoring {}: '{}'...".format(session_id, seed_query))
         for doc_id, rel in judgments[(session_id, seed_query)]:
-            url = "http://{}:{}/CAL/judge"
+            url = "http://{}:{}/CAL/judge".format(CAL_SERVER_IP, CAL_SERVER_PORT)
             body = {'session_id': session_id,
                     'doc_id': doc_id,
                     'rel': rel}
             body = urllib.parse.urlencode(body)
 
-            print("Restoring {}: '{}'...".format(session_id, seed_query))
-
-            resp, _ = h.request(url.format(CAL_SERVER_IP,
-                                           CAL_SERVER_PORT),
+            resp, _ = h.request(url,
                                 body=body,
                                 headers={
                                     'Content-Type': 'text/parameters; charset=UTF-8'
