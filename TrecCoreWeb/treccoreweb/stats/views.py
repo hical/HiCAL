@@ -81,6 +81,31 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
                 context["stdev_ontopic_timespent_CAL"] = round(statistics.stdev(total), 3)
                 context["variance_ontopic_timespent_CAL"] = round(statistics.variance(total), 3)
 
+        # TIMES
+
+        CALJudgmentsTimes = Judgement.objects.filter(user=self.request.user,
+                                                     isFromCAL=True,
+                                                     relevant=True,
+                                                     topic=self.request.user.current_topic)
+        times = [float(judgment.time_to_judge) for judgment in CALJudgmentsTimes]
+        context["times_relevant_CAL"] = times
+        context["times_relevant_CAL_size"] = len(times)
+
+        CALJudgmentsTimes = Judgement.objects.filter(user=self.request.user,
+                                                     isFromCAL=True,
+                                                     nonrelevant=True,
+                                                     topic=self.request.user.current_topic)
+        times = [float(judgment.time_to_judge) for judgment in CALJudgmentsTimes]
+        context["times_nonrelevant_CAL"] = times
+        context["times_nonrelevant_CAL_size"] = len(times)
+
+        CALJudgmentsTimes = Judgement.objects.filter(user=self.request.user,
+                                                     isFromCAL=True,
+                                                     ontopic=True,
+                                                     topic=self.request.user.current_topic)
+        times = [float(judgment.time_to_judge) for judgment in CALJudgmentsTimes]
+        context["times_ontopic_CAL"] = times
+        context["times_ontopic_CAL_size"] = len(times)
 
 
         return context

@@ -3,7 +3,10 @@
 
 {% block pagetitle %}Judgments{% endblock %}
 
-{% block extra_head %}{% endblock %}
+{% block extra_head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"
+            type="application/javascript"></script>
+{% endblock %}
 
 
 {% block sidebar %}
@@ -26,116 +29,305 @@
 
 
 {% block main %}
-<h1 class="text-primary">{{ user.current_topic.title }}</h1>
-<div class="row">
-   <div class="col-md-6">
-       <div class="card">
-           <div class="card-block" id="first">
-               <h4 class="text-primary">How many documents are judged?</h4>
-               <div class="row extra-top-margin">
-                   <div class="col-md-12">
-                       <table class="table table-hover">
-                          <thead>
-                            <tr>
-                              <th>Judgment</th>
-                              <th>CAL</th>
-                              <th>Search</th>
-                              <th>All</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <th scope="row"><span class="text-success">Relevant</span></th>
-                              <td>{{ total_relevant_CAL }}</td>
-                              <td>{{ total_relevant_search }}</td>
-                              <td>{{ total_relevant_CAL|add:total_relevant_search }}</td>
-                            </tr>
-                            <tr>
-                              <th scope="row"><span class="text-warning">On topic</span></th>
-                              <td>{{ total_ontopic_CAL }}</td>
-                              <td>{{ total_ontopic_search }}</td>
-                              <td>{{ total_ontopic_CAL|add:total_ontopic_search }}</td>
-                            </tr>
-                            <tr>
-                              <th scope="row"><span class="text-danger">Non relevant</span></th>
-                              <td>{{ total_nonrelevant_CAL }}</td>
-                              <td>{{ total_nonrelevant_search }}</td>
-                              <td>{{ total_nonrelevant_CAL|add:total_nonrelevant_search }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
-   <div class="col-md-6">
-       <div class="card">
-           <div class="card-block">
-               <h4 class="text-primary">How much time spent judging in CAL?</h4>
-               <div class="row extra-top-margin">
-                   <div class="col-md-12">
-                       <table class="table table-hover">
-                          <thead>
-                            <tr>
-                              <th>Judgment</th>
-                              <th>Average</th>
-                              <th>Median</th>
-                              <th>SD</th>
-                              <th>Variance</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <th scope="row"><span class="text-success">Relevant</span></th>
-                              <td>{{ average_relevant_timespent_CAL }}</td>
-                              <td>{{ median_relevant_timespent_CAL }}</td>
-                              <td>{{ stdev_relevant_timespent_CAL }}</td>
-                              <td>{{ variance_relevant_timespent_CAL }}</td>
-                            </tr>
-                            <tr>
-                              <th scope="row"><span class="text-warning">On topic</span></th>
-                              <td>{{ average_ontopic_timespent_CAL }}</td>
-                              <td>{{ median_ontopic_timespent_CAL }}</td>
-                              <td>{{ stdev_ontopic_timespent_CAL }}</td>
-                              <td>{{ variance_ontopic_timespent_CAL }}</td>
-                            </tr>
-                            <tr>
-                              <th scope="row"><span class="text-danger">Non relevant</span></th>
-                              <td>{{ average_nonrelevant_timespent_CAL }}</td>
-                              <td>{{ median_nonrelevant_timespent_CAL }}</td>
-                              <td>{{ stdev_nonrelevant_timespent_CAL }}</td>
-                              <td>{{ variance_nonrelevant_timespent_CAL }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                   </div>
-               </div>
-           </div>
-       </div>
-   </div>
-</div>
+    <h1 class="text-primary">{{ user.current_topic.title }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block" id="first">
+                    <h4 class="text-primary">How many documents are judged?</h4>
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Judgment</th>
+                                    <th>CAL</th>
+                                    <th>Search</th>
+                                    <th>All</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row"><span
+                                            class="text-success">Relevant</span></th>
+                                    <td>{{ total_relevant_CAL }}</td>
+                                    <td>{{ total_relevant_search }}</td>
+                                    <td>{{ total_relevant_CAL|add:total_relevant_search }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><span
+                                            class="text-warning">On topic</span></th>
+                                    <td>{{ total_ontopic_CAL }}</td>
+                                    <td>{{ total_ontopic_search }}</td>
+                                    <td>{{ total_ontopic_CAL|add:total_ontopic_search }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><span
+                                            class="text-danger">Non relevant</span></th>
+                                    <td>{{ total_nonrelevant_CAL }}</td>
+                                    <td>{{ total_nonrelevant_search }}</td>
+                                    <td>{{ total_nonrelevant_CAL|add:total_nonrelevant_search }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="offset-md-2 col-md-8">
+                            <canvas id="piechart" width="200" height="200"
+                                    class="extra-top-margin"></canvas>
+                        </div>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById("piechart");
+                        var data = {
+                            labels: [
+                                "Relevant",
+                                "On topic",
+                                "Non relevant"
+                            ],
+                            datasets: [
+                                {
+                                    data: [
+                                        {{ total_relevant_CAL|add:total_relevant_search }},
+                                        {{ total_ontopic_CAL|add:total_ontopic_search }},
+                                        {{ total_nonrelevant_CAL|add:total_nonrelevant_search }}],
+                                    backgroundColor: [
+                                        "#5cb85c",
+                                        "#f0ad4e",
+                                        "#d9534f"
+                                    ],
+                                    hoverBackgroundColor: [
+                                        "#5cb85c",
+                                        "#f0ad4e",
+                                        "#d9534f"
+                                    ]
+                                }]
+                        };
+                        var myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: data,
+                            options: {
+                                legend: {
+                                    display: true,
+                                    position: 'right'
+                                }
+                            }
+                        });
+                    </script>
 
-<div class="row extra-top-margin">
-   <div class="col-md-6">
-       <div class="card">
-           <div class="card-block">
-               <h4 class="text-primary">Lorem?</h4>
-               <p>{% lorem %}</p>
-           </div>
-       </div>
-   </div>
-   <div class="col-md-6">
-       <div class="card">
-           <div class="card-block">
-               <h4 class="text-primary">Lorem?</h4>
-               <p>{% lorem %}</p>
-           </div>
-       </div>
-   </div>
-</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="text-primary">How much time spent judging in CAL?</h4>
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Judgment</th>
+                                    <th>Average</th>
+                                    <th>Median</th>
+                                    <th>SD</th>
+                                    <th>Variance</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row"><span
+                                            class="text-success">Relevant</span></th>
+                                    <td>{{ average_relevant_timespent_CAL }}</td>
+                                    <td>{{ median_relevant_timespent_CAL }}</td>
+                                    <td>{{ stdev_relevant_timespent_CAL }}</td>
+                                    <td>{{ variance_relevant_timespent_CAL }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><span
+                                            class="text-warning">On topic</span></th>
+                                    <td>{{ average_ontopic_timespent_CAL }}</td>
+                                    <td>{{ median_ontopic_timespent_CAL }}</td>
+                                    <td>{{ stdev_ontopic_timespent_CAL }}</td>
+                                    <td>{{ variance_ontopic_timespent_CAL }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><span
+                                            class="text-danger">Non relevant</span></th>
+                                    <td>{{ average_nonrelevant_timespent_CAL }}</td>
+                                    <td>{{ median_nonrelevant_timespent_CAL }}</td>
+                                    <td>{{ stdev_nonrelevant_timespent_CAL }}</td>
+                                    <td>{{ variance_nonrelevant_timespent_CAL }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <canvas id="lineNonRelevant" class="extra-top-margin"></canvas>
+                        </div>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById("lineNonRelevant");
+                        var data = {
+                            labels: Array({{ times_nonrelevant_CAL_size }}).join(".").split("."),
+                            datasets: [
+                                {
+                                    label: "Time to judge not relevant",
+                                    fill: false,
+                                    lineTension: 0.1,
+                                    backgroundColor: "rgba(217, 83, 79,0.4)",
+                                    borderColor: "rgba(217, 83, 79,1)",
+                                    borderCapStyle: 'butt',
+                                    borderDash: [],
+                                    borderDashOffset: 0.0,
+                                    borderJoinStyle: 'miter',
+                                    pointBorderColor: "rgba(217, 83, 79,1)",
+                                    pointBackgroundColor: "#fff",
+                                    pointBorderWidth: 1,
+                                    pointHoverRadius: 5,
+                                    pointHoverBackgroundColor: "rgba(217, 83, 79,1)",
+                                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                                    pointHoverBorderWidth: 2,
+                                    pointRadius: 1,
+                                    pointHitRadius: 10,
+                                    data: {{ times_nonrelevant_CAL }},
+                                    spanGaps: false,
+                                }
+                            ]
+                        };
+                        var myLineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: data,
+                            options: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
+                            }
+                        });
+                    </script>
+
+
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <canvas id="lineOnTopic" class="extra-top-margin"></canvas>
+                        </div>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById("lineOnTopic");
+                        var data = {
+                            labels: Array({{ times_ontopic_CAL_size }}).join(".").split("."),
+                            datasets: [
+                                {
+                                    label: "Time to judge on topic",
+                                    fill: false,
+                                    lineTension: 0.1,
+                                    backgroundColor: "rgba(240, 173, 78,0.4)",
+                                    borderColor: "rgba(240, 173, 78,1)",
+                                    borderCapStyle: 'butt',
+                                    borderDash: [],
+                                    borderDashOffset: 0.0,
+                                    borderJoinStyle: 'miter',
+                                    pointBorderColor: "rgba(240, 173, 78,1)",
+                                    pointBackgroundColor: "#fff",
+                                    pointBorderWidth: 1,
+                                    pointHoverRadius: 5,
+                                    pointHoverBackgroundColor: "rgba(240, 173, 78,1)",
+                                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                                    pointHoverBorderWidth: 2,
+                                    pointRadius: 1,
+                                    pointHitRadius: 10,
+                                    data: {{ times_ontopic_CAL }},
+                                    spanGaps: false,
+                                }
+                            ]
+                        };
+                        var myLineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: data,
+                            options: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
+                            }
+                        });
+                    </script>
+
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <canvas id="lineRelevant" class="extra-top-margin"></canvas>
+                        </div>
+                    </div>
+                    <script>
+                        var ctx = document.getElementById("lineRelevant");
+                        var data = {
+                            labels: Array({{ times_relevant_CAL_size }}).join(".").split("."),
+                            datasets: [
+                                {
+                                    label: "Time to judge relevant",
+                                    fill: false,
+                                    lineTension: 0.1,
+                                    backgroundColor: "rgba(92, 184, 92,0.4)",
+                                    borderColor: "rgba(92, 184, 92,1)",
+                                    borderCapStyle: 'butt',
+                                    borderDash: [],
+                                    borderDashOffset: 0.0,
+                                    borderJoinStyle: 'miter',
+                                    pointBorderColor: "rgba(92, 184, 92,1)",
+                                    pointBackgroundColor: "#fff",
+                                    pointBorderWidth: 1,
+                                    pointHoverRadius: 5,
+                                    pointHoverBackgroundColor: "rgba(92, 184, 92,1)",
+                                    pointHoverBorderColor: "rgba(220,220,220,1)",
+                                    pointHoverBorderWidth: 2,
+                                    pointRadius: 1,
+                                    pointHitRadius: 10,
+                                    data: {{ times_relevant_CAL }},
+                                    spanGaps: false,
+                                }
+                            ]
+                        };
+                        var myLineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: data,
+                            options: {
+                                legend: {
+                                    display: true,
+                                    position: 'top'
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row extra-top-margin">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="text-primary">Lorem?</h4>
+                    <p>{% lorem %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="text-primary">Lorem?</h4>
+                    <p>{% lorem %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_scripts %}
-
 {% endblock %}
