@@ -82,7 +82,7 @@ void Scorer::rescore_documents(const vector<float> &weights,
 
     pair<float, int> top_docs[top_docs_per_thread * num_threads];
     for(int i = 0;i<top_docs_per_thread * num_threads; i++)
-        top_docs[i] = {-1, -1};
+        top_docs[i] = {-1e9, -1};
     
     // Fix the last segment to contain everything remaining
     for(int i = 0; i< num_threads;i++){
@@ -103,8 +103,9 @@ void Scorer::rescore_documents(const vector<float> &weights,
         x.join();
 
     sort(top_docs, top_docs + top_docs_per_thread * num_threads, greater<pair<float, int>>());
-    for(int i = 0;i<top_docs_per_thread; i++)
+    for(int i = 0;i<top_docs_per_thread; i++){
         top_docs_results.push_back(top_docs[i].second);
+    }
 }
 
 vector<pair<int, float>> Scorer::get_top_terms(const vector<float> &weights, string doc_id, int num_top_terms){
