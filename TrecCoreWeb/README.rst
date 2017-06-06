@@ -19,10 +19,11 @@ Basic Commands
 Setting Up The Server
 ^^^^^^^^^^^^^^^^^^^^^
 
-* Install postgres and run it, make sure you create a db called `treccoreweb`
-*
-* Create a python3 virtual env, and pip install
-* For running a uwsgi instance, `uwsgi --socket 127.0.0.1:8001 --module config.wsgi --master --process 2 --threads 4`
+* Install postgres and run it, make sure you create a db called ``treccoreweb``
+* Create a python3 virtual env, and pip install everything in ``requirements/base.txt``
+* Your local db is initially empty, and you will need to create the tables according to the models. To do this, run ``python manage.py makemigrations`` and then ``python manage.py migrate``
+* For running a uwsgi instance, ``uwsgi --socket 127.0.0.1:8001 --module config.wsgi --master --process 2 --threads 4``
+* To run locally, run ``python manage.py runserver``
 
 
 Setting Up Your Users

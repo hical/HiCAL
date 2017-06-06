@@ -27,6 +27,10 @@ def get_documents(query, start=0, numdisplay=20):
 
         doc_ids = []
         result = OrderedDict()
+
+        if not isinstance(xmlResult, list):
+            xmlResult = [xmlResult]
+
         for doc in xmlResult:
             docno = doc["docno"].zfill(7)
             parsed_doc = {
