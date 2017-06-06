@@ -203,7 +203,7 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+extra_judgment_docs, finished_judgments, results);
+    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<scorer->doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
