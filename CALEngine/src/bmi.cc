@@ -93,7 +93,6 @@ void BMI::train(SfWeightVector &w){
         else
             negatives.push_back(&scorer->doc_features[judgment.first]);
     }
-    cout<<positives.size()<<" "<<negatives.size()<<endl;
     
     sofia_ml::StochasticRocLoop(positives,
             negatives,
