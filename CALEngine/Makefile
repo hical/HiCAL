@@ -6,6 +6,9 @@ cli:
 fcgi:
 	$(CC) -lfcgi -lfcgi++ src/bmi_fcgi.cc src/bmi.cc src/features.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc -o bmi_fcgi
 
+sofia_cli:
+	$(CC) src/sofia_cli.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc -o sofia_cli
+
 clean:
 	rm -f bmi_cli
 	rm -f bmi_fcgi

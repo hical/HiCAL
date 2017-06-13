@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include <fstream>
 #include <cstring>
@@ -15,7 +16,7 @@ vector<SfSparseVector> parse_doc_features(string fname){
     string line;
     while(getline(doc_features_file, line)){
         const char* line_chr = line.c_str();
-        int len = strlen(line_chr);
+        int len = line.size();
         while(line_chr[len-1] == '\n')
             len--;
         const char* moving_chr = line_chr;
@@ -72,6 +73,7 @@ void Scorer::score_docs(const vector<float> &weights,
     }
 }
 
+// Only use for small values of top_docs_per_thread
 void Scorer::rescore_documents(const vector<float> &weights,
         int num_threads, 
         int top_docs_per_thread,
@@ -106,6 +108,20 @@ void Scorer::rescore_documents(const vector<float> &weights,
     for(int i = 0;i<top_docs_per_thread; i++){
         top_docs_results.push_back(top_docs[i].second);
     }
+}
+
+// Todo: replace the current rescore_documents with this version
+vector<pair<int, float>> Scorer::rescore_all_documents(const vector<float> &weights, int num_threads){
+    vector<pair<int, float>> top_docs_results;
+    for(int i = 0;i<doc_features.size(); i++){
+        float score = 0.0;
+        for(auto feature: doc_features[i].features_){
+            score += weights[feature.id_] * feature.value_;
+        }
+        top_docs_results.push_back({i, score});
+    }
+    sort(top_docs_results.begin(), top_docs_results.end(), [](auto a, auto b) -> bool{ return a.second > b.second;});
+    return top_docs_results;
 }
 
 vector<pair<int, float>> Scorer::get_top_terms(const vector<float> &weights, string doc_id, int num_top_terms){
