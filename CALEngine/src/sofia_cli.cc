@@ -2,6 +2,8 @@
 #include <fstream>
 #include <chrono>
 #include <random>
+#include <thread>
+#include <mutex>
 #include "scorer.h"
 #include "sofiaml/sofia-ml-methods.h"
 #include "sofiaml/sf-data-set.h"
@@ -36,8 +38,44 @@ void train(vector<pair<int, int>> judgments, Scorer *scorer, SfWeightVector &w){
             &w);
 }
 
+int RUNNING = 0;
+mutex running_mutex;
+void job(string training, string out, Scorer *scorer){
+    vector<pair<int, int>> judgments;
+    ifstream fin(training);
+    string doc_id;
+    int val;
+    while(fin>>val>>doc_id){
+        judgments.push_back({scorer->doc_ids_inv_map[doc_id], val});
+    }
+    fin.close();
+    SfWeightVector w(scorer->dimensionality);
+    if(judgments.size() == 0){
+        cerr<<"No training examples found for "<<training<<endl;
+    }else{
+        train(judgments, scorer, w);
+    }
+
+    auto weights = w.AsFloatVector();
+    // Scoring
+    vector<pair<int, float>> results = scorer->rescore_all_documents(weights, 1);
+
+    ofstream fout(out);
+    for(pair<int, float> result: results){
+        if(result.first >= 0 && result.first < scorer->doc_features.size())
+            fout<<scorer->doc_features[result.first].doc_id<<" "<<result.second<<endl;
+    }
+    fout.close();
+    cerr<<"Finished ranking for "<<training<<endl;
+    {
+        lock_guard<mutex> lock(running_mutex);
+        RUNNING--;
+    }
+}
+
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
+    AddFlag("--threads", "Number of threads", int(4));
     /* AddFlag("--training", "Number of docs to judge per iteration (-1 for BMI default)", int(-1)); */
     /* AddFlag("--out", "Number of threads to use for scoring", int(8)); */
     AddFlag("--help", "Show Help", bool(false));
@@ -73,7 +111,6 @@ int main(int argc, char **argv){
     cerr<<"Read "<<scorer.doc_features.size()<<" docs in "<<duration.count()<<"ms"<<endl;
     string training, out;
     while(getline(cin, training)){
-        vector<pair<int, int>> judgments;
         if(training.length() == 0){
             cerr<<"Error: blank line"<<endl;
             return 1;
@@ -83,33 +120,17 @@ int main(int argc, char **argv){
             cerr<<"Error: blank line"<<endl;
             return 1;
         }
-        ifstream fin(training);
-        string doc_id;
-        int val;
-        while(fin>>val>>doc_id){
-            judgments.push_back({scorer.doc_ids_inv_map[doc_id], val});
+        while(RUNNING >= CMD_LINE_INTS["--threads"]){
+            this_thread::sleep_for(chrono::milliseconds(200));
         }
-        fin.close();
-        SfWeightVector w(scorer.dimensionality);
-        if(judgments.size() == 0){
-            cerr<<"No training examples found for "<<training<<endl;
-        }else{
-            train(judgments, &scorer, w);
+        {
+            lock_guard<mutex> lock(running_mutex);
+            RUNNING++;
         }
-
-        auto weights = w.AsFloatVector();
-        // Scoring
-        start = std::chrono::steady_clock::now();
-        vector<pair<int, float>> results = scorer.rescore_all_documents(weights, 1);
-        duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-            (std::chrono::steady_clock::now() - start);
-        cerr<<"Rescored "<<scorer.doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
-
-        ofstream fout(out);
-        for(pair<int, float> result: results){
-            if(result.first >= 0 && result.first < scorer.doc_features.size())
-                fout<<scorer.doc_features[result.first].doc_id<<" "<<result.second<<endl;
-        }
-        fout.close();
+        auto t = thread(job, training, out, &scorer);
+        t.detach();
+    }
+    while(RUNNING > 0){
+        this_thread::sleep_for(chrono::milliseconds(200));
     }
 }
