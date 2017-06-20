@@ -26,7 +26,7 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
 
         # TODO: Hide stats for now.
         # counters = Judgement.objects.filter(user=self.request.user,
-        #                             topic=self.request.user.current_topic).aggregate(
+        #                             topic=self.request.user.current_task.topic).aggregate(
         #     total_relevant=Count(Case(When(relevant=True, then=1))),
         #     total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
         #     total_ontopic=Count(Case(When(ontopic=True, then=1)))
@@ -155,7 +155,7 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
             document_ids = helpers.padder(document_ids)
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
-                                                      self.request.user.current_topic)
+                                                      self.request.user.current_task.topic)
         context["documents"] = documents_values
         context["query"] = search_input
 

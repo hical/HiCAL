@@ -21,14 +21,6 @@
     </li>
 {% endblock %}
 
-{% block nav-right%}
-    {% if request.user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_task.topic.id %}">Topic</a>
-    </li>
-    {% endif %}
-{% endblock %}
-
 
 {% block main %}
 
@@ -36,12 +28,12 @@
         <div class="card-block">
             <div class="row flex-items-md-center">
                 <div class="col-md-4 mt-4">
-                    <h2 class="text-primary">TrecCoreWeb</h2>
+                    <h2 class="text-primary"> < TrecCoreWeb > </h2>
                     <h6>Please choose from the following:</h6>
 
                 </div>
                 <div class="col-md-8 center-text">
-                    <a class="btn btn-outline-primary" href="{% url 'home' %}">Home</a>
+                    <a class="btn btn-outline-primary" href="{% url 'progress:home' %}">Home</a>
                     <a class="btn btn-outline-primary" href="#">Tutorial</a>
                     <hr>
                     {% if request.user.is_authenticated %}

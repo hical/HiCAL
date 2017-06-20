@@ -55,7 +55,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         # Check if a judgment exists already, if so, update the db row.
         exists = Judgement.objects.filter(user=self.request.user,
                                           doc_id=doc_id,
-                                          topic=self.request.user.current_topic)
+                                          topic=self.request.user.current_task.topic)
 
         if exists:
             exists = exists.first()
@@ -85,8 +85,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "doc_title": doc_title,
-                        "topic_id": self.request.user.current_topic.id,
-                        "session": str(self.request.user.current_topic.uuid),
+                        "topic_id": self.request.user.current_task.topic.id,
+                        "session": str(self.request.user.current_task.topic.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
@@ -109,7 +109,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_title=doc_title,
                 doc_CAL_snippet=doc_CAL_snippet,
                 doc_search_snippet=doc_search_snippet,
-                topic=self.request.user.current_topic,
+                topic=self.request.user.current_task.topic,
                 query=query,
                 relevant=relevant,
                 nonrelevant=nonrelevant,
@@ -131,8 +131,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "doc_title": doc_title,
-                        "topic_id": self.request.user.current_topic.id,
-                        "session": str(self.request.user.current_topic.uuid),
+                        "topic_id": self.request.user.current_task.topic.id,
+                        "session": str(self.request.user.current_task.topic.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
@@ -155,14 +155,14 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 next_patch, top_terms = CALFunctions.send_judgment(
-                    self.request.user.current_topic.uuid,
+                    self.request.user.current_task.topic.uuid,
                     doc_id,
                     rel)
                 if not next_patch:
                     return self.render_json_response([])
 
                 documents = DocEngine.get_documents_with_snippet(next_patch,
-                                                    self.request.user.current_topic.seed_query,
+                                                    self.request.user.current_task.topic.seed_query,
                                                     top_terms)
             except TimeoutError:
                 error_dict = {u"message": u"Timeout error. "
@@ -175,7 +175,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             # mark on topic documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
-                CALFunctions.send_judgment(self.request.user.current_topic.uuid,
+                CALFunctions.send_judgment(self.request.user.current_task.topic.uuid,
                                            doc_id,
                                            rel)
             except TimeoutError:
@@ -199,7 +199,7 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         latest = Judgement.objects.filter(
                     user=self.request.user,
-                    topic=self.request.user.current_topic,
+                    topic=self.request.user.current_task.topic,
                     isFromCAL=True
                  ).order_by('-updated_at')[:number_of_docs_to_show]
         result = []
@@ -227,7 +227,7 @@ class GetAllView(views.LoginRequiredMixin, generic.TemplateView):
         context = {
             "judgments_list": Judgement.objects.filter(
                     user=self.request.user,
-                    topic=self.request.user.current_topic,
+                    topic=self.request.user.current_task.topic,
                  ).order_by('-updated_at')
         }
 

@@ -20,7 +20,7 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CALHomePageView, self).get_context_data(**kwargs)
         counters = Judgement.objects.filter(user=self.request.user,
-                                    topic=self.request.user.current_topic).aggregate(
+                                    topic=self.request.user.current_task.topic).aggregate(
             total_relevant=Count(Case(When(relevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
             total_ontopic=Count(Case(When(ontopic=True, then=1)))
@@ -111,8 +111,8 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             json_context, content_type=self.get_content_type(), status=502)
 
     def get_ajax(self, request, *args, **kwargs):
-        session = self.request.user.current_topic.uuid
-        seed_query = self.request.user.current_topic.seed_query
+        session = self.request.user.current_task.topic.uuid
+        seed_query = self.request.user.current_task.topic.seed_query
         try:
             docs_ids_to_judge, top_terms = CALFunctions.get_documents(str(session), 5,
                                                                       seed_query)

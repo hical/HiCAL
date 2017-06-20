@@ -56,6 +56,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     # custom users app
     'treccoreweb.users.apps.UsersConfig',
+    'treccoreweb.progress',
     'treccoreweb.CAL',
     'treccoreweb.topic',
     'treccoreweb.judgment',
