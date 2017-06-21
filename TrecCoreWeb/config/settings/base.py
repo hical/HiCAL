@@ -266,7 +266,7 @@ SOCIALACCOUNT_ADAPTER = 'treccoreweb.users.adapters.SocialAccountAdapter'
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'progress:home'
 LOGIN_URL = 'account_login'
 
 # SLUGLIFIER

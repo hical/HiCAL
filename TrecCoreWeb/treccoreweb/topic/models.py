@@ -2,11 +2,10 @@ from django.db import models
 from model_utils import Choices
 from config.settings.base import AUTH_USER_MODEL as User
 import uuid
+import datetime
 
 
 class Topic(models.Model):
-    username = models.ForeignKey(User)
-
     number = models.PositiveIntegerField(null=True,
                                          blank=True)
     title = models.CharField(null=False,
@@ -27,7 +26,7 @@ class Topic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "<User:{}, TopicNum:{}>".format(self.username, self.number)
+        return "<TopicNum:{}>".format(self.number)
 
     def __str__(self):
         return self.__unicode__()
@@ -112,15 +111,14 @@ class Task(models.Model):
     pretask = models.ForeignKey(PreTask)
     posttask = models.ForeignKey(PostTask)
     # current time spent on task
-    time_spent = models.DurationField()
+    timespent = models.DurationField(default=datetime.timedelta)
 
     def is_time_past(self):
         """
         Check if the task max time been reached.
         :return: True if task max time has been reched.
         """
-        import datetime
-        return self.time_spent >= datetime.timedelta(days=0, hours=1)
+        return self.timespent >= datetime.timedelta(days=0, hours=1)
 
     def is_completed(self):
         """
