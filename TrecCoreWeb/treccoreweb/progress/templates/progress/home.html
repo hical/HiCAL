@@ -17,42 +17,41 @@
 
 {% block nav-header %}
     <li class="nav-item active">
-        <span class="nav-link gray-text">Welcome to TrecCoreWeb</span>
+        <span class="nav-link gray-text">Please choose a judging platform ( S / J )</span>
     </li>
+{% endblock %}
+{% block nav-right%}
+<li class="nav-item right-margin">
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'progress:tutorial' %}">Tutorial</a>
+</li>
+<li class="nav-item">
+    {% if request.user.is_authenticated %}
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_logout'  %}">Sign out</a>
+    {% else %}
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_login' %}">Sign In</a>
+    {% endif %}
+</li>
 {% endblock %}
 
 
 {% block main %}
-
-    <div class="card">
-        <div class="card-block">
-            <div class="row flex-items-md-center">
-                <div class="col-md-4 mt-4">
-                    <h2 class="text-primary"> < TrecCoreWeb > </h2>
-                    <h6>Please choose from the following:</h6>
-
-                </div>
-                <div class="col-md-8 center-text">
-                    <a class="btn btn-outline-primary" href="{% url 'progress:home' %}">Home</a>
-                    <a class="btn btn-outline-primary" href="#">Tutorial</a>
-                    <hr>
-                    {% if request.user.is_authenticated %}
-                    <a class="btn btn-outline-primary" href="{% url 'search:main' %}">Search</a>
-                    <a class="btn btn-outline-primary" href="{% url 'CAL:main' %}">CAL</a>
-{#                    <a class="btn btn-outline-primary" href="{% url 'stats:home' %}">Stat <span class="badge badge-danger">Under construction</span></a>#}
-                    <hr>
-                    <a class="btn btn-outline-primary" href="{% url 'account_logout'  %}">Sign out</a>
-                    {% else %}
-                    <a class="btn btn-outline-primary" href="{% url 'account_signup' %}">Sign Up</a>
-                    <a class="btn btn-outline-primary" href="{% url 'account_login' %}">Sign In</a>
-                    {% endif %}
-
-                </div>
-
-            </div>
-
+    <div class="row top-bottom-margin">
+        <div class="col-md-6">
+            <h2 class="text-primary"> Your task </h2>
+            <hr>
+            <h6 class="text-primary"> Please choose a judging interface from the left navigation list.</h6>
+            <p>For this topic, you are provided with two judging interfaces you could use to judge documents. </p>
+            <p><strong class="text-primary">S</strong> : Search platform. < insert desc of interface here ></p>
+            <p><strong class="text-primary">J</strong> : Intelligent platform. < insert desc of interface here ></p>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-primary"> Your current topic </h2>
+            <hr>
+            <p><strong>Title</strong>: {{ user.current_task.topic.title }}</p>
+            <p><strong>Desc</strong>: {{ user.current_task.topic.description }}
+            </p>
+            <p><strong>Narrative</strong>: {{ user.current_task.topic.narrative }}
+            </p>
         </div>
     </div>
-
-
 {% endblock %}

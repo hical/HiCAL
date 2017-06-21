@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block pagetitle %}Tutorial{% endblock %}
+
+
+{% block sidebar %}{% endblock %}
+
+{% block nav-left%}{% endblock %}
+{% block nav-header %}
+    <li class="nav-item active">
+        <span class="nav-link gray-text">Tutorial</span>
+    </li>
+{% endblock %}
+{% block nav-right%}
+<li class="nav-item">
+        {% if request.user.is_authenticated %}
+        <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_logout'  %}">Sign out</a>
+        {% else %}
+        <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
+
+{% block main %}
+
+            <div class="row flex-items-md-center">
+                <div class="col-md-12 mt-4">
+                    <h1 class="text-primary"> Tutorial </h1>
+                    <strong>Please go through the tutorial:</strong>
+                </div>
+            </div>
+            <div class="row extra-top-margin">
+                <div class="col-md-12">
+                    <p>{% lorem 2 p %}</p>
+                    <p>{% lorem 1 p %}</p>
+                    <p>{% lorem 1 p %}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 align-right">
+                    <a class="btn btn-primary btn" href="{% url 'progress:pretask' %}">I understand and accept the terms and conditions</a>
+                </div>
+            </div>
+
+
+
+{% endblock %}

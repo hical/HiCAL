@@ -27,13 +27,15 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand font-montserrat" href="/"><strong>TrecCore</strong></a>
+    <a class="navbar-brand font-montserrat" href="/"><strong>IRStudy</strong></a>
     <div class="collapse navbar-collapse font-montserrat" id="navbarsExampleDefault">
+        {% block nav-left%}
         <ul class="navbar-nav mt-2">
             <li class="nav-item text-truncate" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;">
                 <span class="small gray-text">Topic: {{ user.current_task.topic.title }}</span>
             </li>
         </ul>
+        {% endblock %}
 
         <ul class="navbar-nav mx-auto small mt-1">
             {% block nav-header %}

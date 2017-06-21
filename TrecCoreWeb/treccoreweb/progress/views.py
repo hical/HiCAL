@@ -20,8 +20,12 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         return context
 
     def get(self, request, *args, **kwargs):
+        current_task = self.request.user.current_task
+        # if first task and pre-task is not done, show tutorial.
+        if current_task.is_first_task() and not current_task.pretask.is_completed:
+            return HttpResponseRedirect(reverse_lazy('progress:tutorial'))
         # if user already completed the pre-task, move to task
-        if not self.request.user.current_task.pretask.is_completed:
+        elif not self.request.user.current_task.pretask.is_completed:
             return HttpResponseRedirect(reverse_lazy('progress:pretask'))
         # if user time in task is over, move to post-task
         elif self.request.user.current_task.is_time_past():

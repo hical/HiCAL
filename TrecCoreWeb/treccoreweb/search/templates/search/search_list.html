@@ -69,7 +69,17 @@
                             <div class="document-{{ document_values.docno }}-modal-content" id="document-{{ document_values.docno }}-modal-content"
                                  data-doc-id="">
                                 <div class="document_content" id="document_{{ document_values.docno }}_content">
-                                    <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                    <div class="row bottom-margin small">
+                                        <div class="col-md-6 ">
+                                            <small class="document_content_date"></small>
+                                        </div>
+                                        <div class="col-md-6 align-right small">
+                                            <code class="document_content_id"></code>
+                                        </div>
+                                    </div>
+                                    <div class="document_content_text">
+                                        <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -188,8 +198,10 @@
                     url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}&query={{ query }}',
                     method: 'GET',
                     success: function (result) {
-                        modal.find('.document_content').html(result[0]['content']);
+                        modal.find('.document_content_text').html(result[0]['content']);
                         loaded_docs['{{ document_values.docno }}'] = true;
+                        modal.find('.document_content_date').html(result[0]['date']);
+                        modal.find('.document_content_id').html(result[0]['doc_id']);
                     },
                     error: function (result){
                         modal.find('.document_content').html("Failed to get doc. Error message: "+result);
@@ -247,14 +259,22 @@
            */
           function jumpTo() {
             if ($results.length) {
+              $input.addClass("greenBorder").css("border-color","#449D44");
               var position,
                 $current = $results.eq(currentIndex);
               $results.removeClass(currentClass);
               if ($current.length) {
                 $current.addClass(currentClass);
-                position = $current.offset().top - offsetTop;
-                window.scrollTo(0, position);
+                position = $current[0].offsetTop - offsetTop;
+                $("#doc-{{ document_values.docno }}-modal").scrollTop(position);
               }
+            }else{
+              if(!$input.val()){
+                  $input.removeAttr( 'style' );
+              }else if ($input.is(':focus')){
+                $input.addClass("redBorder").css("border-color","#C9302C");
+              }
+              $("#doc-{{ document_values.docno }}-modal").scrollTop(0);
             }
           }
 

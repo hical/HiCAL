@@ -122,6 +122,9 @@ class Task(models.Model):
         import datetime
         return self.time_spent >= datetime.timedelta(days=0, hours=1)
 
+    def is_first_task(self):
+        return 1 == self.current_task_number()
+
     def current_task_number(self):
         current_topic_num = self.topic.number
         ith = self.username.sequence.index(current_topic_num) + 1
