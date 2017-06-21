@@ -116,14 +116,24 @@ class Task(models.Model):
 
     def is_time_past(self):
         """
-        Check if the task has been completed.
-        :return: True if task is completed.
+        Check if the task max time been reached.
+        :return: True if task max time has been reched.
         """
         import datetime
         return self.time_spent >= datetime.timedelta(days=0, hours=1)
 
+    def is_completed(self):
+        """
+        Check if the task has been completed.
+        :return: True if task is completed.
+        """
+        return self.pretask.is_completed and self.posttask.is_completed
+
     def is_first_task(self):
         return 1 == self.current_task_number()
+
+    def is_last_task(self):
+        return len(self.username.sequence) == self.current_task_number()
 
     def current_task_number(self):
         current_topic_num = self.topic.number

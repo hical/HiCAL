@@ -11,5 +11,8 @@ urlpatterns = [
     url(r'^pretask/$', views.PretaskView.as_view(),
         name='pretask'),
     url(r'^posttask/$', views.PosttaskView.as_view(),
-        name='posttask')
+        name='posttask'),
+    url(r'^exit/$', TemplateView.as_view(template_name="progress/exit.html"),
+        name='exit'),
+
 ]

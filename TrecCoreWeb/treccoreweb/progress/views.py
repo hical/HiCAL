@@ -24,11 +24,11 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         # if first task and pre-task is not done, show tutorial.
         if current_task.is_first_task() and not current_task.pretask.is_completed:
             return HttpResponseRedirect(reverse_lazy('progress:tutorial'))
-        # if user already completed the pre-task, move to task
-        elif not self.request.user.current_task.pretask.is_completed:
-            return HttpResponseRedirect(reverse_lazy('progress:pretask'))
+        # if the current task is the last one and it has been completed, go to exit
+        elif current_task.is_last_task() and current_task.is_completed():
+            return HttpResponseRedirect(reverse_lazy('progress:exit'))
         # if user time in task is over, move to post-task
-        elif self.request.user.current_task.is_time_past():
+        elif current_task.is_time_past():
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
 
         return super(Home, self).get(self, request, *args, **kwargs)
@@ -133,8 +133,7 @@ class PosttaskView(views.LoginRequiredMixin, generic.CreateView):
                     self.request.user.save()
                 # if user has completed all tasks, move to exit questionnaire
                 else:
-                    # TODO: Move to exit questionnaire.
-                    pass
+                    return HttpResponseRedirect(reverse_lazy('progress:exit'))
             else:
                 context['object'] = unmodified_object
                 return render(request,

@@ -9,7 +9,7 @@
 {% block nav-left%}{% endblock %}
 {% block nav-header %}
     <li class="nav-item active">
-        <span class="nav-link gray-text">Tutorial</span>
+        <span class="nav-link gray-text">Exit questionnaire</span>
     </li>
 {% endblock %}
 {% block nav-right%}
@@ -27,20 +27,18 @@
 
     <div class="row flex-items-md-center">
         <div class="col-md-12 mt-4">
-            <h1 class="text-primary"> Tutorial </h1>
-            <strong>Please go through the tutorial:</strong>
+            <h1 class="text-primary"> Exit questionnaire </h1>
+            <strong>Please answer the following questions:</strong>
         </div>
     </div>
     <div class="row extra-top-margin">
         <div class="col-md-12">
-            <p>{% lorem 2 p %}</p>
-            <p>{% lorem 1 p %}</p>
             <p>{% lorem 1 p %}</p>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 align-right">
-            <a class="btn btn-primary btn" href="{% url 'progress:pretask' %}">I understand and accept the terms and conditions</a>
+            <a class="btn btn-primary btn" href="{% url 'progress:pretask' %}">Exit study</a>
         </div>
     </div>
 
