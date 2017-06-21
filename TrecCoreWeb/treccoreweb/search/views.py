@@ -147,7 +147,7 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
         context = {}
         documents_values, document_ids = None, None
         try:
-            documents_values, document_ids = get_documents(search_input)
+            documents_values, document_ids, total_time = get_documents(search_input)
         except (TimeoutError, httplib2.HttpLib2Error):
             context['error'] = "Error happened. Please check search server."
 
@@ -158,6 +158,8 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
                                                       self.request.user.current_task.topic)
         context["documents"] = documents_values
         context["query"] = search_input
+        if total_time:
+            context["total_time"] = "{0:.2f}".format(round(float(total_time), 2))
 
         rendered_template = template.render(context)
         return HttpResponse(rendered_template, content_type='text/html')

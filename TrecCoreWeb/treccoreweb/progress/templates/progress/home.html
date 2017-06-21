@@ -3,18 +3,6 @@
 
 {% block pagetitle %}Home{% endblock %}
 
-
-{% block sidebar %}
-    {% if request.user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'search:main' %}">S</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
-    </li>
-    {% endif %}
-{% endblock %}
-
 {% block nav-header %}
     <li class="nav-item active">
         <span class="nav-link gray-text">Please choose a judging platform ( S / J )</span>

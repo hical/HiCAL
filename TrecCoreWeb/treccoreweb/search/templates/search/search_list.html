@@ -5,7 +5,21 @@
     </div>
 </div>
 {% endif %}
-
+{% if not  documents.items %}
+<div class="med card-section">
+    <p style="padding-top:.33em">
+        Your search - <em>{{ query }}</em> - did not match any documents.  </p>
+        <p style="margin-top:1em">Suggestions:</p>
+        <ul style="margin-left:1.3em;margin-bottom:2em">
+            <li>Make sure that all words are spelled correctly.</li>
+            <li>Try different keywords.</li>
+            <li>Try more general keywords.</li>
+            <li>Try fewer keywords.</li></ul>
+</div>
+{% endif %}
+{% if total_time %}
+<small class="gray-text">{{ total_time }} seconds.</small>
+{% endif %}
 {% for doc_id, document_values in documents.items %}
     <div class="row flex-items-md-middle">
         <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 15px;">

@@ -12,43 +12,26 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
+    </li>
 {% endblock %}
 
 {% block nav-header %}
     {% block nav-header-title %}{% endblock %}
     <li class="nav-item active">
     <span class="nav-link thin text-primary">
-       <strong>TrecSearch</strong>
+       <strong>Search</strong>
     </span>
     </li>
-    {% comment %}
-    <li class="nav-item active">
-    <span class="nav-link thin gray-text">
-       <strong>Document judged: </strong><span class="badge badge-success"
-                                               id="nav_stats_rel_header">{{ total_relevant }}</span> <span
-            class="badge badge-danger"
-            id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span
-            class="badge badge-warning"
-            id="nav_stats_ontopic_header">{{ total_ontopic }}</span>
-    </span>
-    </li>
-    <li class="nav-item active" style="width: 200px">
-    <span class="nav-link thin gray-text">
-        <strong>Time spent:</strong>
-        <div id="nav_timer_header" class="display-inline">
-            <span class="values" id="timer_counter">counters</span>
-        </div>
-    </span>
-    </li>
-    {% endcomment %}
 {% endblock %}
 
 {% block main %}
     <div class="row flex-items-lg-middle">
         <div class="col-lg-2 mt-1 text-primary font-montserrat">
-            <h3>TrecSearch</h3>
+            <h3>Search</h3>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-8">
           <form class="input-group" id="search_form">
               <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
                    name="search_input">

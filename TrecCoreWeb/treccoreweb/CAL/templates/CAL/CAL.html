@@ -12,6 +12,9 @@
         <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
                 class="sr-only">(current)</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
+    </li>
 {% endblock %}
 
 {% block nav-header-title %}
@@ -28,12 +31,6 @@
         <a class="nav-link" data-toggle="modal" data-target="#reviewDocsModal" href="#"
             id="reviewDocs">Latest judgments</a>
     </li>
-{#    <li class="nav-item">#}
-{#        <a class="nav-link" href="{% url 'judgment:get_all' %}">All judgments</a>#}
-{#    </li>#}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_task.topic.id %}">Topic</a>
-    </li>
     {% endif %}
 {% endblock %}
 
@@ -44,7 +41,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest CAL judged
+                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest judged
                         docs.</h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
@@ -267,7 +264,7 @@
                             "",
                             "<span class='text-danger'>Server returned empty list.</span>",
                             "",
-                            "Something went wrong.. Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic.",
+                            "Something went wrong.. Please contact the study coordinators.",
                             ""
                         );
                 }
