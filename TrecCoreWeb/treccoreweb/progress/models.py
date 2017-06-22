@@ -126,7 +126,7 @@ class Demographic(models.Model):
 
 class PreTask(models.Model):
     username = models.ForeignKey(User)
-    topic = models.ForeignKey(Topic)
+    task = models.ForeignKey('Task', related_name='pretask_task')
 
     # Pre-task questions
     familiarity = models.CharField(max_length=35,
@@ -144,7 +144,7 @@ class PreTask(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "<User:{}, TopicNum:{}>".format(self.username, self.topic.number)
+        return "<User:{}, Task:{}>".format(self.username, self.task)
 
     def __str__(self):
         return self.__unicode__()
@@ -152,7 +152,7 @@ class PreTask(models.Model):
 
 class PostTask(models.Model):
     username = models.ForeignKey(User)
-    topic = models.ForeignKey(Topic)
+    task = models.ForeignKey('Task', related_name='posttask_task')
 
     # Post-task questions
     difficulty = models.CharField(max_length=35,
@@ -176,17 +176,31 @@ class PostTask(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "<User:{}, TopicNum:{}>".format(self.username, self.topic.number)
+        return "<User:{}, Task:{}>".format(self.username, self.task)
 
     def __str__(self):
         return self.__unicode__()
 
 
+class TaskSetting(models.Model):
+    """
+    Interface and document settings for tasks
+
+    """
+
+    show_search = models.BooleanField()
+    show_CAL = models.BooleanField()
+    show_summary = models.BooleanField()
+    show_full_doc = models.BooleanField()
+
+
 class Task(models.Model):
     username = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
-    pretask = models.ForeignKey(PreTask)
-    posttask = models.ForeignKey(PostTask)
+    pretask = models.ForeignKey(PreTask, related_name='task_pretask')
+    posttask = models.ForeignKey(PostTask, related_name='task_posttask')
+    setting = models.ForeignKey(TaskSetting)
+
     # current time spent on task
     timespent = models.DurationField(default=datetime.timedelta)
 

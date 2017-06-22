@@ -21,8 +21,11 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         current_task = self.request.user.current_task
+        # if demographic is not completed yet, show demographic
+        if not Demographic.objects.filter(username=self.request.user):
+            return HttpResponseRedirect(reverse_lazy('progress:demographic'))
         # if first task and pre-task is not done, show tutorial.
-        if current_task.is_first_task() and not current_task.pretask.is_completed:
+        elif current_task.is_first_task() and not current_task.pretask.is_completed:
             return HttpResponseRedirect(reverse_lazy('progress:tutorial'))
         # if the current task is the last one and it has been completed, go to exit
         elif current_task.is_last_task() and current_task.is_completed():
