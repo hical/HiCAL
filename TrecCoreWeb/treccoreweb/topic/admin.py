@@ -1,5 +1,5 @@
 from django.contrib import admin
-from treccoreweb.topic.models import Topic, Task, PreTask, PostTask
+from treccoreweb.topic.models import Topic
 
 
 class TopicAdmin(admin.ModelAdmin):
@@ -15,6 +15,3 @@ class TopicAdmin(admin.ModelAdmin):
             return []
 
 admin.site.register(Topic, TopicAdmin)
-admin.site.register(Task)
-admin.site.register(PreTask)
-admin.site.register(PostTask)

@@ -3,8 +3,8 @@ from treccoreweb.topic.models import *
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import generic
-from treccoreweb.topic.models import PreTask, PostTask
-from treccoreweb.topic.forms import PreTaskForm, PostTaskForm
+from treccoreweb.progress.models import Demographic, PreTask, PostTask
+from treccoreweb.progress.forms import DemographicForm, PreTaskForm, PostTaskForm
 from django.shortcuts import render, get_object_or_404
 
 import logging
@@ -32,6 +32,23 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
 
         return super(Home, self).get(self, request, *args, **kwargs)
+
+
+class DemographicCreateView(views.LoginRequiredMixin, generic.CreateView):
+    model = Demographic
+    template_name = "progress/demographic.html"
+    object = None
+    form_class = DemographicForm
+    success_url = reverse_lazy("progress:pretask")
+
+    def form_valid(self, form):
+        prev = Demographic.objects.filter(username=self.request.user)
+        # if a demographic instance already exists, delete old one
+        if prev:
+            prev.first().delete()
+        self.object = form.save(commit=False)
+        self.object.username = self.request.user
+        return super(DemographicCreateView, self).form_valid(form)
 
 
 class PretaskView(views.LoginRequiredMixin, generic.CreateView):

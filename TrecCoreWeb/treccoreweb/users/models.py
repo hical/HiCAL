@@ -5,7 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.postgres.fields import JSONField
 
-from treccoreweb.topic.models import Task
+from treccoreweb.progress.models import Task
 
 @python_2_unicode_compatible
 class User(AbstractUser):

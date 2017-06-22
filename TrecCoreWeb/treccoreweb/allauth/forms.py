@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.postgres.forms import JSONField
-from treccoreweb.topic.models import Topic, Task, PreTask, PostTask
+from treccoreweb.topic.models import Topic
+from treccoreweb.progress.models import Task, PreTask, PostTask
 from treccoreweb.users.models import User
 
 
@@ -10,7 +11,7 @@ class SignupForm(forms.Form):
             'username': ('Username', "Only letters, numbers, '-', '.', and '_'"),
     }
     field_order = ['username', 'email', 'sequence']
-    sequence = JSONField()
+    sequence = JSONField(initial=[])
 
     def signup(self, request, user):
         user.sequence = self.cleaned_data['sequence']
