@@ -26,7 +26,7 @@ def get_documents(doc_ids, query):
                               method="GET")
     result = []
     if resp and resp['status'] == '200':
-        content = loads(content)
+        content = loads(content.decode('utf-8'))
         for doc in content:
             isFound = doc.get("isFound", False)
             if not isFound:
