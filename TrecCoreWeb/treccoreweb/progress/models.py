@@ -126,7 +126,7 @@ class Demographic(models.Model):
 
 class PreTask(models.Model):
     username = models.ForeignKey(User)
-    task = models.ForeignKey('Task', related_name='pretask_task')
+    task = models.ForeignKey('Task', related_name='pretask_task', null=True, blank=True)
 
     # Pre-task questions
     familiarity = models.CharField(max_length=35,
@@ -152,7 +152,7 @@ class PreTask(models.Model):
 
 class PostTask(models.Model):
     username = models.ForeignKey(User)
-    task = models.ForeignKey('Task', related_name='posttask_task')
+    task = models.ForeignKey('Task', related_name='posttask_task', null=True, blank=True)
 
     # Post-task questions
     difficulty = models.CharField(max_length=35,

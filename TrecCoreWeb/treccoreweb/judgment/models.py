@@ -1,12 +1,12 @@
 from django.db import models
 from config.settings.base import AUTH_USER_MODEL as User
-from treccoreweb.topic.models import Topic
+from treccoreweb.progress.models import Task
 
 
 class Judgement(models.Model):
     class Meta:
-        unique_together = ['user', 'doc_id', 'topic']
-        index_together = ['user', 'doc_id', 'topic']
+        unique_together = ['user', 'doc_id', 'task']
+        index_together = ['user', 'doc_id', 'task']
 
     LOGGING_MESSAGES = {
         "create": "New judgment.",
@@ -24,7 +24,7 @@ class Judgement(models.Model):
                                        blank=False)
     doc_search_snippet = models.TextField(null=False,
                                           blank=False)
-    topic = models.ForeignKey(Topic)
+    task = models.ForeignKey(Task)
     query = models.CharField(null=True,
                              blank=True,
                              max_length=512)

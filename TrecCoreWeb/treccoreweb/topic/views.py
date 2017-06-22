@@ -8,11 +8,12 @@ from treccoreweb.topic.models import Topic
 from treccoreweb.topic.forms import TopicForm
 from treccoreweb.topic.logging_messages import LOGGING_MESSAGES as TOPIC_LOGGING_MESSAGES
 from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.CAL.exceptions import CALError
+from braces import views
 
 import logging
 logger = logging.getLogger(__name__)
 
-from braces import views
 
 class TopicView(LoginRequiredMixin, generic.DetailView):
     model = Topic
@@ -97,13 +98,23 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.username = self.request.user
 
-        if CALFunctions.add_session(str(self.object.uuid), self.object.seed_query):
+        try:
+            CALFunctions.add_session(str(self.object.uuid), self.object.seed_query)
             self.object.save()
             messages.add_message(self.request,
                                  messages.SUCCESS,
                                  'Your topic has been created but it\'s not active. '
                                  'Activate it to start working under it')
-        else:
+        except CALError as e:
+            log_body = {
+                "user": self.request.user.username,
+                "result": {
+                    "message": str(e),
+                    "source": "interfaces.CAL.functions.add_session()"
+                }
+            }
+
+            logger.error("[{}]".format(log_body))
             messages.add_message(self.request,
                                  messages.ERROR,
                                  'Failed to create session. CAL backend failed to add  '

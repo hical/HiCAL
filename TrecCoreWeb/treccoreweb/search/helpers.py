@@ -1,19 +1,19 @@
 from treccoreweb.judgment.models import Judgement
 
 
-def join_judgments(document_values, document_ids, user, topic):
+def join_judgments(document_values, document_ids, user, task):
     """
     Adds the relevance judgment of the document to the document_values dict.
     If document has not been judged yet, `isJudged` will be False.
     :param user:
-    :param topic:
+    :param task:
     :param document_values:
     :param document_ids:
     :return: document_values with extra information about the document
     """
 
     judged_docs = Judgement.objects.filter(user=user,
-                                           topic=topic,
+                                           task=task,
                                            doc_id__in=document_ids)
     judged_docs = {j.doc_id: j for j in judged_docs}
     for key in document_values:

@@ -2,13 +2,14 @@ import json
 
 from braces import views
 from django.http import HttpResponse
-from django.template import loader
 from django.views import generic
 from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 from treccoreweb.judgment.models import Judgement
+from treccoreweb.CAL.exceptions import CALError
 
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +56,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         # Check if a judgment exists already, if so, update the db row.
         exists = Judgement.objects.filter(user=self.request.user,
                                           doc_id=doc_id,
-                                          topic=self.request.user.current_task.topic)
+                                          task=self.request.user.current_task)
 
         if exists:
             exists = exists.first()
@@ -109,7 +110,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_title=doc_title,
                 doc_CAL_snippet=doc_CAL_snippet,
                 doc_search_snippet=doc_search_snippet,
-                topic=self.request.user.current_task.topic,
+                task=self.request.user.current_task,
                 query=query,
                 relevant=relevant,
                 nonrelevant=nonrelevant,
@@ -150,6 +151,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             logger.info("[{}]".format(log_body))
 
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
+        CALErrorMessage = None
+
         if isFromCAL:
             # mark on topic documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
@@ -168,9 +171,10 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
+            except CALError as e:
+                CALErrorMessage = str(e)
 
             context[u"next_docs"] = documents
-            return self.render_json_response(context)
         else:
             # mark on topic documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
@@ -182,8 +186,38 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
+            except CALError as e:
+                CALErrorMessage = str(e)
 
-            return self.render_json_response(context)
+        if CALErrorMessage:
+            log_body = {
+                "user": self.request.user.username,
+                "client_time": client_time,
+                "result": {
+                    "message": CALErrorMessage,
+                    "action": "create",
+                    "doc_judgment": {
+                        "doc_id": doc_id,
+                        "doc_title": doc_title,
+                        "topic_id": self.request.user.current_task.topic.id,
+                        "session": str(self.request.user.current_task.topic.uuid),
+                        "query": query,
+                        "relevant": relevant,
+                        "nonrelevant": nonrelevant,
+                        "ontopic": ontopic,
+                        "time_to_judge": time_to_judge,
+                        "isFromCAL": isFromCAL,
+                        "isFromSearch": isFromSearch,
+                        "isFromSearchModal": isFromSearchModal,
+                        "fromMouse": fromMouse,
+                        "fromKeyboard": fromKeyboard
+                    }
+                }
+            }
+
+            logger.error("[{}]".format(log_body))
+
+        return self.render_json_response(context)
 
 
 class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
@@ -199,7 +233,7 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         latest = Judgement.objects.filter(
                     user=self.request.user,
-                    topic=self.request.user.current_task.topic,
+                    task=self.request.user.current_task,
                     isFromCAL=True
                  ).order_by('-updated_at')[:number_of_docs_to_show]
         result = []
@@ -227,7 +261,7 @@ class GetAllView(views.LoginRequiredMixin, generic.TemplateView):
         context = {
             "judgments_list": Judgement.objects.filter(
                     user=self.request.user,
-                    topic=self.request.user.current_task.topic,
+                    task=self.request.user.current_task,
                  ).order_by('-updated_at')
         }
 

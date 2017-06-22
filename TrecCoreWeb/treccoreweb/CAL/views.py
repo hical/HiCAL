@@ -9,6 +9,7 @@ from treccoreweb.interfaces.CAL import functions as CALFunctions
 from treccoreweb.judgment.models import Judgement
 from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
 from interfaces.DocumentSnippetEngine import functions as DocEngine
+from treccoreweb.CAL.exceptions import CALError
 
 import logging
 logger = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CALHomePageView, self).get_context_data(**kwargs)
         counters = Judgement.objects.filter(user=self.request.user,
-                                    topic=self.request.user.current_task.topic).aggregate(
+                                    task=self.request.user.current_task).aggregate(
             total_relevant=Count(Case(When(relevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
             total_ontopic=Count(Case(When(ontopic=True, then=1)))
@@ -121,8 +122,21 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             documents = DocEngine.get_documents_with_snippet(docs_ids_to_judge,
                                                              seed_query,
                                                              top_terms)
+            return self.render_json_response(documents)
         except TimeoutError:
             error_dict = {u"message": u"Timeout error. Please check status of servers."}
             return self.render_timeout_request_response(error_dict)
+        except CALError as e:
+            log_body = {
+                "user": self.request.user.username,
+                "result": {
+                    "message": str(e),
+                    "source": "interfaces.CAL.functions.get_documents()"
+                }
+            }
 
-        return self.render_json_response(documents)
+            logger.error("[{}]".format(log_body))
+            error_dict = {u"message": u"Error occurred. Please inform study coordinators"}
+
+            # TODO: add proper http response for CAL errors
+            return self.render_timeout_request_response(error_dict)
