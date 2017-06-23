@@ -1,4 +1,4 @@
-CC = g++ -O3 -Wall -pthread
+CC = g++ -O3 -Wall -pthread --std=c++14
 
 cli:
 	$(CC) src/bmi_cli.cc src/bmi.cc src/features.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc -o bmi_cli
