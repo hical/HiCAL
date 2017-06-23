@@ -63,7 +63,7 @@ class TopicVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     def post(self, request, *args, **kwargs):
         try:
             client_time = self.request_json.get(u"client_time", None)
-            type = self.request_json.get("type", None)
+            html_file = self.request_json.get("html_file", None)
         except KeyError:
             error_dict = {u"message": u"your input must include client_time."}
             return self.render_bad_request_response(error_dict)
@@ -72,10 +72,10 @@ class TopicVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             "user": self.request.user.username,
             "client_time": client_time,
             "result": {
-                "message": TOPIC_LOGGING_MESSAGES.get("visit").get(type, None),
+                "message": TOPIC_LOGGING_MESSAGES.get("visit").get(html_file, None),
                 "page_visit": True,
-                "page_file": "{}.html".format(type),
-                "page_title": "Topics {}".format(type)
+                "page_file": "{}.html".format(html_file),
+                "page_title": "Topics {}".format(html_file)
             }
         }
 

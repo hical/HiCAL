@@ -12,7 +12,7 @@ from treccoreweb.search import helpers
 import logging
 
 from treccoreweb.search.logging_messages import LOGGING_MESSAGES as SEARCH_LOGGING_MESSAGES
-from treccoreweb.interfaces.SearchEngine.functions import get_documents
+from treccoreweb.interfaces.SearchEngine import functions as SearchEngine
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 
 logger = logging.getLogger(__name__)
@@ -141,13 +141,17 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
         template = loader.get_template(self.template)
         try:
             search_input = request.POST.get("search_input")
+            numdisplay = 2
         except KeyError:
             rendered_template = template.render({})
             return HttpResponse(rendered_template, content_type='text/html')
         context = {}
         documents_values, document_ids = None, None
         try:
-            documents_values, document_ids, total_time = get_documents(search_input)
+            documents_values, document_ids, total_time = SearchEngine.get_documents(
+                                                            search_input,
+                                                            numdisplay=numdisplay
+                                                         )
         except (TimeoutError, httplib2.HttpLib2Error):
             context['error'] = "Error happened. Please check search server."
 
