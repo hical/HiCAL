@@ -87,7 +87,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "doc_id": doc_id,
                         "doc_title": doc_title,
                         "topic_id": self.request.user.current_task.topic.id,
-                        "session": str(self.request.user.current_task.topic.uuid),
+                        "session": str(self.request.user.current_task.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
@@ -133,7 +133,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "doc_id": doc_id,
                         "doc_title": doc_title,
                         "topic_id": self.request.user.current_task.topic.id,
-                        "session": str(self.request.user.current_task.topic.uuid),
+                        "session": str(self.request.user.current_task.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
@@ -158,7 +158,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 next_patch, top_terms = CALFunctions.send_judgment(
-                    self.request.user.current_task.topic.uuid,
+                    self.request.user.current_task.uuid,
                     doc_id,
                     rel)
                 if not next_patch:
@@ -179,7 +179,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             # mark on topic documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
-                CALFunctions.send_judgment(self.request.user.current_task.topic.uuid,
+                CALFunctions.send_judgment(self.request.user.current_task.uuid,
                                            doc_id,
                                            rel)
             except TimeoutError:
@@ -200,7 +200,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "doc_id": doc_id,
                         "doc_title": doc_title,
                         "topic_id": self.request.user.current_task.topic.id,
-                        "session": str(self.request.user.current_task.topic.uuid),
+                        "session": str(self.request.user.current_task.uuid),
                         "query": query,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,

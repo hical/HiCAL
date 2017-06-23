@@ -2,7 +2,11 @@ from django.db import models
 from model_utils import Choices
 from config.settings.base import AUTH_USER_MODEL as User
 from treccoreweb.topic.models import Topic
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.CAL.exceptions import CALError
+
 import datetime
+import uuid
 
 NA = "---"
 NAA = "NOT AT ALL"
@@ -200,9 +204,21 @@ class Task(models.Model):
     pretask = models.ForeignKey(PreTask, related_name='task_pretask')
     posttask = models.ForeignKey(PostTask, related_name='task_posttask')
     setting = models.ForeignKey(TaskSetting)
+    uuid = models.UUIDField(default=uuid.uuid4,
+                            editable=False)
 
     # current time spent on task
     timespent = models.DurationField(default=datetime.timedelta)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            try:
+                CALFunctions.add_session(str(self.uuid), self.topic.seed_query)
+            except CALError as e:
+                # TODO: log error
+                pass
+
+        super(Task, self).save(args, kwargs)
 
     def is_time_past(self):
         """

@@ -1,5 +1,4 @@
 from django.db import models
-import uuid
 
 
 class Topic(models.Model):
@@ -15,8 +14,6 @@ class Topic(models.Model):
                                    blank=False)
     narrative = models.TextField(null=False,
                                  blank=False)
-    uuid = models.UUIDField(default=uuid.uuid4,
-                            editable=False)
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)

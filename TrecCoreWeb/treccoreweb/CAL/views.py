@@ -112,7 +112,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             json_context, content_type=self.get_content_type(), status=502)
 
     def get_ajax(self, request, *args, **kwargs):
-        session = self.request.user.current_task.topic.uuid
+        session = self.request.user.current_task.uuid
         seed_query = self.request.user.current_task.topic.seed_query
         try:
             docs_ids_to_judge, top_terms = CALFunctions.get_documents(str(session), 5,
