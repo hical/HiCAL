@@ -7,7 +7,7 @@ CAL::utils::BinFeatureWriter::BinFeatureWriter(std::string file_name):FeatureWri
 CAL::utils::SVMlightFeatureWriter::SVMlightFeatureWriter(std::string file_name):FeatureWriter(file_name){
 }
 
-void CAL::utils::BinFeatureWriter::write(const SfSparseVector *spv){
+void CAL::utils::BinFeatureWriter::write(const std::unique_ptr<SfSparseVector> &spv){
     fwrite(spv->doc_id.c_str(), 1, spv->doc_id.length(), fp);
     fputc(DELIM_CHAR, fp);
 
@@ -36,7 +36,7 @@ void CAL::utils::BinFeatureWriter::finish(){
     fflush(fp);
 }
 
-void CAL::utils::SVMlightFeatureWriter::write(const SfSparseVector *spv){
+void CAL::utils::SVMlightFeatureWriter::write(const std::unique_ptr<SfSparseVector> &spv){
     fprintf(fp, "%s", spv->doc_id.c_str());
     for(auto &fpv: spv->features_){
         if(fpv.id_ != 0)

@@ -13,7 +13,7 @@ CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(std::string file_name):
 
 // Bad things will happen if the file is corrupted
 // Todo: move things to heap
-SfSparseVector* CAL::utils::BinFeatureParser::next(){
+std::unique_ptr<SfSparseVector> CAL::utils::BinFeatureParser::next(){
     string doc_id;
     char c = fgetc(fp);
     if(c == EOF)
@@ -33,7 +33,7 @@ SfSparseVector* CAL::utils::BinFeatureParser::next(){
         fvp.id_ = x;
         fread(&fvp.value_, sizeof(float), 1, fp);
     }
-    return new SfSparseVector(doc_id, features);
+    return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
 bool CAL::utils::SVMlightFeatureParser::read_line(){
@@ -60,7 +60,7 @@ bool CAL::utils::SVMlightFeatureParser::read_line(){
 
 // Move to c file buffers
 // Bad things will happen if file is not proper!
-SfSparseVector* CAL::utils::SVMlightFeatureParser::next(){
+std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
     if(!read_line())
         return NULL;
 
@@ -83,13 +83,13 @@ SfSparseVector* CAL::utils::SVMlightFeatureParser::next(){
         if(moving_chr == NULL)
             break;
     }
-    return new SfSparseVector(doc_id, features);
+    return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-vector<SfSparseVector*> CAL::utils::FeatureParser::get_all(){
-    vector<SfSparseVector*> sparse_feature_vectors;
-    SfSparseVector *spv;
+std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>> CAL::utils::FeatureParser::get_all(){
+    auto sparse_feature_vectors = std::make_shared<vector<std::unique_ptr<SfSparseVector>>>();
+    std::unique_ptr<SfSparseVector> spv;
     while((spv = next()) != NULL)
-        sparse_feature_vectors.push_back(spv);
+        sparse_feature_vectors->push_back(std::move(spv));
     return sparse_feature_vectors;
 }

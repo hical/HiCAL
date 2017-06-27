@@ -3,6 +3,7 @@
 
 #include "../sofiaml/sf-sparse-vector.h"
 #include <fstream>
+#include <memory>
 
 namespace CAL{
     namespace utils{
@@ -12,8 +13,8 @@ namespace CAL{
                 FILE *fp;
             public:
                 FeatureParser(std::string fname){ fp = fopen(fname.c_str(), "rb"); setvbuf(fp, NULL, _IOFBF, 1<<25); }
-                virtual SfSparseVector* next() = 0;
-                std::vector<SfSparseVector*> get_all();
+                virtual std::unique_ptr<SfSparseVector> next() = 0;
+                std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>> get_all();
                 ~FeatureParser(){fclose(fp);}
         };
 
@@ -21,7 +22,7 @@ namespace CAL{
             uint32_t num_records;
             public:
                 BinFeatureParser(std::string file_name);
-                SfSparseVector* next();
+                std::unique_ptr<SfSparseVector> next();
         };
 
         class SVMlightFeatureParser:public FeatureParser {
@@ -30,7 +31,7 @@ namespace CAL{
             public:
                 SVMlightFeatureParser(std::string file_name);
                 bool read_line();
-                SfSparseVector* next();
+                std::unique_ptr<SfSparseVector> next();
                 ~SVMlightFeatureParser(){delete [] buffer;}
         };
     }
