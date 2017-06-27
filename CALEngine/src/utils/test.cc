@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
-        cerr<<"Wrote "<<spvs_orig.size()<<" docs in "<<duration.count()<<"ms"<<endl;
+        cerr<<"Read "<<spvs_orig.size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
         cerr<<"Testing "<<argv[2]<<endl;
         for(int i = 0;i< spvs_orig.size(); i++){
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
-        cerr<<"Wrote "<<spvs_orig.size()<<" docs in "<<duration.count()<<"ms"<<endl;
+        cerr<<"Read "<<spvs_orig.size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
         cerr<<"Testing "<<argv[3]<<endl;
         for(int i = 0;i< spvs_orig.size(); i++){
