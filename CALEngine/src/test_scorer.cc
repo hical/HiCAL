@@ -6,7 +6,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
-
+    int threads = atoi(argv[2]);
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
     auto features = CAL::utils::BinFeatureParser(argv[1]).get_all();
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
             wt = (float)rand()/(float)(RAND_MAX);
 
         start = std::chrono::steady_clock::now();
-        scorer.rescore_documents(weights, 1, 10, judgments, results);
+        scorer.rescore_documents(weights, threads, 10, judgments, results);
         duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
         cerr<<"Rescored "<<scorer.doc_features->size()<<" documents in "<<duration.count()<<"ms"<<endl;
