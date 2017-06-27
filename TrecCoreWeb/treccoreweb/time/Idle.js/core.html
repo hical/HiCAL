@@ -7,8 +7,9 @@
 		<script>
 			$(function() {
 
-				var awayTime;
-				var backTime;
+				var awayTime = 0;
+				var backTime = 0;
+				var hiddenTime = 0;
 				function setMessage(msg) {
 					$('#ActivityList').append("<li>" + new Date().toTimeString() + ": " + msg + "</li>");
 				}
@@ -27,15 +28,42 @@
 				};
 				var awayBackCallback = function() {
 					backTime = Date.now();
+					totalTime =0;
 					setMessage("back"+backTime);
-					totalTime = backTime-awayTime;
-					setMessage("spend"+totalTime);
+					if(awayTime != 0){
+						totalTime = backTime-awayTime;
+					}
+					
+					setMessage("Away time spend away:"+totalTime);
+					awayTime =  0;
+					backTime = 0;
 				};
 				var hiddenCallback = function() {
-					setMessage("User is not looking at page");
+					setMessage("User is not looking at page"+Date.now());
+					hiddenTime = Date.now();
 				};
 				var visibleCallback = function(){
-					setMessage("User started looking at page again")
+					backTime = Date.now();
+					totalTime = 0;
+					if(awayTime != 0 && hiddenTime != 0){
+						if(awayTime > hiddenTime){
+							totalTime = backTime-hiddenTime;
+						}else{
+							totalTime = backTime-awayTime;
+						}
+					}else if(hiddenTime != 0){
+						totalTime = backTime-hiddenTime;
+					}else if(awayTime != 0){
+						totalTime = backTime-awayTime;
+					}
+					
+					
+					setMessage("User started looking at page again"+Date.now())
+					setMessage("Hidden time spend away:"+totalTime);
+
+					awayTime =  0;
+					backTime = 0;
+					hiddenTime = 0;
 				};
 				
 				var idle = new Idle({
@@ -43,7 +71,7 @@
 					onVisible : visibleCallback,
 					onAway : awayCallback,
 					onAwayBack : awayBackCallback,
-					awayTimeout : 3000 //away with default value of the textbox
+					awayTimeout : 5000 //away with default value of the textbox
 				}).start();
 
 
