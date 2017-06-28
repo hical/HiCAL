@@ -2,7 +2,7 @@
 #include <fstream>
 #include <thread>
 #include "simple-cmd-line-helper.h"
-#include "bmi.h"
+#include "bmi_para.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
@@ -60,11 +60,12 @@ vector<pair<string, SfSparseVector>> generate_seed_queries(string fname, int num
     return seed_queries;
 }
 
-void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer){
+void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer, Scorer *scorer_para){
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
     BMI bmi(seed_query.second,
             scorer,
+            scorer_para,
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
@@ -80,13 +81,14 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer){
     while((doc_ids = bmi.get_doc_to_judge(1)).size() > 0){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi.record_judgment(doc_ids[0], judgment);
-        logfile << seed_query.first <<" "<< doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
+        logfile << doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
     }
     logfile.close();
 }
 
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
+    AddFlag("--para-features", "Path of the file with list of paragraph features", string(""));
     AddFlag("--df", "Path of the file with document frequency of each term", string(""));
     AddFlag("--query", string("Path of the file with queries (odd lines containing topic-id and even lines containing")+\
             string("respective query string)"), string(""));
@@ -134,6 +136,14 @@ int main(int argc, char **argv){
         (std::chrono::steady_clock::now() - start);
     cerr<<"Read "<<scorer.doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
+    start = std::chrono::steady_clock::now();
+    cerr<<"Loading paragraph features on memory"<<endl;
+    string para_features_path = CMD_LINE_STRINGS["--para-features"];
+    Scorer scorer_para(CAL::utils::BinFeatureParser(para_features_path).get_all());
+    duration = std::chrono::duration_cast<std::chrono::milliseconds> 
+        (std::chrono::steady_clock::now() - start);
+    cerr<<"Read "<<scorer_para.doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
     vector<pair<string, SfSparseVector>> seed_queries = 
@@ -141,7 +151,7 @@ int main(int argc, char **argv){
 
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
-        jobs.push_back(thread(begin_bmi_helper, seed_query, &scorer));
+        jobs.push_back(thread(begin_bmi_helper, seed_query, &scorer, &scorer_para));
     }
 
     for(auto &t: jobs)
