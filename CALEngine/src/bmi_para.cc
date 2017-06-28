@@ -18,33 +18,6 @@ BMI_para::BMI_para(const SfSparseVector &_seed,
 {
 }
 
-void BMI::train(SfWeightVector &w){
-    vector<const SfSparseVector*> positives, negatives;
-    positives.push_back(&seed);
-    // Sampling random non_rel documents
-    uniform_int_distribution<int> distribution(0, scorer->doc_features->size()-1);
-    for(int i = 1;i<=100;i++){
-        int idx = distribution(rand_generator);
-        negatives.push_back((*scorer->doc_features)[idx].get());
-    }
-
-    for(pair<int, int> judgment: judgments){
-        if(judgment.second > 0)
-            positives.push_back((*scorer->doc_features)[judgment.first].get());
-        else
-            negatives.push_back((*scorer->doc_features)[judgment.first].get());
-    }
-    
-    sofia_ml::StochasticRocLoop(positives,
-            negatives,
-            sofia_ml::LOGREG_PEGASOS,
-            sofia_ml::PEGASOS_ETA,
-            0.0001,
-            10000000.0,
-            200000,
-            &w);
-}
-
 vector<string> BMI_para::get_doc_to_judge(uint32_t count=1){
     while(true){
         {
