@@ -9,7 +9,7 @@
 #include "sofiaml/sf-data-set.h"
 
 class BMI{
-    private:
+    protected:
 
     Scorer *scorer;
 
@@ -97,7 +97,7 @@ class BMI{
     void perform_iteration_async();
 
     // Handler for performing a training iteration
-    std::vector<int> perform_training_iteration();
+    virtual std::vector<int> perform_training_iteration();
 
     public:
     BMI(const SfSparseVector &seed,
@@ -109,10 +109,10 @@ class BMI{
         bool async_mode);
 
     // Get upto `count` number of documents from `judgment_list`
-    std::vector<std::string> get_doc_to_judge(uint32_t count);
+    virtual std::vector<std::string> get_doc_to_judge(uint32_t count);
 
     // Record judgment (-1 or 1) for a given doc_id
-    void record_judgment(std::string doc_id, int judgment);
+    virtual void record_judgment(std::string doc_id, int judgment);
 
     // Get latest classifier weights, make it thread safe someday
     vector<float> get_weights(){ return state.weights; }

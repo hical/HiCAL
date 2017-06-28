@@ -60,17 +60,28 @@ vector<pair<string, SfSparseVector>> generate_seed_queries(string fname, int num
     return seed_queries;
 }
 
-void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer, Scorer *scorer_para){
+void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<Scorer> &scorer, const unique_ptr<Scorer> &scorer_para){
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
-    BMI bmi(seed_query.second,
-            scorer,
-            scorer_para,
+    unique_ptr<BMI> bmi;
+    if(scorer_para != NULL){
+        bmi = make_unique<BMI_para>(seed_query.second,
+            scorer.get(),
+            scorer_para.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"]);
+    }else{
+        bmi = make_unique<BMI>(seed_query.second,
+            scorer.get(),
+            CMD_LINE_INTS["--threads"],
+            CMD_LINE_INTS["--judgments-per-iteration"],
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"]);
+    }
 
     auto get_judgment = get_judgment_stdin;
     if(CMD_LINE_STRINGS["--qrel"] != ""){
@@ -78,9 +89,9 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, Scorer *scorer, S
     }
 
     vector<string> doc_ids;
-    while((doc_ids = bmi.get_doc_to_judge(1)).size() > 0){
+    while((doc_ids = bmi->get_doc_to_judge(1)).size() > 0){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
-        bmi.record_judgment(doc_ids[0], judgment);
+        bmi->record_judgment(doc_ids[0], judgment);
         logfile << doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
     }
     logfile.close();
@@ -128,30 +139,36 @@ int main(int argc, char **argv){
     }
 
     // Load docs
+    unique_ptr<Scorer> scorer_doc = NULL;
+    unique_ptr<Scorer> scorer_para = NULL;
+
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
     string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
-    Scorer scorer(CAL::utils::BinFeatureParser(doc_features_path).get_all());
+    scorer_doc = make_unique<Scorer>(CAL::utils::BinFeatureParser(doc_features_path).get_all());
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<scorer.doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Read "<<scorer_doc->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
-    start = std::chrono::steady_clock::now();
-    cerr<<"Loading paragraph features on memory"<<endl;
+    // Load para
     string para_features_path = CMD_LINE_STRINGS["--para-features"];
-    Scorer scorer_para(CAL::utils::BinFeatureParser(para_features_path).get_all());
-    duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<scorer_para.doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    if(para_features_path.length() > 0){
+        start = std::chrono::steady_clock::now();
+        cerr<<"Loading paragraph features on memory"<<endl;
+        scorer_para = make_unique<Scorer>(CAL::utils::BinFeatureParser(para_features_path).get_all());
+        duration = std::chrono::duration_cast<std::chrono::milliseconds> 
+            (std::chrono::steady_clock::now() - start);
+        cerr<<"Read "<<scorer_para->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    }
 
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
     vector<pair<string, SfSparseVector>> seed_queries = 
-        generate_seed_queries(CMD_LINE_STRINGS["--query"], scorer.doc_features->size());
+        generate_seed_queries(CMD_LINE_STRINGS["--query"], scorer_doc->doc_features->size());
 
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
-        jobs.push_back(thread(begin_bmi_helper, seed_query, &scorer, &scorer_para));
+        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(scorer_doc), cref(scorer_para)));
     }
 
     for(auto &t: jobs)
