@@ -35,8 +35,8 @@ class BMI{
 
     // The current state of CAL
     struct{
-        int cur_iteration = 0;
-        int next_iteration_target = 0;
+        uint32_t cur_iteration = 0;
+        uint32_t next_iteration_target = 0;
         bool finished = false;
         vector<float> weights;
     }state;
@@ -109,7 +109,7 @@ class BMI{
         bool async_mode);
 
     // Get upto `count` number of documents from `judgment_list`
-    std::vector<std::string> get_doc_to_judge(int count);
+    std::vector<std::string> get_doc_to_judge(uint32_t count);
 
     // Record judgment (-1 or 1) for a given doc_id
     void record_judgment(std::string doc_id, int judgment);

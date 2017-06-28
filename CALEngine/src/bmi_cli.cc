@@ -4,6 +4,7 @@
 #include "simple-cmd-line-helper.h"
 #include "bmi.h"
 #include "features.h"
+#include "utils/feature_parser.h"
 
 using namespace std;
 
@@ -127,15 +128,16 @@ int main(int argc, char **argv){
     // Load docs
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
-    Scorer scorer(CMD_LINE_STRINGS["--doc-features"]);
+    string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
+    Scorer scorer(CAL::utils::BinFeatureParser(doc_features_path).get_all());
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<scorer.doc_features.size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Read "<<scorer.doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
     vector<pair<string, SfSparseVector>> seed_queries = 
-        generate_seed_queries(CMD_LINE_STRINGS["--query"], scorer.doc_features.size());
+        generate_seed_queries(CMD_LINE_STRINGS["--query"], scorer.doc_features->size());
 
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
