@@ -11,7 +11,8 @@ BMI::BMI(const SfSparseVector &_seed,
         int _judgments_per_iteration,
         int _max_effort,
         int _max_iterations,
-        bool _async_mode)
+        bool _async_mode,
+        bool initialize)
     :scorer(_scorer),
     num_threads(_num_threads),
     judgments_per_iteration(_judgments_per_iteration),
@@ -23,7 +24,8 @@ BMI::BMI(const SfSparseVector &_seed,
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
         judgments_per_iteration = 1;
-    perform_iteration();
+    if(initialize)
+        perform_iteration();
 }
 
 void BMI::finish_session(){
@@ -81,17 +83,17 @@ void BMI::train(SfWeightVector &w){
     vector<const SfSparseVector*> positives, negatives;
     positives.push_back(&seed);
     // Sampling random non_rel documents
-    uniform_int_distribution<int> distribution(0, scorer->doc_features.size()-1);
+    uniform_int_distribution<int> distribution(0, scorer->doc_features->size()-1);
     for(int i = 1;i<=100;i++){
         int idx = distribution(rand_generator);
-        negatives.push_back(&scorer->doc_features[idx]);
+        negatives.push_back((*scorer->doc_features)[idx].get());
     }
 
     for(pair<int, int> judgment: judgments){
         if(judgment.second > 0)
-            positives.push_back(&scorer->doc_features[judgment.first]);
+            positives.push_back((*scorer->doc_features)[judgment.first].get());
         else
-            negatives.push_back(&scorer->doc_features[judgment.first]);
+            negatives.push_back((*scorer->doc_features)[judgment.first].get());
     }
     
     sofia_ml::StochasticRocLoop(positives,
@@ -104,7 +106,7 @@ void BMI::train(SfWeightVector &w){
             &w);
 }
 
-vector<string> BMI::get_doc_to_judge(int count=1){
+vector<string> BMI::get_doc_to_judge(uint32_t count=1){
     while(true){
         {
             lock_guard<mutex> lock(judgment_list_mutex);
@@ -114,7 +116,7 @@ vector<string> BMI::get_doc_to_judge(int count=1){
                 for(int id: judgment_list){
                     if(id == -1 || ret.size() >= count)
                         break;
-                    ret.push_back(scorer->doc_features[id].doc_id);
+                    ret.push_back((*scorer->doc_features)[id]->doc_id);
                 }
                 return ret;
             }
@@ -206,7 +208,7 @@ vector<int> BMI::perform_training_iteration(){
     scorer->rescore_documents(weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Rescored "<<scorer->doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Rescored "<<scorer->doc_features->size()<<" documents in "<<duration.count()<<"ms"<<endl;
 
     state.weights = weights;
 
@@ -240,5 +242,3 @@ void BMI::run()
         }
     }
 }
-
-

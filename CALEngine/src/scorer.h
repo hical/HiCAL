@@ -5,6 +5,7 @@
 #include <vector>
 #include <set>
 #include <unordered_map>
+#include <memory>
 #include "sofiaml/sf-sparse-vector.h"
 
 class Scorer {
@@ -21,16 +22,16 @@ class Scorer {
 
     public:
     // List of all document features
-    std::vector<SfSparseVector> doc_features;
+    std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>> doc_features;
 
     // Number of features
-    int dimensionality;
+    uint32_t dimensionality;
 
     // Inverted map of all document ids to their indices
     std::unordered_map<std::string, int> doc_ids_inv_map;
 
     // Construct the object using the feature file in svm light format
-    Scorer(std::string fname);
+    Scorer(std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>>);
 
     // Rescore all documents given the weights, and return the top documents
     void rescore_documents(const std::vector<float> &weights,

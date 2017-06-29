@@ -54,7 +54,7 @@ using std::vector;
 // Each element of the SfSparseVector is represented as a FeatureValuePair.
 // Bundling these as a struct improves memory locality.
 struct FeatureValuePair {
-  int id_;
+  uint32_t id_;
   float value_;
 };
 
@@ -96,7 +96,7 @@ class SfSparseVector {
 
   // Adds a new (id, value) FeatureValuePair to the end of the vector, and
   // updates the internal squared_norm_ member.
-  void PushPair (int id, float value);
+  void PushPair (uint32_t id, float value);
 
   // Clear all feature values and the cached squared_norm_, leaving all
   // other information unchanged.
