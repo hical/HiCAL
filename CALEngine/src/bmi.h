@@ -106,7 +106,8 @@ class BMI{
         int judgments_per_iteration,
         int max_effort,
         int max_iterations,
-        bool async_mode);
+        bool async_mode,
+        bool initialize=true);
 
     // Get upto `count` number of documents from `judgment_list`
     virtual std::vector<std::string> get_doc_to_judge(uint32_t count);

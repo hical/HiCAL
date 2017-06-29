@@ -11,7 +11,8 @@ BMI::BMI(const SfSparseVector &_seed,
         int _judgments_per_iteration,
         int _max_effort,
         int _max_iterations,
-        bool _async_mode)
+        bool _async_mode,
+        bool initialize)
     :scorer(_scorer),
     num_threads(_num_threads),
     judgments_per_iteration(_judgments_per_iteration),
@@ -23,7 +24,8 @@ BMI::BMI(const SfSparseVector &_seed,
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
         judgments_per_iteration = 1;
-    perform_iteration();
+    if(initialize)
+        perform_iteration();
 }
 
 void BMI::finish_session(){

@@ -13,9 +13,10 @@ BMI_para::BMI_para(const SfSparseVector &_seed,
         int _max_effort,
         int _max_iterations,
         bool _async_mode)
-    :BMI(_seed, _scorer, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode),
+    :BMI(_seed, _scorer, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, false),
     scorer_para(_scorer_para)
 {
+    perform_iteration();
 }
 
 vector<string> BMI_para::get_doc_to_judge(uint32_t count=1){
@@ -70,11 +71,11 @@ vector<int> BMI_para::perform_training_iteration(){
             judgments[training.first] = training.second;
             finished_judgments.insert(training.first);
             string doc_id = (*scorer->doc_features)[training.first]->doc_id;
-            for(int i = 0; ; i++){
+            for(int i = 0; i<1000; i++){
                 string para_offset = to_string(i);
                 string para_id = doc_id + "." + string(3 - para_offset.size(), '0') + para_offset;
                 if(scorer_para->doc_ids_inv_map.find(para_id) == scorer_para->doc_ids_inv_map.end())
-                    break;
+                    continue;
                 else
                     finished_judgments_para.insert(scorer_para->doc_ids_inv_map[para_id]);
             }
@@ -100,7 +101,7 @@ vector<int> BMI_para::perform_training_iteration(){
     scorer_para->rescore_documents(weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), finished_judgments_para, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Rescored "<<scorer->doc_features->size()<<" documents in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Rescored "<<scorer_para->doc_features->size()<<" documents in "<<duration.count()<<"ms"<<endl;
 
     state.weights = weights;
 
