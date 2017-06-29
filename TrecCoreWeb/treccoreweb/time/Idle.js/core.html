@@ -4,87 +4,9 @@
 		<title>Idle.Js Test</title>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script src="./idle.js"></script>
+		<script src="./timer.js"></script>
 		<script>
-			$(function() {
-
-				var awayTime = 0;
-				var backTime = 0;
-				var hiddenTime = 0;
-				function setMessage(msg) {
-					$('#ActivityList').append("<li>" + new Date().toTimeString() + ": " + msg + "</li>");
-				}
-
-				function showAlarm(msg) {
-					window.alert(msg);
-				}
-
-				var awayCallback = function() {
-					
-					awayTime = Date.now();
-					setMessage("away"+awayTime);
-
-					showAlarm("You have been away for more than 1 minute. Please stay on the interface and continue judgements.");
-					
-				};
-				var awayBackCallback = function() {
-					backTime = Date.now();
-					totalTime =0;
-					setMessage("back"+backTime);
-					if(awayTime != 0){
-						totalTime = backTime-awayTime;
-					}
-					
-					setMessage("Away time spend away:"+totalTime);
-					awayTime =  0;
-					backTime = 0;
-				};
-				var hiddenCallback = function() {
-					setMessage("User is not looking at page"+Date.now());
-					hiddenTime = Date.now();
-				};
-				var visibleCallback = function(){
-					backTime = Date.now();
-					totalTime = 0;
-					if(awayTime != 0 && hiddenTime != 0){
-						if(awayTime > hiddenTime){
-							totalTime = backTime-hiddenTime;
-						}else{
-							totalTime = backTime-awayTime;
-						}
-					}else if(hiddenTime != 0){
-						totalTime = backTime-hiddenTime;
-					}else if(awayTime != 0){
-						totalTime = backTime-awayTime;
-					}
-					
-					
-					setMessage("User started looking at page again"+Date.now())
-					setMessage("Hidden time spend away:"+totalTime);
-
-					awayTime =  0;
-					backTime = 0;
-					hiddenTime = 0;
-				};
-				
-				var idle = new Idle({
-					onHidden : hiddenCallback,
-					onVisible : visibleCallback,
-					onAway : awayCallback,
-					onAwayBack : awayBackCallback,
-					awayTimeout : 5000 //away with default value of the textbox
-				}).start();
-
-
-				// idle.setAwayTimeout(3000);
-				// $('#Timeout').keydown(function(e) {
-				// 	if(e.keyCode == 13) {
-
-				// 		var timeout = $(this).val();
-				// 		setMessage("Timeout changed to: " + timeout);
-				// 		idle.setAwayTimeout(timeout);
-				// 	}
-				// })
-			});
+var foo = AwayTimer();
 
 		</script>
 		<style>
