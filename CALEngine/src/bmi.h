@@ -120,6 +120,8 @@ class BMI{
 
     // Begin CAL
     void run();
+
+    virtual Scorer *get_ranking_scorer() {return scorer;};
 };
 
 #endif // BMI_H
