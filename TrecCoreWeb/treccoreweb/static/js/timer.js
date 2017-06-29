@@ -3,7 +3,7 @@ function AwayTimer(){
     this.backTime = 0;
     this.hiddenTime = 0;
     this.totalAwayTime = 0;
-    this.startTime = moment();
+    this.startTime = Date.now();
 
     var parent = this;
     function showAlarm(msg) {
@@ -11,22 +11,20 @@ function AwayTimer(){
         document.body.click();
     }
 
-
     parent.resetTimer= function(){
-        parent.startTime = moment();
+        parent.startTime = Date.now();
         parent.awayTime = 0;
         parent.totalAwayTime = 0;
     };
 
     var awayCallback = function() {
-
-        parent.awayTime = moment();
-
+        parent.awayTime = Date.now();
         showAlarm("You have been away for more than 1 minute. Please stay on the interface and continue judgements.");
 
     };
+
     var awayBackCallback = function() {
-        parent.backTime = moment();
+        parent.backTime = Date.now();
         totalTime =0;
         if(parent.awayTime != 0){
             totalTime = parent.backTime-parent.awayTime;
@@ -35,11 +33,13 @@ function AwayTimer(){
         parent.awayTime =  0;
         parent.backTime = 0;
     };
+
     var hiddenCallback = function() {
-        parent.hiddenTime = moment();
+        parent.hiddenTime = Date.now();
     };
+
     var visibleCallback = function(){
-        parent.backTime = moment();
+        parent.backTime = Date.now();
         totalTime = 0;
         if(parent.awayTime != 0 && hiddenTime != 0){
             if(parent.awayTime > hiddenTime){
@@ -65,7 +65,7 @@ function AwayTimer(){
         onVisible : visibleCallback,
         onAway : awayCallback,
         onAwayBack : awayBackCallback,
-        awayTimeout : 5000 //away with default value of the textbox
+        awayTimeout : 60000 //away with default value of the textbox
     }).start();
     return parent;
 }

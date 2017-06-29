@@ -208,8 +208,13 @@
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/easytimer.js' %}"></script>
     <script src="{% static 'js/CAL.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/idle.js' %}"></script>
+    <script src="{% static 'js/timer.js' %}"></script>
 
     <script>
+
+        var pageTimer = null;
         // Nofity server of page visit on pageload
         window.onload = function () {
             var now = + new Date();
@@ -225,6 +230,8 @@
                     console.log(result['message']);
                 }
             });
+
+            pageTimer = new Idle({}).start();
         };
 
         var queue = new Queue();
@@ -238,6 +245,7 @@
         var onTopicCounter = parseInt("{{ total_ontopic }}");
 
 
+        var documentTimer = null;
         // Get initial document at page visit
         $.ajax({
             url: '{% url 'CAL:get_docs' %}',
@@ -258,6 +266,8 @@
                                 next_doc["content"]
                         );
                         updateTimer();
+                        documentTimer = AwayTimer();
+
                     }
                 }else{
                     updateDocument(
@@ -336,11 +346,11 @@
             var time_to_judge = timer.getTimeValues().toSeconds();
             var now = + new Date();
 
-{#            if(queue.isEmpty()){#}
-{#                console.log("The queue of documents to judge is empty. Please wait");#}
-{#                alert("The queue of documents to judge is empty. Please wait");#}
-{#                return;#}
-{#            }#}
+            // if(queue.isEmpty()){
+            //    console.log("The queue of documents to judge is empty. Please wait");
+            //    alert("The queue of documents to judge is empty. Please wait");
+            //    return;
+            //}
 
             console.log("Saving '"+current_doc_id+"' to judged_docs JS dict");
             judged_docs[current_doc_id] = true;
@@ -362,6 +372,8 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
+                'totalActiveTime': moment() - documentTimer.startTime - documentTimer.totalAwayTime,
+                'totalAwayTime': documentTimer.totalAwayTime,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };

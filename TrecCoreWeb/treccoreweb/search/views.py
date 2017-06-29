@@ -3,8 +3,9 @@ import json
 import httplib2
 from braces import views
 from django.db.models import Count, Case, When
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.urls import reverse_lazy
 
 from django.views import generic
 from treccoreweb.judgment.models import Judgement
@@ -36,6 +37,13 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         # context["total_ontopic"] = counters["total_ontopic"]
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        current_task = self.request.user.current_task
+        if current_task.is_time_past():
+            return HttpResponseRedirect(reverse_lazy('progress:completed'))
+
+        return super(SearchHomePageView, self).get(self, request, *args, **kwargs)
 
 
 class SearchVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
@@ -141,7 +149,7 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
         template = loader.get_template(self.template)
         try:
             search_input = request.POST.get("search_input")
-            numdisplay = 2
+            numdisplay = request.POST.get("numdisplay", 10)
         except KeyError:
             rendered_template = template.render({})
             return HttpResponse(rendered_template, content_type='text/html')

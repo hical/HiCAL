@@ -4,6 +4,18 @@
 {% block pagetitle %}Pre-task{% endblock %}
 {% block nav-header %}{% endblock %}
 {% block sidebar %}{% endblock %}
+{% block nav-right %}
+    <li class="nav-item">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_logout' %}">Sign out</a>
+        {% else %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
 
 {% block main %}
     <h4 class="text-primary top-margin">Post-task questionnaire</h4>

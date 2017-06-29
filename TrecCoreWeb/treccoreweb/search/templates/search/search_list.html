@@ -132,15 +132,9 @@
                                         <span class="gray-text align-left">Judge document:</span>
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">
-                                                Relevant
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
-                                                topic
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
-                                                relevant
-                                            </a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, moment() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime, documents_timers['{{ document_values.docno }}'].totalAwayTime);" class="btn btn-sm btn-success">Relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, moment() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime, documents_timers['{{ document_values.docno }}'].totalAwayTime);" class="btn btn-sm btn-warning">On topic</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, moment() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime, documents_timers['{{ document_values.docno }}'].totalAwayTime);" class="btn btn-sm btn-danger">Not relevant</a>
                                         </div>
                                     </li>
                                     <div class="extra-top-margin align-left">
@@ -199,7 +193,10 @@
     <!-- MODAL EVENT TRIGGERS -->
     <script>
         $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
-            console.log("model has been hidden");
+            console.log("Model has been hidden.");
+            console.log("Destroying document# {{ document_values.docno }} timer.");
+            documents_timers['{{ document_values.docno }}'].idle.stop();
+            delete documents_timers['{{ document_values.docno }}'];
             isModalOpen = false;
             currentOpenedModalDocId = null;
         });
@@ -216,6 +213,10 @@
                         loaded_docs['{{ document_values.docno }}'] = true;
                         modal.find('.document_content_date').html(result[0]['date']);
                         modal.find('.document_content_id').html(result[0]['doc_id']);
+                        // TODO: start document timer
+                        console.log("Initializing document timer for doc: {{ document_values.docno }}");
+                        var documentTimer = AwayTimer();
+                        documents_timers['{{ document_values.docno }}'] = documentTimer;
                     },
                     error: function (result){
                         modal.find('.document_content').html("Failed to get doc. Error message: "+result);
@@ -226,9 +227,13 @@
                         }
                     }
                 });
+            }else{
+                console.log("Re-initializing document timer for doc: {{ document_values.docno }}");
+                var documentTimer = AwayTimer();
+                documents_timers['{{ document_values.docno }}'] = documentTimer;
             }
 
-            console.log("model has been shown");
+            console.log("Model has been shown");
             isModalOpen = true;
             currentOpenedModalDocId = '{{ document_values.docno }}';
         });

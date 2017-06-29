@@ -1,6 +1,7 @@
 from django.db import models
 from config.settings.base import AUTH_USER_MODEL as User
 from treccoreweb.progress.models import Task
+from django.contrib.postgres.fields import JSONField
 
 
 class Judgement(models.Model):
@@ -37,6 +38,8 @@ class Judgement(models.Model):
     isFromSearchModal = models.BooleanField(null=False, blank=False)
     fromMouse = models.BooleanField(null=False, blank=False)
     fromKeyboard = models.BooleanField(null=False, blank=False)
+    timeActive = JSONField(null=True, blank=True, default=[])
+    timeAway = JSONField(null=True, blank=True, default=[])
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)

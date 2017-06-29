@@ -15,7 +15,7 @@ class User(AbstractUser):
     name = models.CharField(_('Name of User'), blank=True, max_length=255)
     current_task = models.ForeignKey(Task, blank=True, null=True)
     # sequence of topics assigned to user.
-    sequence = JSONField(blank=True, null=True)
+    sequence = JSONField(blank=True, null=True, default=[])
 
     def __str__(self):
         return self.username
