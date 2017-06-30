@@ -7,6 +7,7 @@ from django.contrib.postgres.fields import JSONField
 
 from treccoreweb.progress.models import Task
 
+
 @python_2_unicode_compatible
 class User(AbstractUser):
 

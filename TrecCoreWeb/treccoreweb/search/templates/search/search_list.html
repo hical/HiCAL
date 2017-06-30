@@ -192,13 +192,23 @@
 
     <!-- MODAL EVENT TRIGGERS -->
     <script>
+
         $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
+            console.log("is_from_judgment: " + is_from_judement);
             console.log("Model has been hidden.");
             console.log("Destroying document# {{ document_values.docno }} timer.");
             documents_timers['{{ document_values.docno }}'].idle.stop();
             delete documents_timers['{{ document_values.docno }}'];
             isModalOpen = false;
             currentOpenedModalDocId = null;
+
+            if(is_from_judement == false){
+                // TODO: update timeActive and timeAway for this unjudged document
+                console.log("should update timer with no judgment");
+            }else{
+                // reset flag
+                is_from_judement = false;
+            }
         });
 
         $('#doc-{{ document_values.docno }}-modal').on('shown.bs.modal', function (e) {

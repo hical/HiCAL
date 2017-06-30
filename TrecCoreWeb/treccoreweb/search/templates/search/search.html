@@ -278,8 +278,18 @@
 
         function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, timeActive, timeAway){
             send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true, timeActive, timeAway);
+            var element = document;
+            var event = new CustomEvent("new_judgment");
+            element.dispatchEvent(event);
+
             hide_modal(doc_id);
             return false;
         }
+        var is_from_judement = false;
+        var element = document;
+        element.addEventListener("new_judgment", function (e) {
+            is_from_judement = true;
+        }, false);
+
     </script>
 {% endblock %}
