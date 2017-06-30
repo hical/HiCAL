@@ -4,58 +4,48 @@
         "treatments": [
             {
                 "topic_num": 321, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 310, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 307, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 330, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 325, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -64,58 +54,48 @@
         "treatments": [
             {
                 "topic_num": 345, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 336, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 347, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 344, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 341, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -124,58 +104,48 @@
         "treatments": [
             {
                 "topic_num": 354, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 350, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 355, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 356, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 353, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -184,58 +154,48 @@
         "treatments": [
             {
                 "topic_num": 362, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 375, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 372, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 363, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 367, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -244,58 +204,48 @@
         "treatments": [
             {
                 "topic_num": 389, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 393, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 394, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 378, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 379, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -304,58 +254,48 @@
         "treatments": [
             {
                 "topic_num": 399, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 408, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 404, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 400, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 397, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -364,58 +304,48 @@
         "treatments": [
             {
                 "topic_num": 419, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 416, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 422, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 414, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 423, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -424,58 +354,48 @@
         "treatments": [
             {
                 "topic_num": 426, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 427, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 433, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 435, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 436, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -484,58 +404,48 @@
         "treatments": [
             {
                 "topic_num": 614, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 445, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 439, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 443, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 442, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -544,58 +454,48 @@
         "treatments": [
             {
                 "topic_num": 677, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 620, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 690, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 626, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 646, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -604,58 +504,48 @@
         "treatments": [
             {
                 "topic_num": 325, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 321, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 310, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 307, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 330, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -664,58 +554,48 @@
         "treatments": [
             {
                 "topic_num": 341, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 345, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 344, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 336, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 347, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -724,58 +604,48 @@
         "treatments": [
             {
                 "topic_num": 356, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 354, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 350, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 353, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 355, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -784,58 +654,48 @@
         "treatments": [
             {
                 "topic_num": 363, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 362, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 375, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 367, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 372, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -844,58 +704,48 @@
         "treatments": [
             {
                 "topic_num": 393, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 394, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 378, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 379, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 389, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -904,58 +754,48 @@
         "treatments": [
             {
                 "topic_num": 404, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 399, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 397, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 408, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 400, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -964,58 +804,48 @@
         "treatments": [
             {
                 "topic_num": 422, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 419, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 423, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 416, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 414, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -1024,58 +854,48 @@
         "treatments": [
             {
                 "topic_num": 435, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 436, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 426, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 427, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 433, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1084,58 +904,48 @@
         "treatments": [
             {
                 "topic_num": 439, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 614, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 442, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 445, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 443, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -1144,58 +954,48 @@
         "treatments": [
             {
                 "topic_num": 626, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 677, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 646, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 690, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 620, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1204,58 +1004,48 @@
         "treatments": [
             {
                 "topic_num": 330, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 325, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 321, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 310, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 307, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -1264,58 +1054,48 @@
         "treatments": [
             {
                 "topic_num": 336, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 344, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 341, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 347, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 345, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -1324,58 +1104,48 @@
         "treatments": [
             {
                 "topic_num": 350, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 355, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 353, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 354, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 356, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -1384,58 +1154,48 @@
         "treatments": [
             {
                 "topic_num": 375, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 372, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 367, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 362, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 363, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1444,58 +1204,48 @@
         "treatments": [
             {
                 "topic_num": 394, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 378, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 379, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 389, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 393, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1504,58 +1254,48 @@
         "treatments": [
             {
                 "topic_num": 408, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 400, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 399, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 397, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 404, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1564,58 +1304,48 @@
         "treatments": [
             {
                 "topic_num": 414, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 423, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 416, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 422, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 419, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1624,58 +1354,48 @@
         "treatments": [
             {
                 "topic_num": 427, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 433, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 435, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 436, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 426, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1684,58 +1404,48 @@
         "treatments": [
             {
                 "topic_num": 443, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 442, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 445, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 439, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 614, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -1744,58 +1454,48 @@
         "treatments": [
             {
                 "topic_num": 646, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 690, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 677, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 620, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 626, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1804,58 +1504,48 @@
         "treatments": [
             {
                 "topic_num": 307, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 330, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 325, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 321, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 310, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1864,58 +1554,48 @@
         "treatments": [
             {
                 "topic_num": 347, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 341, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 336, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 345, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 344, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1924,58 +1604,48 @@
         "treatments": [
             {
                 "topic_num": 355, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 353, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 356, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 350, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 354, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -1984,58 +1654,48 @@
         "treatments": [
             {
                 "topic_num": 367, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 363, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 362, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 372, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 375, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2044,58 +1704,48 @@
         "treatments": [
             {
                 "topic_num": 378, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 379, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 389, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 393, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 394, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2104,58 +1754,48 @@
         "treatments": [
             {
                 "topic_num": 397, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 404, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 400, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 399, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 408, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2164,58 +1804,48 @@
         "treatments": [
             {
                 "topic_num": 416, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 414, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 419, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 423, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 422, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2224,58 +1854,48 @@
         "treatments": [
             {
                 "topic_num": 433, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 435, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 436, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 426, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 427, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2284,58 +1904,48 @@
         "treatments": [
             {
                 "topic_num": 445, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 443, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 614, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 442, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 439, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2344,58 +1954,48 @@
         "treatments": [
             {
                 "topic_num": 620, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 646, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 626, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 677, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 690, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2404,58 +2004,48 @@
         "treatments": [
             {
                 "topic_num": 310, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 307, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 330, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 325, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 321, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2464,58 +2054,48 @@
         "treatments": [
             {
                 "topic_num": 344, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 347, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 345, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 341, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 336, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2524,58 +2104,48 @@
         "treatments": [
             {
                 "topic_num": 353, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 356, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 354, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 355, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 350, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2584,58 +2154,48 @@
         "treatments": [
             {
                 "topic_num": 372, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 367, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 363, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 375, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 362, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }
         ]
     }, 
@@ -2644,58 +2204,48 @@
         "treatments": [
             {
                 "topic_num": 379, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 389, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 393, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 394, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 378, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2704,58 +2254,48 @@
         "treatments": [
             {
                 "topic_num": 400, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 397, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 408, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 404, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 399, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2764,58 +2304,48 @@
         "treatments": [
             {
                 "topic_num": 423, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 422, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 414, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 419, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 416, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2824,58 +2354,48 @@
         "treatments": [
             {
                 "topic_num": 436, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 426, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 427, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 433, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 435, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2884,58 +2404,48 @@
         "treatments": [
             {
                 "topic_num": 442, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 439, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 443, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 614, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 445, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }, 
@@ -2944,58 +2454,48 @@
         "treatments": [
             {
                 "topic_num": 690, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "true", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": true, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 626, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 620, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "true"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": true
+                }
             }, 
             {
                 "topic_num": 646, 
-                "setting": [
-                    {
-                        "toggle_doc": "true", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": true, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }, 
             {
                 "topic_num": 677, 
-                "setting": [
-                    {
-                        "toggle_doc": "false", 
-                        "show_cal": "true", 
-                        "only_show_doc": "false", 
-                        "show_search": "false"
-                    }
-                ]
+                "setting": {
+                    "toggle_doc": false, 
+                    "show_cal": true, 
+                    "only_show_doc": false, 
+                    "show_search": false
+                }
             }
         ]
     }
