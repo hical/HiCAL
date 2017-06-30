@@ -40,7 +40,8 @@ def add_session(session, seed_query):
     url = "http://{}:{}/CAL/begin"
 
     body = {'session_id': str(session),
-            'seed_query': seed_query}
+            'seed_query': seed_query,
+            'mode': 'para'}
     body = urllib.parse.urlencode(body)
     resp, content = h.request(url.format(CAL_SERVER_IP,
                                          CAL_SERVER_PORT),

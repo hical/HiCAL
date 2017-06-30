@@ -161,7 +161,14 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 if not next_patch:
                     return self.render_json_response([])
 
-                documents = DocEngine.get_documents_with_snippet(next_patch,
+                doc_ids_hack = []
+                for doc_id in next_patch:
+                    doc = {'doc_id': doc_id}
+                    if '.' in doc_id:
+                        doc['doc_id'], doc['para_id'] = doc_id.split('.')
+                    doc_ids_hack.append(doc)
+
+                documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
                                                     self.request.user.current_topic.seed_query,
                                                     top_terms)
             except TimeoutError:

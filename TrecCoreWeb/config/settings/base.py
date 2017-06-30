@@ -315,10 +315,10 @@ MESSAGE_TAGS = {
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = '129.97.84.14'
 CAL_SERVER_PORT = '9001'
-DOCUMENT_SNIPPET_ENGINE_SERVER_IP = '129.97.186.125'
-DOCUMENT_SNIPPET_ENGINE_SERVER_PORT = '5050'
 SEARCH_SERVER_IP = '129.97.25.37'
 SEARCH_SERVER_PORT = '80'
+DOCUMENTS_PATH = '/home/nghelani/nyt/docs'
+PARA_PATH = '/home/nghelani/nyt/para'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------

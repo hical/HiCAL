@@ -118,7 +118,15 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                                                       seed_query)
             if not docs_ids_to_judge:
                 return self.render_json_response([])
-            documents = DocEngine.get_documents_with_snippet(docs_ids_to_judge,
+
+            doc_ids_hack = []
+            for doc_id in docs_ids_to_judge:
+                doc = {'doc_id': doc_id}
+                if '.' in doc_id:
+                    doc['doc_id'], doc['para_id'] = doc_id.split('.')
+                doc_ids_hack.append(doc)
+
+            documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
                                                              seed_query,
                                                              top_terms)
         except TimeoutError:
