@@ -48,10 +48,10 @@ vector<string> BMI_para::get_doc_to_judge(uint32_t count=1){
 }
 
 void BMI_para::record_judgment(string doc_id, int judgment){
-    int id = scorer_para->doc_ids_inv_map[doc_id];
-    int doc_id_int = scorer->doc_ids_inv_map[doc_id.substr(0, doc_id.length() - 4)];
+    /* int id = scorer_para->doc_ids_inv_map[doc_id]; */
+    int doc_id_int = scorer->doc_ids_inv_map[doc_id];
     add_to_training_cache(doc_id_int, judgment);
-    remove_from_judgment_list(id);
+    /* remove_from_judgment_list(id); */
 
     if(!async_mode){
         if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target)

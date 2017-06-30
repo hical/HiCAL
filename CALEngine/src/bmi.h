@@ -122,6 +122,7 @@ class BMI{
     void run();
 
     virtual Scorer *get_ranking_scorer() {return scorer;};
+    Scorer *get_scorer() {return scorer;};
 };
 
 #endif // BMI_H

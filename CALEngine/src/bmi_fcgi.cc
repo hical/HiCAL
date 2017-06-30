@@ -217,7 +217,7 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
     }
 
     const unique_ptr<BMI> &bmi = SESSIONS[session_id];
-    if(bmi->get_ranking_scorer()->doc_ids_inv_map.find(doc_id) == bmi->get_ranking_scorer()->doc_ids_inv_map.end()){
+    if(bmi->get_scorer()->doc_ids_inv_map.find(doc_id) == bmi->get_scorer()->doc_ids_inv_map.end()){
         write_response(request, 404, "application/json", "{\"error\": \"doc_id not found\"}");
         return;
     }
