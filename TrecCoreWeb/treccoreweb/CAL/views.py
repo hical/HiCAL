@@ -1,13 +1,11 @@
 import json
 
 from braces import views
-from django.db.models import Count, Case, When
-from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
 
 from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.judgment.models import Judgement
 from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 from treccoreweb.CAL.exceptions import CALError
@@ -18,20 +16,6 @@ logger = logging.getLogger(__name__)
 
 class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'CAL/CAL.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(CALHomePageView, self).get_context_data(**kwargs)
-        counters = Judgement.objects.filter(user=self.request.user,
-                                    task=self.request.user.current_task).aggregate(
-            total_relevant=Count(Case(When(relevant=True, then=1))),
-            total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-            total_ontopic=Count(Case(When(ontopic=True, then=1)))
-        )
-        context["total_relevant"] = counters["total_relevant"]
-        context["total_nonrelevant"] = counters["total_nonrelevant"]
-        context["total_ontopic"] = counters["total_ontopic"]
-
-        return context
 
     def get(self, request, *args, **kwargs):
         current_task = self.request.user.current_task

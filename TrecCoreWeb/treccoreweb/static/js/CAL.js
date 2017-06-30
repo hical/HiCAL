@@ -60,25 +60,6 @@ function updateDocument(id, title, date, snippet, content){
 }
 
 
-function updateTimer(){
-    $("#nav_timer_header").hide().fadeIn();
-
-    timer.stop();
-    timer.start({precision: 'secondTenths', callback: function (values) {
-        $('#nav_timer_header').html(values.toString(['hours', 'minutes', 'seconds', 'secondTenths']));
-    }});
-}
-
-function  updateCounter(key){
-    if(key == "s"){
-        $("#nav_stats_rel_header").hide().fadeIn().html(++relCounter);
-    }else if(key == "h"){
-        $("#nav_stats_nonrel_header").hide().fadeIn().html(++nonRelCounter);
-    }else if (key == "k"){
-        $("#nav_stats_ontopic_header").hide().fadeIn().html(++onTopicCounter);
-    }
-}
-
 
 /* SEARCH BAR and highlighter */
 

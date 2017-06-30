@@ -11,10 +11,12 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
     </li>
+    {% comment %}
     <li class="nav-item">
         <a class="nav-link active bold" href="{% url 'judgment:get_all' %}">A<span
                 class="sr-only">(current)</span></a>
     </li>
+    {% endcomment %}
 {% endblock %}
 
 {% block nav-header %}

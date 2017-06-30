@@ -32,29 +32,16 @@
     <a class="navbar-brand font-montserrat" href="/"><strong>IRStudy</strong></a>
     <div class="collapse navbar-collapse font-montserrat" id="navbarsExampleDefault">
         {% block nav-left%}
-        <ul class="navbar-nav mt-1">
+        <ul class="navbar-nav mt-2">
             <li class="nav-item text-truncate" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;">
                 <span class="small gray-text">Topic: {{ user.current_task.topic.title }}</span>
             </li>
         </ul>
         {% endblock %}
 
-        <ul class="navbar-nav mx-auto small mt-0">
+        <ul class="navbar-nav mx-auto small mt-1">
             {% block nav-header %}
             {% block nav-header-title %}{% endblock %}
-            <li class="nav-item active">
-                <span class="nav-link thin gray-text" >
-                   <strong>Document judged: </strong><span class="badge badge-success" id="nav_stats_rel_header">{{ total_relevant }}</span> <span class="badge badge-warning" id="nav_stats_ontopic_header">{{ total_ontopic }}</span> <span class="badge badge-danger" id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span>
-                </span>
-            </li>
-            <li class="nav-item active" style="width: 200px">
-                <span class="nav-link thin gray-text">
-                    <strong>Time spent:</strong>
-                    <div id="nav_timer_header" class="display-inline">
-                        <span class="values" id="timer_counter">0:0:0</span>
-                    </div>
-                </span>
-            </li>
             {% endblock %}
         </ul>
         <div class="form-inline mt-2 mt-md-0">
@@ -85,9 +72,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
                 </li>
+                {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
                 </li>
+                {% endcomment %}
                 {% endblock %}
             </ul>
 

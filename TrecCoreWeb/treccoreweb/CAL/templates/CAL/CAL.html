@@ -12,15 +12,17 @@
         <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
                 class="sr-only">(current)</span></a>
     </li>
+    {% comment %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
     </li>
+    {% endcomment %}
 {% endblock %}
 
 {% block nav-header-title %}
     <li class="nav-item">
         <span class="nav-link thin text-primary">
-           <strong>CAL:</strong>
+           <strong>CAL</strong>
         </span>
     </li>
 {% endblock %}
@@ -260,7 +262,6 @@
                                 next_doc["snippet"],
                                 next_doc["content"]
                         );
-                        updateTimer();
                         documentTimer = AwayTimer();
 
                     }
@@ -425,7 +426,6 @@
                                         next_doc["content"]
                                 );
                             }
-                            updateTimer();
 
                         }
                     }
@@ -478,7 +478,6 @@
                         next_doc["content"]
                 );
 
-                updateTimer();
             }else{
                 updateDocument(
                         "",

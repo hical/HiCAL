@@ -37,7 +37,7 @@ class Judgement(models.Model):
     isFromSearchModal = models.BooleanField(null=False, blank=False)
     fromMouse = models.BooleanField(null=False, blank=False)
     fromKeyboard = models.BooleanField(null=False, blank=False)
-    timeVerbose = JSONField(null=True, blank=True, default=[])
+    timeVerbose = JSONField(null=True, blank=True, default=[], verbose_name="History")
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)
