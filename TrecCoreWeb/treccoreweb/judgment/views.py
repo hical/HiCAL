@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from braces import views
 from django.http import HttpResponse
@@ -47,6 +48,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             fromKeyboard = self.request_json[u"fromKeyboard"]
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
+            timeActive = self.request_json.get(u"timeActive", None)
+            timeAway = self.request_json.get(u"timeAway", None)
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
                                       u"relevant, nonrelevant, ontopic, time_to_judge, "
@@ -75,6 +78,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.isFromSearchModal = isFromSearchModal
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
+            exists.timeActive.append(timeActive)
+            exists.timeAway.append(timeAway)
             exists.save()
 
             log_body = {
@@ -97,7 +102,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard
+                        "fromKeyboard": fromKeyboard,
+                        "timeActive": timeActive,
+                        "timeAway": timeAway
                     }
                 }
             }
@@ -120,7 +127,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 isFromSearch=isFromSearch,
                 isFromSearchModal=isFromSearchModal,
                 fromMouse=fromMouse,
-                fromKeyboard=fromKeyboard
+                fromKeyboard=fromKeyboard,
+                timeActive=[timeActive],
+                timeAway=[timeAway]
             )
 
             log_body = {
@@ -143,7 +152,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard
+                        "fromKeyboard": fromKeyboard,
+                        "timeActive": timeActive,
+                        "timeAway": timeAway
                     }
                 }
             }
@@ -151,7 +162,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             logger.info("[{}]".format(log_body))
 
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
-        CALErrorMessage = None
+        error_message = None
 
         if isFromCAL:
             # mark on topic documents as relevant only to CAL.
@@ -172,7 +183,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
             except CALError as e:
-                CALErrorMessage = str(e)
+                error_message = "CAL Exception: {}".format(str(e))
+            except Exception as e:
+                error_message = str(e)
 
             context[u"next_docs"] = documents
         else:
@@ -187,14 +200,16 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
             except CALError as e:
-                CALErrorMessage = str(e)
+                error_message = "CAL Exception: {}".format(str(e))
+            except Exception as e:
+                error_message = str(e)
 
-        if CALErrorMessage:
+        if error_message:
             log_body = {
                 "user": self.request.user.username,
                 "client_time": client_time,
                 "result": {
-                    "message": CALErrorMessage,
+                    "message": error_message,
                     "action": "create",
                     "doc_judgment": {
                         "doc_id": doc_id,
@@ -210,12 +225,19 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard
+                        "fromKeyboard": fromKeyboard,
+                        "timeActive": timeActive,
+                        "timeAway": timeAway
                     }
                 }
             }
 
             logger.error("[{}]".format(log_body))
+
+        # update total timespent on task
+        if timeActive:
+            request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
+            request.user.current_task.save()
 
         return self.render_json_response(context)
 

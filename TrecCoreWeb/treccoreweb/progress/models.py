@@ -225,7 +225,7 @@ class Task(models.Model):
         Check if the task max time been reached.
         :return: True if task max time has been reched.
         """
-        return self.timespent >= datetime.timedelta(days=0, hours=1)
+        return self.timespent >= datetime.timedelta(days=0, hours=1, minutes=0)
 
     def is_completed(self):
         """

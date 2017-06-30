@@ -2,9 +2,10 @@ import json
 
 from braces import views
 from django.db.models import Count, Case, When
-from django.http import HttpResponseBadRequest, HttpResponse
-
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponse
+from django.urls import reverse_lazy
 from django.views import generic
+
 from treccoreweb.interfaces.CAL import functions as CALFunctions
 from treccoreweb.judgment.models import Judgement
 from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
@@ -31,6 +32,13 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         context["total_ontopic"] = counters["total_ontopic"]
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        current_task = self.request.user.current_task
+        if current_task.is_time_past():
+            return HttpResponseRedirect(reverse_lazy('progress:completed'))
+
+        return super(CALHomePageView, self).get(self, request, *args, **kwargs)
 
 
 class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,

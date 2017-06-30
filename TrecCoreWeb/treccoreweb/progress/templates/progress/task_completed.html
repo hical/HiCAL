@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block pagetitle %}Pre-task{% endblock %}
+{% block pagetitle %}Task has been completed{% endblock %}
 {% block nav-header %}{% endblock %}
 {% block sidebar %}{% endblock %}
+{% block nav-left %}{% endblock %}
 {% block nav-right %}
     <li class="nav-item">
         {% if request.user.is_authenticated %}
@@ -17,35 +18,15 @@
 {% endblock %}
 
 {% block main %}
-    <h3 class="text-primary">Your current topic</h3>
-    <div class="row top-bottom-margin">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-block">
-                    <p><strong>Title</strong>: {{ user.current_task.topic.title }}</p>
-                    <p><strong>Desc</strong>: {{ user.current_task.topic.description }}
-                    </p>
-                    <p><strong>Narrative</strong>: {{ user.current_task.topic.narrative }}
-                    </p>
-                </div>
-            </div>
-
+    <h3 class="text-primary">Your task has been completed</h3>
+    <p>
+    You have reached the maximum amount of judging time required for this task. Please proceed.
+    </p>
+    <div class="row">
+        <div class="col-md-12 align-right">
+            <a class="btn btn-primary" href="{% url 'progress:posttask' %}">Next</a>
         </div>
     </div>
-    <h4 class="text-primary top-margin">Please answer the following questions</h4>
-    <div class="row top-bottom-margin">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-block">
-                    <form method="POST">
-                        {% csrf_token %}
-                        {% crispy form %}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
 {% endblock %}
 
 

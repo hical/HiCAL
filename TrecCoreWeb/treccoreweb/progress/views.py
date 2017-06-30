@@ -162,3 +162,20 @@ class PosttaskView(views.LoginRequiredMixin, generic.CreateView):
                               )
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+class Completed(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = 'progress/task_completed.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Completed, self).get_context_data(**kwargs)
+        # TODO: Get any related context here
+        return context
+
+    def get(self, request, *args, **kwargs):
+        current_task = self.request.user.current_task
+        # check if current task is not completed, if yes, go to home page
+        if not current_task.is_time_past():
+            return HttpResponseRedirect(reverse_lazy('progress:home'))
+
+        return super(Completed, self).get(self, request, *args, **kwargs)

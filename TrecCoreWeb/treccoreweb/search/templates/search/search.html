@@ -31,7 +31,7 @@
         <div class="col-lg-2 mt-1 text-primary font-montserrat">
             <h3>Search</h3>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-10">
           <form class="input-group" id="search_form">
               <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
                    name="search_input">
@@ -41,6 +41,15 @@
                         ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
                         tabindex="-1">Search
                 </button>
+              </span>
+              <span class="input-btn left-margin mt-1">
+                #docs:
+                <select class="select btn btn-lg btn-outline-primary" id="id_numdisplay" name="numdisplay">
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
               </span>
           </form>
         </div>
@@ -68,10 +77,14 @@
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/idle.js' %}"></script>
+    <script src="{% static 'js/timer.js' %}"></script>
 
     <script>
 
         var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
+        var documents_timers = {}; // dict of timers for each loaded doc.
 
         // flag to check if a modal is currently opened
         var isModalOpen = false;
@@ -173,13 +186,13 @@
             var doc_snippet = $("#doc-"+current_doc_id+"-snippet").html();
 
             if(key == 's') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true, );
             }
             else if(key == 'h') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true, );
             }
             else if(key == 'k') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true, );
             }
 
         });
@@ -203,7 +216,7 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal) {
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal, timeActive, timeAway) {
             var now = + new Date();
 
             console.log("Sending judgment call to backend for document id: " + doc_id);
@@ -223,10 +236,11 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
+                'timeActive': timeActive,
+                'timeAway': timeAway,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
-
 
             $.ajax({
                 url: '{% url 'judgment:post_judgment' %}',
@@ -262,8 +276,8 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard){
-            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true);
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, timeActive, timeAway){
+            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true, timeActive, timeAway);
             hide_modal(doc_id);
             return false;
         }
