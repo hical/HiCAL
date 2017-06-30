@@ -32,7 +32,6 @@ class Judgement(models.Model):
     relevant = models.BooleanField(null=False, blank=False)
     nonrelevant = models.BooleanField(null=False, blank=False)
     ontopic = models.BooleanField(null=False, blank=False)
-    time_to_judge = models.CharField(null=True, blank=True, max_length=512)
     isFromCAL = models.BooleanField(null=False, blank=False)
     isFromSearch = models.BooleanField(null=False, blank=False)
     isFromSearchModal = models.BooleanField(null=False, blank=False)
@@ -50,4 +49,3 @@ class Judgement(models.Model):
 
     def __str__(self):
         return self.__unicode__()
-
