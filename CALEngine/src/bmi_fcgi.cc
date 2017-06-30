@@ -270,6 +270,7 @@ void process_request(const FCGX_Request & request) {
 
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
+    AddFlag("--para-features", "Path of the file with list of paragraph features", string(""));
     AddFlag("--df", "Path of the file with document frequency of each term", string(""));
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
     AddFlag("--num-iterations", "Set max number of training iterations", int(-1));
