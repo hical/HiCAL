@@ -12,12 +12,17 @@
         <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
                 class="sr-only">(current)</span></a>
     </li>
+    {% comment %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
+    </li>
+    {% endcomment %}
 {% endblock %}
 
 {% block nav-header-title %}
     <li class="nav-item">
         <span class="nav-link thin text-primary">
-           <strong>CAL:</strong>
+           <strong>CAL</strong>
         </span>
     </li>
 {% endblock %}
@@ -27,12 +32,6 @@
     <li class="nav-item">
         <a class="nav-link" data-toggle="modal" data-target="#reviewDocsModal" href="#"
             id="reviewDocs">Latest judgments</a>
-    </li>
-{#    <li class="nav-item">#}
-{#        <a class="nav-link" href="{% url 'judgment:get_all' %}">All judgments</a>#}
-{#    </li>#}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_topic.id %}">Topic</a>
     </li>
     {% endif %}
 {% endblock %}
@@ -44,7 +43,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest CAL judged
+                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest judged
                         docs.</h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
@@ -129,8 +128,7 @@
                         <li class="nav-item extra-top-margin">
                             <span class="gray-text align-left">Judge document:</span>
 
-                            <div class="btn-group top-margin" role="group"
-                                 aria-label="Basic example">
+                            <div class="btn-group top-margin" role="group">
                                 <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">
                                     Relevant
                                 </a>
@@ -212,8 +210,13 @@
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/easytimer.js' %}"></script>
     <script src="{% static 'js/CAL.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/idle.js' %}"></script>
+    <script src="{% static 'js/timer.js' %}"></script>
 
     <script>
+
+        var pageTimer = null;
         // Nofity server of page visit on pageload
         window.onload = function () {
             var now = + new Date();
@@ -229,19 +232,17 @@
                     console.log(result['message']);
                 }
             });
+
+            pageTimer = new Idle({}).start();
         };
 
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
         var latestJudgedDocsViewAlreadyEmpty = true;
 
-        var timer = new Timer();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        var relCounter = parseInt("{{ total_relevant }}");
-        var nonRelCounter = parseInt("{{ total_nonrelevant }}");
-        var onTopicCounter = parseInt("{{ total_ontopic }}");
 
-
+        var documentTimer = null;
         // Get initial document at page visit
         $.ajax({
             url: '{% url 'CAL:get_docs' %}',
@@ -261,14 +262,15 @@
                                 next_doc["snippet"],
                                 next_doc["content"]
                         );
-                        updateTimer();
+                        documentTimer = AwayTimer();
+
                     }
                 }else{
                     updateDocument(
                             "",
                             "<span class='text-danger'>Server returned empty list.</span>",
                             "",
-                            "Something went wrong.. Make sure the session has been initialized. If you haven't created or have chosen a topic, please do and activate it as the current active topic.",
+                            "Something went wrong.. Please contact the study coordinators.",
                             ""
                         );
                 }
@@ -329,7 +331,7 @@
 
         function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
                                rel, non, ontopic, isMouse, isKeyboard) {
-
+            window.scrollTo(0, 0);
             if(current_doc_id == "") {
                 console.log("Please wait...");
                 return false;
@@ -340,16 +342,26 @@
             var time_to_judge = timer.getTimeValues().toSeconds();
             var now = + new Date();
 
-{#            if(queue.isEmpty()){#}
-{#                console.log("The queue of documents to judge is empty. Please wait");#}
-{#                alert("The queue of documents to judge is empty. Please wait");#}
-{#                return;#}
-{#            }#}
+            // if(queue.isEmpty()){
+            //    console.log("The queue of documents to judge is empty. Please wait");
+            //    alert("The queue of documents to judge is empty. Please wait");
+            //    return;
+            //}
 
             console.log("Saving '"+current_doc_id+"' to judged_docs JS dict");
             judged_docs[current_doc_id] = true;
 
             console.log("Sending judgment call to backend for document id: " + current_doc_id);
+            var timeVerbose = {
+                "timestamp": now,
+                "timeActive": Date.now() - documentTimer.startTime - documentTimer.totalAwayTime,
+                "timeAway": documentTimer.totalAwayTime,
+                "source": "CAL",
+                "judged": true,
+                "rel": rel,
+                "non": non,
+                "ontopic": ontopic
+            };
 
             var data = {
                 'doc_id': current_doc_id,
@@ -366,6 +378,7 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
+                'timeVerbose': timeVerbose,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
@@ -413,18 +426,8 @@
                                         next_doc["content"]
                                 );
                             }
-                            updateTimer();
 
                         }
-                    }
-
-                    // console.log("Updating nav-bar counters");
-                    if(rel){
-                        updateCounter("s");
-                    }else if(non){
-                        updateCounter("h");
-                    }else if (ontopic){
-                        updateCounter("k");
                     }
 
                 },
@@ -475,7 +478,6 @@
                         next_doc["content"]
                 );
 
-                updateTimer();
             }else{
                 updateDocument(
                         "",

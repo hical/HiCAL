@@ -12,43 +12,28 @@
     <li class="nav-item">
         <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
     </li>
+    {% comment %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
+    </li>
+    {% endcomment %}
 {% endblock %}
 
 {% block nav-header %}
     {% block nav-header-title %}{% endblock %}
     <li class="nav-item active">
     <span class="nav-link thin text-primary">
-       <strong>TrecSearch</strong>
+       <strong>Search</strong>
     </span>
     </li>
-    {% comment %}
-    <li class="nav-item active">
-    <span class="nav-link thin gray-text">
-       <strong>Document judged: </strong><span class="badge badge-success"
-                                               id="nav_stats_rel_header">{{ total_relevant }}</span> <span
-            class="badge badge-danger"
-            id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span
-            class="badge badge-warning"
-            id="nav_stats_ontopic_header">{{ total_ontopic }}</span>
-    </span>
-    </li>
-    <li class="nav-item active" style="width: 200px">
-    <span class="nav-link thin gray-text">
-        <strong>Time spent:</strong>
-        <div id="nav_timer_header" class="display-inline">
-            <span class="values" id="timer_counter">counters</span>
-        </div>
-    </span>
-    </li>
-    {% endcomment %}
 {% endblock %}
 
 {% block main %}
     <div class="row flex-items-lg-middle">
         <div class="col-lg-2 mt-1 text-primary font-montserrat">
-            <h3>TrecSearch</h3>
+            <h3>Search</h3>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-10">
           <form class="input-group" id="search_form">
               <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
                    name="search_input">
@@ -58,6 +43,15 @@
                         ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
                         tabindex="-1">Search
                 </button>
+              </span>
+              <span class="input-btn left-margin mt-1">
+                #docs:
+                <select class="select btn btn-lg btn-outline-primary" id="id_numdisplay" name="numdisplay">
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
               </span>
           </form>
         </div>
@@ -85,10 +79,14 @@
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/idle.js' %}"></script>
+    <script src="{% static 'js/timer.js' %}"></script>
 
     <script>
 
         var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
+        var documents_timers = {}; // dict of timers for each loaded doc.
 
         // flag to check if a modal is currently opened
         var isModalOpen = false;
@@ -220,9 +218,22 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal) {
-            var now = + new Date();
-
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
+            if(timeVerbose == null){
+                var now = + new Date();
+                timeVerbose = {
+                    "timestamp": now,
+                    "timeActive": null,
+                    "timeAway": null,
+                    "source": "searchSERP",
+                    "judged": true,
+                    "rel": rel,
+                    "non": non,
+                    "ontopic": ontopic
+                };
+            }else{
+                var now = timeVerbose['timestamp'];
+            }
             console.log("Sending judgment call to backend for document id: " + doc_id);
 
             var data = {
@@ -240,10 +251,10 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
+                'timeVerbose': timeVerbose,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
-
 
             $.ajax({
                 url: '{% url 'judgment:post_judgment' %}',
@@ -280,9 +291,32 @@
         }
 
         function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard){
-            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true);
+            var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
+            var timeAway = documents_timers[doc_id].totalAwayTime;
+            var now = + new Date;
+            var timeVerbose = {
+                "timestamp": now,
+                "timeActive": timeActive,
+                "timeAway": timeAway,
+                "source": "searchModal",
+                "judged": true,
+                "rel": rel,
+                "non": non,
+                "ontopic": ontopic
+            };
+            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true, timeVerbose);
+            var element = document;
+            var event = new CustomEvent("new_judgment");
+            element.dispatchEvent(event);
+
             hide_modal(doc_id);
             return false;
         }
+        var is_from_judement = false;
+        var element = document;
+        element.addEventListener("new_judgment", function (e) {
+            is_from_judement = true;
+        }, false);
+
     </script>
 {% endblock %}

@@ -3,7 +3,7 @@ from treccoreweb.topic.models import Topic
 
 
 class TopicAdmin(admin.ModelAdmin):
-    readonly_fields = ('seed_query', 'uuid')
+    readonly_fields = ('seed_query', )
 
     class Meta:
         model = Topic
@@ -15,4 +15,3 @@ class TopicAdmin(admin.ModelAdmin):
             return []
 
 admin.site.register(Topic, TopicAdmin)
-

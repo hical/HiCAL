@@ -1,14 +1,14 @@
 import json
 
 from braces import views
-from django.db.models import Count, Case, When
-from django.http import HttpResponseBadRequest, HttpResponse
-
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse_lazy
 from django.views import generic
+
 from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.judgment.models import Judgement
 from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
 from interfaces.DocumentSnippetEngine import functions as DocEngine
+from treccoreweb.CAL.exceptions import CALError
 
 import logging
 logger = logging.getLogger(__name__)
@@ -17,19 +17,12 @@ logger = logging.getLogger(__name__)
 class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'CAL/CAL.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(CALHomePageView, self).get_context_data(**kwargs)
-        counters = Judgement.objects.filter(user=self.request.user,
-                                    topic=self.request.user.current_topic).aggregate(
-            total_relevant=Count(Case(When(relevant=True, then=1))),
-            total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-            total_ontopic=Count(Case(When(ontopic=True, then=1)))
-        )
-        context["total_relevant"] = counters["total_relevant"]
-        context["total_nonrelevant"] = counters["total_nonrelevant"]
-        context["total_ontopic"] = counters["total_ontopic"]
+    def get(self, request, *args, **kwargs):
+        current_task = self.request.user.current_task
+        if current_task.is_time_past():
+            return HttpResponseRedirect(reverse_lazy('progress:completed'))
 
-        return context
+        return super(CALHomePageView, self).get(self, request, *args, **kwargs)
 
 
 class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
@@ -111,8 +104,8 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             json_context, content_type=self.get_content_type(), status=502)
 
     def get_ajax(self, request, *args, **kwargs):
-        session = self.request.user.current_topic.uuid
-        seed_query = self.request.user.current_topic.seed_query
+        session = self.request.user.current_task.uuid
+        seed_query = self.request.user.current_task.topic.seed_query
         try:
             docs_ids_to_judge, top_terms = CALFunctions.get_documents(str(session), 5,
                                                                       seed_query)
@@ -129,8 +122,21 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
                                                              seed_query,
                                                              top_terms)
+            return self.render_json_response(documents)
         except TimeoutError:
             error_dict = {u"message": u"Timeout error. Please check status of servers."}
             return self.render_timeout_request_response(error_dict)
+        except CALError as e:
+            log_body = {
+                "user": self.request.user.username,
+                "result": {
+                    "message": str(e),
+                    "source": "interfaces.CAL.functions.get_documents()"
+                }
+            }
 
-        return self.render_json_response(documents)
+            logger.error("[{}]".format(log_body))
+            error_dict = {u"message": u"Error occurred. Please inform study coordinators"}
+
+            # TODO: add proper http response for CAL errors
+            return self.render_timeout_request_response(error_dict)

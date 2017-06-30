@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block pagetitle %}Task has been completed{% endblock %}
+{% block nav-header %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block nav-left %}{% endblock %}
+{% block nav-right %}
+    <li class="nav-item">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_logout' %}">Sign out</a>
+        {% else %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
+{% block main %}
+    <h3 class="text-primary">Your task has been completed</h3>
+    <p>
+    You have reached the maximum amount of judging time required for this task. Please proceed.
+    </p>
+    <div class="row">
+        <div class="col-md-12 align-right">
+            <a class="btn btn-primary" href="{% url 'progress:posttask' %}">Next</a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+    <script>
+        // TODO: Update URL
+        // Nofity server of page visit on pageload
+        window.onload = function () {
+            var now = +new Date();
+            $.ajax({
+                url: '{% url 'topic:post_visit' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'type': "create",
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                }
+            });
+        };
+    </script>
+{% endblock %}

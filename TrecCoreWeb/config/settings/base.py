@@ -49,13 +49,14 @@ THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
     'allauth',  # registration
     'allauth.account',  # registration
-    'allauth.socialaccount',  # registration
+    # 'allauth.socialaccount',  # registration
 ]
 
 # Apps specific for this project go here.
 LOCAL_APPS = [
     # custom users app
     'treccoreweb.users.apps.UsersConfig',
+    'treccoreweb.progress',
     'treccoreweb.CAL',
     'treccoreweb.topic',
     'treccoreweb.judgment',
@@ -265,7 +266,7 @@ SOCIALACCOUNT_ADAPTER = 'treccoreweb.users.adapters.SocialAccountAdapter'
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'progress:home'
 LOGIN_URL = 'account_login'
 
 # SLUGLIFIER

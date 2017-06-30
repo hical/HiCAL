@@ -3,8 +3,9 @@ import json
 import httplib2
 from braces import views
 from django.db.models import Count, Case, When
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+from django.urls import reverse_lazy
 
 from django.views import generic
 from treccoreweb.judgment.models import Judgement
@@ -12,7 +13,7 @@ from treccoreweb.search import helpers
 import logging
 
 from treccoreweb.search.logging_messages import LOGGING_MESSAGES as SEARCH_LOGGING_MESSAGES
-from treccoreweb.interfaces.SearchEngine.functions import get_documents
+from treccoreweb.interfaces.SearchEngine import functions as SearchEngine
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
 
         # TODO: Hide stats for now.
         # counters = Judgement.objects.filter(user=self.request.user,
-        #                             topic=self.request.user.current_topic).aggregate(
+        #                             topic=self.request.user.current_task.topic).aggregate(
         #     total_relevant=Count(Case(When(relevant=True, then=1))),
         #     total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
         #     total_ontopic=Count(Case(When(ontopic=True, then=1)))
@@ -36,6 +37,13 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         # context["total_ontopic"] = counters["total_ontopic"]
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        current_task = self.request.user.current_task
+        if current_task.is_time_past():
+            return HttpResponseRedirect(reverse_lazy('progress:completed'))
+
+        return super(SearchHomePageView, self).get(self, request, *args, **kwargs)
 
 
 class SearchVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
@@ -141,13 +149,17 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
         template = loader.get_template(self.template)
         try:
             search_input = request.POST.get("search_input")
+            numdisplay = request.POST.get("numdisplay", 10)
         except KeyError:
             rendered_template = template.render({})
             return HttpResponse(rendered_template, content_type='text/html')
         context = {}
         documents_values, document_ids = None, None
         try:
-            documents_values, document_ids = get_documents(search_input)
+            documents_values, document_ids, total_time = SearchEngine.get_documents(
+                                                            search_input,
+                                                            numdisplay=numdisplay
+                                                         )
         except (TimeoutError, httplib2.HttpLib2Error):
             context['error'] = "Error happened. Please check search server."
 
@@ -155,9 +167,11 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
             document_ids = helpers.padder(document_ids)
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
-                                                      self.request.user.current_topic)
+                                                      self.request.user.current_task)
         context["documents"] = documents_values
         context["query"] = search_input
+        if total_time:
+            context["total_time"] = "{0:.2f}".format(round(float(total_time), 2))
 
         rendered_template = template.render(context)
         return HttpResponse(rendered_template, content_type='text/html')

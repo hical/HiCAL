@@ -28,7 +28,7 @@
                 method: 'POST',
                 data: JSON.stringify({
                     'client_time': now,
-                    'type': "create",
+                    'html_file': "create",
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 }),
                 success: function (result) {}

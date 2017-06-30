@@ -5,7 +5,21 @@
     </div>
 </div>
 {% endif %}
-
+{% if not  documents.items %}
+<div class="med card-section">
+    <p style="padding-top:.33em">
+        Your search - <em>{{ query }}</em> - did not match any documents.  </p>
+        <p style="margin-top:1em">Suggestions:</p>
+        <ul style="margin-left:1.3em;margin-bottom:2em">
+            <li>Make sure that all words are spelled correctly.</li>
+            <li>Try different keywords.</li>
+            <li>Try more general keywords.</li>
+            <li>Try fewer keywords.</li></ul>
+</div>
+{% endif %}
+{% if total_time %}
+<small class="gray-text">{{ total_time }} seconds.</small>
+{% endif %}
 {% for doc_id, document_values in documents.items %}
     <div class="row flex-items-md-middle">
         <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 15px;">
@@ -35,13 +49,13 @@
         <div class="offset-md-0-5 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group"
                  aria-label="Basic example">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false);" class="btn btn-sm btn-success">
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null);" class="btn btn-sm btn-success">
                     Relevant
                 </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false);" class="btn btn-sm btn-warning">On
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null);" class="btn btn-sm btn-warning">On
                     topic
                 </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false);" class="btn btn-sm btn-danger">Not
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null);" class="btn btn-sm btn-danger">Not
                     relevant
                 </a>
             </div>
@@ -69,7 +83,17 @@
                             <div class="document-{{ document_values.docno }}-modal-content" id="document-{{ document_values.docno }}-modal-content"
                                  data-doc-id="">
                                 <div class="document_content" id="document_{{ document_values.docno }}_content">
-                                    <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                    <div class="row bottom-margin small">
+                                        <div class="col-md-6 ">
+                                            <small class="document_content_date"></small>
+                                        </div>
+                                        <div class="col-md-6 align-right small">
+                                            <code class="document_content_id"></code>
+                                        </div>
+                                    </div>
+                                    <div class="document_content_text">
+                                        <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -108,15 +132,9 @@
                                         <span class="gray-text align-left">Judge document:</span>
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">
-                                                Relevant
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
-                                                topic
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
-                                                relevant
-                                            </a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On topic</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
                                         </div>
                                     </li>
                                     <div class="extra-top-margin align-left">
@@ -174,10 +192,52 @@
 
     <!-- MODAL EVENT TRIGGERS -->
     <script>
+
         $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
-            console.log("model has been hidden");
+            var timeActive = Date.now() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime;
+            var timeAway = documents_timers['{{ document_values.docno }}'].totalAwayTime;
+            console.log("Model has been hidden.");
+            console.log("Destroying document# {{ document_values.docno }} timer.");
+            documents_timers['{{ document_values.docno }}'].idle.stop();
+            delete documents_timers['{{ document_values.docno }}'];
             isModalOpen = false;
             currentOpenedModalDocId = null;
+
+            if(is_from_judement == false){
+                console.log("No judgment has been made. Sending no judgment call to backend for document id: " + '{{ document_values.docno }}');
+                var now = + new Date();
+                var timeVerbose = {
+                    "timestamp": now,
+                    "timeActive": timeActive,
+                    "timeAway": timeAway,
+                    "source": "searchModal",
+                    "judged": false
+                };
+                var data = {
+                    'doc_id': '{{ document_values.docno }}',
+                    'doc_title': '{{ document_values.title|escapejs }}',
+                    'doc_search_snippet': '{{ document_values.snippet|escapejs }}',
+                    'client_time': now,
+                    'timeVerbose': timeVerbose,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                };
+
+                $.ajax({
+                    url: '{% url 'judgment:post_nojudgment' %}',
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        console.log(result['message']);
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    }
+                });
+            }else{
+                // reset flag
+                is_from_judement = false;
+            }
         });
 
         $('#doc-{{ document_values.docno }}-modal').on('shown.bs.modal', function (e) {
@@ -188,8 +248,14 @@
                     url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}&query={{ query }}',
                     method: 'GET',
                     success: function (result) {
-                        modal.find('.document_content').html(result[0]['content']);
+                        modal.find('.document_content_text').html(result[0]['content']);
                         loaded_docs['{{ document_values.docno }}'] = true;
+                        modal.find('.document_content_date').html(result[0]['date']);
+                        modal.find('.document_content_id').html(result[0]['doc_id']);
+                        // TODO: start document timer
+                        console.log("Initializing document timer for doc: {{ document_values.docno }}");
+                        var documentTimer = AwayTimer();
+                        documents_timers['{{ document_values.docno }}'] = documentTimer;
                     },
                     error: function (result){
                         modal.find('.document_content').html("Failed to get doc. Error message: "+result);
@@ -200,9 +266,13 @@
                         }
                     }
                 });
+            }else{
+                console.log("Re-initializing document timer for doc: {{ document_values.docno }}");
+                var documentTimer = AwayTimer();
+                documents_timers['{{ document_values.docno }}'] = documentTimer;
             }
 
-            console.log("model has been shown");
+            console.log("Model has been shown");
             isModalOpen = true;
             currentOpenedModalDocId = '{{ document_values.docno }}';
         });
@@ -247,14 +317,22 @@
            */
           function jumpTo() {
             if ($results.length) {
+              $input.addClass("greenBorder").css("border-color","#449D44");
               var position,
                 $current = $results.eq(currentIndex);
               $results.removeClass(currentClass);
               if ($current.length) {
                 $current.addClass(currentClass);
-                position = $current.offset().top - offsetTop;
-                window.scrollTo(0, position);
+                position = $current[0].offsetTop - offsetTop;
+                $("#doc-{{ document_values.docno }}-modal").scrollTop(position);
               }
+            }else{
+              if(!$input.val()){
+                  $input.removeAttr( 'style' );
+              }else if ($input.is(':focus')){
+                $input.addClass("redBorder").css("border-color","#C9302C");
+              }
+              $("#doc-{{ document_values.docno }}-modal").scrollTop(0);
             }
           }
 

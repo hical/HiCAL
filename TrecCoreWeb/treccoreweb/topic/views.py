@@ -8,11 +8,12 @@ from treccoreweb.topic.models import Topic
 from treccoreweb.topic.forms import TopicForm
 from treccoreweb.topic.logging_messages import LOGGING_MESSAGES as TOPIC_LOGGING_MESSAGES
 from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.CAL.exceptions import CALError
+from braces import views
 
 import logging
 logger = logging.getLogger(__name__)
 
-from braces import views
 
 class TopicView(LoginRequiredMixin, generic.DetailView):
     model = Topic
@@ -21,7 +22,7 @@ class TopicView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = {
-            "form": TopicForm(instance=self.request.user.current_topic)
+            "form": TopicForm(instance=self.request.user.current_task.topic)
         }
 
         return context
@@ -62,7 +63,7 @@ class TopicVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     def post(self, request, *args, **kwargs):
         try:
             client_time = self.request_json.get(u"client_time", None)
-            type = self.request_json.get("type", None)
+            html_file = self.request_json.get("html_file", None)
         except KeyError:
             error_dict = {u"message": u"your input must include client_time."}
             return self.render_bad_request_response(error_dict)
@@ -71,10 +72,10 @@ class TopicVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             "user": self.request.user.username,
             "client_time": client_time,
             "result": {
-                "message": TOPIC_LOGGING_MESSAGES.get("visit").get(type, None),
+                "message": TOPIC_LOGGING_MESSAGES.get("visit").get(html_file, None),
                 "page_visit": True,
-                "page_file": "{}.html".format(type),
-                "page_title": "Topics {}".format(type)
+                "page_file": "{}.html".format(html_file),
+                "page_title": "Topics {}".format(html_file)
             }
         }
 
@@ -97,13 +98,23 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.username = self.request.user
 
-        if CALFunctions.add_session(str(self.object.uuid), self.object.seed_query):
+        try:
+            CALFunctions.add_session(str(self.object.uuid), self.object.seed_query)
             self.object.save()
             messages.add_message(self.request,
                                  messages.SUCCESS,
                                  'Your topic has been created but it\'s not active. '
                                  'Activate it to start working under it')
-        else:
+        except CALError as e:
+            log_body = {
+                "user": self.request.user.username,
+                "result": {
+                    "message": str(e),
+                    "source": "interfaces.CAL.functions.add_session()"
+                }
+            }
+
+            logger.error("[{}]".format(log_body))
             messages.add_message(self.request,
                                  messages.ERROR,
                                  'Failed to create session. CAL backend failed to add  '
@@ -135,7 +146,7 @@ class TopicActivateView(LoginRequiredMixin, generic.DetailView):
     def post(self, request, *args, **kwargs):
         topic_id = request.POST.get("topic_id")
         topic = Topic.objects.get(id=topic_id, username=request.user)
-        request.user.current_topic = topic
+        request.user.current_task.topic = topic
         request.user.save()
         messages.add_message(request,
                              messages.SUCCESS,

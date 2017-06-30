@@ -19,7 +19,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
 
         counters = Judgement.objects.filter(user=self.request.user,
                                             isFromCAL=True,
-                                topic=self.request.user.current_topic).aggregate(
+                                topic=self.request.user.current_task.topic).aggregate(
             total_relevant=Count(Case(When(relevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
             total_ontopic=Count(Case(When(ontopic=True, then=1)))
@@ -31,7 +31,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
 
         counters = Judgement.objects.filter(user=self.request.user,
                                             isFromSearch=True,
-                                topic=self.request.user.current_topic).aggregate(
+                                topic=self.request.user.current_task.topic).aggregate(
             total_relevant=Count(Case(When(relevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
             total_ontopic=Count(Case(When(ontopic=True, then=1)))
@@ -46,7 +46,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         CALJudgments = Judgement.objects.filter(user=self.request.user,
                                                 isFromCAL=True,
                                                 relevant=True,
-                                                topic=self.request.user.current_topic)
+                                                topic=self.request.user.current_task.topic)
         if CALJudgments:
             total = [float(judgment.time_to_judge) for judgment in CALJudgments]
             context["average_relevant_timespent_CAL"] = round(statistics.mean(total), 3)
@@ -58,7 +58,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         CALJudgments = Judgement.objects.filter(user=self.request.user,
                                                 isFromCAL=True,
                                                 nonrelevant=True,
-                                                topic=self.request.user.current_topic)
+                                                topic=self.request.user.current_task.topic)
 
         if CALJudgments:
             total = [float(judgment.time_to_judge) for judgment in CALJudgments]
@@ -71,7 +71,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         CALJudgments = Judgement.objects.filter(user=self.request.user,
                                                 isFromCAL=True,
                                                 ontopic=True,
-                                                topic=self.request.user.current_topic)
+                                                topic=self.request.user.current_task.topic)
 
         if CALJudgments:
             total = [float(judgment.time_to_judge) for judgment in CALJudgments]
@@ -86,7 +86,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         CALJudgmentsTimes = Judgement.objects.filter(user=self.request.user,
                                                      isFromCAL=True,
                                                      relevant=True,
-                                                     topic=self.request.user.current_topic)
+                                                     topic=self.request.user.current_task.topic)
         times = [float(judgment.time_to_judge) for judgment in CALJudgmentsTimes]
         context["times_relevant_CAL"] = times
         context["times_relevant_CAL_size"] = len(times)
@@ -94,7 +94,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         CALJudgmentsTimes = Judgement.objects.filter(user=self.request.user,
                                                      isFromCAL=True,
                                                      nonrelevant=True,
-                                                     topic=self.request.user.current_topic)
+                                                     topic=self.request.user.current_task.topic)
         times = [float(judgment.time_to_judge) for judgment in CALJudgmentsTimes]
         context["times_nonrelevant_CAL"] = times
         context["times_nonrelevant_CAL_size"] = len(times)
@@ -102,7 +102,7 @@ class StatsHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         CALJudgmentsTimes = Judgement.objects.filter(user=self.request.user,
                                                      isFromCAL=True,
                                                      ontopic=True,
-                                                     topic=self.request.user.current_topic)
+                                                     topic=self.request.user.current_task.topic)
         times = [float(judgment.time_to_judge) for judgment in CALJudgmentsTimes]
         context["times_ontopic_CAL"] = times
         context["times_ontopic_CAL_size"] = len(times)
