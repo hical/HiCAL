@@ -48,8 +48,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             fromKeyboard = self.request_json[u"fromKeyboard"]
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
-            timeActive = self.request_json.get(u"timeActive", None)
-            timeAway = self.request_json.get(u"timeAway", None)
+            timeVerbose = self.request_json.get(u"timeVerbose")
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
                                       u"relevant, nonrelevant, ontopic, time_to_judge, "
@@ -78,8 +77,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.isFromSearchModal = isFromSearchModal
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
-            exists.timeActive.append(timeActive)
-            exists.timeAway.append(timeAway)
+            exists.timeVerbose.append(timeVerbose)
             exists.save()
 
             log_body = {
@@ -103,8 +101,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
-                        "timeActive": timeActive,
-                        "timeAway": timeAway
+                        "timeVerbose": timeVerbose,
                     }
                 }
             }
@@ -128,8 +125,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 isFromSearchModal=isFromSearchModal,
                 fromMouse=fromMouse,
                 fromKeyboard=fromKeyboard,
-                timeActive=[timeActive],
-                timeAway=[timeAway]
+                timeVerbose=[timeVerbose],
             )
 
             log_body = {
@@ -153,8 +149,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
-                        "timeActive": timeActive,
-                        "timeAway": timeAway
+                        "timeVerbose": timeVerbose,
                     }
                 }
             }
@@ -226,8 +221,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromSearchModal": isFromSearchModal,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
-                        "timeActive": timeActive,
-                        "timeAway": timeAway
+                        "timeVerbose": timeVerbose,
                     }
                 }
             }
@@ -235,9 +229,109 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             logger.error("[{}]".format(log_body))
 
         # update total timespent on task
-        if timeActive:
+        if timeVerbose['timeActive']:
+            timeActive = timeVerbose['timeActive']
             request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
             request.user.current_task.save()
+
+        return self.render_json_response(context)
+
+
+class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            doc_id = self.request_json[u"doc_id"]
+            doc_title = self.request_json[u"doc_title"]
+            doc_search_snippet = self.request_json[u"doc_search_snippet"]
+            query = self.request_json.get(u"query", None)
+            client_time = self.request_json.get(u"client_time", None)
+            timeVerbose = self.request_json.get(u"timeVerbose")
+        except KeyError:
+            error_dict = {u"message": u"your input must include doc_id, doc_title, "
+                                      u"doc_search_snippet, etc.."}
+            return self.render_bad_request_response(error_dict)
+
+        # Check if a judgment exists already, if so, update the db row.
+        exists = Judgement.objects.filter(user=self.request.user,
+                                          doc_id=doc_id,
+                                          task=self.request.user.current_task)
+
+        if exists:
+            exists = exists.first()
+            exists.query = query
+            exists.doc_title = doc_title
+            exists.doc_search_snippet = doc_search_snippet
+            exists.timeVerbose.append(timeVerbose)
+            exists.save()
+
+            log_body = {
+                "user": self.request.user.username,
+                "client_time": client_time,
+                "result": {
+                    "message": Judgement.LOGGING_MESSAGES.get("update", None),
+                    "action": "update - no judgment",
+                    "doc_judgment": {
+                        "doc_id": doc_id,
+                        "doc_title": doc_title,
+                        "topic_id": self.request.user.current_task.topic.id,
+                        "session": str(self.request.user.current_task.uuid),
+                        "query": query,
+                        "timeVerbose": timeVerbose,
+                    }
+                }
+            }
+
+            logger.info("[{}]".format(log_body))
+        else:
+            Judgement.objects.create(
+                user=self.request.user,
+                doc_id=doc_id,
+                doc_title=doc_title,
+                doc_CAL_snippet="",
+                doc_search_snippet=doc_search_snippet,
+                task=self.request.user.current_task,
+                query=query,
+                relevant=False,
+                nonrelevant=False,
+                ontopic=False,
+                time_to_judge="NA",
+                isFromCAL=False,
+                isFromSearch=False,
+                isFromSearchModal=False,
+                fromMouse=False,
+                fromKeyboard=False,
+                timeVerbose=[timeVerbose],
+            )
+
+            log_body = {
+                "user": self.request.user.username,
+                "client_time": client_time,
+                "result": {
+                    "message": Judgement.LOGGING_MESSAGES.get("create", None),
+                    "action": "create",
+                    "doc_judgment": {
+                        "doc_id": doc_id,
+                        "doc_title": doc_title,
+                        "topic_id": self.request.user.current_task.topic.id,
+                        "session": str(self.request.user.current_task.uuid),
+                        "query": query,
+                        "timeVerbose": timeVerbose
+                    }
+                }
+            }
+
+            logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your no judgment on {} has been received!".format(doc_id)}
+
+        # update total timespent on task
+        timeActive = timeVerbose['timeActive']
+        request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
+        request.user.current_task.save()
 
         return self.render_json_response(context)
 

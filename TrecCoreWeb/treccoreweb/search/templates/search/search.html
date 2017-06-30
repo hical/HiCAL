@@ -186,13 +186,13 @@
             var doc_snippet = $("#doc-"+current_doc_id+"-snippet").html();
 
             if(key == 's') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true, );
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
             }
             else if(key == 'h') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true, );
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
             }
             else if(key == 'k') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true, );
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
             }
 
         });
@@ -216,9 +216,22 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal, timeActive, timeAway) {
-            var now = + new Date();
-
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
+            if(timeVerbose == null){
+                var now = + new Date();
+                timeVerbose = {
+                    "timestamp": now,
+                    "timeActive": null,
+                    "timeAway": null,
+                    "source": "searchSERP",
+                    "judged": true,
+                    "rel": rel,
+                    "non": non,
+                    "ontopic": ontopic
+                };
+            }else{
+                var now = timeVerbose['timestamp'];
+            }
             console.log("Sending judgment call to backend for document id: " + doc_id);
 
             var data = {
@@ -236,8 +249,7 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
-                'timeActive': timeActive,
-                'timeAway': timeAway,
+                'timeVerbose': timeVerbose,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
@@ -276,8 +288,21 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, timeActive, timeAway){
-            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true, timeActive, timeAway);
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard){
+            var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
+            var timeAway = documents_timers[doc_id].totalAwayTime;
+            var now = + new Date;
+            var timeVerbose = {
+                "timestamp": now,
+                "timeActive": timeActive,
+                "timeAway": timeAway,
+                "source": "searchModal",
+                "judged": true,
+                "rel": rel,
+                "non": non,
+                "ontopic": ontopic
+            };
+            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true, timeVerbose);
             var element = document;
             var event = new CustomEvent("new_judgment");
             element.dispatchEvent(event);

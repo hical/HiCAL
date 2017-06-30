@@ -38,15 +38,14 @@ class Judgement(models.Model):
     isFromSearchModal = models.BooleanField(null=False, blank=False)
     fromMouse = models.BooleanField(null=False, blank=False)
     fromKeyboard = models.BooleanField(null=False, blank=False)
-    timeActive = JSONField(null=True, blank=True, default=[])
-    timeAway = JSONField(null=True, blank=True, default=[])
+    timeVerbose = JSONField(null=True, blank=True, default=[])
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        judgment = 1 if self.relevant else -1 if self.nonrelevant else 0
+        judgment = 1 if self.relevant else -1 if self.nonrelevant else 0 if self.ontopic else None
         return "{} on {}: {}".format(self.user, self.doc_id, judgment)
 
     def __str__(self):

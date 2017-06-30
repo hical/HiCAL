@@ -238,12 +238,7 @@
         var latestJudgedDocsQueue = new Queue();
         var latestJudgedDocsViewAlreadyEmpty = true;
 
-        var timer = new Timer();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        var relCounter = parseInt("{{ total_relevant }}");
-        var nonRelCounter = parseInt("{{ total_nonrelevant }}");
-        var onTopicCounter = parseInt("{{ total_ontopic }}");
-
 
         var documentTimer = null;
         // Get initial document at page visit
@@ -356,6 +351,16 @@
             judged_docs[current_doc_id] = true;
 
             console.log("Sending judgment call to backend for document id: " + current_doc_id);
+            var timeVerbose = {
+                "timestamp": now,
+                "timeActive": Date.now() - documentTimer.startTime - documentTimer.totalAwayTime,
+                "timeAway": documentTimer.totalAwayTime,
+                "source": "CAL",
+                "judged": true,
+                "rel": rel,
+                "non": non,
+                "ontopic": ontopic
+            };
 
             var data = {
                 'doc_id': current_doc_id,
@@ -372,8 +377,7 @@
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
-                'totalActiveTime': moment() - documentTimer.startTime - documentTimer.totalAwayTime,
-                'totalAwayTime': documentTimer.totalAwayTime,
+                'timeVerbose': timeVerbose,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
@@ -424,15 +428,6 @@
                             updateTimer();
 
                         }
-                    }
-
-                    // console.log("Updating nav-bar counters");
-                    if(rel){
-                        updateCounter("s");
-                    }else if(non){
-                        updateCounter("h");
-                    }else if (ontopic){
-                        updateCounter("k");
                     }
 
                 },

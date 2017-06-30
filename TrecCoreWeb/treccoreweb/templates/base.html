@@ -20,7 +20,9 @@
 </head>
 
 <body>
+
 <nav class="navbar nav-bar-padding navbar-toggleable-md bg-faded fixed-top border-bottom">
+
     <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button"
             data-toggle="collapse" data-target="#navbarsExampleDefault"
             aria-controls="navbarsExampleDefault" aria-expanded="false"
@@ -30,14 +32,14 @@
     <a class="navbar-brand font-montserrat" href="/"><strong>IRStudy</strong></a>
     <div class="collapse navbar-collapse font-montserrat" id="navbarsExampleDefault">
         {% block nav-left%}
-        <ul class="navbar-nav mt-2">
+        <ul class="navbar-nav mt-1">
             <li class="nav-item text-truncate" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 200px;">
                 <span class="small gray-text">Topic: {{ user.current_task.topic.title }}</span>
             </li>
         </ul>
         {% endblock %}
 
-        <ul class="navbar-nav mx-auto small mt-1">
+        <ul class="navbar-nav mx-auto small mt-0">
             {% block nav-header %}
             {% block nav-header-title %}{% endblock %}
             <li class="nav-item active">
