@@ -30,7 +30,7 @@ with open("nist.topics") as f:
 # you may also want to remove whitespace characters like `\n` at the end of each line
 nistTopicList = [int(x.strip()) for x in nistTopics] 
 
-print nistTopicList
+# print nistTopicList
 
 np.random.seed(1234)
 
@@ -67,14 +67,16 @@ treatmentDict[5] =["false","false","true","true" ]
 
 treatmentDumps = []
 for i in range(0,50):
-	print i
+	# print i
 	aList = topicDict[i]
+	# print aList
 	topicList = []
 	for t in aList:
 		topicList.append(nistTopicList[t-1])
 	# print topicList
 
 	bList = interfaceDict[i]
+	# print bList
 	interfaceList = []
 	for interface in bList:
 		interfaceList.append(treatmentDict[interface])
