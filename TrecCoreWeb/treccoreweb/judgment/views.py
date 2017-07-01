@@ -40,7 +40,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             relevant = self.request_json[u"relevant"]
             nonrelevant = self.request_json[u"nonrelevant"]
             ontopic = self.request_json[u"ontopic"]
-            time_to_judge = self.request_json[u"time_to_judge"]
             isFromCAL = self.request_json[u"isFromCAL"]
             isFromSearch = self.request_json[u"isFromSearch"]
             isFromSearchModal = self.request_json[u"isFromSearchModal"]
@@ -51,7 +50,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             timeVerbose = self.request_json.get(u"timeVerbose")
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
-                                      u"relevant, nonrelevant, ontopic, time_to_judge, "
+                                      u"relevant, nonrelevant, ontopic, "
                                       u"doc_CAL_snippet, doc_search_snippet, etc.."}
             return self.render_bad_request_response(error_dict)
 
@@ -71,7 +70,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.relevant = relevant
             exists.nonrelevant = nonrelevant
             exists.ontopic = ontopic
-            exists.time_to_judge = time_to_judge
             exists.isFromCAL = isFromCAL
             exists.isFromSearch = isFromSearch
             exists.isFromSearchModal = isFromSearchModal
@@ -95,7 +93,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
                         "ontopic": ontopic,
-                        "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
@@ -119,7 +116,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 relevant=relevant,
                 nonrelevant=nonrelevant,
                 ontopic=ontopic,
-                time_to_judge=time_to_judge,
                 isFromCAL=isFromCAL,
                 isFromSearch=isFromSearch,
                 isFromSearchModal=isFromSearchModal,
@@ -143,7 +139,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
                         "ontopic": ontopic,
-                        "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
@@ -222,7 +217,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "relevant": relevant,
                         "nonrelevant": nonrelevant,
                         "ontopic": ontopic,
-                        "time_to_judge": time_to_judge,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
@@ -305,7 +299,6 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 relevant=False,
                 nonrelevant=False,
                 ontopic=False,
-                time_to_judge="NA",
                 isFromCAL=False,
                 isFromSearch=False,
                 isFromSearchModal=False,
