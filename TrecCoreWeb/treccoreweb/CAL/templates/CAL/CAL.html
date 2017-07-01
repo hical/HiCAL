@@ -339,7 +339,6 @@
             var current_doc_content = $("#document_content").html();
             var current_doc_date = $("#document_date").html();
 
-            var time_to_judge = timer.getTimeValues().toSeconds();
             var now = + new Date();
 
             // if(queue.isEmpty()){
@@ -371,7 +370,6 @@
                 'relevant': rel,
                 'nonrelevant': non,
                 'ontopic': ontopic,
-                'time_to_judge': time_to_judge,
                 'isFromCAL': true,
                 'isFromSearch': false,
                 'isFromSearchModal': false,
