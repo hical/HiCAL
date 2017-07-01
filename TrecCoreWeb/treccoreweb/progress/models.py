@@ -218,7 +218,7 @@ class Task(models.Model):
                 # TODO: log error
                 pass
 
-        super(Task, self).save(args, kwargs)
+        super(Task, self).save(*args, **kwargs)
 
     def is_time_past(self):
         """

@@ -45,9 +45,7 @@ django-redis==4.8.0
 redis>=2.10.5
 
 
-
-
-
 # Your custom requirements go here
 httplib2
 xmltodict
+lxml
