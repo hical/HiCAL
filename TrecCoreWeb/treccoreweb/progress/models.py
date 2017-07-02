@@ -193,7 +193,6 @@ class TaskSetting(models.Model):
     """
 
     show_search = models.BooleanField()
-    show_CAL = models.BooleanField()
     toggle_doc = models.BooleanField()
     only_show_doc = models.BooleanField()
 

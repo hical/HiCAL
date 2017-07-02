@@ -67,14 +67,15 @@ for i in range(0, 50):
         interfaceList.append(treatmentDict[interface])
 
     # print interfaceList
-    treatment = {"user_ID": i, \
+    treatment = {"user_ID": i,
                  "treatments": [
                      dict(topic_num=topic, setting=dict(show_search=interface[0],
-                                                         toggle_doc=interface[1],
-                                                         only_show_doc=interface[2],
-                                                         show_cal=interface[3])) for
-                     topic, interface in
-                     zip(topicList, interfaceList)]}
+                                                        toggle_doc=interface[1],
+                                                        only_show_doc=interface[2])
+                          )
+                     for topic, interface in zip(topicList, interfaceList)
+                     ]
+                 }
 
     treatmentDumps.append(treatment)
 
