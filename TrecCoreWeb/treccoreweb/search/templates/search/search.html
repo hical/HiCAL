@@ -19,14 +19,7 @@
     {% endcomment %}
 {% endblock %}
 
-{% block nav-header %}
-    {% block nav-header-title %}{% endblock %}
-    <li class="nav-item active">
-    <span class="nav-link thin text-primary">
-       <strong>Search</strong>
-    </span>
-    </li>
-{% endblock %}
+{% block nav-header %}{% endblock %}
 
 {% block main %}
     <div class="row flex-items-lg-middle">
@@ -264,7 +257,7 @@
                     console.log(result['message']);
                 },
                 error: function (result) {
-                    console.log(result);
+                    console.error(result);
                 }
             });
 

@@ -39,27 +39,20 @@
                 {% endif %}
             {% endif %}
         </div>
-        <div class="col-md-6"  data-toggle="modal" data-target=".doc-{{ document_values.docno }}-modal" style="cursor: pointer; cursor: hand;">
+        <div class="col-md-7"  data-toggle="modal" data-target=".doc-{{ document_values.docno }}-modal" style="cursor: pointer; cursor: hand;">
             <div class="document" data-rank="{{ document_values.rank }}">
                 <div class="title" id="doc-{{ document_values.docno }}-title">{{ document_values.title|safe }}</div>
                 <div class="url">doc_id: {{ document_values.docno }}</div>
                 <div class="snippet" id="doc-{{ document_values.docno }}-snippet"> {{ document_values.snippet|safe }} </div>
             </div>
         </div>
-        <div class="offset-md-0-5 col-md-3 mt-5 center-text">
-            <div class="btn-group top-margin" role="group"
-                 aria-label="Basic example">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null);" class="btn btn-sm btn-success">
-                    Relevant
-                </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null);" class="btn btn-sm btn-warning">On
-                    topic
-                </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null);" class="btn btn-sm btn-danger">Not
-                    relevant
-                </a>
+        <div class="offset-md-1 col-md-3 mt-5 center-text">
+            <div class="btn-group top-margin" role="group">
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null);" class="btn btn-sm btn-success">Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null);" class="btn btn-sm btn-warning">On topic</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null);" class="btn btn-sm btn-danger">No relevant</a>
             </div>
-            <span class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</span>
+            <div class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
         </div>
     </div>
 
@@ -77,7 +70,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="overflow: auto; min-height: 400px; max-height: inherit;">
+                <div class="modal-body" style="overflow: auto; min-height: 450px; max-height: inherit;">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="document-{{ document_values.docno }}-modal-content" id="document-{{ document_values.docno }}-modal-content"
@@ -228,10 +221,10 @@
                     method: 'POST',
                     data: JSON.stringify(data),
                     success: function (result) {
-                        console.log(result['message']);
+                        console.error(result['message']);
                     },
                     error: function (result) {
-                        console.log(result);
+                        console.error(result);
                     }
                 });
             }else{
@@ -252,17 +245,20 @@
                         loaded_docs['{{ document_values.docno }}'] = true;
                         modal.find('.document_content_date').html(result[0]['date']);
                         modal.find('.document_content_id').html(result[0]['doc_id']);
-                        // TODO: start document timer
                         console.log("Initializing document timer for doc: {{ document_values.docno }}");
                         var documentTimer = AwayTimer();
                         documents_timers['{{ document_values.docno }}'] = documentTimer;
                     },
                     error: function (result){
-                        modal.find('.document_content').html("Failed to get doc. Error message: "+result);
+                        var error_msg = "["+result['status']+"] "+"Failed to get document. Error message: "+result["statusText"]+".";
+                        modal.find('.document_content').html(error_msg).addClass("text-danger");
+                        console.error(error_msg);
                     },
                     statusCode: {
                         502: function (xhr) {
-                            modal.find('.document_content').html("502 Failed to get doc. Error message: "+xhr.responseText);
+                            var error_msg = "[502] Failed to get document. Error message: "+xhr.responseText;
+                            modal.find('.document_content').html(error_msg).addClass("text-danger");
+                            console.error(error_msg);
                         }
                     }
                 });

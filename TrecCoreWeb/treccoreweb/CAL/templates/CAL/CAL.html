@@ -19,13 +19,7 @@
     {% endcomment %}
 {% endblock %}
 
-{% block nav-header-title %}
-    <li class="nav-item">
-        <span class="nav-link thin text-primary">
-           <strong>CAL</strong>
-        </span>
-    </li>
-{% endblock %}
+{% block nav-header-title %}{% endblock %}
 
 {% block nav-right%}
     {% if request.user.is_authenticated %}
@@ -282,7 +276,7 @@
                     result['status'] + " " +result['statusText'],
                     "");
                 }
-                console.log("Error occurred: " + JSON.stringify(result));
+                console.error("Error occurred: " + JSON.stringify(result));
             },
             statusCode: {
                 502: function (xhr) {
@@ -293,7 +287,7 @@
                         xhr.responseText,
                         "");
                     }
-                    console.log("Failed to get docs. Error message: "+xhr.responseText);
+                    console.error("Failed to get documents. Error message: "+xhr.responseText);
                 }
             }
         });
@@ -437,7 +431,7 @@
                         "");
                     }
 
-                    console.log("Something went wrong. " +
+                    console.error("Something went wrong. " +
                             "Judgment may have not been recorded.", result['message'])
                 },
                 statusCode: {
@@ -608,7 +602,7 @@
                         "");
                     }
 
-                    console.log("Something went wrong. " +
+                    console.error("Something went wrong. " +
                             "Judgment may have not been recorded.", result['message'])
                 },
                 statusCode: {
@@ -620,7 +614,7 @@
                             xhr.responseText,
                             "");
                         }
-                        console.log("Something went wrong. Timeout error." +
+                        console.error("Something went wrong. Timeout error." +
                             "Judgment may have not been recorded to CAL.", xhr.responseText);
                     }
                 }
