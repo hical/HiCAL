@@ -196,6 +196,15 @@ class TaskSetting(models.Model):
     toggle_doc = models.BooleanField()
     only_show_doc = models.BooleanField()
 
+    def __unicode__(self):
+        show_search = "T" if self.show_search else "F"
+        toggle_doc = "T" if self.toggle_doc else "F"
+        only_show_doc = "T" if self.only_show_doc else "F"
+        return "{}{}{}".format(show_search, toggle_doc, only_show_doc)
+
+    def __str__(self):
+        return self.__unicode__()
+
 
 class Task(models.Model):
     username = models.ForeignKey(User)

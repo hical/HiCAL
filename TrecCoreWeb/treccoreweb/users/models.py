@@ -16,7 +16,10 @@ class User(AbstractUser):
     name = models.CharField(_('Name of User'), blank=True, max_length=255)
     current_task = models.ForeignKey(Task, blank=True, null=True)
     # sequence of topics assigned to user.
-    sequence = JSONField(blank=True, null=True, default=[])
+    sequence = JSONField(blank=True, null=True, default=list)
+    # treatment number
+    treatment = models.IntegerField(blank=True, null=True,
+                                    choices=((x, x) for x in range(0, 50)))
 
     def __str__(self):
         return self.username
