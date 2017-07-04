@@ -187,6 +187,10 @@
     <script>
 
         $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
+            if(documents_timers['{{ document_values.docno }}'] == undefined){
+                console.log("Hiding modal with no timer. An error  must have happened.");
+                return;
+            }
             var timeActive = Date.now() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime;
             var timeAway = documents_timers['{{ document_values.docno }}'].totalAwayTime;
             console.log("Model has been hidden.");
