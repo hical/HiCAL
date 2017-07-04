@@ -211,7 +211,7 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyrelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
             if(timeVerbose == null){
                 var now = + new Date();
                 timeVerbose = {
@@ -220,9 +220,9 @@
                     "timeAway": null,
                     "source": "searchSERP",
                     "judged": true,
-                    "rel": rel,
+                    "highlyrelevant": highlyrelevant,
                     "non": non,
-                    "ontopic": ontopic
+                    "relevant": relevant
                 };
             }else{
                 var now = timeVerbose['timestamp'];
@@ -234,9 +234,9 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': "",
                 'doc_search_snippet': current_doc_snippet,
-                'relevant': rel,
+                'highlyrelevant': highlyrelevant,
                 'nonrelevant': non,
-                'ontopic': ontopic,
+                'relevant': relevant,
                 'time_to_judge': "NA",
                 'isFromCAL': false,
                 'isFromSearch': true,
@@ -261,18 +261,18 @@
                 }
             });
 
-            update_doc_status(doc_id, rel, non, ontopic);
+            update_doc_status(doc_id, highlyrelevant, non, relevant);
 
             return false;
         }
 
-        function update_doc_status(doc_id, rel, non, ontopic){
+        function update_doc_status(doc_id, highlyrelevant, non, relevant){
             console.log("Updating document " + doc_id + " status");
-            if(rel){
+            if(highlyrelevant){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
-            }else if(ontopic){
+            }else if(relevant){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
@@ -283,7 +283,7 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard){
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyrelevant, non, relevant, isMouse, isKeyboard){
             var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
             var timeAway = documents_timers[doc_id].totalAwayTime;
             var now = + new Date;
@@ -293,11 +293,11 @@
                 "timeAway": timeAway,
                 "source": "searchModal",
                 "judged": true,
-                "rel": rel,
+                "highlyrelevant": highlyrelevant,
                 "non": non,
-                "ontopic": ontopic
+                "relevant": relevant
             };
-            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true, timeVerbose);
+            send_judgment(doc_id, doc_title, doc_snippet, highlyrelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose);
             var element = document;
             var event = new CustomEvent("new_judgment");
             element.dispatchEvent(event);

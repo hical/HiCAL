@@ -40,7 +40,7 @@
                 <a href="#" data-toggle="modal" data-target=".doc-{{ judgment.doc_id }}-modal">
                     <div class="row top-margin">
                         <div class="col-md-1">
-                            {% if judgment.relevant %}
+                            {% if judgment.highlyrelevant %}
                                 <div class="bg-success" style="height: 100%;" >
                                     <i class="fa" aria-hidden="true"></i>
                                 </div>
@@ -48,7 +48,7 @@
                                 <div class="bg-danger" style="height: 100%;">
                                     <i class="fa" aria-hidden="true"></i>
                                 </div>
-                            {% elif judgment.ontopic %}
+                            {% elif judgment.relevant %}
                                 <div class="bg-warning" style="height: 100%;">
                                     <i class="fa" aria-hidden="true"></i>
                                 </div>
@@ -101,10 +101,10 @@
                         <span class="custom-control-description">All</span>
                     </label>
                     <label class="custom-control custom-radio">
-                        <input id="rel" name="radio-stacked" type="radio"
+                        <input id="highlyrelevant" name="radio-stacked" type="radio"
                                class="custom-control-input">
                         <span class="custom-control-indicator"></span>
-                        <span class="custom-control-description">Relevant judgments</span>
+                        <span class="custom-control-description">Highly Relevant judgments</span>
                     </label>
                     <label class="custom-control custom-radio">
                         <input id="nonrel" name="radio-stacked" type="radio"
@@ -113,10 +113,10 @@
                         <span class="custom-control-description">Non relevant judgments</span>
                     </label>
                     <label class="custom-control custom-radio">
-                        <input id="ontopic" name="radio-stacked" type="radio"
+                        <input id="relevant" name="radio-stacked" type="radio"
                                class="custom-control-input">
                         <span class="custom-control-indicator"></span>
-                        <span class="custom-control-description">On topic judgments</span>
+                        <span class="custom-control-description">Relevant judgments</span>
                     </label>
                 </div>
 
@@ -186,7 +186,7 @@
                                                     <span class="badge badge-success">s</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as relevant
+                                                    <small class="left-margin">Mark as highly relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -197,7 +197,7 @@
                                                     <span class="badge badge-warning">k</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as on topic
+                                                    <small class="left-margin">Mark as relevant
                                                     </small>
                                                 </div>
                                             </div>

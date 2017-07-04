@@ -29,9 +29,9 @@ class Judgement(models.Model):
     query = models.CharField(null=True,
                              blank=True,
                              max_length=512)
-    relevant = models.NullBooleanField()
+    highlyRelevant = models.NullBooleanField()
     nonrelevant = models.NullBooleanField()
-    ontopic = models.NullBooleanField()
+    relevant = models.NullBooleanField()
     isFromCAL = models.NullBooleanField()
     isFromSearch = models.NullBooleanField()
     isFromSearchModal = models.NullBooleanField()
@@ -44,7 +44,7 @@ class Judgement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        judgment = 1 if self.relevant else -1 if self.nonrelevant else 0 if self.ontopic else None
+        judgment = 2 if self.highlyRelevant else 0 if self.nonrelevant else 1 if self.relevant else None
         return "{} on {}: {}".format(self.user, self.doc_id, judgment)
 
     def __str__(self):

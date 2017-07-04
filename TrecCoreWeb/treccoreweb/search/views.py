@@ -28,13 +28,13 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         # TODO: Hide stats for now.
         # counters = Judgement.objects.filter(user=self.request.user,
         #                             topic=self.request.user.current_task.topic).aggregate(
-        #     total_relevant=Count(Case(When(relevant=True, then=1))),
+        #     total_highlyrelevant=Count(Case(When(highlyrelevant=True, then=1))),
         #     total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-        #     total_ontopic=Count(Case(When(ontopic=True, then=1)))
+        #     total_relevant=Count(Case(When(relevant=True, then=1)))
         # )
-        # context["total_relevant"] = counters["total_relevant"]
+        # context["total_highlyrelevant"] = counters["total_highlyrelevant"]
         # context["total_nonrelevant"] = counters["total_nonrelevant"]
-        # context["total_ontopic"] = counters["total_ontopic"]
+        # context["total_relevant"] = counters["total_relevant"]
 
         return context
 

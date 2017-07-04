@@ -24,7 +24,7 @@
     <div class="row flex-items-md-middle">
         <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 15px;">
             {% if document_values.isJudged %}
-                {% if document_values.relevance_judgment.relevant %}
+                {% if document_values.relevance_judgment.highlyrelevant %}
                     <div class="bg-success" style="height: 100%; padding: 5px;" >
                         <i class="fa" aria-hidden="true"></i>
                     </div>
@@ -32,7 +32,7 @@
                     <div class="bg-danger" style="height: 100%; padding: 5px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
-                {% elif document_values.relevance_judgment.ontopic %}
+                {% elif document_values.relevance_judgment.relevant %}
                     <div class="bg-warning" style="height: 100%; padding: 5px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
@@ -48,8 +48,8 @@
         </div>
         <div class="offset-md-1 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null);" class="btn btn-sm btn-success">Relevant</a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null);" class="btn btn-sm btn-warning">On topic</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null);" class="btn btn-sm btn-success">Highly Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null);" class="btn btn-sm btn-warning">Relevant</a>
                 <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null);" class="btn btn-sm btn-danger">No relevant</a>
             </div>
             <div class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
@@ -125,8 +125,8 @@
                                         <span class="gray-text align-left">Judge document:</span>
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Relevant</a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On topic</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
                                             <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
                                         </div>
                                     </li>
@@ -138,7 +138,7 @@
                                                     <span class="badge badge-success">s</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as relevant
+                                                    <small class="left-margin">Mark as highly relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -149,7 +149,7 @@
                                                     <span class="badge badge-warning">k</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as on topic
+                                                    <small class="left-margin">Mark as relevant
                                                     </small>
                                                 </div>
                                             </div>

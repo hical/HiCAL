@@ -66,7 +66,7 @@
     <div class="extra-bottom-margin">
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="card">
                     <div class="card-block document-cal" id="cal-document"
                          data-doc-id="">
@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <nav class="sidebar-nav-fixed bg-faded font-open-sans">
                     <ul class="nav nav-pills flex-column little-padding">
                         <div class="cal-search">
@@ -123,15 +123,9 @@
                             <span class="gray-text align-left">Judge document:</span>
 
                             <div class="btn-group top-margin" role="group">
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">
-                                    Relevant
-                                </a>
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-warning">On
-                                    topic
-                                </a>
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-danger">Not
-                                    relevant
-                                </a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
                             </div>
                         </li>
 
@@ -143,7 +137,7 @@
                                         <span class="badge badge-success">s</span>
                                     </div>
                                     <div class="col-md-9">
-                                        <small class="left-margin">Mark as relevant
+                                        <small class="left-margin">Mark as highly relevant
                                         </small>
                                     </div>
                                 </div>
@@ -155,7 +149,7 @@
                                         <span class="badge badge-warning">k</span>
                                     </div>
                                     <div class="col-md-9">
-                                        <small class="left-margin">Mark as on topic
+                                        <small class="left-margin">Mark as relevant
                                         </small>
                                     </div>
                                 </div>
@@ -323,7 +317,7 @@
         }
 
         function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
-                               rel, non, ontopic, isMouse, isKeyboard) {
+                               highlyrelevant, notrelevant, relevant, isMouse, isKeyboard) {
             window.scrollTo(0, 0);
             if(current_doc_id == "") {
                 console.log("Please wait...");
@@ -350,9 +344,9 @@
                 "timeAway": documentTimer.totalAwayTime,
                 "source": "CAL",
                 "judged": true,
-                "rel": rel,
-                "non": non,
-                "ontopic": ontopic
+                "highlyRelevant": highlyrelevant,
+                "notrelevant": notrelevant,
+                "relvant": relevant
             };
 
             var data = {
@@ -360,9 +354,9 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': current_doc_snippet,
                 'doc_search_snippet': "",
-                'relevant': rel,
-                'nonrelevant': non,
-                'ontopic': ontopic,
+                'highlyrelevant': highlyrelevant,
+                'nonrelevant': notrelevant,
+                'relevant': relevant,
                 'isFromCAL': true,
                 'isFromSearch': false,
                 'isFromSearchModal': false,
@@ -493,9 +487,9 @@
                 "doc_date": current_doc_date,
                 "doc_CAL_snippet": current_doc_snippet,
                 "doc_content": current_doc_content,
-                "relevant": rel,
-                "nonrelevant": non,
-                "ontopic": ontopic
+                'highlyrelevant': highlyrelevant,
+                'nonrelevant': notrelevant,
+                'relevant': relevant
             };
 
             if(isInLatestJudgedDocsQueue){
@@ -638,11 +632,11 @@
 
             var doc_status_div = "";
 
-            if (doc["relevant"]){
+            if (doc["highlyrelevant"]){
                 doc_status_div = '<div class="bg-success" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
             }else if(doc["nonrelevant"]){
                 doc_status_div = '<div class="bg-danger" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
-            }else if(doc["ontopic"]){
+            }else if(doc["relevant"]){
                 doc_status_div = '<div class="bg-warning" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
             }
 
