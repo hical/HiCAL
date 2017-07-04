@@ -5,6 +5,7 @@ from treccoreweb.progress.models import TaskSetting, Task, PreTask, PostTask
 from treccoreweb.users.models import User
 from config.latinSquare.treatments import all_treatments
 
+
 class SignupForm(forms.Form):
     model = None
     labels = {
@@ -32,7 +33,6 @@ class SignupForm(forms.Form):
             settings = TaskSetting.objects.get(show_search=True,
                                                toggle_doc=True,
                                                only_show_doc=False)
-
 
         is_first = True
         for idx, topic_num in enumerate(user.sequence):

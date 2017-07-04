@@ -29,14 +29,14 @@ class Judgement(models.Model):
     query = models.CharField(null=True,
                              blank=True,
                              max_length=512)
-    relevant = models.BooleanField(null=False, blank=False)
-    nonrelevant = models.BooleanField(null=False, blank=False)
-    ontopic = models.BooleanField(null=False, blank=False)
-    isFromCAL = models.BooleanField(null=False, blank=False)
-    isFromSearch = models.BooleanField(null=False, blank=False)
-    isFromSearchModal = models.BooleanField(null=False, blank=False)
-    fromMouse = models.BooleanField(null=False, blank=False)
-    fromKeyboard = models.BooleanField(null=False, blank=False)
+    relevant = models.NullBooleanField()
+    nonrelevant = models.NullBooleanField()
+    ontopic = models.NullBooleanField()
+    isFromCAL = models.NullBooleanField()
+    isFromSearch = models.NullBooleanField()
+    isFromSearchModal = models.NullBooleanField()
+    fromMouse = models.NullBooleanField()
+    fromKeyboard = models.NullBooleanField()
     timeVerbose = JSONField(null=True, blank=True, default=[], verbose_name="History")
 
     created_at = models.DateTimeField(auto_now_add=True,

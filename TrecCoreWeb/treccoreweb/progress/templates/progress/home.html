@@ -5,7 +5,7 @@
 
 {% block nav-header %}
     <li class="nav-item active">
-        <span class="nav-link gray-text">Please choose a judging platform ( S / J )</span>
+        <span class="nav-link gray-text">Please choose a judging platform</span>
     </li>
 {% endblock %}
 {% block nav-right%}
@@ -28,8 +28,7 @@
             <h2 class="text-primary"> Your task </h2>
             <hr>
             <h6 class="text-primary"> Please choose a judging interface from the left navigation list.</h6>
-            <p>For this topic, you are provided with two judging interfaces you could use to judge documents. </p>
-            <p><strong class="text-primary">S</strong> : Search platform. < insert desc of interface here ></p>
+            {% if user.current_task.setting.show_search %}<p><strong class="text-primary">S</strong> : Search platform. < insert desc of interface here ></p>{% endif %}
             <p><strong class="text-primary">J</strong> : Intelligent platform. < insert desc of interface here ></p>
         </div>
         <div class="col-md-6">
