@@ -211,7 +211,7 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyrelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
             if(timeVerbose == null){
                 var now = + new Date();
                 timeVerbose = {
@@ -220,7 +220,7 @@
                     "timeAway": null,
                     "source": "searchSERP",
                     "judged": true,
-                    "highlyrelevant": highlyrelevant,
+                    "highlyRelevant": highlyRelevant,
                     "non": non,
                     "relevant": relevant
                 };
@@ -234,7 +234,7 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': "",
                 'doc_search_snippet': current_doc_snippet,
-                'highlyrelevant': highlyrelevant,
+                'highlyRelevant': highlyRelevant,
                 'nonrelevant': non,
                 'relevant': relevant,
                 'time_to_judge': "NA",
@@ -261,14 +261,14 @@
                 }
             });
 
-            update_doc_status(doc_id, highlyrelevant, non, relevant);
+            update_doc_status(doc_id, highlyRelevant, non, relevant);
 
             return false;
         }
 
-        function update_doc_status(doc_id, highlyrelevant, non, relevant){
+        function update_doc_status(doc_id, highlyRelevant, non, relevant){
             console.log("Updating document " + doc_id + " status");
-            if(highlyrelevant){
+            if(highlyRelevant){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
@@ -283,7 +283,7 @@
              $('#doc-'+doc_id+'-modal').modal('hide');
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyrelevant, non, relevant, isMouse, isKeyboard){
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard){
             var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
             var timeAway = documents_timers[doc_id].totalAwayTime;
             var now = + new Date;
@@ -293,11 +293,11 @@
                 "timeAway": timeAway,
                 "source": "searchModal",
                 "judged": true,
-                "highlyrelevant": highlyrelevant,
+                "highlyRelevant": highlyRelevant,
                 "non": non,
                 "relevant": relevant
             };
-            send_judgment(doc_id, doc_title, doc_snippet, highlyrelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose);
+            send_judgment(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose);
             var element = document;
             var event = new CustomEvent("new_judgment");
             element.dispatchEvent(event);

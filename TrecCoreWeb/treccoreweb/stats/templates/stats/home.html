@@ -48,9 +48,9 @@
                                 <tr>
                                     <th scope="row"><span
                                             class="text-success">Highly relevant</span></th>
-                                    <td>{{ total_highlyrelevant_CAL }}</td>
-                                    <td>{{ total_highlyrelevant_search }}</td>
-                                    <td>{{ total_highlyrelevant_CAL|add:total_highlyrelevant_search }}</td>
+                                    <td>{{ total_highlyRelevant_CAL }}</td>
+                                    <td>{{ total_highlyRelevant_search }}</td>
+                                    <td>{{ total_highlyRelevant_CAL|add:total_highlyRelevant_search }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><span
@@ -88,7 +88,7 @@
                             datasets: [
                                 {
                                     data: [
-                                        {{ total_highlyrelevant_CAL|add:total_highlyrelevant_search }},
+                                        {{ total_highlyRelevant_CAL|add:total_highlyRelevant_search }},
                                         {{ total_relevant_CAL|add:total_relevant_search }},
                                         {{ total_nonrelevant_CAL|add:total_nonrelevant_search }}],
                                     backgroundColor: [
@@ -138,10 +138,10 @@
                                 <tr>
                                     <th scope="row"><span
                                             class="text-success">Highly relevant</span></th>
-                                    <td>{{ average_highlyrelevant_timespent_CAL }}</td>
-                                    <td>{{ median_highlyrelevant_timespent_CAL }}</td>
-                                    <td>{{ stdev_highlyrelevant_timespent_CAL }}</td>
-                                    <td>{{ variance_highlyrelevant_timespent_CAL }}</td>
+                                    <td>{{ average_highlyRelevant_timespent_CAL }}</td>
+                                    <td>{{ median_highlyRelevant_timespent_CAL }}</td>
+                                    <td>{{ stdev_highlyRelevant_timespent_CAL }}</td>
+                                    <td>{{ variance_highlyRelevant_timespent_CAL }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><span
@@ -265,7 +265,7 @@
                     <script>
                         var ctx = document.getElementById("lineHighlyRelevant");
                         var data = {
-                            labels: Array({{ times_highlyrelevant_CAL_size }}).join(".").split("."),
+                            labels: Array({{ times_highlyRelevant_CAL_size }}).join(".").split("."),
                             datasets: [
                                 {
                                     label: "Time to judge highly relevant",

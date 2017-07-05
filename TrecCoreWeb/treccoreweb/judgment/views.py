@@ -37,8 +37,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             doc_title = self.request_json[u"doc_title"]
             doc_CAL_snippet = self.request_json[u"doc_CAL_snippet"]
             doc_search_snippet = self.request_json[u"doc_search_snippet"]
-            highlyrelevant = self.request_json[u"highlyrelevant"]
-            nonrelevant = self.request_json[u"notrelevant"]
+            highlyRelevant = self.request_json[u"highlyRelevant"]
+            nonrelevant = self.request_json[u"nonrelevant"]
             relevant = self.request_json[u"relevant"]
             isFromCAL = self.request_json[u"isFromCAL"]
             isFromSearch = self.request_json[u"isFromSearch"]
@@ -49,9 +49,25 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             client_time = self.request_json.get(u"client_time", None)
             timeVerbose = self.request_json.get(u"timeVerbose")
         except KeyError:
+            print(doc_id)
+            print(doc_title)
+            print(doc_CAL_snippet)
+            print(doc_search_snippet)
+            print(highlyRelevant)
+            print(nonrelevant)
+            print(relevant)
+            print(isFromCAL)
+            print(isFromSearch)
+            print(isFromSearchModal)
+            print(fromMouse)
+            print(fromKeyboard)
+            print(query)
+            print(client_time)
+            print(timeVerbose)
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
-                                      u"highlyrelevant, nonrelevant, relevant, "
+                                      u"highlyRelevant, nonrelevant, relevant, "
                                       u"doc_CAL_snippet, doc_search_snippet, etc.."}
+
             return self.render_bad_request_response(error_dict)
 
         # Check if a judgment exists already, if so, update the db row.
@@ -67,7 +83,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 exists.doc_CAL_snippet = doc_CAL_snippet
             if doc_search_snippet != "":
                 exists.doc_search_snippet = doc_search_snippet
-            exists.highlyrelevant = highlyrelevant
+            exists.highlyRelevant = highlyRelevant
             exists.nonrelevant = nonrelevant
             exists.relevant = relevant
             exists.isFromCAL = isFromCAL
@@ -90,7 +106,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "topic_id": self.request.user.current_task.topic.id,
                         "session": str(self.request.user.current_task.uuid),
                         "query": query,
-                        "highlyrelevant": highlyrelevant,
+                        "highlyRelevant": highlyRelevant,
                         "nonrelevant": nonrelevant,
                         "relevant": relevant,
                         "isFromCAL": isFromCAL,
@@ -113,7 +129,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_search_snippet=doc_search_snippet,
                 task=self.request.user.current_task,
                 query=query,
-                highlyrelevant=relevant,
+                highlyRelevant=highlyRelevant,
                 nonrelevant=nonrelevant,
                 relevant=relevant,
                 isFromCAL=isFromCAL,
@@ -136,7 +152,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "topic_id": self.request.user.current_task.topic.id,
                         "session": str(self.request.user.current_task.uuid),
                         "query": query,
-                        "highlyrelevant": highlyrelevant,
+                        "highlyRelevant": highlyRelevant,
                         "nonrelevant": nonrelevant,
                         "relevant": relevant,
                         "isFromCAL": isFromCAL,
@@ -214,7 +230,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "topic_id": self.request.user.current_task.topic.id,
                         "session": str(self.request.user.current_task.uuid),
                         "query": query,
-                        "highlyrelevant": highlyrelevant,
+                        "highlyRelevant": highlyRelevant,
                         "nonrelevant": nonrelevant,
                         "relevant": relevant,
                         "isFromCAL": isFromCAL,
@@ -296,7 +312,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_search_snippet=doc_search_snippet,
                 task=self.request.user.current_task,
                 query=query,
-                highlyrelevant=False,
+                highlyRelevant=False,
                 nonrelevant=False,
                 relevant=False,
                 isFromCAL=False,
@@ -361,7 +377,7 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_date": "",
                     "doc_CAL_snippet": judgment.doc_CAL_snippet,
                     "doc_content": "",
-                    "highlyrelevant": judgment.highlyrelevant,
+                    "highlyRelevant": judgment.highlyRelevant,
                     "nonrelevant": judgment.nonrelevant,
                     "relevant": judgment.relevant,
                 }

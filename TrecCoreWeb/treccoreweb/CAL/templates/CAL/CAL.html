@@ -418,7 +418,7 @@
         }
 
         function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
-                               highlyrelevant, notrelevant, relevant, isMouse, isKeyboard) {
+                               highlyRelevant, notrelevant, relevant, isMouse, isKeyboard) {
             window.scrollTo(0, 0);
             if(current_doc_id == "") {
                 console.log("Please wait...");
@@ -445,7 +445,7 @@
                 "timeAway": documentTimer.totalAwayTime,
                 "source": "CAL",
                 "judged": true,
-                "highlyRelevant": highlyrelevant,
+                "highlyRelevant": highlyRelevant,
                 "notrelevant": notrelevant,
                 "relvant": relevant
             };
@@ -455,7 +455,7 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': current_doc_snippet,
                 'doc_search_snippet': "",
-                'highlyrelevant': highlyrelevant,
+                'highlyRelevant': highlyRelevant,
                 'nonrelevant': notrelevant,
                 'relevant': relevant,
                 'isFromCAL': true,
@@ -588,7 +588,7 @@
                 "doc_date": current_doc_date,
                 "doc_CAL_snippet": current_doc_snippet,
                 "doc_content": current_doc_content,
-                'highlyrelevant': highlyrelevant,
+                'highlyRelevant': highlyRelevant,
                 'nonrelevant': notrelevant,
                 'relevant': relevant
             };
@@ -733,7 +733,7 @@
 
             var doc_status_div = "";
 
-            if (doc["highlyrelevant"]){
+            if (doc["highlyRelevant"]){
                 doc_status_div = '<div class="bg-success" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
             }else if(doc["nonrelevant"]){
                 doc_status_div = '<div class="bg-danger" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';

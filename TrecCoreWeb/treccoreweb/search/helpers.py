@@ -21,7 +21,7 @@ def join_judgments(document_values, document_ids, user, task):
         if isJudged:
             judgedment = judged_docs.get(key)
             document_values[key]['relevance_judgment'] = {
-                "highlyrelevant": judgedment.highlyrelevant,
+                "highlyRelevant": judgedment.highlyRelevant,
                 "nonrelevant": judgedment.nonrelevant,
                 "relevant": judgedment.relevant,
             }
