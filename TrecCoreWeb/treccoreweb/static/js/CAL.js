@@ -46,21 +46,6 @@ function document_isEmpty(){
 }
 
 
-function updateDocument(id, title, date, snippet, content){
-    console.log("Updating document view for document id: " + id);
-    $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
-    $("#document_id").html("docno: " + id);
-    $("#document_title").html(title);
-    $("#document_date").html(date);
-    $("#document_snippet").html(snippet);
-    $("#document_content").html(content);
-
-    $( "#document_content" ).trigger( "updated" );
-    window.scrollTo(0, 0);
-}
-
-
-
 /* SEARCH BAR and highlighter */
 
 $('#searchContentForm').submit(function (e) {

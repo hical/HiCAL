@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 {% load static %}
 
+{# TODO: Change page title to something user-study friendly #}
 {% block pagetitle %}CAL{% endblock %}
 
 
 {% block sidebar %}
+    {% if user.current_task.setting.show_search %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'search:main' %}">S</a>
     </li>
+    {% endif %}
     <li class="nav-item">
         <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
                 class="sr-only">(current)</span></a>
@@ -76,13 +79,20 @@
                                 <small id="document_date"></small>
                             </div>
                             <div class="col-md-6 small align-right">
-                                <code id="document_id"></code>
+                                <code>docno: </code><code id="document_id"></code>
                             </div>
                         </div>
                         <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
                         <hr style="border-top: 5px solid rgba(0,0,0,.1);">
+                        {% if user.current_task.setting.toggle_doc %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary" href="#" onclick="return show_full_doc();">Show full document</a>
+                            </div>
+                        </div>
+                        {% endif %}
                         <div id="document_content"></div>
                     </div>
                 </div>
@@ -227,6 +237,49 @@
         var latestJudgedDocsViewAlreadyEmpty = true;
 
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
+        var toggle_full_doc = {{ user.current_task.setting.toggle_doc|yesno:"true,false" }};
+        if(toggle_full_doc){
+            $("#document_content").hide();
+        }
+
+        function hide_full_doc(){
+            // show button
+            $("#show_full_doc_button").show();
+            // hide full document
+            $("#document_content").hide();
+        }
+
+        function show_full_doc(){
+            // hide button
+            $("#show_full_doc_button").hide();
+            // show full document
+            $("#document_content").show();
+            var now = + new Date();
+            var current_doc_snippet = $("#document_content").html();
+            var current_doc_title = $("#document_title").html();
+            var current_doc_id = $("#document_id").html();
+
+            var data = {
+                'action': 'trig_show_full_doc',
+                'message': 'Show full document button is clicked and document is shown',
+                'doc_id': current_doc_id,
+                'doc_title': current_doc_title,
+                'doc_CAL_snippet': current_doc_snippet,
+                'extra_context': {},
+                'client_time': now,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'page_title': document.title
+            };
+
+            $.ajax({
+                url: '{% url 'CAL:post_log_msg' %}',
+                method: 'POST',
+                data: JSON.stringify(data),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+        }
 
         var documentTimer = null;
         // Get initial document at page visit
@@ -299,6 +352,55 @@
                 update_latest_judged_doc_view();
             }
         });
+
+
+        function updateDocument(id, title, date, snippet, content){
+            console.log("Updating document view for document id: " + id);
+            $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
+            $("#document_id").html(id);
+            $("#document_title").html(title);
+            $("#document_date").html(date);
+            $("#document_snippet").html(snippet);
+            $("#document_content").html(content);
+
+            $( "#document_content" ).trigger( "updated" );
+            window.scrollTo(0, 0);
+
+            if(id){
+                // resetting.. hiding full document content and showing button
+                hide_full_doc();
+
+                var now = + new Date();
+                var data = {
+                    'action': 'trig_update_document_view',
+                    'message': 'The view of current document has been updated to a new document.',
+                    'doc_id': id,
+                    'doc_title': title,
+                    'doc_CAL_snippet': snippet,
+                    'extra_context': {},
+                    'client_time': now,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                };
+
+                $.ajax({
+                    url: '{% url 'CAL:post_log_msg' %}',
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+
+            }else{
+                // when an error has occurred and no document is shown (e.g. no doc id)
+                // hide button
+                if(toggle_full_doc){
+                    $("#show_full_doc_button").hide();
+                }
+            }
+        }
+
 
         function update_documents_to_judge_list() {
             $.ajax({

@@ -40,8 +40,12 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         current_task = self.request.user.current_task
+
         if current_task.is_time_past():
             return HttpResponseRedirect(reverse_lazy('progress:completed'))
+
+        if not current_task.setting.show_search:
+            return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(SearchHomePageView, self).get(self, request, *args, **kwargs)
 

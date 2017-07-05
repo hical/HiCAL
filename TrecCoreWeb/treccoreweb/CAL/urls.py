@@ -8,5 +8,6 @@ urlpatterns = [
 
     url(r'^post_visit/$', views.CALVisitAJAXView.as_view(), name='post_visit'),
     url(r'^post_ctrlf/$', views.CALCtrlFAJAXView.as_view(), name='post_ctrlf'),
+    url(r'^post_log/$', views.CALMessageAJAXView.as_view(), name='post_log_msg'),
     url(r'^get_docs/$', views.DocAJAXView.as_view(), name='get_docs'),
 ]

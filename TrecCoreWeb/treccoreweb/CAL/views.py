@@ -55,6 +55,48 @@ class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
+class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    """
+    Generic view to capture specific log messages from browser
+    """
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time")
+            message = self.request_json.get(u"message")
+            action = self.request_json.get(u"action")
+            page_title = self.request_json.get(u"page_title")
+            doc_CAL_snippet = self.request_json.get(u'doc_CAL_snippet')
+            doc_id = self.request_json.get(u'doc_id')
+            extra_context = self.request_json.get(u'extra_context')
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time, "
+                                      u"message, ... etc"}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "action": action,
+                "message": message,
+                "doc_id": doc_id,
+                "doc_CAL_snippet": doc_CAL_snippet,
+                "page_title": page_title,
+                "extra_context": extra_context,
+            }
+        }
+
+        logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your log message with action '{}' and of "
+                               u"document '{}' has been logged.".format(action, doc_id)}
+        return self.render_json_response(context)
+
+
 class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):
