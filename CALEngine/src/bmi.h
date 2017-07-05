@@ -87,7 +87,7 @@ class BMI{
     void add_to_training_cache(int id, int judgment);
 
     // Remove document from judgment_list
-    void remove_from_judgment_list(int id);
+    virtual void remove_from_judgment_list(int id);
 
     // blocks the thread until all the judgments are done
     void wait_for_judgments();

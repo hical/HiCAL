@@ -159,9 +159,7 @@ void BMI::add_to_training_cache(int id, int judgment){
 
 void BMI::remove_from_judgment_list(int id){
     lock_guard<mutex> lock(judgment_list_mutex);
-    auto it = std::find(judgment_list.begin(), judgment_list.end(), id);
-    if(it != judgment_list.end())
-        judgment_list.erase(it);
+    std::remove(judgment_list.begin(), judgment_list.end(), id);
 }
 
 void BMI::record_judgment(string doc_id, int judgment){

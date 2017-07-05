@@ -14,6 +14,7 @@ class BMI_para:public BMI {
     Scorer *scorer_para;
     std::set<int> finished_judgments_para;
     std::vector<int> perform_training_iteration();
+    virtual void remove_from_judgment_list(int id);
 
     public:
     BMI_para(const SfSparseVector &seed,

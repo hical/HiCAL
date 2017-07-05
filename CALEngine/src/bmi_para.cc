@@ -47,6 +47,17 @@ vector<string> BMI_para::get_doc_to_judge(uint32_t count=1){
     }
 }
 
+void BMI_para::remove_from_judgment_list(int doc_idx){
+    lock_guard<mutex> lock(judgment_list_mutex);
+    std::remove_if(judgment_list.begin(), judgment_list.end(),
+            [doc_idx, this](int id) -> bool {
+                string para_id = (*this->scorer_para->doc_features)[id]->doc_id;
+                string doc_id = (*this->scorer_para->doc_features)[doc_idx]->doc_id;
+                return para_id.find(doc_id) == 0;
+            }
+    );
+}
+
 void BMI_para::record_judgment(string doc_id, int judgment){
     /* int id = scorer_para->doc_ids_inv_map[doc_id]; */
     int doc_id_int = scorer->doc_ids_inv_map[doc_id];
