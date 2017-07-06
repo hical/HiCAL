@@ -2,24 +2,13 @@
 {% load static %}
 
 {# TODO: Change page title to something user-study friendly #}
-{% block pagetitle %}CAL{% endblock %}
+{% block pagetitle %}Iterative{% endblock %}
 
 
 {% block sidebar %}
-    {% if user.current_task.setting.show_search %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'search:main' %}">S</a>
+        <a class="nav-link" href="{% url 'iterative:main' %}">I</a>
     </li>
-    {% endif %}
-    <li class="nav-item">
-        <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
-                class="sr-only">(current)</span></a>
-    </li>
-    {% comment %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
-    </li>
-    {% endcomment %}
 {% endblock %}
 
 {% block nav-header-title %}{% endblock %}
@@ -48,7 +37,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="reviewCAL">
+                    <div id="reviewDocsIterative">
                         <div class="row">
                             <div class="col-md-12 center-text">
                                 <i id="reviewSpinner" style="display: none;"
@@ -85,14 +74,6 @@
                         <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
-                        <hr style="border-top: 5px solid rgba(0,0,0,.1);">
-                        {% if user.current_task.setting.toggle_doc %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary" href="#" onclick="return show_full_doc();">Show full document</a>
-                            </div>
-                        </div>
-                        {% endif %}
                         <div id="document_content"></div>
                     </div>
                 </div>
@@ -216,7 +197,7 @@
         window.onload = function () {
             var now = + new Date();
             $.ajax({
-                url: '{% url 'CAL:post_visit' %}',
+                url: '{% url 'iterative:post_visit' %}',
                 method: 'POST',
                 data: JSON.stringify({
                     'client_time': now,
@@ -232,55 +213,12 @@
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
 
-        var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        var toggle_full_doc = {{ user.current_task.setting.toggle_doc|yesno:"true,false" }};
-        if(toggle_full_doc){
-            $("#document_content").hide();
-        }
-
-        function hide_full_doc(){
-            // show button
-            $("#show_full_doc_button").show();
-            // hide full document
-            $("#document_content").hide();
-        }
-
-        function show_full_doc(){
-            // hide button
-            $("#show_full_doc_button").hide();
-            // show full document
-            $("#document_content").show();
-            var now = + new Date();
-            var current_doc_snippet = $("#document_snippet").html();
-            var current_doc_title = $("#document_title").html();
-            var current_doc_id = $("#document_id").html();
-
-            var data = {
-                'action': 'trig_show_full_doc',
-                'message': 'Show full document button is clicked and document is shown',
-                'doc_id': current_doc_id,
-                'doc_title': current_doc_title,
-                'doc_CAL_snippet': current_doc_snippet,
-                'extra_context': {},
-                'client_time': now,
-                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                'page_title': document.title
-            };
-
-            $.ajax({
-                url: '{% url 'CAL:post_log_msg' %}',
-                method: 'POST',
-                data: JSON.stringify(data),
-                success: function (result) {
-                    console.log(result['message']);
-                }
-            });
-        }
-
+        var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh.
         var documentTimer = null;
+
         // Get initial document at page visit
         $.ajax({
-            url: '{% url 'CAL:get_docs' %}',
+            url: '{% url 'iterative:get_docs' %}',
             method: 'GET',
             success: function (result) {
                 console.log(JSON.stringify(result));
@@ -294,18 +232,17 @@
                                 next_doc["doc_id"],
                                 next_doc["title"],
                                 next_doc["date"],
-                                next_doc["snippet"],
+                                "", // empty snippet
                                 next_doc["content"]
                         );
-
                     }
                 }else{
                     updateDocument(
                             "",
                             "<span class='text-danger'>Server returned empty list.</span>",
                             "",
-                            "Something went wrong.. Please contact the study coordinators.",
-                            ""
+                            "",
+                            "Something went wrong.. Please contact the study coordinators."
                         );
                 }
             },
@@ -355,18 +292,12 @@
             $("#document_id").html(id);
             $("#document_title").html(title);
             $("#document_date").html(date);
-            $("#document_snippet").html(snippet);
             $("#document_content").html(content);
 
             $( "#document_content" ).trigger( "updated" );
             window.scrollTo(0, 0);
 
             if(id){
-                if(toggle_full_doc){
-                    // resetting.. hiding full document content and showing button
-                    hide_full_doc();
-                }
-
                 console.log("Initializing timer for document " + id);
                 if(documentTimer != null){
                     documentTimer.idle.stop();
@@ -379,7 +310,6 @@
                     'message': 'The view of current document has been updated to a new document.',
                     'doc_id': id,
                     'doc_title': title,
-                    'doc_CAL_snippet': snippet,
                     'extra_context': {},
                     'client_time': now,
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -387,19 +317,16 @@
                 };
 
                 $.ajax({
-                    url: '{% url 'CAL:post_log_msg' %}',
+                    url: '{% url 'iterative:post_log_msg' %}',
                     method: 'POST',
                     data: JSON.stringify(data),
                     success: function (result) {
                         console.log(result['message']);
                     }
                 });
-
             }else{
-                // when an error has occurred and no document is shown (e.g. no doc id)
-                // hide button
-                if(toggle_full_doc){
-                    $("#show_full_doc_button").hide();
+                if(documentTimer != null){
+                    documentTimer.idle.stop();
                 }
             }
         }
@@ -407,7 +334,7 @@
 
         function update_documents_to_judge_list() {
             $.ajax({
-                url: '{% url 'CAL:get_docs' %}',
+                url: '{% url 'iterative:get_docs' %}',
                 method: 'GET',
                 data: JSON.stringify({csrfmiddlewaretoken: '{{ csrf_token }}'}),
                 success: function (result) {
@@ -446,7 +373,7 @@
                 "timestamp": now,
                 "timeActive": Date.now() - documentTimer.startTime - documentTimer.totalAwayTime,
                 "timeAway": documentTimer.totalAwayTime,
-                "source": "CAL",
+                "source": "Iterative",
                 "judged": true,
                 "isMouse": isMouse,
                 "isKeyboard": isKeyboard,
@@ -458,12 +385,12 @@
             var data = {
                 'doc_id': current_doc_id,
                 'doc_title': current_doc_title,
-                'doc_CAL_snippet': current_doc_snippet,
+                'doc_CAL_snippet': "",
                 'doc_search_snippet': "",
                 'highlyRelevant': highlyRelevant,
                 'nonrelevant': notrelevant,
                 'relevant': relevant,
-                'isFromCAL': true,
+                'isFromCAL': false,
                 'isFromSearch': false,
                 'isFromSearchModal': false,
                 'client_time': now,
@@ -480,11 +407,7 @@
                 method: 'POST',
                 data: JSON.stringify(data),
                 success: function (result) {
-                    console.log(result['message'], " - Updating the queue after sending judgment of document: " + data["doc_id"]);
-                    queue = new Queue();
-                    for(var i = 0; i < result['next_docs'].length; i++){
-                        queue.enqueue(result['next_docs'][i]);
-                    }
+                    console.log(result['message'], " - Dequing after sending judgment of document: " + data["doc_id"]);
 
                     var isempty_view = document_isEmpty();
                     if(isempty_view){
@@ -492,11 +415,11 @@
                         if(queue.isEmpty()){
                             updateDocument(
                                     "",
-                                    "No documents received for judging",
+                                    "Done judging the set of documents.",
                                     "",
-                                    "CAL has not returned a new " +
-                                    "set of documents to return. Please try refreshing.",
-                                    ""
+                                    "",
+                                    "You have finished judging the " +
+                                    "set of documents. Please try refreshing. "
                             );
                         }else{
                             var next_doc = false;
@@ -544,7 +467,7 @@
                             "");
                         }
                         console.log("Something went wrong. Timeout error." +
-                            "Judgment may have not been recorded to CAL.", xhr.responseText);
+                            "Judgment may have not been recorded.", xhr.responseText);
                     }
                 }
             });
@@ -572,7 +495,7 @@
             }else{
                 updateDocument(
                         "",
-                        "<span class='text-danger'>Please wait..</span>",
+                        "<span class='text-danger'>Done..</span>",
                         "",
                         "The queue is empty.",
                         "");
@@ -591,7 +514,6 @@
                 "doc_id": current_doc_id,
                 "doc_title": current_doc_title,
                 "doc_date": current_doc_date,
-                "doc_CAL_snippet": current_doc_snippet,
                 "doc_content": current_doc_content,
                 'highlyRelevant': highlyRelevant,
                 'nonrelevant': notrelevant,
@@ -630,7 +552,7 @@
     function post_ctrlf(){
         var now = + new Date();
         $.ajax({
-            url: '{% url 'CAL:post_ctrlf' %}',
+            url: '{% url 'iterative:post_ctrlf' %}',
             method: 'POST',
             data: JSON.stringify({
                 'client_time': now,
@@ -646,6 +568,23 @@
 
 
     function show_prev_judged_doc_and_hide_modal(doc_index){
+        // get current doc
+        var current_doc = null;
+        var current_doc_id = $("#document_id").html();
+        if(current_doc_id){
+            var current_doc_title = $('#document_title').html();
+            var current_doc_content = $('#document_content').html();
+            var current_doc_date = $("#document_date").html();
+            current_doc = {
+                'doc_id': current_doc_id,
+                'date': current_doc_date,
+                'title': current_doc_title,
+                'content': current_doc_content
+            }
+        }
+
+
+
         var list = latestJudgedDocsQueue.getList();
         var doc = list[doc_index];
         var doFetch = false;
@@ -657,7 +596,6 @@
             doFetch = true;
             doc_date = "Fetching date..."
         }
-        var doc_snippet = doc['doc_CAL_snippet'];
         var doc_content = doc['doc_content'];
         if (doc_content == ""){
             doc_content = "<span class='text-danger'>Please wait.. fetching doc content.</span>"
@@ -669,12 +607,14 @@
             doc_id,
             doc_title,
             doc_date,
-            doc_snippet,
+            "", // empty snippet
             doc_content
         );
 
-        // Reset queue
-        queue = new Queue();
+        // push the prev document to infront of queue
+        if(current_doc){
+            queue.insertFront(current_doc);
+        }
 
         if(doFetch){
             $.ajax({
@@ -685,7 +625,7 @@
                         doc_id,
                         doc_title,
                         result[0]['date'],
-                        doc_snippet,
+                        "", // empty snippet,
                         result[0]['content']
                     );
 
@@ -715,7 +655,7 @@
                             "");
                         }
                         console.error("Something went wrong. Timeout error." +
-                            "Judgment may have not been recorded to CAL.", xhr.responseText);
+                            ".", xhr.responseText);
                     }
                 }
             });
@@ -727,8 +667,7 @@
         console.log("Updating latest judged docs modal view");
 
         // empty content of modal
-        $("#reviewCAL").html("");
-
+        $("#reviewDocsIterative").html("");
 
         var list = latestJudgedDocsQueue.getList();
         for(var i = latestJudgedDocsQueue.getLength() - 1; i >= 0; i--){
@@ -757,7 +696,7 @@
                     </div> \n\
                 </div> \n\
             </a>';
-            $( "#reviewCAL" ).append( doc_div );
+            $( "#reviewDocsIterative" ).append( doc_div );
         }
     }
 

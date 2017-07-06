@@ -22,25 +22,10 @@ logger = logging.getLogger(__name__)
 class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'search/search.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(SearchHomePageView, self).get_context_data(**kwargs)
-
-        # TODO: Hide stats for now.
-        # counters = Judgement.objects.filter(user=self.request.user,
-        #                             topic=self.request.user.current_task.topic).aggregate(
-        #     total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
-        #     total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-        #     total_relevant=Count(Case(When(relevant=True, then=1)))
-        # )
-        # context["total_highlyRelevant"] = counters["total_highlyRelevant"]
-        # context["total_nonrelevant"] = counters["total_nonrelevant"]
-        # context["total_relevant"] = counters["total_relevant"]
-
-        return context
-
     def get(self, request, *args, **kwargs):
+        # TODO: If we're not going to use electron.js, make sure the view
+        # is only allowed to people with permission to access this page
         current_task = self.request.user.current_task
-
         if current_task.is_time_past():
             return HttpResponseRedirect(reverse_lazy('progress:completed'))
 

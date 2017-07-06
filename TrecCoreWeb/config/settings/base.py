@@ -7,7 +7,9 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
+import os
 import environ
+import raven
 from django.contrib.messages import constants as messages
 
 ROOT_DIR = environ.Path(__file__) - 3  # (treccoreweb/config/settings/base.py - 3 = treccoreweb/)
@@ -17,7 +19,7 @@ APPS_DIR = ROOT_DIR.path('treccoreweb')
 env = environ.Env()
 
 # .env file, should load only in development environment
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 
 if READ_DOT_ENV_FILE:
     # Operating System Environment variables have precedence over variables defined in the .env file,
@@ -50,6 +52,7 @@ THIRD_PARTY_APPS = [
     'allauth',  # registration
     'allauth.account',  # registration
     # 'allauth.socialaccount',  # registration
+    'raven.contrib.django.raven_compat',
 ]
 
 # Apps specific for this project go here.
@@ -62,6 +65,7 @@ LOCAL_APPS = [
     'treccoreweb.judgment',
     'treccoreweb.search',
     'treccoreweb.stats',
+    'treccoreweb.iterative'
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -312,7 +316,7 @@ MESSAGE_TAGS = {
 }
 
 
-# CORE TREC COMPONENTS IPS (Required)
+# CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = '129.97.84.14'
 CAL_SERVER_PORT = '9001'
@@ -325,4 +329,13 @@ PARA_PATH = '/home/nghelani/nyt/para'
 # ------------------------------------------------------------------------------
 
 
+# RAVEN
+# ------------------------------------------------------------------------------
+RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
+RAVEN_CONFIG = {
+    'dsn': 'https://{}@sentry.io/186800'.format(RAVEN_SECRET_KEY),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(str(ROOT_DIR))),
+}
 

@@ -5,17 +5,14 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse_lazy
 from django.views import generic
 
-from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
 from interfaces.DocumentSnippetEngine import functions as DocEngine
-from treccoreweb.CAL.exceptions import CALError
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
-    template_name = 'CAL/CAL.html'
+class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = 'iterative/iterative.html'
 
     def get(self, request, *args, **kwargs):
         # TODO: If we're not going to use electron.js, make sure the view
@@ -24,10 +21,10 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         if current_task.is_time_past():
             return HttpResponseRedirect(reverse_lazy('progress:completed'))
 
-        return super(CALHomePageView, self).get(self, request, *args, **kwargs)
+        return super(HomePageView, self).get(self, request, *args, **kwargs)
 
 
-class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):
     require_json = False
@@ -46,7 +43,7 @@ class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             "user": self.request.user.username,
             "client_time": client_time,
             "result": {
-                "message": CAL_LOGGING_MESSAGES.get("ctrlf", None),
+                "message": "Ctrl+f event",
                 "searchfield_input": search_field_value,
                 "page_title": page_title
             }
@@ -57,7 +54,7 @@ class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
-class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):
     """
@@ -71,7 +68,6 @@ class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             message = self.request_json.get(u"message")
             action = self.request_json.get(u"action")
             page_title = self.request_json.get(u"page_title")
-            doc_CAL_snippet = self.request_json.get(u'doc_CAL_snippet')
             doc_id = self.request_json.get(u'doc_id')
             extra_context = self.request_json.get(u'extra_context')
         except KeyError:
@@ -86,7 +82,6 @@ class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "action": action,
                 "message": message,
                 "doc_id": doc_id,
-                "doc_CAL_snippet": doc_CAL_snippet,
                 "page_title": page_title,
                 "extra_context": extra_context,
             }
@@ -99,7 +94,7 @@ class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
-class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):
     require_json = False
@@ -116,7 +111,7 @@ class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             "user": self.request.user.username,
             "client_time": client_time,
             "result": {
-                "message": CAL_LOGGING_MESSAGES.get("visit", None),
+                "message": "Iterative interface page visit",
                 "page_visit": True,
                 "page_file": "CAL.html",
                 "page_title": page_title
@@ -132,7 +127,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                   views.JsonRequestResponseMixin,
                   views.AjaxResponseMixin, generic.View):
     """
-    View to get a list of documents to judge from CAL
+    View to get a list of documents to judge
     """
     require_json = False
 
@@ -148,39 +143,11 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             json_context, content_type=self.get_content_type(), status=502)
 
     def get_ajax(self, request, *args, **kwargs):
-        session = self.request.user.current_task.uuid
-        seed_query = self.request.user.current_task.topic.seed_query
         try:
-            docs_ids_to_judge, top_terms = CALFunctions.get_documents(str(session), 5,
-                                                                      seed_query)
-            if not docs_ids_to_judge:
-                return self.render_json_response([])
-
-            doc_ids_hack = []
-            for doc_id in docs_ids_to_judge:
-                doc = {'doc_id': doc_id}
-                if '.' in doc_id:
-                    doc['doc_id'], doc['para_id'] = doc_id.split('.')
-                doc_ids_hack.append(doc)
-
-            documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
-                                                             seed_query,
-                                                             top_terms)
+            # TODO: only get doc ids that are not judged
+            docs_ids = ["0001001", "0008008", "0001003"]
+            documents = DocEngine.get_documents(docs_ids, query=None)
             return self.render_json_response(documents)
         except TimeoutError:
             error_dict = {u"message": u"Timeout error. Please check status of servers."}
-            return self.render_timeout_request_response(error_dict)
-        except CALError as e:
-            log_body = {
-                "user": self.request.user.username,
-                "result": {
-                    "message": str(e),
-                    "source": "interfaces.CAL.functions.get_documents()"
-                }
-            }
-
-            logger.error("[{}]".format(log_body))
-            error_dict = {u"message": u"Error occurred. Please inform study coordinators"}
-
-            # TODO: add proper http response for CAL errors
             return self.render_timeout_request_response(error_dict)

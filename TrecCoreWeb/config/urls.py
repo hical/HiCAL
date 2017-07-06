@@ -20,6 +20,7 @@ urlpatterns = [
 
     # Custom urls includes go here
     url(r'^CAL/', include('treccoreweb.CAL.urls', namespace='CAL')),
+    url(r'^iterative/', include('treccoreweb.iterative.urls', namespace='iterative')),
     url(r'^search/', include('treccoreweb.search.urls', namespace='search')),
     url(r'^topic/', include('treccoreweb.topic.urls', namespace='topic')),
     url(r'^judgment/', include('treccoreweb.judgment.urls', namespace='judgment')),
