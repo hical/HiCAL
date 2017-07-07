@@ -323,6 +323,7 @@
                             'client_time': now,
                             'doc_id': "{{ document_values.docno }}",
                             'character': character,
+                            'page_title': document.title,
                             'search_bar_value': $(search_form).val(),
                             'isSearchbarFocused': $(search_form).is(':focus'),
                             'csrfmiddlewaretoken': '{{ csrf_token }}'

@@ -761,6 +761,30 @@
         }
     }
 
+    var search_form = document.getElementById("search_content");
+    Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
+        if(event.type == "keydown" && $(search_form).is(':focus')){
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'search:post_find_keystroke' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'doc_id': "{{ document_values.docno }}",
+                    'character': character,
+                    'page_title': document.title,
+                    'search_bar_value': $(search_form).val(),
+                    'isSearchbarFocused': $(search_form).is(':focus'),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+            console.log("Character pressed: ", character, now);
+        }
+    };
+
     </script>
 
 {% endblock %}
