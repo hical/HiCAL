@@ -43,27 +43,13 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             isFromCAL = self.request_json[u"isFromCAL"]
             isFromSearch = self.request_json[u"isFromSearch"]
             isFromSearchModal = self.request_json[u"isFromSearchModal"]
+            isFromIterative = self.request_json[u"isFromIterative"]
             fromMouse = self.request_json[u"fromMouse"]
             fromKeyboard = self.request_json[u"fromKeyboard"]
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
             timeVerbose = self.request_json.get(u"timeVerbose")
         except KeyError:
-            print(doc_id)
-            print(doc_title)
-            print(doc_CAL_snippet)
-            print(doc_search_snippet)
-            print(highlyRelevant)
-            print(nonrelevant)
-            print(relevant)
-            print(isFromCAL)
-            print(isFromSearch)
-            print(isFromSearchModal)
-            print(fromMouse)
-            print(fromKeyboard)
-            print(query)
-            print(client_time)
-            print(timeVerbose)
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
                                       u"highlyRelevant, nonrelevant, relevant, "
                                       u"doc_CAL_snippet, doc_search_snippet, etc.."}
@@ -89,6 +75,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.isFromCAL = isFromCAL
             exists.isFromSearch = isFromSearch
             exists.isFromSearchModal = isFromSearchModal
+            exists.isFromIterative = isFromIterative
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
             exists.timeVerbose.append(timeVerbose)
@@ -112,6 +99,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
+                        "isFromIterative": isFromIterative,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
@@ -135,6 +123,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 isFromCAL=isFromCAL,
                 isFromSearch=isFromSearch,
                 isFromSearchModal=isFromSearchModal,
+                isFromIterative=isFromIterative,
                 fromMouse=fromMouse,
                 fromKeyboard=fromKeyboard,
                 timeVerbose=[timeVerbose],
@@ -158,6 +147,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
+                        "isFromIterative": isFromIterative,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
@@ -236,6 +226,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
+                        "isFromIterative": isFromIterative,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
@@ -318,6 +309,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 isFromCAL=False,
                 isFromSearch=False,
                 isFromSearchModal=False,
+                isFromIterative=False,
                 fromMouse=False,
                 fromKeyboard=False,
                 timeVerbose=[timeVerbose],

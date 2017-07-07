@@ -396,8 +396,7 @@
                 });
 
             }else{
-                // when an error has occurred and no document is shown (e.g. no doc id)
-                // hide button
+                // when an error has occurred and no document is shown (e.g. no doc id) hide button.
                 if(toggle_full_doc){
                     $("#show_full_doc_button").hide();
                 }
@@ -466,6 +465,7 @@
                 'isFromCAL': true,
                 'isFromSearch': false,
                 'isFromSearchModal': false,
+                'isFromIterative': false,
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,

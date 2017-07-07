@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from interfaces.DocumentSnippetEngine import functions as DocEngine
-
+from interfaces.Iterative import functions as IterativeEngine
 import logging
 logger = logging.getLogger(__name__)
 
@@ -144,8 +144,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
     def get_ajax(self, request, *args, **kwargs):
         try:
-            # TODO: only get doc ids that are not judged
-            docs_ids = ["0001001", "0008008", "0001003"]
+            docs_ids = IterativeEngine.get_documents(self.request.user.id)
             documents = DocEngine.get_documents(docs_ids, query=None)
             return self.render_json_response(documents)
         except TimeoutError:

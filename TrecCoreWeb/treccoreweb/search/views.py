@@ -2,20 +2,17 @@ import json
 
 import httplib2
 from braces import views
-from django.db.models import Count, Case, When
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse_lazy
-
 from django.views import generic
-from treccoreweb.judgment.models import Judgement
-from treccoreweb.search import helpers
-import logging
 
+from treccoreweb.search import helpers
 from treccoreweb.search.logging_messages import LOGGING_MESSAGES as SEARCH_LOGGING_MESSAGES
 from treccoreweb.interfaces.SearchEngine import functions as SearchEngine
-from interfaces.DocumentSnippetEngine import functions as DocEngine
+from treccoreweb.interfaces.DocumentSnippetEngine import functions as DocEngine
 
+import logging
 logger = logging.getLogger(__name__)
 
 

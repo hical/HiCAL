@@ -49,3 +49,4 @@ redis>=2.10.5
 httplib2
 xmltodict
 lxml
+raven

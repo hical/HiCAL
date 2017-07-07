@@ -29,14 +29,19 @@ class Judgement(models.Model):
     query = models.CharField(null=True,
                              blank=True,
                              max_length=512)
+    # a judgment can have null fields if its only been viewed but not judged
     highlyRelevant = models.NullBooleanField()
     nonrelevant = models.NullBooleanField()
     relevant = models.NullBooleanField()
+    # method used to make the judgment
+    fromMouse = models.NullBooleanField()
+    fromKeyboard = models.NullBooleanField()
+    # set only when an explicit judgment is made
     isFromCAL = models.NullBooleanField()
     isFromSearch = models.NullBooleanField()
     isFromSearchModal = models.NullBooleanField()
-    fromMouse = models.NullBooleanField()
-    fromKeyboard = models.NullBooleanField()
+    isFromIterative = models.NullBooleanField()
+    # history of active and away time spent on the document
     timeVerbose = JSONField(null=True, blank=True, default=[], verbose_name="History")
 
     created_at = models.DateTimeField(auto_now_add=True,

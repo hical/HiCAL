@@ -1,3 +1,4 @@
+from django.db.models import Q
 from treccoreweb.judgment.models import Judgement
 
 
@@ -12,9 +13,15 @@ def join_judgments(document_values, document_ids, user, task):
     :return: document_values with extra information about the document
     """
 
-    judged_docs = Judgement.objects.filter(user=user,
-                                           task=task,
-                                           doc_id__in=document_ids)
+    judged_docs = Judgement.objects.filter(Q(user=user,
+                                             task=task,
+                                             doc_id__in=document_ids) &
+                                           (
+                                               Q(highlyRelevant=True) |
+                                               Q(relevant=True) |
+                                               Q(nonrelevant=True)
+                                           )
+                                           )
     judged_docs = {j.doc_id: j for j in judged_docs}
     for key in document_values:
         isJudged = True if key in judged_docs else False
