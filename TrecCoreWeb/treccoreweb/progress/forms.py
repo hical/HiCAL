@@ -2,7 +2,10 @@ from crispy_forms.layout import Submit
 from crispy_forms.helper import FormHelper
 
 from django import forms
-from treccoreweb.progress.models import Demographic, PreTask, PostTask, LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import Demographic, PreTask, PostTask, ExitTask, LIKERT_SCALE_CHOICES, \
+    LEFTDOC_SCALE_CHOICES, FAM_LIKERT_SCALE_CHOICES, DIFF_LIKERT_SCALE_CHOICES, HELP_LIKERT_SCALE_CHOICES, \
+    CLOSE_LIKERT_SCALE_CHOICES, INTERFACE_LIKERT_SCALE_CHOICES, FEAT_LIKERT_SCALE_CHOICES
+
 
 
 class DemographicForm(forms.ModelForm):
@@ -57,17 +60,18 @@ class PreTaskForm(forms.ModelForm):
 
     """
     submit_name = 'submit-pretask-form'
+
     familiarity = forms.CharField(
-        widget=forms.Select(choices=LIKERT_SCALE_CHOICES),
-        label=u'Question on familiarity?')
+        widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
+        label=u'How familiar are you with this subject of the above topic?')
     difficulty = forms.CharField(
-        widget=forms.Select(choices=LIKERT_SCALE_CHOICES),
-        label=u'Question on difficulty?')
+        widget=forms.Select(choices=DIFF_LIKERT_SCALE_CHOICES),
+        label=u'How hard do you think it will be to find relevant documents towards this topic?')
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,
                                      'cols': 80}
                               ),
-        label=u'Question on feedback?',
+        label=u'Do you have any feedback on this topic?',
         required=False
     )
 
@@ -91,32 +95,72 @@ class PostTaskForm(forms.ModelForm):
     """
     submit_name = 'submit-posttask-form'
     difficulty = forms.CharField(
-        widget=forms.Select(choices=LIKERT_SCALE_CHOICES),
-        label=u'Question on difficulty?')
-    confidence = forms.CharField(
-        widget=forms.Select(choices=LIKERT_SCALE_CHOICES),
-        label=u'Question on confidence?')
-    mood = forms.CharField(
-        widget=forms.Select(choices=LIKERT_SCALE_CHOICES),
-        label=u'Question on nood?')
-    experience = forms.CharField(
-        widget=forms.Select(choices=LIKERT_SCALE_CHOICES),
-        label=u'Question on experience?')
+        widget=forms.Select(choices=DIFF_LIKERT_SCALE_CHOICES),
+        label=u'How easy to use did you find this user interface for its intended purpose of helping you find all relevant documents?')
+    helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'How useful was [insert specific feature here, e.g., being able to do keyword searches, scroll down to see the full document, etc.] for its intended purpose of helping you find all relevant documents?')
+    close = forms.CharField(
+        widget=forms.Select(choices=CLOSE_LIKERT_SCALE_CHOICES),
+        label=u'How close to finding all relevant documents do you think you came?')
+    complete = forms.CharField(
+        widget=forms.Select(choices=LEFTDOC_SCALE_CHOICES),
+        label=u'How many relevant documents do you think were left behind?')
 
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,
                                      'cols': 80}
                               ),
-        label=u'Question on feedback?',
+        label=u'What, if anything, would you change about this user interface to make it easier or more useful for its intended purpose of helping you find all relevant documents?',
         required=False
     )
 
     class Meta:
         model = PostTask
-        fields = ['difficulty', 'confidence', 'mood', 'experience', 'feedback']
+        fields = ['difficulty', 'helpful', 'close', 'complete', 'feedback']
 
     def __init__(self, *args, **kwargs):
         super(PostTaskForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.layout.append(
+            Submit(self.submit_name, u'Submit',
+                   css_class='btn btn-primary')
+        )
+
+
+class ExitTaskForm(forms.ModelForm):
+    """
+    Form for updating Posttask
+
+    """
+    submit_name = 'submit-exit-form'
+    difficulty = forms.CharField(
+        widget=forms.Select(choices=INTERFACE_LIKERT_SCALE_CHOICES),
+        label=u'Please rate the [number] user interfaces from most to least useful for their intended purpose of helping you find all relevant documents?')
+    helpful = forms.CharField(
+        widget=forms.Select(choices=FEAT_LIKERT_SCALE_CHOICES),
+        label=u'Please indicate the feature(s) that was (were) most useful to you for the purpose of helping you find all relevant documents.')
+    familiar_before = forms.CharField(
+        widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
+        label=u'How familiar were you with this topic before you began this task?')
+    familiar_after = forms.CharField(
+        widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
+        label=u'How familiar were you with this topic after you finished this task?')
+
+    feedback = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 5,
+                                     'cols': 80}
+                              ),
+        label=u'Is there anything else you would like to add about the user interfaces, the topics, or this study?',
+        required=False
+    )
+
+    class Meta:
+        model = ExitTask
+        fields = ['difficulty', 'helpful', 'familiar_before', 'familiar_after', 'feedback']
+
+    def __init__(self, *args, **kwargs):
+        super(ExitTaskForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.layout.append(
             Submit(self.submit_name, u'Submit',
