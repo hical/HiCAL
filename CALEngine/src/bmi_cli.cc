@@ -45,6 +45,8 @@ struct Qrel{
 }qrel;
 
 int get_judgment_qrel(string topic_id, string doc_id){
+    doc_id = doc_id.substr(0, doc_id.find("."));
+    topic_id = topic_id.substr(0, topic_id.find("."));
     return qrel.get_judgment(topic_id, doc_id);
 }
 
@@ -169,6 +171,11 @@ int main(int argc, char **argv){
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
         jobs.push_back(thread(begin_bmi_helper, seed_query, cref(scorer_doc), cref(scorer_para)));
+        if(jobs.size() == 8){
+            for(auto &t: jobs)
+                t.join();
+            jobs.clear();
+        }
     }
 
     for(auto &t: jobs)
