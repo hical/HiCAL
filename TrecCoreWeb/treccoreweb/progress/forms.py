@@ -2,10 +2,11 @@ from crispy_forms.layout import Submit
 from crispy_forms.helper import FormHelper
 
 from django import forms
-from treccoreweb.progress.models import Demographic, PreTask, PostTask, ExitTask, LIKERT_SCALE_CHOICES, \
-    LEFTDOC_SCALE_CHOICES, FAM_LIKERT_SCALE_CHOICES, DIFF_LIKERT_SCALE_CHOICES, HELP_LIKERT_SCALE_CHOICES, \
+from treccoreweb.progress.models import Demographic, PreTask, PostTask, ExitTask, \
+    LIKERT_SCALE_CHOICES, \
+    LEFTDOC_SCALE_CHOICES, FAM_LIKERT_SCALE_CHOICES, DIFF_LIKERT_SCALE_CHOICES, \
+    HELP_LIKERT_SCALE_CHOICES, \
     CLOSE_LIKERT_SCALE_CHOICES, INTERFACE_LIKERT_SCALE_CHOICES, FEAT_LIKERT_SCALE_CHOICES
-
 
 
 class DemographicForm(forms.ModelForm):
@@ -13,6 +14,7 @@ class DemographicForm(forms.ModelForm):
     Form for demographic questionnaire
 
     """
+
     class Meta:
         model = Demographic
         exclude = ["username"]
@@ -66,7 +68,8 @@ class PreTaskForm(forms.ModelForm):
         label=u'How familiar are you with this subject of the above topic?')
     difficulty = forms.CharField(
         widget=forms.Select(choices=DIFF_LIKERT_SCALE_CHOICES),
-        label=u'How hard do you think it will be to find relevant documents towards this topic?')
+        label=u'How hard do you think it will be to find relevant documents '
+              u'towards this topic?')
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,
                                      'cols': 80}
@@ -96,10 +99,13 @@ class PostTaskForm(forms.ModelForm):
     submit_name = 'submit-posttask-form'
     difficulty = forms.CharField(
         widget=forms.Select(choices=DIFF_LIKERT_SCALE_CHOICES),
-        label=u'How easy to use did you find this user interface for its intended purpose of helping you find all relevant documents?')
+        label=u'How easy to use did you find this user interface for its intended '
+              u'purpose of helping you find all relevant documents?')
     helpful = forms.CharField(
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
-        label=u'How useful was [insert specific feature here, e.g., being able to do keyword searches, scroll down to see the full document, etc.] for its intended purpose of helping you find all relevant documents?')
+        label=u'How useful was [insert specific feature here, e.g., being able to do '
+              u'keyword searches, scroll down to see the full document, etc.] for its '
+              u'intended purpose of helping you find all relevant documents?')
     close = forms.CharField(
         widget=forms.Select(choices=CLOSE_LIKERT_SCALE_CHOICES),
         label=u'How close to finding all relevant documents do you think you came?')
@@ -111,7 +117,9 @@ class PostTaskForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 5,
                                      'cols': 80}
                               ),
-        label=u'What, if anything, would you change about this user interface to make it easier or more useful for its intended purpose of helping you find all relevant documents?',
+        label=u'What, if anything, would you change about this user interface to make it '
+              u'easier or more useful for its intended purpose of helping you find all '
+              u'relevant documents?',
         required=False
     )
 
@@ -136,10 +144,12 @@ class ExitTaskForm(forms.ModelForm):
     submit_name = 'submit-exit-form'
     difficulty = forms.CharField(
         widget=forms.Select(choices=INTERFACE_LIKERT_SCALE_CHOICES),
-        label=u'Please rate the [number] user interfaces from most to least useful for their intended purpose of helping you find all relevant documents?')
+        label=u'Please rate the [number] user interfaces from most to least useful for '
+              u'their intended purpose of helping you find all relevant documents?')
     helpful = forms.CharField(
         widget=forms.Select(choices=FEAT_LIKERT_SCALE_CHOICES),
-        label=u'Please indicate the feature(s) that was (were) most useful to you for the purpose of helping you find all relevant documents.')
+        label=u'Please indicate the feature(s) that was (were) most useful to you for '
+              u'the purpose of helping you find all relevant documents.')
     familiar_before = forms.CharField(
         widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
         label=u'How familiar were you with this topic before you began this task?')
@@ -151,13 +161,15 @@ class ExitTaskForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 5,
                                      'cols': 80}
                               ),
-        label=u'Is there anything else you would like to add about the user interfaces, the topics, or this study?',
+        label=u'Is there anything else you would like to add about the user interfaces, '
+              u'the topics, or this study?',
         required=False
     )
 
     class Meta:
         model = ExitTask
-        fields = ['difficulty', 'helpful', 'familiar_before', 'familiar_after', 'feedback']
+        fields = ['difficulty', 'helpful', 'familiar_before', 'familiar_after',
+                  'feedback']
 
     def __init__(self, *args, **kwargs):
         super(ExitTaskForm, self).__init__(*args, **kwargs)

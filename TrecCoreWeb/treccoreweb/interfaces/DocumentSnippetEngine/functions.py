@@ -11,6 +11,7 @@ except ImportError:
 
 from config.settings.base import DOCUMENTS_PATH, PARA_PATH
 
+
 def exec_xpath(tree, xpath):
     try:
         val = tree.xpath(xpath)[0]
@@ -21,6 +22,7 @@ def exec_xpath(tree, xpath):
     except:
         traceback.print_exc()
         return "N/A"
+
 
 def get_date(tree, xpath):
     try:
@@ -34,6 +36,7 @@ def get_date(tree, xpath):
         traceback.print_exc()
         return "N/A"
 
+
 def get_documents(doc_ids, query):
     """
     :param query:
@@ -42,7 +45,8 @@ def get_documents(doc_ids, query):
     """
     result = []
     for doc_id in doc_ids:
-        tree = etree.parse(os.path.join(DOCUMENTS_PATH, doc_id[:4], doc_id + '.xml'))
+        url = 'http://129.97.84.14:9000/doc/{}/{}.xml'.format(doc_id[:4], doc_id)
+        tree = etree.parse(url)
         title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1')
         content = exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')
         date = get_date(tree, '/nitf/head/pubdata/@date.publication')

@@ -9,12 +9,11 @@ import datetime
 import uuid
 
 NA = "---"
-VEN = "Very Not"
-SMN = "Somehow Not"
-NNN = "Neither Nor Not"
+VEN = "Very_Not"
+SMN = "Somehow_Not"
+NNN = "Neither_Nor_Not"
 SMT = "Somewhat"
 VEY = "Very"
-
 
 ONE = "1"
 TWO = "2"
@@ -30,61 +29,59 @@ LIKERT_SCALE_CHOICES = Choices((NA, "---"),
                                (VEY, "Very")
                                )
 FAM_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                               (VEN, "Very Not Familiar"),
-                               (SMN, "Somehow Not Familiar"),
-                               (NNN, "Neither Familiar Nor Not Familiar"),
-                               (SMT, "Somewhat Familiar"),
-                               (VEY, "Very Familiar")
-                               )
+                                   (VEN, "Very Not Familiar"),
+                                   (SMN, "Somehow Not Familiar"),
+                                   (NNN, "Neither Familiar Nor Not Familiar"),
+                                   (SMT, "Somewhat Familiar"),
+                                   (VEY, "Very Familiar")
+                                   )
 
 DIFF_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                               (VEN, "Very Not Difficult"),
-                               (SMN, "Somehow Not Difficult"),
-                               (NNN, "Neither Difficult Nor Not Difficult"),
-                               (SMT, "Somewhat Difficult"),
-                               (VEY, "Very Difficult")
-                               )
+                                    (VEN, "Very Not Difficult"),
+                                    (SMN, "Somehow Not Difficult"),
+                                    (NNN, "Neither Difficult Nor Not Difficult"),
+                                    (SMT, "Somewhat Difficult"),
+                                    (VEY, "Very Difficult")
+                                    )
 
 HELP_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                               (VEN, "Very Not Useful"),
-                               (SMN, "Somehow Not Useful"),
-                               (NNN, "Neither Useful Nor Not Useful"),
-                               (SMT, "Somewhat Useful"),
-                               (VEY, "Very Useful")
-                               )
+                                    (VEN, "Very Not Useful"),
+                                    (SMN, "Somehow Not Useful"),
+                                    (NNN, "Neither Useful Nor Not Useful"),
+                                    (SMT, "Somewhat Useful"),
+                                    (VEY, "Very Useful")
+                                    )
 
 CLOSE_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                               (VEN, "Very Not Close"),
-                               (SMN, "Somehow Not Close"),
-                               (NNN, "Neither Close Nor Not Close"),
-                               (SMT, "Somewhat Close"),
-                               (VEY, "Very Close")
-                               )
+                                     (VEN, "Very Not Close"),
+                                     (SMN, "Somehow Not Close"),
+                                     (NNN, "Neither Close Nor Not Close"),
+                                     (SMT, "Somewhat Close"),
+                                     (VEY, "Very Close")
+                                     )
 
 LEFTDOC_SCALE_CHOICES = Choices((NA, "0"),
-                               (VEN, "1-49"),
-                               (SMN, "50-99"),
-                               (NNN, "100-499"),
-                               (SMT, "500-999"),
-                               (VEY, "1,000 or more")
-                               )
-
-
+                                (VEN, "1-49"),
+                                (SMN, "50-99"),
+                                (NNN, "100-499"),
+                                (SMT, "500-999"),
+                                (VEY, "1,000 or more")
+                                )
 
 INTERFACE_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                               (ONE, "Search Interface & Paragraph with Toggle Document Interface Together"),
-                               (TWO, "Paragraph with Toggle Document Interface Only"),
-                               (THREE, "Search Interface & Paragraph Interface Together"),
-                               (FOUR, "Paragraph Interface Only"),
-                               (FIVE, "Document Interface Only")
-                               )
+                                         (ONE, "Search Interface & Paragraph with Toggle Document Interface Together"),
+                                         (TWO,  "Paragraph with Toggle Document Interface Only"),
+                                         (THREE, "Search Interface & Paragraph Interface Together"),
+                                         (FOUR, "Paragraph Interface Only"),
+                                         (FIVE, "Document Interface Only")
+                                         )
 
 FEAT_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                               (ONE, "Keywords search and highlighting"),
-                               (TWO, "View full document"),
-                               (THREE, "Search interface"),
-                               (FOUR, "Paragraph interface"),
-                               )
+                                    (ONE, "Keywords Search and Highlighting"),
+                                    (TWO, "View Full Document"),
+                                    (THREE, "Search Interface"),
+                                    (FOUR, "Paragraph Interface"),
+                                    )
 
 
 class Demographic(models.Model):
@@ -227,14 +224,14 @@ class PostTask(models.Model):
                                   choices=LIKERT_SCALE_CHOICES,
                                   default=NA)
     helpful = models.CharField(max_length=35,
-                                  choices=LIKERT_SCALE_CHOICES,
-                                  default=NA)
+                               choices=LIKERT_SCALE_CHOICES,
+                               default=NA)
     close = models.CharField(max_length=35,
-                            choices=LIKERT_SCALE_CHOICES,
-                            default=NA)
+                             choices=LIKERT_SCALE_CHOICES,
+                             default=NA)
     complete = models.CharField(max_length=35,
-                                  choices=LEFTDOC_SCALE_CHOICES,
-                                  default=NA)
+                                choices=LEFTDOC_SCALE_CHOICES,
+                                default=NA)
     feedback = models.TextField(null=True,
                                 blank=True)
 
@@ -259,14 +256,14 @@ class ExitTask(models.Model):
                                   choices=INTERFACE_LIKERT_SCALE_CHOICES,
                                   default=NA)
     helpful = models.CharField(max_length=35,
-                                  choices=FEAT_LIKERT_SCALE_CHOICES,
-                                  default=NA)
+                               choices=FEAT_LIKERT_SCALE_CHOICES,
+                               default=NA)
     familiar_before = models.CharField(max_length=35,
-                            choices=FAM_LIKERT_SCALE_CHOICES,
-                            default=NA)
+                                       choices=FAM_LIKERT_SCALE_CHOICES,
+                                       default=NA)
     familiar_after = models.CharField(max_length=35,
-                                  choices=FAM_LIKERT_SCALE_CHOICES,
-                                  default=NA)
+                                      choices=FAM_LIKERT_SCALE_CHOICES,
+                                      default=NA)
     feedback = models.TextField(null=True,
                                 blank=True)
 
@@ -280,6 +277,7 @@ class ExitTask(models.Model):
 
     def __str__(self):
         return self.__unicode__()
+
 
 class TaskSetting(models.Model):
     """
