@@ -70,17 +70,17 @@
                 {% block sidebar %}
                 {% if user.current_task.setting.only_show_doc %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'search:main' %}">S</a>
+                    <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
                 </li>
                 {% else %}
                     {% if user.current_task.setting.show_search %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'search:main' %}">S</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
+                </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></a>
+                </li>
                 {% endif %}
                 {% comment %}
                 <li class="nav-item">

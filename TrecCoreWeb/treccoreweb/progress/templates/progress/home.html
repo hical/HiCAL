@@ -28,8 +28,14 @@
             <h2 class="text-primary"> Your task </h2>
             <hr>
             <h6 class="text-primary"> Please choose a judging interface from the left navigation list.</h6>
-            {% if user.current_task.setting.show_search %}<p><strong class="text-primary">S</strong> : Search platform. < insert desc of interface here ></p>{% endif %}
-            <p><strong class="text-primary">J</strong> : Intelligent platform. < insert desc of interface here ></p>
+            {% if user.current_task.setting.only_show_doc %}
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-list-ol" aria-hidden="true"></i></h2> : Iterative platform. < insert desc of interface here ></p>
+            {% else %}
+            {% if user.current_task.setting.show_search %}
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-search" aria-hidden="true"></i></h2> : Search platform. < insert desc of interface here ></p>
+            {% endif %}
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></h2> : Intelligent platform. < insert desc of interface here ></p>
+            {% endif %}
         </div>
         <div class="col-md-6">
             <h2 class="text-primary"> Your current topic </h2>

@@ -8,11 +8,11 @@
 {% block sidebar %}
     {% if user.current_task.setting.show_search %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'search:main' %}">S</a>
+        <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
     </li>
     {% endif %}
     <li class="nav-item">
-        <a class="nav-link active bold" href="{% url 'CAL:main' %}">J<span
+        <a class="nav-link active bold" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span
                 class="sr-only">(current)</span></a>
     </li>
     {% comment %}
