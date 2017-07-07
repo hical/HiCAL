@@ -276,17 +276,26 @@
 
 {% endblock %}
 
-{% block extra_script %}
+{% block extra_scripts %}
     <script src="{% static 'js/jquery.bootpag.min.js' %}"></script>
 
     <script>
+    function show_tutorial_part(num){
+        // function to hide all parts of tutorial divs except div with `num` on.
+        var i = 0;
+        for(;i < 10; i++){
+            var content = $("#tutorial_part_" + i);
+            if(i == num){
+                content.show();
+                return;
+            }
+            content.hide();
+        }
+    }
     $('#page-selection').bootpag({
         total: 5
     }).on("page", function(event, num){
         $("#tutorial_content").html("Page " + num); // or some ajax content loading...
-
-        // ... after content load -> change total to 10
-        $(this).bootpag({total: 10, maxVisible: 10});
 
     });
     </script>
