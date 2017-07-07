@@ -766,7 +766,7 @@
         if(event.type == "keydown" && $(search_form).is(':focus')){
             var now = + new Date();
             $.ajax({
-                url: '{% url 'search:post_find_keystroke' %}',
+                url: '{% url 'progress:post_find_keystroke' %}',
                 method: 'POST',
                 data: JSON.stringify({
                     'client_time': now,

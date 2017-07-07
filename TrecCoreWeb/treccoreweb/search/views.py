@@ -128,42 +128,6 @@ class SearchKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
-class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                       views.JsonRequestResponseMixin,
-                       generic.View):
-    require_json = False
-
-    def post(self, request, *args, **kwargs):
-        try:
-            client_time = self.request_json.get(u"client_time")
-            doc_id = self.request_json.get(u"doc_id")
-            page_title = self.request_json.get(u"page_title")
-            character = self.request_json.get(u"character")
-            isSearchbarFocused = self.request_json.get(u"isSearchbarFocused")
-            search_bar_value = self.request_json.get(u"search_bar_value")
-        except KeyError:
-            error_dict = {u"message": u"your input must include client_time,"
-                                      u" doc_id, character, isSearchbarFocused,"
-                                      u" page_title and search bar value."}
-            return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": SEARCH_LOGGING_MESSAGES.get("find_keystroke", None),
-                "character": character,
-                "search_bar_value": search_bar_value,
-                "isSearchbarFocused": isSearchbarFocused,
-                'page_title': page_title,
-                "doc_id": doc_id
-            }
-        }
-        logger.info("[{}]".format(log_body))
-
-        context = {u"message": u"Your visit has been recorded."}
-        return self.render_json_response(context)
-
 class SearchListView(views.CsrfExemptMixin, generic.base.View):
     template = 'search/search_list.html'
 

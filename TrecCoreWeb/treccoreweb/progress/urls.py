@@ -24,5 +24,7 @@ urlpatterns = [
     url(r'^exit/$',
         TemplateView.as_view(template_name="progress/exit.html"),
         name='exit'),
+    url(r'^post_find_keystroke/$', views.FindKeystrokeAJAXView.as_view(),
+        name='post_find_keystroke'),
 
 ]
