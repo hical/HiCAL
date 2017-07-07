@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block pagetitle %}Tutorial{% endblock %}
 {% block extra_head %}
@@ -260,9 +260,13 @@
         question.
     </p>
     <p>{% lorem 1 p %}</p>
-    <p>{% lorem 1 p %}</p>
+
+    <div id="tutorial_content">
+        <p>{% lorem 1 p %}</p>
     </div>
-    </div>
+
+    <div id="page-selection">page selection here</div>
+
     <div class="row">
         <div class="col-md-12 align-right">
             <a class="btn btn-primary btn" href="{% url 'progress:pretask' %}">I
@@ -270,4 +274,20 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/jquery.bootpag.min.js' %}"></script>
+
+    <script>
+    $('#page-selection').bootpag({
+        total: 5
+    }).on("page", function(event, num){
+        $("#tutorial_content").html("Page " + num); // or some ajax content loading...
+
+        // ... after content load -> change total to 10
+        $(this).bootpag({total: 10, maxVisible: 10});
+
+    });
+    </script>
 {% endblock %}
