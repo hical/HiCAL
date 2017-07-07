@@ -68,14 +68,20 @@
         <nav class="col-sm-2 col-md-0-5 hidden-xs-down sidebar bg-faded font-open-sans">
             <ul class="nav nav-pills flex-column center-text">
                 {% block sidebar %}
-                {% if user.current_task.setting.show_search %}
+                {% if user.current_task.setting.only_show_doc %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'search:main' %}">S</a>
                 </li>
+                {% else %}
+                    {% if user.current_task.setting.show_search %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'search:main' %}">S</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
+                    </li>
                 {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
-                </li>
                 {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
