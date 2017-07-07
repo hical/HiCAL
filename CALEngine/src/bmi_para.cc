@@ -49,20 +49,22 @@ vector<string> BMI_para::get_doc_to_judge(uint32_t count=1){
 
 void BMI_para::remove_from_judgment_list(int doc_idx){
     lock_guard<mutex> lock(judgment_list_mutex);
-    std::remove_if(judgment_list.begin(), judgment_list.end(),
+    judgment_list.erase(std::remove_if(judgment_list.begin(), judgment_list.end(),
             [doc_idx, this](int id) -> bool {
                 string para_id = (*this->scorer_para->doc_features)[id]->doc_id;
-                string doc_id = (*this->scorer_para->doc_features)[doc_idx]->doc_id;
+                string doc_id = (*this->scorer->doc_features)[doc_idx]->doc_id;
                 return para_id.find(doc_id) == 0;
             }
-    );
+    ), judgment_list.end());
 }
 
 void BMI_para::record_judgment(string doc_id, int judgment){
     /* int id = scorer_para->doc_ids_inv_map[doc_id]; */
+    doc_id = doc_id.substr(0, doc_id.find("."));
+
     int doc_id_int = scorer->doc_ids_inv_map[doc_id];
     add_to_training_cache(doc_id_int, judgment);
-    /* remove_from_judgment_list(id); */
+    remove_from_judgment_list(doc_id_int);
 
     if(!async_mode){
         if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target)
@@ -109,7 +111,7 @@ vector<int> BMI_para::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    scorer_para->rescore_documents(weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), finished_judgments_para, results);
+    scorer_para->rescore_documents(weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:100), finished_judgments_para, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<scorer_para->doc_features->size()<<" documents in "<<duration.count()<<"ms"<<endl;
