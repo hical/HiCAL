@@ -112,6 +112,9 @@ class PostTaskForm(forms.ModelForm):
     complete = forms.CharField(
         widget=forms.Select(choices=LEFTDOC_SCALE_CHOICES),
         label=u'How many relevant documents do you think were left behind?')
+    familiarity = forms.CharField(
+        widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
+        label=u'How familiar are you with this subject of the above topic after completing this task?')
 
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,
@@ -125,7 +128,7 @@ class PostTaskForm(forms.ModelForm):
 
     class Meta:
         model = PostTask
-        fields = ['difficulty', 'helpful', 'close', 'complete', 'feedback']
+        fields = ['difficulty', 'helpful', 'close', 'complete', 'familiarity', 'feedback']
 
     def __init__(self, *args, **kwargs):
         super(PostTaskForm, self).__init__(*args, **kwargs)
@@ -150,12 +153,6 @@ class ExitTaskForm(forms.ModelForm):
         widget=forms.Select(choices=FEAT_LIKERT_SCALE_CHOICES),
         label=u'Please indicate the feature(s) that was (were) most useful to you for '
               u'the purpose of helping you find all relevant documents.')
-    familiar_before = forms.CharField(
-        widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
-        label=u'How familiar were you with this topic before you began this task?')
-    familiar_after = forms.CharField(
-        widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
-        label=u'How familiar were you with this topic after you finished this task?')
 
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,
@@ -168,8 +165,7 @@ class ExitTaskForm(forms.ModelForm):
 
     class Meta:
         model = ExitTask
-        fields = ['difficulty', 'helpful', 'familiar_before', 'familiar_after',
-                  'feedback']
+        fields = ['difficulty', 'helpful', 'feedback']
 
     def __init__(self, *args, **kwargs):
         super(ExitTaskForm, self).__init__(*args, **kwargs)

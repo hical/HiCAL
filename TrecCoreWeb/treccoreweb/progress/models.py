@@ -232,6 +232,9 @@ class PostTask(models.Model):
     complete = models.CharField(max_length=35,
                                 choices=LEFTDOC_SCALE_CHOICES,
                                 default=NA)
+    familiarity = models.CharField(max_length=35,
+                                   choices=LIKERT_SCALE_CHOICES,
+                                   default=NA)
     feedback = models.TextField(null=True,
                                 blank=True)
 
@@ -258,12 +261,7 @@ class ExitTask(models.Model):
     helpful = models.CharField(max_length=35,
                                choices=FEAT_LIKERT_SCALE_CHOICES,
                                default=NA)
-    familiar_before = models.CharField(max_length=35,
-                                       choices=FAM_LIKERT_SCALE_CHOICES,
-                                       default=NA)
-    familiar_after = models.CharField(max_length=35,
-                                      choices=FAM_LIKERT_SCALE_CHOICES,
-                                      default=NA)
+
     feedback = models.TextField(null=True,
                                 blank=True)
 
