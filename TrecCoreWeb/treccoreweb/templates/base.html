@@ -16,7 +16,6 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     {% include "raven-config.html" %}
 
     {% block extra_head %}{% endblock %}
@@ -36,11 +35,7 @@
     <div class="collapse navbar-collapse font-montserrat" id="navbars">
         {% block nav-left%}
         <ul class="navbar-nav mt-2">
-            <!-- <li class="nav-item text-truncate">
-                <span class="small gray-text">Topic: {{ user.current_task.topic.title }}</span>
-            </li> -->
-
-            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{user.current_task.topic.description}}">
+            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.description }}">
             <strong>Topic</strong>: {{ user.current_task.topic.title }}</a>
         </ul>
         {% endblock %}
@@ -122,14 +117,6 @@
     </div>
 </div>
 
-<script>
-$(document).ready(function(){
-    $('[data-toggle="popover"]').popover({
-  trigger: 'focus'
-    }); 
-});
-</script>
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
@@ -139,8 +126,13 @@ $(document).ready(function(){
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({
+      trigger: 'focus'
+        });
+    });
+</script>
 {% block extra_scripts %}{% endblock %}
 
 </body>
