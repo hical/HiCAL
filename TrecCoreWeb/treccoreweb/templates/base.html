@@ -40,7 +40,7 @@
                 <span class="small gray-text">Topic: {{ user.current_task.topic.title }}</span>
             </li> -->
 
-            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-content="{{user.current_task.topic.description}}">
+            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{user.current_task.topic.description}}">
             <strong>Topic</strong>: {{ user.current_task.topic.title }}</a>
         </ul>
         {% endblock %}
@@ -124,7 +124,9 @@
 
 <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
+    $('[data-toggle="popover"]').popover({
+  trigger: 'focus'
+    }); 
 });
 </script>
 
