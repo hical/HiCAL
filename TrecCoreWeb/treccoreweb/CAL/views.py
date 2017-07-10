@@ -6,7 +6,6 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.CAL.logging_messages import LOGGING_MESSAGES as CAL_LOGGING_MESSAGES
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 from treccoreweb.CAL.exceptions import CALError
 
