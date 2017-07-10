@@ -38,21 +38,35 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         return super(Home, self).get(self, request, *args, **kwargs)
 
 
-class DemographicCreateView(views.LoginRequiredMixin, generic.CreateView):
-    model = Demographic
-    template_name = "progress/demographic.html"
-    object = None
-    form_class = DemographicForm
-    success_url = reverse_lazy("progress:pretask")
+class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
 
-    def form_valid(self, form):
-        prev = Demographic.objects.filter(username=self.request.user)
-        # if a demographic instance already exists, delete old one
-        if prev:
-            prev.first().delete()
-        self.object = form.save(commit=False)
-        self.object.username = self.request.user
-        return super(DemographicCreateView, self).form_valid(form)
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time")
+            page_title = self.request_json.get(u"page_title")
+            page_file = self.request_json.get(u"page_file")
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time,"
+                                      u"pag_file and page_title"}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "message": "{} page visit".format(page_file),
+                "page_visit": True,
+                "page_file": page_file,
+                "page_title": page_title
+            }
+        }
+        logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your visit has been recorded"}
+        return self.render_json_response(context)
 
 
 class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
@@ -90,6 +104,23 @@ class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         context = {u"message": u"Your visit has been recorded."}
         return self.render_json_response(context)
+
+
+class DemographicCreateView(views.LoginRequiredMixin, generic.CreateView):
+    model = Demographic
+    template_name = "progress/demographic.html"
+    object = None
+    form_class = DemographicForm
+    success_url = reverse_lazy("progress:pretask")
+
+    def form_valid(self, form):
+        prev = Demographic.objects.filter(username=self.request.user)
+        # if a demographic instance already exists, delete old one
+        if prev:
+            prev.first().delete()
+        self.object = form.save(commit=False)
+        self.object.username = self.request.user
+        return super(DemographicCreateView, self).form_valid(form)
 
 
 class PretaskView(views.LoginRequiredMixin, generic.CreateView):

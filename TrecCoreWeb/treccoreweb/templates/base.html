@@ -32,7 +32,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand font-montserrat" href="/"><strong>IRStudy</strong></a>
-    <div class="collapse navbar-collapse font-montserrat" id="navbars">
+    <div class="collapse navbar-collapse" id="navbars">
         {% block nav-left%}
         <ul class="navbar-nav mt-2">
             <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.description }}">
@@ -132,7 +132,26 @@
       trigger: 'focus'
         });
     });
+
+    // Nofity server of page visit on pageload
+    window.onload = function () {
+        var now = + new Date();
+        $.ajax({
+            url: '{% url 'progress:post_visit' %}',
+            method: 'POST',
+            data: JSON.stringify({
+                'client_time': now,
+                'page_title': document.title,
+                'page_file': '{{ request.page_file }}',
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            }),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
+    };
 </script>
+
 {% block extra_scripts %}{% endblock %}
 
 </body>

@@ -99,35 +99,6 @@ class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
-class CALVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                       views.JsonRequestResponseMixin,
-                       generic.View):
-    require_json = False
-
-    def post(self, request, *args, **kwargs):
-        try:
-            client_time = self.request_json.get(u"client_time")
-            page_title = self.request_json.get(u"page_title")
-        except KeyError:
-            error_dict = {u"message": u"your input must include client_time, page_title"}
-            return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": CAL_LOGGING_MESSAGES.get("visit", None),
-                "page_visit": True,
-                "page_file": "CAL.html",
-                "page_title": page_title
-            }
-        }
-        logger.info("[{}]".format(log_body))
-
-        context = {u"message": u"Your visit has been recorded"}
-        return self.render_json_response(context)
-
-
 class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                   views.JsonRequestResponseMixin,
                   views.AjaxResponseMixin, generic.View):

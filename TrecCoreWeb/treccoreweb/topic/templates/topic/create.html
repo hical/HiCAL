@@ -15,24 +15,3 @@
     </div>
 </div>
 {% endblock %}
-
-
-
-{% block extra_scripts %}
-    <script>
-        // Nofity server of page visit on pageload
-        window.onload = function () {
-            var now = + new Date();
-            $.ajax({
-                url: '{% url 'topic:post_visit' %}',
-                method: 'POST',
-                data: JSON.stringify({
-                    'client_time': now,
-                    'html_file': "create",
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                }),
-                success: function (result) {}
-            });
-        };
-    </script>
-{% endblock %}

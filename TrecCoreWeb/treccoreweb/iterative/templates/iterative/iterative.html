@@ -193,23 +193,6 @@
 
     <script>
 
-        // Nofity server of page visit on pageload
-        window.onload = function () {
-            var now = + new Date();
-            $.ajax({
-                url: '{% url 'iterative:post_visit' %}',
-                method: 'POST',
-                data: JSON.stringify({
-                    'client_time': now,
-                    'page_title': document.title,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                }),
-                success: function (result) {
-                    console.log(result['message']);
-                }
-            });
-        };
-
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
 

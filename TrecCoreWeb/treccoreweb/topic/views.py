@@ -55,36 +55,6 @@ class TopicView(LoginRequiredMixin, generic.DetailView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class TopicVisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                         views.JsonRequestResponseMixin,
-                         generic.View):
-    require_json = False
-
-    def post(self, request, *args, **kwargs):
-        try:
-            client_time = self.request_json.get(u"client_time", None)
-            html_file = self.request_json.get("html_file", None)
-        except KeyError:
-            error_dict = {u"message": u"your input must include client_time."}
-            return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": TOPIC_LOGGING_MESSAGES.get("visit").get(html_file, None),
-                "page_visit": True,
-                "page_file": "{}.html".format(html_file),
-                "page_title": "Topics {}".format(html_file)
-            }
-        }
-
-        logger.info("[{}]".format(log_body))
-
-        context = {u"message": u"Your visit has been recorded."}
-        return self.render_json_response(context)
-
-
 class TopicCreateView(LoginRequiredMixin, generic.CreateView):
     model = Topic
     template_name = "topic/create.html"
