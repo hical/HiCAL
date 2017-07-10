@@ -1,15 +1,15 @@
 /* Mousetraps keyboard shortcuts */
-Mousetrap.bind(['s', 'h', 'k', 'u'], function(e, key) {
+Mousetrap.bind(['h', 's', 'r', 'u'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
     var doc_title = $('#document_title').text();
     var doc_snippet = $('#document_snippet').html();
-    if(key == 's') {
+    if(key == 'h') {
         send_judgment(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
     }
-    else if(key == 'h') {
+    else if(key == 's') {
         send_judgment(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
     }
-    else if(key == 'k') {
+    else if(key == 'r') {
         send_judgment(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
     }else if(key == 'u') {
         $('#reviewDocsModal').modal('toggle');
