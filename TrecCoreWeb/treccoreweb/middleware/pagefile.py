@@ -7,7 +7,7 @@ class PageHTMLMiddleware(MiddlewareMixin):
     """
 
     def process_request(self, request):
-        # Add page_html field to request
+        # Add page_file field to request
         request.page_file = None
 
     def process_view(self, request, view, *args, **kwargs):

@@ -7,10 +7,10 @@ urlpatterns = [
     url(r'^$', views.Home.as_view(),
         name='home'),
     url(r'^demographic/$',
-        views.DemographicCreateView.as_view(template_name="progress/demographic.html"),
+        views.DemographicCreateView.as_view(),
         name='demographic'),
     url(r'^tutorial/$',
-        TemplateView.as_view(template_name="progress/tutorial.html"),
+        views.TutorialView.as_view(),
         name='tutorial'),
     url(r'^pretask/$',
         views.PretaskView.as_view(),
@@ -26,6 +26,9 @@ urlpatterns = [
         name='exit'),
 
     # Ajax views
+    url(r'^post_ctrlf/$',
+        views.CtrlFAJAXView.as_view(),
+        name='post_ctrlf'),
     url(r'^post_find_keystroke/$', views.FindKeystrokeAJAXView.as_view(),
         name='post_find_keystroke'),
     url(r'^post_visit/$',

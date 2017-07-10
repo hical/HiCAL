@@ -187,8 +187,10 @@
     <script>
 
         $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
+            isModalOpen = false;
+            currentOpenedModalDocId = null;
             if(documents_timers['{{ document_values.docno }}'] == undefined){
-                console.log("Hiding modal with no timer. An error  must have happened.");
+                console.error("Hiding modal with no timer. An error must have happened.");
                 return;
             }
             var timeActive = Date.now() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime;
@@ -197,8 +199,7 @@
             console.log("Destroying document# {{ document_values.docno }} timer.");
             documents_timers['{{ document_values.docno }}'].idle.stop();
             delete documents_timers['{{ document_values.docno }}'];
-            isModalOpen = false;
-            currentOpenedModalDocId = null;
+
 
             if(is_from_judement == false){
                 console.log("No judgment has been made. Sending no judgment call to backend for document id: " + '{{ document_values.docno }}');

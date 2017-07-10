@@ -176,16 +176,44 @@
         });
 
         Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
-            console.log("in cntrf", isModalOpen, currentOpenedModalDocId);
-            e.preventDefault();
-
+            console.log("Ctrl+f triggered. isModalOpen: " + isModalOpen + ". currentOpenedModalDocId: " +  currentOpenedModalDocId);
+            post_ctrlf();
             if(!isModalOpen){
                 return;
             }
+            e.preventDefault();
             var docid = get_current_opened_modal_doc_id();
             $( "#search_content_doc_"+docid).focus();
+
             return false;
         });
+
+        function post_ctrlf(){
+            var isOnSERP = !isModalOpen;
+            var docid = null;
+            if(isModalOpen){
+                docid = get_current_opened_modal_doc_id();
+            }
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'progress:post_ctrlf' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'page_title': document.title,
+                    'extra_context': {
+                        'doc_id': docid,
+                        'isOnSERP': isOnSERP,
+                        'isModalOpen': isModalOpen
+                    },
+                    'search_field_value': $("#search_content_doc_"+docid).val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+        }
 
         function get_current_opened_modal_doc_id(){
             if(isModalOpen){

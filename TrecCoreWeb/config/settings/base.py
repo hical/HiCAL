@@ -330,14 +330,14 @@ PARA_PATH = '/home/nghelani/nyt/para'
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 
-
-# RAVEN
-# ------------------------------------------------------------------------------
-RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
-RAVEN_CONFIG = {
-    'dsn': 'https://{}@sentry.io/186800'.format(RAVEN_SECRET_KEY),
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    'release': raven.fetch_git_sha(os.path.dirname(str(ROOT_DIR))),
-}
-
+#
+# # RAVEN
+# # ------------------------------------------------------------------------------
+# RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
+# RAVEN_CONFIG = {
+#     'dsn': 'https://{}@sentry.io/186800'.format(RAVEN_SECRET_KEY),
+#     # If you are using git, you can also automatically configure the
+#     # release based on the git info.
+#     'release': raven.fetch_git_sha(os.path.dirname(str(ROOT_DIR))),
+# }
+#

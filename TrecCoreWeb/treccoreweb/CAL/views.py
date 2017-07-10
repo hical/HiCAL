@@ -27,36 +27,6 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         return super(CALHomePageView, self).get(self, request, *args, **kwargs)
 
 
-class CALCtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                       views.JsonRequestResponseMixin,
-                       generic.View):
-    require_json = False
-
-    def post(self, request, *args, **kwargs):
-        try:
-            client_time = self.request_json.get(u"client_time")
-            search_field_value = self.request_json.get(u"search_field_value")
-            page_title = self.request_json.get(u"page_title")
-        except KeyError:
-            error_dict = {u"message": u"your input must include client_time, "
-                                      u"and search_field_value"}
-            return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": CAL_LOGGING_MESSAGES.get("ctrlf", None),
-                "searchfield_input": search_field_value,
-                "page_title": page_title
-            }
-        }
-        logger.info("[{}]".format(log_body))
-
-        context = {u"message": u"Your event has been recorded"}
-        return self.render_json_response(context)
-
-
 class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):

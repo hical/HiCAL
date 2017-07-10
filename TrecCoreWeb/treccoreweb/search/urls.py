@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^get_single_doc/$',
         views.SearchGetDocAJAXView.as_view(),
         name='get_doc'),
+
+    # Ajax views
     url(r'^post_search_status/$', views.SearchInputStatusAJAXView.as_view(),
         name='post_search_status'),
     url(r'^post_keystroke/$', views.SearchKeystrokeAJAXView.as_view(),

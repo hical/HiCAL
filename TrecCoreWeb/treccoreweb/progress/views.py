@@ -69,6 +69,38 @@ class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
+class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time")
+            search_field_value = self.request_json.get(u"search_field_value")
+            page_title = self.request_json.get(u"page_title")
+            extra_context = self.request_json.get(u"extra_context")
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time, "
+                                      u"extra_context and search_field_value"}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "message": "Ctrl+f event",
+                "extra_context": extra_context,
+                "searchfield_input": search_field_value,
+                "page_title": page_title
+            }
+        }
+        logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your event has been recorded"}
+        return self.render_json_response(context)
+
+
 class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                        views.JsonRequestResponseMixin,
                        generic.View):
@@ -111,7 +143,7 @@ class DemographicCreateView(views.LoginRequiredMixin, generic.CreateView):
     template_name = "progress/demographic.html"
     object = None
     form_class = DemographicForm
-    success_url = reverse_lazy("progress:pretask")
+    success_url = reverse_lazy("progress:tutorial")
 
     def form_valid(self, form):
         prev = Demographic.objects.filter(username=self.request.user)
@@ -121,6 +153,10 @@ class DemographicCreateView(views.LoginRequiredMixin, generic.CreateView):
         self.object = form.save(commit=False)
         self.object.username = self.request.user
         return super(DemographicCreateView, self).form_valid(form)
+
+
+class TutorialView(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = "progress/tutorial.html"
 
 
 class PretaskView(views.LoginRequiredMixin, generic.CreateView):

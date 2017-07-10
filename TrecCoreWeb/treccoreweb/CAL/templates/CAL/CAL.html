@@ -613,11 +613,14 @@
     function post_ctrlf(){
         var now = + new Date();
         $.ajax({
-            url: '{% url 'CAL:post_ctrlf' %}',
+            url: '{% url 'progress:post_ctrlf' %}',
             method: 'POST',
             data: JSON.stringify({
                 'client_time': now,
                 'page_title': document.title,
+                'extra_context': {
+                    'doc_id': $("#document_id").html()
+                },
                 'search_field_value': $("#search_content").val(),
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             }),
