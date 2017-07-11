@@ -85,11 +85,9 @@ class SfSparseVector {
 
   // Getters and setters.
   void SetY(float new_y) { y_ = new_y; }
-  void SetA(float new_a) { a_ = new_a; }
   void SetGroupId(const string& new_id) { group_id_ = new_id; }
   void SetComment(const string& new_comment) { comment_ = new_comment; }
   float GetY() const { return y_; }
-  float GetA() const { return a_; }
   float GetSquaredNorm() const { return squared_norm_; }
   const string& GetGroupId() const { return group_id_; }
   const string& GetComment() const { return comment_; }
@@ -132,9 +130,6 @@ class SfSparseVector {
   // y_ is the class label.  We store this as a float, rather than an int,
   // so that this class may be used for regression problems, etc., if desired.
   float y_;
-
-  // a_ is the current alpha value in optimization.
-  float a_;
 
   // squared_norm_ = x1*x1 + ... + xN*xN
   float squared_norm_;

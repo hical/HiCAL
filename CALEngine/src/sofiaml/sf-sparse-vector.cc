@@ -29,7 +29,6 @@
 //----------------------------------------------------------------//
 SfSparseVector::SfSparseVector(const char* in_string)
   : y_(0.0), 
-    a_(0.0),
     squared_norm_(0.0),
     group_id_("") {
   NoBias();
@@ -39,7 +38,6 @@ SfSparseVector::SfSparseVector(const char* in_string)
 SfSparseVector::SfSparseVector(const char* in_string,
 			       bool use_bias_term)
   : y_(0.0), 
-    a_(0.0),
     squared_norm_(0.0),
     group_id_("") {
   if (use_bias_term) {
@@ -52,7 +50,6 @@ SfSparseVector::SfSparseVector(const char* in_string,
 
 SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
   : y_(0.0), 
-    a_(0.0),
     squared_norm_(0.0),
     group_id_("")
 {
@@ -63,7 +60,6 @@ SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
 
 SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector)
   : y_(0.0), 
-    a_(0.0),
     squared_norm_(0.0),
     group_id_(""),
     doc_id(doc_id)
@@ -77,7 +73,6 @@ SfSparseVector::SfSparseVector(const SfSparseVector& a,
 				 const SfSparseVector& b,
 				 float y) 
   : y_(y),
-    a_(0.0),
     squared_norm_(0.0) {
   group_id_ = a.GetGroupId();
   int a_i = 0;
