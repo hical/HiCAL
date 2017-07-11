@@ -115,6 +115,9 @@ class BMI{
     // Record judgment (-1 or 1) for a given doc_id
     virtual void record_judgment(std::string doc_id, int judgment);
 
+    // Record batch judgments
+    void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
+
     // Get latest classifier weights, make it thread safe someday
     vector<float> get_weights(){ return state.weights; }
 

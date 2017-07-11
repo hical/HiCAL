@@ -162,10 +162,12 @@ void BMI::remove_from_judgment_list(int id){
     std::remove(judgment_list.begin(), judgment_list.end(), id);
 }
 
-void BMI::record_judgment(string doc_id, int judgment){
-    int id = scorer->doc_ids_inv_map[doc_id];
-    add_to_training_cache(id, judgment);
-    remove_from_judgment_list(id);
+void BMI::record_judgment_batch(vector<pair<string, int>> _judgments){
+    for(auto judgment: _judgments){
+        int id = scorer->doc_ids_inv_map[judgment.first];
+        add_to_training_cache(id, judgment.second);
+        remove_from_judgment_list(id);
+    }
 
     if(!async_mode){
         if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target)
@@ -174,6 +176,10 @@ void BMI::record_judgment(string doc_id, int judgment){
         auto t = thread(&BMI::perform_iteration_async, this);
         t.detach();
     }
+}
+
+void BMI::record_judgment(string doc_id, int judgment){
+    record_judgment_batch({{doc_id, judgment}});
 }
 
 vector<int> BMI::perform_training_iteration(){

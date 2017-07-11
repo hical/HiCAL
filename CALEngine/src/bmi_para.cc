@@ -60,20 +60,7 @@ void BMI_para::remove_from_judgment_list(int doc_idx){
 }
 
 void BMI_para::record_judgment(string doc_id, int judgment){
-    /* int id = scorer_para->doc_ids_inv_map[doc_id]; */
-    doc_id = doc_id.substr(0, doc_id.find("."));
-
-    int doc_id_int = scorer->doc_ids_inv_map[doc_id];
-    add_to_training_cache(doc_id_int, judgment);
-    remove_from_judgment_list(doc_id_int);
-
-    if(!async_mode){
-        if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target)
-            perform_iteration();
-    }else{
-        auto t = thread(&BMI_para::perform_iteration_async, this);
-        t.detach();
-    }
+    record_judgment_batch({{doc_id.substr(0, doc_id.find(".")), judgment}});
 }
 
 vector<int> BMI_para::perform_training_iteration(){
