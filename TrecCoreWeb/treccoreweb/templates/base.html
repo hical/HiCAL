@@ -47,7 +47,7 @@
         </ul>
         <div class="form-inline mt-2 mt-md-0">
             <ul class="navbar-nav mr-auto">
-                {% block nav-right%}
+                {% block nav-right %}
                     {% if request.user.is_authenticated %}
 {#                    <li class="nav-item">#}
 {#                        <a class="nav-link" href="{% url 'judgment:get_all' %}">All judgments</a>#}
@@ -127,15 +127,15 @@
         crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('[data-toggle="popover"]').popover({
-      trigger: 'focus'
+            trigger: 'focus'
         });
     });
 
     // Nofity server of page visit on pageload
     window.onload = function () {
-        var now = + new Date();
+        var now = +new Date();
         $.ajax({
             url: '{% url 'progress:post_visit' %}',
             method: 'POST',
