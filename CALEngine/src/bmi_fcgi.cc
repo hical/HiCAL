@@ -104,10 +104,12 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
 
     if(session_id.size() == 0 || query.size() == 0){
         write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id and query required\"}");
+        return;
     }
 
     if(mode != "doc" && mode != "para"){
         write_response(request, 400, "application/json", "{\"error\": \"Invalid mode\"}");
+        return;
     }
 
     if(mode == "doc"){
