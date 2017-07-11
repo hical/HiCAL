@@ -29,6 +29,7 @@ class BMI_para:public BMI {
     std::vector<std::string> get_doc_to_judge(uint32_t count);
     void record_judgment(std::string doc_id, int judgment);
     Scorer *get_ranking_scorer() {return scorer_para;};
+    vector<std::pair<string, float>> get_ranklist();
 };
 
 #endif // BMI_PARA_H

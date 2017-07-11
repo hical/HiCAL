@@ -213,6 +213,15 @@ vector<int> BMI::perform_training_iteration(){
     return results;
 }
 
+std::vector<std::pair<string, float>> BMI::get_ranklist(){
+    vector<std::pair<string, float>> ret_results;
+    auto results = get_ranking_scorer()->rescore_all_documents(state.weights, num_threads);
+    for(auto result: results){
+        ret_results.push_back({(*get_ranking_scorer()->doc_features)[result.first]->doc_id, result.second});
+    }
+    return ret_results;
+}
+
 void BMI::run()
 {
     is_bmi = (judgments_per_iteration == -1);

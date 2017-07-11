@@ -118,6 +118,9 @@ class BMI{
     // Get latest classifier weights, make it thread safe someday
     vector<float> get_weights(){ return state.weights; }
 
+    // Get ranklist for current classifier state
+    virtual vector<std::pair<string, float>> get_ranklist();
+
     // Begin CAL
     void run();
 

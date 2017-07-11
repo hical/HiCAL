@@ -2,6 +2,7 @@
 #include <mutex>
 #include <thread>
 #include <algorithm>
+#include <unordered_set>
 #include "bmi_para.h"
 
 using namespace std;
@@ -120,3 +121,20 @@ vector<int> BMI_para::perform_training_iteration(){
 
     return results;
 }
+
+std::vector<std::pair<string, float>> BMI_para::get_ranklist(){
+    vector<std::pair<string, float>> ret_results;
+    unordered_set<string> doc_id_seen;
+    auto results = get_ranking_scorer()->rescore_all_documents(state.weights, num_threads);
+
+    for(auto result: results){
+        string para_id = (*get_ranking_scorer()->doc_features)[result.first]->doc_id;
+        string doc_id = para_id.substr(0, para_id.find('.'));
+        if(doc_id_seen.find(doc_id) == doc_id_seen.end()){
+            ret_results.push_back({doc_id, result.second});
+            doc_id_seen.insert(doc_id);
+        }
+    }
+    return ret_results;
+}
+

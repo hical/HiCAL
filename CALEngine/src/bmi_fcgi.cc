@@ -192,6 +192,33 @@ void get_docs_view(const FCGX_Request & request, const vector<pair<string, strin
     write_response(request, 200, "application/json", get_docs(session_id, max_count));
 }
 
+// Handler for /get_ranklist
+void get_ranklist(const FCGX_Request & request, const vector<pair<string, string>> &params){
+    string session_id;
+
+    for(auto kv: params){
+        if(kv.first == "session_id"){
+            session_id = kv.second;
+        }
+    }
+
+    if(session_id.size() == 0){
+        write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id required\"}");
+    }
+
+    if(SESSIONS.find(session_id) == SESSIONS.end()){
+        write_response(request, 404, "application/json", "{\"error\": \"session not found\"}");
+        return;
+    }
+
+    vector<pair<string, float>> ranklist = SESSIONS[session_id]->get_ranklist();
+    string ranklist_str = "";
+    for(auto item: ranklist){
+        ranklist_str += item.first + " " + to_string(item.second) + "\n";
+    }
+    write_response(request, 200, "text/plain", ranklist_str);
+}
+
 // Handler for /judge
 void judge_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, doc_id;
@@ -264,6 +291,10 @@ void process_request(const FCGX_Request & request) {
     }else if(action == "judge"){
         if(method == "POST"){
             judge_view(request, params);
+        }
+    }else if(action == "get_ranklist"){
+        if(method == "GET"){
+            get_ranklist(request, params);
         }
     }
 }
