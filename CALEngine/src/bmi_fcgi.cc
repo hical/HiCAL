@@ -81,9 +81,33 @@ void write_response(const FCGX_Request & request, int status, string content_typ
     cerr<<"Wrote response: "<<content<<endl;
 }
 
+bool parse_seed_judgments(const string &str, vector<pair<string, int>> &seed_judgments){
+    size_t cur_idx = 0;
+    while(cur_idx < str.size()){
+        string doc_judgment_pair;
+        while(cur_idx < str.size() && str[cur_idx] != ','){
+            doc_judgment_pair.push_back(str[cur_idx]);
+            cur_idx++;
+        }
+        if(doc_judgment_pair.find(':') == string::npos){
+            return false;
+        }
+        try{
+            auto sep = doc_judgment_pair.find(':');
+            seed_judgments.push_back(
+                    {doc_judgment_pair.substr(0, sep), stoi(doc_judgment_pair.substr(sep+1))}
+            );
+        } catch (const invalid_argument& ia){
+            return false;
+        }
+    }
+    return true;
+}
+
 // Handler for API endpoint /begin
 void begin_session_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, query, mode = "doc";
+    vector<pair<string, int>> seed_judgments;
 
     for(auto kv: params){
         if(kv.first == "session_id"){
@@ -92,6 +116,11 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
             query = kv.second;
         }else if(kv.first == "mode"){
             mode = kv.second;
+        }else if(kv.first == "seed_judgments"){
+            if(!parse_seed_judgments(kv.second, seed_judgments)){
+                write_response(request, 400, "application/json", "{\"error\": \"Invalid format for seed_judgments\"}");
+                return;
+            }
         }
     }
 
@@ -126,6 +155,8 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 CMD_LINE_INTS["--num-iterations"],
                 CMD_LINE_BOOLS["--async-mode"]);
     }
+
+    SESSIONS[session_id]->record_judgment_batch(seed_judgments);
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
