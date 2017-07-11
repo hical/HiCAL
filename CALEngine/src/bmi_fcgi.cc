@@ -91,6 +91,7 @@ bool parse_seed_judgments(const string &str, vector<pair<string, int>> &seed_jud
             doc_judgment_pair.push_back(str[cur_idx]);
             cur_idx++;
         }
+        cur_idx++;
         if(doc_judgment_pair.find(':') == string::npos){
             return false;
         }
