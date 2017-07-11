@@ -1,7 +1,9 @@
-from django.db import models
 from config.settings.base import AUTH_USER_MODEL as User
-from treccoreweb.progress.models import Task
+
 from django.contrib.postgres.fields import JSONField
+from django.db import models
+
+from treccoreweb.progress.models import Task
 
 
 class Judgement(models.Model):

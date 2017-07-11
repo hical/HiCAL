@@ -1,12 +1,18 @@
-from crispy_forms.layout import Submit
 from crispy_forms.helper import FormHelper
-
+from crispy_forms.layout import Submit
 from django import forms
-from treccoreweb.progress.models import Demographic, PreTask, PostTask, ExitTask, \
-    LIKERT_SCALE_CHOICES, \
-    LEFTDOC_SCALE_CHOICES, FAM_LIKERT_SCALE_CHOICES, DIFF_LIKERT_SCALE_CHOICES, \
-    HELP_LIKERT_SCALE_CHOICES, \
-    CLOSE_LIKERT_SCALE_CHOICES, INTERFACE_LIKERT_SCALE_CHOICES, FEAT_LIKERT_SCALE_CHOICES
+
+from treccoreweb.progress.models import CLOSE_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import DIFF_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import FAM_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import FEAT_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import HELP_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import INTERFACE_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import LEFTDOC_SCALE_CHOICES
+from treccoreweb.progress.models import Demographic
+from treccoreweb.progress.models import ExitTask
+from treccoreweb.progress.models import PostTask
+from treccoreweb.progress.models import PreTask
 
 
 class DemographicForm(forms.ModelForm):

@@ -1,9 +1,13 @@
+from config.latinSquare.treatments import all_treatments
+
 from django import forms
 from django.contrib.postgres.forms import JSONField
+
+from treccoreweb.progress.models import PostTask
+from treccoreweb.progress.models import PreTask
+from treccoreweb.progress.models import Task
+from treccoreweb.progress.models import TaskSetting
 from treccoreweb.topic.models import Topic
-from treccoreweb.progress.models import TaskSetting, Task, PreTask, PostTask
-from treccoreweb.users.models import User
-from config.latinSquare.treatments import all_treatments
 
 
 class SignupForm(forms.Form):

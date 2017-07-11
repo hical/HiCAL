@@ -1,9 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import JSONField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.postgres.fields import JSONField
 
 from treccoreweb.progress.models import Task
 

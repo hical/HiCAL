@@ -1,5 +1,10 @@
 from django.contrib import admin
-from treccoreweb.progress.models import Demographic, Task, TaskSetting, PreTask, PostTask
+
+from treccoreweb.progress.models import Demographic
+from treccoreweb.progress.models import PostTask
+from treccoreweb.progress.models import PreTask
+from treccoreweb.progress.models import Task
+from treccoreweb.progress.models import TaskSetting
 
 
 class TaskSettingAdmin(admin.ModelAdmin):

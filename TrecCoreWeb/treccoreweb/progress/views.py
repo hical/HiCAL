@@ -1,14 +1,21 @@
+import logging
+
 from braces import views
-from treccoreweb.topic.models import *
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from treccoreweb.progress.models import Demographic, PreTask, PostTask
-from treccoreweb.progress.forms import DemographicForm, PreTaskForm, PostTaskForm
-from django.shortcuts import render, get_object_or_404
-from treccoreweb.progress.logging_messages import LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
 
-import logging
+from treccoreweb.progress.forms import DemographicForm
+from treccoreweb.progress.forms import PostTaskForm
+from treccoreweb.progress.forms import PreTaskForm
+from treccoreweb.progress.logging_messages import \
+    LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
+from treccoreweb.progress.models import Demographic
+from treccoreweb.progress.models import PostTask
+from treccoreweb.progress.models import PreTask
+
 logger = logging.getLogger(__name__)
 
 

@@ -1,12 +1,13 @@
-from django.db import models
-from model_utils import Choices
 from config.settings.base import AUTH_USER_MODEL as User
-from treccoreweb.topic.models import Topic
-from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.CAL.exceptions import CALError
-
 import datetime
 import uuid
+
+from django.db import models
+from model_utils import Choices
+
+from treccoreweb.CAL.exceptions import CALError
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.topic.models import Topic
 
 NA = "---"
 VEN = "Very_Not"

@@ -1,6 +1,9 @@
+from config.settings.base import DOCUMENTS_PATH
+from config.settings.base import PARA_PATH
+from datetime import date
 import os
 import traceback
-from datetime import date
+
 from lxml import etree
 
 try:
@@ -9,7 +12,6 @@ try:
 except ImportError:
     from json import loads, dumps
 
-from config.settings.base import DOCUMENTS_PATH, PARA_PATH
 
 
 def exec_xpath(tree, xpath):

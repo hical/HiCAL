@@ -1,16 +1,15 @@
-import json
 import datetime
+import json
+import logging
 
 from braces import views
 from django.http import HttpResponse
 from django.views import generic
-from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
-from treccoreweb.judgment.models import Judgement
+
 from treccoreweb.CAL.exceptions import CALError
-
-import logging
-
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.judgment.models import Judgement
 
 logger = logging.getLogger(__name__)
 
