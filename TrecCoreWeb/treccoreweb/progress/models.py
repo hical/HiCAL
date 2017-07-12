@@ -325,6 +325,7 @@ class Task(models.Model):
     def is_time_past(self):
         """
         Check if the task max time been reached.
+        Returns False if the task is not time bound (iterative mode)
         :return: True if task max time has been reched.
         """
         return self.timespent >= 60 and not self.setting.only_show_doc
