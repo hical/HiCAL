@@ -54,6 +54,9 @@ $('#searchContentForm').submit(function (e) {
     return false;
 });
 
+var marked_matches_in_document_title = {};
+var marked_matches_in_document_snippet = {};
+var marked_matches_in_document_content = {};
 
 
 $(function() {
@@ -68,6 +71,8 @@ $(function() {
     $nextBtn = $("button[data-search='next']"),
     // the context where to search
     $content = $(".document-cal"),
+    // list of selectors to ignore during the search
+    $exclude = ["#show_full_doc_button", "#docno_text"],
     // jQuery object to save <mark> elements
     $results = "",
     // the class that will be appended to the current
@@ -83,6 +88,7 @@ $(function() {
    */
   function jumpTo() {
     if ($results.length) {
+      $input.addClass("greenBorder").css("border-color","#449D44");
       var position,
         $current = $results.eq(currentIndex);
       $results.removeClass(currentClass);
@@ -90,8 +96,42 @@ $(function() {
         $current.addClass(currentClass);
         position = $current.offset().top - offsetTop;
         window.scrollTo(0, position);
+      }else{
+        if(!$input.val()){
+          $input.removeAttr('style');
+        }else if ($input.is(':focus')){
+          $input.addClass("redBorder").css("border-color","#C9302C");
+        }
       }
     }
+  }
+
+  /**
+   * Update dicts of matches in document title, snippet, and content
+   */
+  function updateMatchesDictionaries(){
+    resetMatchesDict();
+    var document_title_mark_instances = $("#document_title").find("mark");
+    var document_snippet_mark_instances = $("#document_snippet").find("mark");
+    var document_content_mark_instances = $("#document_content").find("mark");
+
+    var i;
+    for(i = 0; i < document_title_mark_instances.length; i++){
+        marked_matches_in_document_title[i] = document_title_mark_instances[i].innerHTML;
+    }
+    for(i = 0; i < document_snippet_mark_instances.length; i++){
+        marked_matches_in_document_snippet[i] = document_snippet_mark_instances[i].innerHTML;
+    }
+    for(i = 0; i < document_content_mark_instances.length; i++){
+        marked_matches_in_document_content[i] = document_content_mark_instances[i].innerHTML;
+    }
+
+  }
+
+  function resetMatchesDict(){
+    marked_matches_in_document_title = {};
+    marked_matches_in_document_snippet = {};
+    marked_matches_in_document_content = {};
   }
 
   /**
@@ -104,7 +144,9 @@ $(function() {
       done: function() {
         $content.mark(searchVal, {
           separateWordSearch: true,
+          exclude: $exclude,
           done: function() {
+            updateMatchesDictionaries();
             $results = $content.find("mark");
             currentIndex = 0;
             jumpTo();
@@ -121,7 +163,9 @@ $(function() {
               done: function () {
                   $content.mark(searchVal, {
                       separateWordSearch: true,
+                      exclude: $exclude,
                       done: function () {
+                          updateMatchesDictionaries();
                           $results = $content.find("mark");
                           currentIndex = 0;
                       }
@@ -137,6 +181,7 @@ $(function() {
    * Clears the search
    */
   $clearBtn.on("click", function() {
+    resetMatchesDict();
     $content.unmark();
     $input.val("").focus();
   });

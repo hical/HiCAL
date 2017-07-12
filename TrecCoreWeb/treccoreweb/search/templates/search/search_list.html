@@ -48,9 +48,9 @@
         </div>
         <div class="offset-md-1 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null);" class="btn btn-sm btn-success">Highly Relevant</a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null);" class="btn btn-sm btn-warning">Relevant</a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null);" class="btn btn-sm btn-danger">No relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-warning">Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null, null);" class="btn btn-sm btn-danger">No relevant</a>
             </div>
             <div class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
         </div>
@@ -62,7 +62,7 @@
         <div class="modal-dialog modal-xlg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">
+                    <h3 class="modal-title" id="modal-title-{{ document_values.docno }}">
                         {{ document_values.title|safe }}
                     </h3>
                     <button type="button" class="close" data-dismiss="modal"
@@ -84,14 +84,14 @@
                                             <code class="document_content_id"></code>
                                         </div>
                                     </div>
-                                    <div class="document_content_text">
+                                    <div class="document_content_text" id="document_{{ document_values.docno }}_raw_content">
                                         <p><span class="text-danger">Fetching document. Please wait...</span></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" id="{{ document_values.docno }}-sideBar">
                             <nav class="sidebar-nav-fixed bg-faded font-open-sans">
                                 <ul class="nav nav-pills flex-column little-padding">
                                     <div class="cal-search">
@@ -131,14 +131,14 @@
                                         </div>
                                     </li>
                                     <div class="extra-top-margin align-left">
-                                        <span class="gray-text">Keyboard shortcuts:</span>
+                                        <div class="gray-text">Keyboard shortcuts:</div>
                                         <li class="nav-item top-margin">
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <span class="badge badge-success">h</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as highly relevant
+                                                    <small class="left-margin gray-text">Mark as highly relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -149,7 +149,7 @@
                                                     <span class="badge badge-warning">r</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as relevant
+                                                    <small class="left-margin gray-text">Mark as relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -160,7 +160,7 @@
                                                     <span class="badge badge-danger">s</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as non-relevant
+                                                    <small class="left-margin gray-text">Mark as non-relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -226,7 +226,7 @@
                     method: 'POST',
                     data: JSON.stringify(data),
                     success: function (result) {
-                        console.error(result['message']);
+                        console.log(result['message']);
                     },
                     error: function (result) {
                         console.error(result);
@@ -273,6 +273,7 @@
                 documents_timers['{{ document_values.docno }}'] = documentTimer;
             }
 
+            updateMatchesDictionaries();
             console.log("Model has been shown");
             isModalOpen = true;
             currentOpenedModalDocId = '{{ document_values.docno }}';
@@ -302,7 +303,9 @@
             // next button
             $nextBtn = $("button[data-search='next']"),
             // the context where to search
-            $content = $(".document-{{ document_values.docno }}-modal-content"),
+            $content = $("#doc-{{ document_values.docno }}-modal"),
+            // list of selectors to ignore during the search
+            $exclude = [".document_content_date", ".document_content_id", ".sidebar-nav-fixed", ".btn", ".gray-text", ".badge"],
             // jQuery object to save <mark> elements
             $results = "",
             // the class that will be appended to the current
@@ -372,7 +375,9 @@
               done: function() {
                 $content.mark(searchVal, {
                   separateWordSearch: true,
+                  exclude: $exclude,
                   done: function() {
+                    updateMatchesDictionaries();
                     $results = $content.find("mark");
                     currentIndex = 0;
                     jumpTo();
@@ -382,10 +387,30 @@
             });
           });
 
+          $content.on( "updated", function() {
+              var searchVal = $input.val();
+               if(searchVal != undefined){
+                   $content.unmark({
+                      done: function () {
+                          $content.mark(searchVal, {
+                              separateWordSearch: true,
+                              exclude: $exclude,
+                              done: function () {
+                                  updateMatchesDictionaries();
+                                  $results = $content.find("mark");
+                                  currentIndex = 0;
+                              }
+                          });
+                      }
+                  });
+               }
+            });
+
           /**
            * Clears the search
            */
           $clearBtn.on("click", function() {
+            resetMatchesDict();
             $content.unmark();
             $input.val("").focus();
           });

@@ -48,6 +48,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
             timeVerbose = self.request_json.get(u"timeVerbose")
+            search_query = self.request_json[u"search_query"]
+            ctrl_f_terms_input = self.request_json[u"ctrl_f_terms_input"]
+            found_ctrl_f_terms_in_title = self.request_json[u"found_ctrl_f_terms_in_title"]
+            found_ctrl_f_terms_in_summary = self.request_json[u"found_ctrl_f_terms_in_summary"]
+            found_ctrl_f_terms_in_full_doc = self.request_json[u"found_ctrl_f_terms_in_full_doc"]
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
                                       u"highlyRelevant, nonrelevant, relevant, "
@@ -78,6 +83,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
             exists.timeVerbose.append(timeVerbose)
+            exists.search_query = search_query
+            exists.ctrl_f_terms_input = ctrl_f_terms_input
+            exists.found_ctrl_f_terms_in_title = found_ctrl_f_terms_in_title
+            exists.found_ctrl_f_terms_in_summary = found_ctrl_f_terms_in_summary
+            exists.found_ctrl_f_terms_in_full_doc = found_ctrl_f_terms_in_full_doc
             exists.save()
 
             log_body = {
@@ -102,6 +112,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
@@ -126,6 +141,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 fromMouse=fromMouse,
                 fromKeyboard=fromKeyboard,
                 timeVerbose=[timeVerbose],
+                search_query=search_query,
+                ctrl_f_terms_input=ctrl_f_terms_input,
+                found_ctrl_f_terms_in_title=found_ctrl_f_terms_in_title,
+                found_ctrl_f_terms_in_summary=found_ctrl_f_terms_in_summary,
+                found_ctrl_f_terms_in_full_doc=found_ctrl_f_terms_in_full_doc
             )
 
             log_body = {
@@ -150,6 +170,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
@@ -229,6 +254,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }

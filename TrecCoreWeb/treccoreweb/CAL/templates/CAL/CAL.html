@@ -79,7 +79,7 @@
                                 <small id="document_date"></small>
                             </div>
                             <div class="col-md-6 small align-right">
-                                <code>docno: </code><code id="document_id"></code>
+                                <code id="docno_text">docno: </code><code id="document_id"></code>
                             </div>
                         </div>
                         <div id="document_snippet">
@@ -453,6 +453,11 @@
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
                 'timeVerbose': timeVerbose,
+                'search_query': null,
+                'ctrl_f_terms_input': $("#search_content").val(),
+                'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                'found_ctrl_f_terms_in_summary': marked_matches_in_document_snippet,
+                'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
