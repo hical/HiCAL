@@ -1,4 +1,5 @@
 from config.settings.base import AUTH_USER_MODEL as User
+from config.settings.base import MAX_ACTIVE_TIME
 import datetime
 import uuid
 
@@ -328,7 +329,7 @@ class Task(models.Model):
         Returns False if the task is not time bound (iterative mode)
         :return: True if task max time has been reched.
         """
-        return self.timespent >= 60 and not self.setting.only_show_doc
+        return self.timespent >= MAX_ACTIVE_TIME and not self.setting.only_show_doc
 
     def is_completed(self):
         """
