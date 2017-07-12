@@ -20,6 +20,12 @@ class User(AbstractUser):
     # treatment number
     treatment = models.IntegerField(blank=True, null=True,
                                     choices=((x, x) for x in range(0, 50)))
+    # current task active time (in seconds)
+    _cur_task_active_time = models.FloatField(default=0.0)
+    # last activity timestamp
+    cur_task_last_activity = models.FloatField(default=None, null=True, blank=True)
+
+    # last activity
 
     def __str__(self):
         return self.username
