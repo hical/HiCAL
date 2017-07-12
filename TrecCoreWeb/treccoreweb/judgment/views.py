@@ -265,12 +265,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
             logger.error("[{}]".format(log_body))
 
-        # update total timespent on task
-        if timeVerbose['timeActive']:
-            timeActive = timeVerbose['timeActive']
-            request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
-            request.user.current_task.save()
-
         return self.render_json_response(context)
 
 
@@ -364,11 +358,6 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             logger.info("[{}]".format(log_body))
 
         context = {u"message": u"Your no judgment on {} has been received!".format(doc_id)}
-
-        # update total timespent on task
-        timeActive = timeVerbose['timeActive']
-        request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
-        request.user.current_task.save()
 
         return self.render_json_response(context)
 

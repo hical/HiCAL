@@ -307,8 +307,10 @@ class Task(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,
                             editable=False)
 
-    # current time spent on task
-    timespent = models.DurationField(default=datetime.timedelta)
+    # current task active time (in seconds)
+    timespent = models.FloatField(default=0)
+    # last activity timestamp
+    last_activity = models.FloatField(default=None, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -325,7 +327,7 @@ class Task(models.Model):
         Check if the task max time been reached.
         :return: True if task max time has been reched.
         """
-        return self.timespent >= datetime.timedelta(days=0, hours=1, minutes=0)
+        return self.timespent >= 60 and not self.setting.only_show_doc
 
     def is_completed(self):
         """
