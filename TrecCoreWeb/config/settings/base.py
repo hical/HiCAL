@@ -319,6 +319,10 @@ MESSAGE_TAGS = {
 }
 
 
+# Timer settings
+# Inactivity trigger time (in seconds)
+INACTIVE_TRIGGER_TIME = float(15)
+
 # CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = '129.97.84.14'

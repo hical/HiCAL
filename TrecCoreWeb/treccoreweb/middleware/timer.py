@@ -1,12 +1,14 @@
+import time
 from datetime import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-import time
-INACTIVE = float(15)
+from config.settings.base import INACTIVE_TRIGGER_TIME
+
 REDIRECT_EXCEPTION = [
     reverse_lazy('progress:completed'),
     reverse_lazy('progress:posttask')
 ]
+
 
 def timer_middleware(get_response):
     def middleware(request):
@@ -14,7 +16,7 @@ def timer_middleware(get_response):
         prev_time = request.user.current_task.last_activity
         if prev_time == None:
             prev_time = cur_time
-        request.user.current_task.timespent += min(cur_time - prev_time, INACTIVE)
+        request.user.current_task.timespent += min(cur_time - prev_time, INACTIVE_TRIGGER_TIME)
         request.user.current_task.last_activity = cur_time
         request.user.current_task.save()
 
