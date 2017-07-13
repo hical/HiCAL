@@ -254,9 +254,6 @@ class PostTask(models.Model):
 
 class ExitTask(models.Model):
     username = models.ForeignKey(User)
-    task = models.ForeignKey('Task', related_name='exit_task', null=True, blank=True)
-
-    # Post-task questions
     difficulty = models.CharField(max_length=35,
                                   choices=INTERFACE_LIKERT_SCALE_CHOICES,
                                   default=NA)
@@ -267,13 +264,12 @@ class ExitTask(models.Model):
     feedback = models.TextField(null=True,
                                 blank=True)
 
-    is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "<User:{}, Task:{}>".format(self.username, self.task)
+        return "<User:{}>".format(self.username)
 
     def __str__(self):
         return self.__unicode__()
@@ -326,7 +322,7 @@ class Task(models.Model):
     def is_iterative(self):
         """
         Checks if task is an iterative task (fifth treatment)
-        :return:
+        :return: True if it's an iterative task
         """
         return self.setting.only_show_doc
 

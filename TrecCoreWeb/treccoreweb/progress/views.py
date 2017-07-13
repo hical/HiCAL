@@ -10,11 +10,14 @@ from django.views import generic
 from treccoreweb.progress.forms import DemographicForm
 from treccoreweb.progress.forms import PostTaskForm
 from treccoreweb.progress.forms import PreTaskForm
+from treccoreweb.progress.forms import ExitTaskForm
+
 from treccoreweb.progress.logging_messages import \
     LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
 from treccoreweb.progress.models import Demographic
 from treccoreweb.progress.models import PostTask
 from treccoreweb.progress.models import PreTask
+from treccoreweb.progress.models import ExitTask
 
 logger = logging.getLogger(__name__)
 
@@ -298,3 +301,16 @@ class Completed(views.LoginRequiredMixin, generic.TemplateView):
             return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(Completed, self).get(self, request, *args, **kwargs)
+
+
+class ExitCreateView(views.LoginRequiredMixin, generic.CreateView):
+    model = ExitTask
+    template_name = "progress/exit.html"
+    object = None
+    form_class = ExitTaskForm
+    success_url = reverse_lazy("progress:tasks_completed")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.username = self.request.user
+        return super(ExitCreateView, self).form_valid(form)
