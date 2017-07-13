@@ -1,6 +1,6 @@
 import time
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from config.settings.base import INACTIVE_TRIGGER_TIME
 
 ACTIVE_URLS = [
