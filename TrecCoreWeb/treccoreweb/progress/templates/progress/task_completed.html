@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block pagetitle %}Task has been completed{% endblock %}
+{% block pagetitle %}Task completed{% endblock %}
 {% block nav-header %}{% endblock %}
 {% block sidebar %}{% endblock %}
 {% block nav-left %}{% endblock %}
@@ -20,8 +20,13 @@
 {% block main %}
     <h3 class="text-primary">Your task has been completed</h3>
     <p>
-    You have reached the maximum amount of judging time required for this task. Please proceed.
+        {% if request.user.current_task.setting.only_show_doc %}
+            You have judged all required documents for this task.
+        {% else %}
+        You have reached the maximum amount of judging time required for this task.
+        {% endif %}
     </p>
+    <p>Please proceed.</p>
     <div class="row">
         <div class="col-md-12 align-right">
             <a class="btn btn-primary" href="{% url 'progress:posttask' %}">Next</a>

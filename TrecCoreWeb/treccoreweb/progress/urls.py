@@ -25,7 +25,7 @@ urlpatterns = [
         views.ExitCreateView.as_view(),
         name='exit'),
     url(r'^tasks_completed/$',
-        TemplateView.as_view(template_name="progress/task_completed.html"),
+        views.TasksCompletedView.as_view(),
         name='tasks_completed'),
 
     # Ajax views

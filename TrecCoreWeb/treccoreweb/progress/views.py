@@ -285,11 +285,6 @@ class PosttaskView(views.LoginRequiredMixin, generic.CreateView):
 class Completed(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'progress/task_completed.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(Completed, self).get_context_data(**kwargs)
-        # TODO: Get any related context here
-        return context
-
     def get(self, request, *args, **kwargs):
         current_task = self.request.user.current_task
         # check if in iterative mode and completed all documents
@@ -301,6 +296,10 @@ class Completed(views.LoginRequiredMixin, generic.TemplateView):
             return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(Completed, self).get(self, request, *args, **kwargs)
+
+
+class TasksCompletedView(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = "progress/tasks_completed.html"
 
 
 class ExitCreateView(views.LoginRequiredMixin, generic.CreateView):
