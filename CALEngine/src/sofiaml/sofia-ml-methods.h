@@ -30,6 +30,7 @@
 #include "sf-weight-vector.h"
 
 namespace sofia_ml {
+  const float INF = -1e18;
 
   //--------------------------------------------------------------------------
   //                     Main API methods for Model Training
@@ -96,7 +97,8 @@ namespace sofia_ml {
   // random from the set of all positives, and samples one negative example uniformly
   // at random from the set of all negatives.  We then take a rank step of the difference
   // of these two vectors.  This optimizes area under the ROC curve.
-  void StochasticRocLoop(const SfDataSet& training_set,
+  void StochasticRocLoop(const std::vector<const SfSparseVector*> &positives,
+                         const std::vector<const SfSparseVector*> &negatives,
 			 LearnerType learner_type,
 			 EtaType eta_type,
 			 float lambda,
@@ -195,7 +197,9 @@ namespace sofia_ml {
 			  float eta,
 			  float c,
 			  float lambda,
-			  SfWeightVector* w);
+			  SfWeightVector* w,
+                          float y_a=INF,
+                          float y_b=INF);
 
   //------------------------------------------------------------------------------//
   //                         LearnerType Methods                                  //
@@ -300,7 +304,9 @@ namespace sofia_ml {
                                    const SfSparseVector& b,
                                    float eta,
                                    float lambda,
-                                   SfWeightVector* w);
+                                   SfWeightVector* w,
+                                   float y_a=INF,
+                                   float y_b=INF);
 
   // Takes a single logistic regression step on vector (a-b), using lambda
   // regularization.

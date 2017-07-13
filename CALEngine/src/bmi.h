@@ -9,7 +9,7 @@
 #include "sofiaml/sf-data-set.h"
 
 class BMI{
-    private:
+    protected:
 
     Scorer *scorer;
 
@@ -35,8 +35,8 @@ class BMI{
 
     // The current state of CAL
     struct{
-        int cur_iteration = 0;
-        int next_iteration_target = 0;
+        uint32_t cur_iteration = 0;
+        uint32_t next_iteration_target = 0;
         bool finished = false;
         vector<float> weights;
     }state;
@@ -51,7 +51,8 @@ class BMI{
     std::mt19937 rand_generator;
 
     // Current of dataset being used to train the classifier
-    SfDataSet training_data;
+    SfSparseVector seed;
+    std::unordered_map<int, int> judgments;
 
     // Whenever judgements are received, they are put into training_cache,
     // to prevent any race condition in case training_data is being used by the
@@ -86,7 +87,7 @@ class BMI{
     void add_to_training_cache(int id, int judgment);
 
     // Remove document from judgment_list
-    void remove_from_judgment_list(int id);
+    virtual void remove_from_judgment_list(int id);
 
     // blocks the thread until all the judgments are done
     void wait_for_judgments();
@@ -96,7 +97,7 @@ class BMI{
     void perform_iteration_async();
 
     // Handler for performing a training iteration
-    std::vector<int> perform_training_iteration();
+    virtual std::vector<int> perform_training_iteration();
 
     public:
     BMI(const SfSparseVector &seed,
@@ -105,19 +106,29 @@ class BMI{
         int judgments_per_iteration,
         int max_effort,
         int max_iterations,
-        bool async_mode);
+        bool async_mode,
+        bool initialize=true);
 
     // Get upto `count` number of documents from `judgment_list`
-    std::vector<std::string> get_doc_to_judge(int count);
+    virtual std::vector<std::string> get_doc_to_judge(uint32_t count);
 
     // Record judgment (-1 or 1) for a given doc_id
-    void record_judgment(std::string doc_id, int judgment);
+    virtual void record_judgment(std::string doc_id, int judgment);
+
+    // Record batch judgments
+    void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
 
     // Get latest classifier weights, make it thread safe someday
     vector<float> get_weights(){ return state.weights; }
 
+    // Get ranklist for current classifier state
+    virtual vector<std::pair<string, float>> get_ranklist();
+
     // Begin CAL
     void run();
+
+    virtual Scorer *get_ranking_scorer() {return scorer;};
+    Scorer *get_scorer() {return scorer;};
 };
 
 #endif // BMI_H

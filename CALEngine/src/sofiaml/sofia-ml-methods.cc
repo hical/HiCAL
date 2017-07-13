@@ -133,33 +133,24 @@ namespace sofia_ml {
     }
   }
 
-  void StochasticRocLoop(const SfDataSet& training_set,
+  void StochasticRocLoop(const std::vector<const SfSparseVector*> &positives,
+                         const std::vector<const SfSparseVector*> &negatives,
 			 LearnerType learner_type,
 			 EtaType eta_type,
 			 float lambda,
 			 float c,
 			 int num_iters,
 			 SfWeightVector* w) {
-    // Create index of positives and negatives for fast sampling
-    // of disagreeing pairs.
-    vector<int> positives;
-    vector<int> negatives;
-    for (int i = 0; i < training_set.NumExamples(); ++i) {
-      if (training_set.VectorAt(i).GetY() > 0.0)
-	positives.push_back(i);
-      else
-	negatives.push_back(i);
-    }
 
     // For each step, randomly sample one positive and one negative and
     // take a pairwise gradient step.
     for (int i = 1; i <= num_iters; ++i) {
       float eta = GetEta(eta_type, lambda, i);
       const SfSparseVector& pos_x =
-	training_set.VectorAt(positives[RandInt(positives.size())]);
+	*positives[RandInt(positives.size())];
       const SfSparseVector& neg_x =
-	training_set.VectorAt(negatives[RandInt(negatives.size())]);
-      OneLearnerRankStep(learner_type, pos_x, neg_x, eta, c, lambda, w);
+	*negatives[RandInt(negatives.size())];
+      OneLearnerRankStep(learner_type, pos_x, neg_x, eta, c, lambda, w, 1, -1);
     }
   }
 
@@ -436,7 +427,9 @@ namespace sofia_ml {
 			  float eta,
 			  float c,
 			  float lambda,
-			  SfWeightVector* w) {
+			  SfWeightVector* w,
+                          float y_a,
+                          float y_b) {
     switch (learner_type) {
     case PEGASOS:
       return SinglePegasosRankStep(a, b, eta, lambda, w);
@@ -445,7 +438,7 @@ namespace sofia_ml {
     case PASSIVE_AGGRESSIVE:
       return SinglePassiveAggressiveRankStep(a, b, lambda, c, w);
     case LOGREG_PEGASOS:
-      return SinglePegasosLogRegRankStep(a, b, eta, lambda, w);
+      return SinglePegasosLogRegRankStep(a, b, eta, lambda, w, y_a, y_b);
     case LOGREG:
       return SingleLogRegRankStep(a, b, eta, lambda, w);
     case LMS_REGRESSION:
@@ -702,9 +695,15 @@ namespace sofia_ml {
 				   const SfSparseVector& b,
 				   float eta,
 				   float lambda,
-				   SfWeightVector* w) {
-    float y = (a.GetY() > b.GetY()) ? 1.0 :
-      (a.GetY() < b.GetY()) ? -1.0 : 0.0;
+				   SfWeightVector* w,
+                                   float y_a,
+                                   float y_b) {
+    if(y_a == INF)
+        y_a = a.GetY();
+    if(y_b == INF)
+        y_b = b.GetY();
+    float y = (y_a > y_b) ? 1.0 :
+      (y_a < y_b) ? -1.0 : 0.0;
     float loss = y / (1 + exp(y * w->InnerProductOnDifference(a, b)));
     L2Regularize(eta, lambda, w);    
 

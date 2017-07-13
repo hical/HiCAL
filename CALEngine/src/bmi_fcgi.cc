@@ -2,13 +2,14 @@
 #include <thread>
 #include <fcgio.h>
 #include "simple-cmd-line-helper.h"
-#include "bmi.h"
+#include "bmi_para.h"
 #include "features.h"
+#include "utils/feature_parser.h"
 
 using namespace std;
-unordered_map<string, BMI*> SESSIONS;
+unordered_map<string, unique_ptr<BMI>> SESSIONS;
 unordered_map<string, thread> SESSION_THREADS;
-Scorer *scorer;
+unique_ptr<Scorer> scorer_doc = NULL, scorer_para = NULL;
 
 // Get the uri without following and preceding slashes
 string parse_action_from_uri(string uri){
@@ -77,18 +78,52 @@ void write_response(const FCGX_Request & request, int status, string content_typ
                     << "Content-type: " << content_type << "\r\n"
                     << "\r\n"
                     << content << "\n";
+    if(content.length() > 50)
+        content = content.substr(0, 50) + "...";
     cerr<<"Wrote response: "<<content<<endl;
+}
+
+bool parse_seed_judgments(const string &str, vector<pair<string, int>> &seed_judgments){
+    size_t cur_idx = 0;
+    while(cur_idx < str.size()){
+        string doc_judgment_pair;
+        while(cur_idx < str.size() && str[cur_idx] != ','){
+            doc_judgment_pair.push_back(str[cur_idx]);
+            cur_idx++;
+        }
+        cur_idx++;
+        if(doc_judgment_pair.find(':') == string::npos){
+            return false;
+        }
+        try{
+            auto sep = doc_judgment_pair.find(':');
+            seed_judgments.push_back(
+                    {doc_judgment_pair.substr(0, sep), stoi(doc_judgment_pair.substr(sep+1))}
+            );
+        } catch (const invalid_argument& ia){
+            return false;
+        }
+    }
+    return true;
 }
 
 // Handler for API endpoint /begin
 void begin_session_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
-    string session_id, query;
+    string session_id, query, mode = "doc";
+    vector<pair<string, int>> seed_judgments;
 
     for(auto kv: params){
         if(kv.first == "session_id"){
             session_id = kv.second;
         }else if(kv.first == "seed_query"){
             query = kv.second;
+        }else if(kv.first == "mode"){
+            mode = kv.second;
+        }else if(kv.first == "seed_judgments"){
+            if(!parse_seed_judgments(kv.second, seed_judgments)){
+                write_response(request, 400, "application/json", "{\"error\": \"Invalid format for seed_judgments\"}");
+                return;
+            }
         }
     }
 
@@ -99,23 +134,42 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
 
     if(session_id.size() == 0 || query.size() == 0){
         write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id and query required\"}");
+        return;
     }
 
-    SESSIONS[session_id] = new BMI(features::get_features(query, scorer->doc_features.size()),
-            scorer,
-            CMD_LINE_INTS["--threads"],
-            CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
-            CMD_LINE_BOOLS["--async-mode"]);
+    if(mode != "doc" && mode != "para"){
+        write_response(request, 400, "application/json", "{\"error\": \"Invalid mode\"}");
+        return;
+    }
+
+    if(mode == "doc"){
+        SESSIONS[session_id] = make_unique<BMI>(features::get_features(query, scorer_doc->doc_features->size()),
+                scorer_doc.get(),
+                CMD_LINE_INTS["--threads"],
+                CMD_LINE_INTS["--judgments-per-iteration"],
+                CMD_LINE_INTS["--max-effort"],
+                CMD_LINE_INTS["--num-iterations"],
+                CMD_LINE_BOOLS["--async-mode"]);
+    }else if(mode == "para"){
+        SESSIONS[session_id] = make_unique<BMI_para>(features::get_features(query, scorer_doc->doc_features->size()),
+                scorer_doc.get(),
+                scorer_para.get(),
+                CMD_LINE_INTS["--threads"],
+                CMD_LINE_INTS["--judgments-per-iteration"],
+                CMD_LINE_INTS["--max-effort"],
+                CMD_LINE_INTS["--num-iterations"],
+                CMD_LINE_BOOLS["--async-mode"]);
+    }
+
+    SESSIONS[session_id]->record_judgment_batch(seed_judgments);
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
 }
 
-string get_top_terms_json(string doc_id, string session_id, int num_top_terms){
+string get_top_terms_json(string doc_id, const unique_ptr<BMI> &bmi, int num_top_terms){
     vector<pair<int, float>> top_terms 
-        = scorer->get_top_terms(SESSIONS[session_id]->get_weights(), doc_id, num_top_terms);
+        = bmi->get_ranking_scorer()->get_top_terms(bmi->get_weights(), doc_id, num_top_terms);
 
     string top_terms_json = "{";
     for(auto top_term: top_terms){
@@ -129,7 +183,7 @@ string get_top_terms_json(string doc_id, string session_id, int num_top_terms){
 
 // Fetch doc-ids in JSON
 string get_docs(string session_id, int max_count, int num_top_terms = 10){
-    BMI *bmi = SESSIONS[session_id];
+    const unique_ptr<BMI> &bmi = SESSIONS[session_id];
     vector<string> doc_ids = bmi->get_doc_to_judge(max_count);
 
     string doc_json = "[";
@@ -140,7 +194,7 @@ string get_docs(string session_id, int max_count, int num_top_terms = 10){
         if(top_terms_json.length() > 1)
             top_terms_json.push_back(',');
         doc_json += "\"" + doc_id + "\"";
-        top_terms_json += "\"" + doc_id + "\": " + get_top_terms_json(doc_id, session_id, num_top_terms);
+        top_terms_json += "\"" + doc_id + "\": " + get_top_terms_json(doc_id, bmi, num_top_terms);
     }
     doc_json.push_back(']');
     top_terms_json.push_back('}');
@@ -174,6 +228,33 @@ void get_docs_view(const FCGX_Request & request, const vector<pair<string, strin
     write_response(request, 200, "application/json", get_docs(session_id, max_count));
 }
 
+// Handler for /get_ranklist
+void get_ranklist(const FCGX_Request & request, const vector<pair<string, string>> &params){
+    string session_id;
+
+    for(auto kv: params){
+        if(kv.first == "session_id"){
+            session_id = kv.second;
+        }
+    }
+
+    if(session_id.size() == 0){
+        write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id required\"}");
+    }
+
+    if(SESSIONS.find(session_id) == SESSIONS.end()){
+        write_response(request, 404, "application/json", "{\"error\": \"session not found\"}");
+        return;
+    }
+
+    vector<pair<string, float>> ranklist = SESSIONS[session_id]->get_ranklist();
+    string ranklist_str = "";
+    for(auto item: ranklist){
+        ranklist_str += item.first + " " + to_string(item.second) + "\n";
+    }
+    write_response(request, 200, "text/plain", ranklist_str);
+}
+
 // Handler for /judge
 void judge_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, doc_id;
@@ -198,7 +279,8 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
         return;
     }
 
-    if(scorer->doc_ids_inv_map.find(doc_id) == scorer->doc_ids_inv_map.end()){
+    const unique_ptr<BMI> &bmi = SESSIONS[session_id];
+    if(bmi->get_scorer()->doc_ids_inv_map.find(doc_id) == bmi->get_scorer()->doc_ids_inv_map.end()){
         write_response(request, 404, "application/json", "{\"error\": \"doc_id not found\"}");
         return;
     }
@@ -208,9 +290,7 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
         return;
     }
 
-    BMI *bmi = SESSIONS[session_id];
     bmi->record_judgment(doc_id, rel);
-
     write_response(request, 200, "application/json", get_docs(session_id, 20));
 }
 
@@ -248,11 +328,16 @@ void process_request(const FCGX_Request & request) {
         if(method == "POST"){
             judge_view(request, params);
         }
+    }else if(action == "get_ranklist"){
+        if(method == "GET"){
+            get_ranklist(request, params);
+        }
     }
 }
 
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
+    AddFlag("--para-features", "Path of the file with list of paragraph features", string(""));
     AddFlag("--df", "Path of the file with document frequency of each term", string(""));
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
     AddFlag("--num-iterations", "Set max number of training iterations", int(-1));
@@ -282,10 +367,22 @@ int main(int argc, char **argv){
     // Load docs
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
-    scorer = new Scorer(CMD_LINE_STRINGS["--doc-features"]);
+    string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
+    scorer_doc = make_unique<Scorer>(CAL::utils::BinFeatureParser(doc_features_path).get_all());
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<scorer->doc_features.size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Read "<<scorer_doc->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+
+    // Load para
+    string para_features_path = CMD_LINE_STRINGS["--para-features"];
+    if(para_features_path.length() > 0){
+        start = std::chrono::steady_clock::now();
+        cerr<<"Loading paragraph features on memory"<<endl;
+        scorer_para = make_unique<Scorer>(CAL::utils::BinFeatureParser(para_features_path).get_all());
+        duration = std::chrono::duration_cast<std::chrono::milliseconds> 
+            (std::chrono::steady_clock::now() - start);
+        cerr<<"Read "<<scorer_para->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    }
 
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
@@ -297,13 +394,6 @@ int main(int argc, char **argv){
     while (FCGX_Accept_r(&request) == 0) {
         process_request(request);
     }
-
-
-    // Cleanup
-    for(auto it: SESSIONS)
-        delete it.second;
-
-    delete scorer;
 
     return 0;
 }

@@ -5,25 +5,27 @@
 #include "bmi.h"
 
 using namespace std;
-BMI::BMI(const SfSparseVector &seed,
+BMI::BMI(const SfSparseVector &_seed,
         Scorer *_scorer,
         int _num_threads,
         int _judgments_per_iteration,
         int _max_effort,
         int _max_iterations,
-        bool _async_mode)
+        bool _async_mode,
+        bool initialize)
     :scorer(_scorer),
     num_threads(_num_threads),
     judgments_per_iteration(_judgments_per_iteration),
     max_effort(_max_effort),
     max_iterations(_max_iterations),
     async_mode(_async_mode),
-    training_data(get_initial_training_data(seed))
+    seed(_seed)
 {
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
         judgments_per_iteration = 1;
-    perform_iteration();
+    if(initialize)
+        perform_iteration();
 }
 
 void BMI::finish_session(){
@@ -70,17 +72,6 @@ void BMI::perform_iteration_async(){
     }
 }
 
-void BMI::randomize_non_rel_docs(){
-    uniform_int_distribution<int> distribution(0, scorer->doc_features.size()-1);
-    for(int i = 1;i<=100;i++){
-        int idx = distribution(rand_generator);
-        if(training_data.NumExamples() < i+1)
-            training_data.AddLabeledVector(scorer->doc_features[idx], -1);
-        else
-            training_data.ModifyLabeledVector(i, scorer->doc_features[idx], -1);
-    }
-}
-
 SfDataSet BMI::get_initial_training_data(const SfSparseVector &seed){
     // Todo generalize seed docs (support multiple rel/non-rel seeds)
     SfDataSet training_data = SfDataSet(true);
@@ -89,7 +80,24 @@ SfDataSet BMI::get_initial_training_data(const SfSparseVector &seed){
 }
 
 void BMI::train(SfWeightVector &w){
-    sofia_ml::StochasticRocLoop(training_data,
+    vector<const SfSparseVector*> positives, negatives;
+    positives.push_back(&seed);
+    // Sampling random non_rel documents
+    uniform_int_distribution<int> distribution(0, scorer->doc_features->size()-1);
+    for(int i = 1;i<=100;i++){
+        int idx = distribution(rand_generator);
+        negatives.push_back((*scorer->doc_features)[idx].get());
+    }
+
+    for(pair<int, int> judgment: judgments){
+        if(judgment.second > 0)
+            positives.push_back((*scorer->doc_features)[judgment.first].get());
+        else
+            negatives.push_back((*scorer->doc_features)[judgment.first].get());
+    }
+    
+    sofia_ml::StochasticRocLoop(positives,
+            negatives,
             sofia_ml::LOGREG_PEGASOS,
             sofia_ml::PEGASOS_ETA,
             0.0001,
@@ -98,7 +106,7 @@ void BMI::train(SfWeightVector &w){
             &w);
 }
 
-vector<string> BMI::get_doc_to_judge(int count=1){
+vector<string> BMI::get_doc_to_judge(uint32_t count=1){
     while(true){
         {
             lock_guard<mutex> lock(judgment_list_mutex);
@@ -108,7 +116,7 @@ vector<string> BMI::get_doc_to_judge(int count=1){
                 for(int id: judgment_list){
                     if(id == -1 || ret.size() >= count)
                         break;
-                    ret.push_back(scorer->doc_features[id].doc_id);
+                    ret.push_back((*scorer->doc_features)[id]->doc_id);
                 }
                 return ret;
             }
@@ -151,15 +159,15 @@ void BMI::add_to_training_cache(int id, int judgment){
 
 void BMI::remove_from_judgment_list(int id){
     lock_guard<mutex> lock(judgment_list_mutex);
-    auto it = std::find(judgment_list.begin(), judgment_list.end(), id);
-    if(it != judgment_list.end())
-        judgment_list.erase(it);
+    std::remove(judgment_list.begin(), judgment_list.end(), id);
 }
 
-void BMI::record_judgment(string doc_id, int judgment){
-    int id = scorer->doc_ids_inv_map[doc_id];
-    add_to_training_cache(id, judgment);
-    remove_from_judgment_list(id);
+void BMI::record_judgment_batch(vector<pair<string, int>> _judgments){
+    for(auto judgment: _judgments){
+        int id = scorer->doc_ids_inv_map[judgment.first];
+        add_to_training_cache(id, judgment.second);
+        remove_from_judgment_list(id);
+    }
 
     if(!async_mode){
         if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target)
@@ -170,14 +178,17 @@ void BMI::record_judgment(string doc_id, int judgment){
     }
 }
 
+void BMI::record_judgment(string doc_id, int judgment){
+    record_judgment_batch({{doc_id, judgment}});
+}
+
 vector<int> BMI::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
-    randomize_non_rel_docs();
 
     {
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
-            training_data.AddLabeledVector(scorer->doc_features[training.first], training.second);
+            judgments[training.first] = training.second;
             finished_judgments.insert(training.first);
         }
         training_cache.clear();
@@ -198,14 +209,23 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+extra_judgment_docs, finished_judgments, results);
+    scorer->rescore_documents(weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), finished_judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Rescored "<<scorer->doc_features.size()<<" documents in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Rescored "<<scorer->doc_features->size()<<" documents in "<<duration.count()<<"ms"<<endl;
 
     state.weights = weights;
 
     return results;
+}
+
+std::vector<std::pair<string, float>> BMI::get_ranklist(){
+    vector<std::pair<string, float>> ret_results;
+    auto results = get_ranking_scorer()->rescore_all_documents(state.weights, num_threads);
+    for(auto result: results){
+        ret_results.push_back({(*get_ranking_scorer()->doc_features)[result.first]->doc_id, result.second});
+    }
+    return ret_results;
 }
 
 void BMI::run()
@@ -235,5 +255,3 @@ void BMI::run()
         }
     }
 }
-
-
