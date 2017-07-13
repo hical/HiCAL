@@ -13,7 +13,6 @@ ACTIVE_URLS = [
     reverse('judgment:post_nojudgment'),
     reverse('progress:post_ctrlf'),
     reverse('progress:post_find_keystroke'),
-    reverse('progress:post_visit'),
     reverse('search:main'),
     reverse('search:get_docs'),
     reverse('search:get_doc'),
@@ -28,17 +27,20 @@ def timer_middleware(get_response):
             if request.path.startswith(url_exception):
                 cur_time = time.time()
                 prev_time = request.user.current_task.last_activity
-                if prev_time == None:
+                if prev_time is None:
                     prev_time = cur_time
                 request.user.current_task.timespent += min(cur_time - prev_time, INACTIVE_TRIGGER_TIME)
                 request.user.current_task.last_activity = cur_time
                 request.user.current_task.save()
 
                 if request.user.current_task.is_time_past():
-                    return HttpResponseRedirect(reverse_lazy('progress:completed'))
+                    response = HttpResponseRedirect(reverse_lazy('progress:completed'))
+                    return response
                 break
 
         response = get_response(request)
+        if request.path.startswith(reverse('progress:completed')):
+            response['completed'] = 1
         return response
 
     return middleware

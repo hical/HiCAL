@@ -127,6 +127,18 @@
         crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script>
+    window.jquery_ajax = $.ajax;
+    $.ajax = function(param){
+        var tmp_success_callback = param['success'];
+        param['success'] = function(data, tmp, xhr){
+            if(xhr.getResponseHeader('completed') == "1" && window.location.pathname != "/completed/"){
+                window.location.href = "/completed/";
+            }else
+                tmp_success_callback(data, tmp, xhr);
+        }
+        window.jquery_ajax(param);
+    };
+
     $(document).ready(function () {
         $('[data-toggle="popover"]').popover({
             trigger: 'focus'
