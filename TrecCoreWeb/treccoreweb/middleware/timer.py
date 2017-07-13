@@ -25,15 +25,16 @@ def timer_middleware(get_response):
     def middleware(request):
         for url_exception in ACTIVE_URLS:
             if request.path.startswith(url_exception):
+                current_task = request.user.current_task
                 cur_time = time.time()
-                prev_time = request.user.current_task.last_activity
+                prev_time = current_task.last_activity
                 if prev_time is None:
                     prev_time = cur_time
-                request.user.current_task.timespent += min(cur_time - prev_time, INACTIVE_TRIGGER_TIME)
-                request.user.current_task.last_activity = cur_time
-                request.user.current_task.save()
+                current_task.timespent += min(cur_time - prev_time, INACTIVE_TRIGGER_TIME)
+                current_task.last_activity = cur_time
+                current_task.save()
 
-                if request.user.current_task.is_time_past():
+                if current_task.is_time_past() and not current_task.is_iterative:
                     response = HttpResponseRedirect(reverse_lazy('progress:completed'))
                     return response
                 break

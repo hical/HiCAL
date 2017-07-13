@@ -274,7 +274,8 @@
                     console.log(result['message']);
                 },
                 error: function (result) {
-                    console.error(result);
+                    console.error("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['responseText'])
                 }
             });
 

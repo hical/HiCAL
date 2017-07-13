@@ -1,9 +1,9 @@
 from config.settings.base import AUTH_USER_MODEL as User
 from config.settings.base import MAX_ACTIVE_TIME
-import datetime
 import uuid
 
 from django.db import models
+from interfaces.Iterative import functions as IterativeEngine
 from model_utils import Choices
 
 from treccoreweb.CAL.exceptions import CALError
@@ -323,13 +323,40 @@ class Task(models.Model):
 
         super(Task, self).save(*args, **kwargs)
 
+    def is_iterative(self):
+        """
+        Checks if task is an iterative task (fifth treatment)
+        :return:
+        """
+        return self.setting.only_show_doc
+
+    def is_iterative_completed(self):
+        """
+        Check if in iterative mode and completed all documents
+        :return: True if completed
+        """
+        iterative_completed_check = False
+        # if user in iterative mode
+        if self.is_iterative():
+            # keep import here to avoid circular imports issues
+            from treccoreweb.judgment import helpers
+            docs_ids = helpers.remove_judged_docs(IterativeEngine.get_documents(
+                                                  self.username.id),
+                                                  self.username,
+                                                  self)
+
+            # if there's no more un-judged docs
+            if not docs_ids:
+                iterative_completed_check = True
+
+        return iterative_completed_check
+
     def is_time_past(self):
         """
         Check if the task max time been reached.
-        Returns False if the task is not time bound (iterative mode)
-        :return: True if task max time has been reched.
+        :return: True if task max time has been reached.
         """
-        return self.timespent >= MAX_ACTIVE_TIME and not self.setting.only_show_doc
+        return self.timespent >= MAX_ACTIVE_TIME
 
     def is_completed(self):
         """

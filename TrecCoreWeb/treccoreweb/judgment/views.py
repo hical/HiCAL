@@ -215,7 +215,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 error_message = str(e)
 
             context[u"next_docs"] = documents
-        else:
+        elif isFromSearch:
             # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:

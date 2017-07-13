@@ -39,7 +39,10 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         elif current_task.is_last_task() and current_task.is_completed():
             return HttpResponseRedirect(reverse_lazy('progress:exit'))
         # if user time in task is over, move to post-task
-        elif current_task.is_time_past():
+        elif current_task.is_time_past() and not current_task.is_iterative():
+            return HttpResponseRedirect(reverse_lazy('progress:posttask'))
+        # if user is in iterative mode and have judged all documents
+        elif current_task.is_iterative() and current_task.is_iterative_completed():
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
 
         return super(Home, self).get(self, request, *args, **kwargs)
@@ -286,8 +289,12 @@ class Completed(views.LoginRequiredMixin, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
         current_task = self.request.user.current_task
+        # check if in iterative mode and completed all documents
+        iterative_mode_check = False
+        if current_task.is_iterative and current_task.is_iterative_completed:
+            iterative_mode_check = True
         # check if current task is not completed, if yes, go to home page
-        if not current_task.is_time_past():
+        if not current_task.is_time_past() and not iterative_mode_check:
             return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(Completed, self).get(self, request, *args, **kwargs)

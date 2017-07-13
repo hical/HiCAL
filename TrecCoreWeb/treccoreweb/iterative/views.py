@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import generic
+from treccoreweb.judgment import helpers
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 from interfaces.Iterative import functions as IterativeEngine
 
@@ -18,8 +19,12 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
     def get(self, request, *args, **kwargs):
         # TODO: If we're not going to use electron.js, make sure the view
         # is only allowed to people with permission to access this page
-        current_task = self.request.user.current_task
-        if current_task.is_time_past():
+        docs_ids = helpers.remove_judged_docs(IterativeEngine.get_documents(
+                                                self.request.user.id),
+                                              self.request.user,
+                                              self.request.user.current_task)
+        # if user has judged all the document he has to judge, move to completed
+        if not docs_ids:
             return HttpResponseRedirect(reverse_lazy('progress:completed'))
 
         return super(HomePageView, self).get(self, request, *args, **kwargs)
@@ -87,6 +92,9 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
     def get_ajax(self, request, *args, **kwargs):
         try:
             docs_ids = IterativeEngine.get_documents(self.request.user.id)
+            docs_ids = helpers.remove_judged_docs(docs_ids,
+                                                  self.request.user,
+                                                  self.request.user.current_task)
             documents = DocEngine.get_documents(docs_ids, query=None)
             return self.render_json_response(documents)
         except TimeoutError:
