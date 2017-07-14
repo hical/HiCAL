@@ -38,15 +38,15 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         # if first task and pre-task is not done, show tutorial.
         elif current_task.is_first_task() and not current_task.pretask.is_completed:
             return HttpResponseRedirect(reverse_lazy('progress:tutorial'))
-        # if the current task is the last one and it has been completed, go to exit
-        elif current_task.is_last_task() and current_task.is_completed():
-            return HttpResponseRedirect(reverse_lazy('progress:exit'))
         # if user time in task is over, move to post-task
         elif current_task.is_time_past() and not current_task.is_iterative():
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
         # if user is in iterative mode and have judged all documents
         elif current_task.is_iterative() and current_task.is_iterative_completed():
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
+        # if the current task is the last one and it has been completed, go to exit
+        elif current_task.is_last_task() and current_task.is_completed():
+            return HttpResponseRedirect(reverse_lazy('progress:exit'))
 
         return super(Home, self).get(self, request, *args, **kwargs)
 

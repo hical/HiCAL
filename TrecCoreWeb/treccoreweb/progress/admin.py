@@ -8,13 +8,16 @@ from treccoreweb.progress.models import Task
 from treccoreweb.progress.models import TaskSetting
 
 
-class TaskSettingAdmin(admin.ModelAdmin):
+class NoAddNoDeleteAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(TaskSetting, TaskSettingAdmin)
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(TaskSetting, NoAddNoDeleteAdmin)
 admin.site.register(Demographic)
-admin.site.register(Task)
-admin.site.register(PreTask)
-admin.site.register(PostTask)
+admin.site.register(Task, NoAddNoDeleteAdmin)
+admin.site.register(PreTask, NoAddNoDeleteAdmin)
+admin.site.register(PostTask, NoAddNoDeleteAdmin)
 admin.site.register(ExitTask)

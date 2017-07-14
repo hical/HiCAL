@@ -151,7 +151,7 @@
                         console.log(result['message']);
                     }
                 });
-                console.log("Character pressed: ", character, now);
+                console.log("Character pressed: '"+character+"'", "at:", now);
             }
         };
 
@@ -233,7 +233,10 @@
                     "judged": true,
                     "highlyRelevant": highlyRelevant,
                     "non": non,
-                    "relevant": relevant
+                    "relevant": relevant,
+                    'ctrl_f_terms_input': ctrlf_terms,
+                    'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                    'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
                 };
             }else{
                 var now = timeVerbose['timestamp'];
@@ -260,7 +263,7 @@
                 'search_query': $("#search_input").val(),
                 'ctrl_f_terms_input': ctrlf_terms,
                 'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
-                'found_ctrl_f_terms_in_summary': {},
+                'found_ctrl_f_terms_in_summary': [],
                 'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
@@ -299,16 +302,17 @@
         function hide_modal(doc_id){
             console.log("hiding modal: ", doc_id);
             $('#doc-'+doc_id+'-modal').modal('hide');
-            resetMatchesDict();
+            resetMatchesLists();
         }
 
         function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard){
+            var now = + new Date;
             if(documents_timers[doc_id] == undefined){
                 return;
             }
             var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
             var timeAway = documents_timers[doc_id].totalAwayTime;
-            var now = + new Date;
+            var ctrlf_terms = $("#search_content_doc_"+doc_id).val();
             var timeVerbose = {
                 "timestamp": now,
                 "timeActive": timeActive,
@@ -317,9 +321,11 @@
                 "judged": true,
                 "highlyRelevant": highlyRelevant,
                 "non": non,
-                "relevant": relevant
+                "relevant": relevant,
+                "ctrl_f_terms_input": ctrlf_terms,
+                "found_ctrl_f_terms_in_title": marked_matches_in_document_title,
+                "found_ctrl_f_terms_in_full_doc": marked_matches_in_document_content
             };
-            var ctrlf_terms = $("#search_content_doc_"+doc_id).val();
             send_judgment(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose, ctrlf_terms);
             var element = document;
             var event = new CustomEvent("new_judgment");
@@ -333,28 +339,77 @@
             is_from_judement = true;
         }, false);
 
-        var marked_matches_in_document_title = {};
-        var marked_matches_in_document_content = {};
+        var marked_matches_in_document_title = [];
+        var marked_matches_in_document_content = [];
         /**
         * Update dicts of matches in document title, and content
         */
-        function updateMatchesDictionaries(){
-            resetMatchesDict();
+        function updateMatchesLists(){
+            resetMatchesLists();
             var document_title_mark_instances = $("#modal-title-"+currentOpenedModalDocId).find("mark");
             var document_content_mark_instances = $("#document_"+currentOpenedModalDocId+"_raw_content").find("mark");
 
             var i;
             for(i = 0; i < document_title_mark_instances.length; i++){
-                marked_matches_in_document_title[i] = document_title_mark_instances[i].innerHTML;
+                var data = {
+                    "match": document_title_mark_instances[i].innerHTML,
+                    "wholeWord": get_surroundings_of_match(document_title_mark_instances[i])
+                };
+                marked_matches_in_document_title.push(data);
             }
             for(i = 0; i < document_content_mark_instances.length; i++){
-                marked_matches_in_document_content[i] = document_content_mark_instances[i].innerHTML;
+                var data = {
+                    "match": document_content_mark_instances[i].innerHTML,
+                    "wholeWord": get_surroundings_of_match(document_content_mark_instances[i])
+                };
+                marked_matches_in_document_content.push(data);
             }
         }
 
-        function resetMatchesDict(){
-            marked_matches_in_document_title = {};
-            marked_matches_in_document_content = {};
+        /**
+         * Gets the surrounding letters of a highlighted match.
+         * E.g. "The company is ba<mark>se</mark>d in California"
+         * retrun "based".
+         */
+        function get_surroundings_of_match(match){
+            if(match.previousSibling != undefined && match.nextSibling != undefined){
+                var prev = match.previousSibling.nodeValue;
+                var next = match.nextSibling.nodeValue;
+                if(prev == ""){
+                    prev = " ";
+                }
+                if(next == ""){
+                    next = " ";
+                }
+
+                var wholeMatch = [];
+                var i;
+                for(i = 0; i < prev.length; i++){
+                    var index = prev.length - i - 1;
+                    if(prev[index] != "" && prev[index] != " ") {
+                        wholeMatch.push(prev[index]);
+                    } else {
+                        break;
+                    }
+                }
+                wholeMatch.reverse();
+                wholeMatch.push.apply(wholeMatch, match.innerHTML.split());
+                for(i = 0; i < next.length; i++){
+                    if(next[i] != "" && next[i] != " "){
+                        wholeMatch.push(next[i]);
+                    }else{
+                        break;
+                    }
+                }
+                return wholeMatch.join("");
+            }else {
+                return null;
+            }
+        }
+
+        function resetMatchesLists(){
+            marked_matches_in_document_title = [];
+            marked_matches_in_document_content = [];
         }
 
     </script>

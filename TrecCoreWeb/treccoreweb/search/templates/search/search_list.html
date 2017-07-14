@@ -63,7 +63,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="modal-title-{{ document_values.docno }}">
-                        {{ document_values.title|safe }}
+                        <span class="text-danger">Please wait...</span>
                     </h3>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
@@ -204,12 +204,16 @@
             if(is_from_judement == false){
                 console.log("No judgment has been made. Sending no judgment call to backend for document id: " + '{{ document_values.docno }}');
                 var now = + new Date();
+                var ctrlf_terms = $("#search_content_doc_{{ document_values.docno }}").val();
                 var timeVerbose = {
                     "timestamp": now,
                     "timeActive": timeActive,
                     "timeAway": timeAway,
                     "source": "searchModal",
-                    "judged": false
+                    "judged": false,
+                    'ctrl_f_terms_input': ctrlf_terms,
+                    'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                    'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
                 };
                 var data = {
                     'doc_id': '{{ document_values.docno }}',
@@ -243,9 +247,10 @@
             var modal = $(this);
             if(!('{{ document_values.docno }}' in loaded_docs)){
                 $.ajax({
-                    url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}&query={{ query }}',
+                    url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}',
                     method: 'GET',
                     success: function (result) {
+                        $("#modal-title-{{ document_values.docno }}").html(result[0]['title']);
                         modal.find('.document_content_text').html(result[0]['content']);
                         loaded_docs['{{ document_values.docno }}'] = true;
                         modal.find('.document_content_date').html(result[0]['date']);
@@ -273,7 +278,9 @@
                 documents_timers['{{ document_values.docno }}'] = documentTimer;
             }
 
-            updateMatchesDictionaries();
+            // fake an updated on the ctrl+f search bar to update
+            $("#search_content_doc_{{ document_values.docno }}").trigger("updated");
+            updateMatchesLists();
             console.log("Model has been shown");
             isModalOpen = true;
             currentOpenedModalDocId = '{{ document_values.docno }}';
@@ -336,7 +343,7 @@
                             console.log(result['message']);
                         }
                     });
-                    console.log("Character pressed: ", character, now);
+                    console.log("Character pressed: '"+character+"'", "at:", now);
                 }
             };
 
@@ -377,7 +384,7 @@
                   separateWordSearch: true,
                   exclude: $exclude,
                   done: function() {
-                    updateMatchesDictionaries();
+                    updateMatchesLists();
                     $results = $content.find("mark");
                     currentIndex = 0;
                     jumpTo();
@@ -396,7 +403,7 @@
                               separateWordSearch: true,
                               exclude: $exclude,
                               done: function () {
-                                  updateMatchesDictionaries();
+                                  updateMatchesLists();
                                   $results = $content.find("mark");
                                   currentIndex = 0;
                               }

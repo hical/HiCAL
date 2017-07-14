@@ -54,9 +54,9 @@ $('#searchContentForm').submit(function (e) {
     return false;
 });
 
-var marked_matches_in_document_title = {};
-var marked_matches_in_document_snippet = {};
-var marked_matches_in_document_content = {};
+var marked_matches_in_document_title = [];
+var marked_matches_in_document_snippet = [];
+var marked_matches_in_document_content = [];
 
 
 $(function() {
@@ -117,21 +117,73 @@ $(function() {
 
     var i;
     for(i = 0; i < document_title_mark_instances.length; i++){
-        marked_matches_in_document_title[i] = document_title_mark_instances[i].innerHTML;
+        var data = {
+            "match": document_title_mark_instances[i].innerHTML,
+            "wholeWord": get_surroundings_of_match(document_title_mark_instances[i])
+        };
+        marked_matches_in_document_title.push(data);
     }
     for(i = 0; i < document_snippet_mark_instances.length; i++){
-        marked_matches_in_document_snippet[i] = document_snippet_mark_instances[i].innerHTML;
+        var data = {
+            "match": document_snippet_mark_instances[i].innerHTML,
+            "wholeWord": get_surroundings_of_match(document_snippet_mark_instances[i])
+        };
+        marked_matches_in_document_snippet.push(data);
     }
     for(i = 0; i < document_content_mark_instances.length; i++){
-        marked_matches_in_document_content[i] = document_content_mark_instances[i].innerHTML;
+        var data = {
+            "match": document_content_mark_instances[i].innerHTML,
+            "wholeWord": get_surroundings_of_match(document_content_mark_instances[i])
+        };
+        marked_matches_in_document_content.push(data);
     }
 
   }
 
+  /**
+     * Gets the surrounding letters of a highlighted match.
+     * E.g. "The company is ba<mark>se</mark>d in California"
+     * retrun "based".
+     */
+    function get_surroundings_of_match(match){
+        if(match.previousSibling != undefined && match.nextSibling != undefined){
+            var prev = match.previousSibling.nodeValue;
+            var next = match.nextSibling.nodeValue;
+            if(prev == ""){
+                prev = " ";
+            }
+            if(next == ""){
+                next = " ";
+            }
+            var wholeMatch = [];
+            var i;
+            for(i = 0; i < prev.length; i++){
+                var index = prev.length - i - 1;
+                if(prev[index] != "" && prev[index] != " ") {
+                    wholeMatch.push(prev[index]);
+                } else {
+                    break;
+                }
+            }
+            wholeMatch.reverse();
+            wholeMatch.push.apply(wholeMatch, match.innerHTML.split());
+            for(i = 0; i < next.length; i++){
+                if(next[i] != "" && next[i] != " "){
+                    wholeMatch.push(next[i]);
+                }else{
+                    break;
+                }
+            }
+            return wholeMatch.join("");
+        }else {
+            return null;
+        }
+    }
+
   function resetMatchesDict(){
-    marked_matches_in_document_title = {};
-    marked_matches_in_document_snippet = {};
-    marked_matches_in_document_content = {};
+    marked_matches_in_document_title = [];
+    marked_matches_in_document_snippet = [];
+    marked_matches_in_document_content = [];
   }
 
   /**
