@@ -309,6 +309,11 @@ class ExitCreateView(views.LoginRequiredMixin, generic.CreateView):
     form_class = ExitTaskForm
     success_url = reverse_lazy("progress:tasks_completed")
 
+    def get(self, request, *args, **kwargs):
+        prev = ExitTask.objects.filter(username=request.user)
+        if prev:
+            return HttpResponseRedirect(reverse_lazy('progress:tasks_completed'))
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.username = self.request.user

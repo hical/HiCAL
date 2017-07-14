@@ -23,14 +23,14 @@ THREE = "3"
 FOUR = "4"
 FIVE = "5"
 
-LIKERT_SCALE_CHOICES = Choices((NA, "---"),
+LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                (VEN, "Very Not"),
                                (SMN, "Somehow Not"),
                                (NNN, "Neither Nor Not"),
                                (SMT, "Somewhat"),
                                (VEY, "Very")
                                )
-FAM_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
+FAM_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                    (VEN, "Very Not Familiar"),
                                    (SMN, "Somehow Not Familiar"),
                                    (NNN, "Neither Familiar Nor Not Familiar"),
@@ -38,7 +38,7 @@ FAM_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
                                    (VEY, "Very Familiar")
                                    )
 
-DIFF_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
+DIFF_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                     (VEN, "Very Not Difficult"),
                                     (SMN, "Somehow Not Difficult"),
                                     (NNN, "Neither Difficult Nor Not Difficult"),
@@ -46,7 +46,7 @@ DIFF_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
                                     (VEY, "Very Difficult")
                                     )
 
-HELP_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
+HELP_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                     (VEN, "Very Not Useful"),
                                     (SMN, "Somehow Not Useful"),
                                     (NNN, "Neither Useful Nor Not Useful"),
@@ -54,7 +54,7 @@ HELP_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
                                     (VEY, "Very Useful")
                                     )
 
-CLOSE_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
+CLOSE_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                      (VEN, "Very Not Close"),
                                      (SMN, "Somehow Not Close"),
                                      (NNN, "Neither Close Nor Not Close"),
@@ -62,23 +62,27 @@ CLOSE_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
                                      (VEY, "Very Close")
                                      )
 
-LEFTDOC_SCALE_CHOICES = Choices((NA, "0"),
-                                (VEN, "1-49"),
-                                (SMN, "50-99"),
-                                (NNN, "100-499"),
-                                (SMT, "500-999"),
-                                (VEY, "1,000 or more")
+LEFTDOC_SCALE_CHOICES = Choices((NA, NA),
+                                ("0", "0"),
+                                ("1-49", "1-49"),
+                                ("50-99", "50-99"),
+                                ("100-499", "100-499"),
+                                ("500-999", "500-999"),
+                                ("1,000 or more", "1,000 or more")
                                 )
 
-INTERFACE_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
-                                         (ONE, "Search Interface & Paragraph with Toggle Document Interface Together"),
-                                         (TWO,  "Paragraph with Toggle Document Interface Only"),
-                                         (THREE, "Search Interface & Paragraph Interface Together"),
+INTERFACE_LIKERT_SCALE_CHOICES = Choices((NA, NA),
+                                         (ONE, "Search Interface & Paragraph with Toggle "
+                                               "Document Interface Together"),
+                                         (TWO,  "Paragraph with Toggle Document "
+                                                "Interface Only"),
+                                         (THREE, "Search Interface & "
+                                                 "Paragraph Interface Together"),
                                          (FOUR, "Paragraph Interface Only"),
                                          (FIVE, "Document Interface Only")
                                          )
 
-FEAT_LIKERT_SCALE_CHOICES = Choices((NA, "---"),
+FEAT_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                     (ONE, "Keywords Search and Highlighting"),
                                     (TWO, "View Full Document"),
                                     (THREE, "Search Interface"),
