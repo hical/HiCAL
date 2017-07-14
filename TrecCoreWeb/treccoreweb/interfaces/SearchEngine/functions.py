@@ -1,10 +1,10 @@
 from collections import OrderedDict
+from config.settings.base import SEARCH_SERVER_IP
+from config.settings.base import SEARCH_SERVER_PORT
+import urllib.parse
 
 import httplib2
-import urllib.parse
 import xmltodict
-
-from config.settings.base import SEARCH_SERVER_IP, SEARCH_SERVER_PORT
 
 
 def get_documents(query, start=0, numdisplay=20):

@@ -1,16 +1,15 @@
-import json
 import datetime
+import json
+import logging
 
 from braces import views
 from django.http import HttpResponse
 from django.views import generic
-from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
-from treccoreweb.judgment.models import Judgement
+
 from treccoreweb.CAL.exceptions import CALError
-
-import logging
-
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.judgment.models import Judgement
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +48,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
             timeVerbose = self.request_json.get(u"timeVerbose")
+            search_query = self.request_json[u"search_query"]
+            ctrl_f_terms_input = self.request_json[u"ctrl_f_terms_input"]
+            found_ctrl_f_terms_in_title = self.request_json[u"found_ctrl_f_terms_in_title"]
+            found_ctrl_f_terms_in_summary = self.request_json[u"found_ctrl_f_terms_in_summary"]
+            found_ctrl_f_terms_in_full_doc = self.request_json[u"found_ctrl_f_terms_in_full_doc"]
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
                                       u"highlyRelevant, nonrelevant, relevant, "
@@ -79,6 +83,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
             exists.timeVerbose.append(timeVerbose)
+            exists.search_query = search_query
+            exists.ctrl_f_terms_input = ctrl_f_terms_input
+            exists.found_ctrl_f_terms_in_title = found_ctrl_f_terms_in_title
+            exists.found_ctrl_f_terms_in_summary = found_ctrl_f_terms_in_summary
+            exists.found_ctrl_f_terms_in_full_doc = found_ctrl_f_terms_in_full_doc
             exists.save()
 
             log_body = {
@@ -103,6 +112,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
@@ -127,6 +141,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 fromMouse=fromMouse,
                 fromKeyboard=fromKeyboard,
                 timeVerbose=[timeVerbose],
+                search_query=search_query,
+                ctrl_f_terms_input=ctrl_f_terms_input,
+                found_ctrl_f_terms_in_title=found_ctrl_f_terms_in_title,
+                found_ctrl_f_terms_in_summary=found_ctrl_f_terms_in_summary,
+                found_ctrl_f_terms_in_full_doc=found_ctrl_f_terms_in_full_doc
             )
 
             log_body = {
@@ -151,6 +170,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
@@ -191,7 +215,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 error_message = str(e)
 
             context[u"next_docs"] = documents
-        else:
+        elif isFromSearch:
             # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
@@ -230,17 +254,16 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
 
             logger.error("[{}]".format(log_body))
-
-        # update total timespent on task
-        if timeVerbose['timeActive']:
-            timeActive = timeVerbose['timeActive']
-            request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
-            request.user.current_task.save()
 
         return self.render_json_response(context)
 
@@ -335,11 +358,6 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             logger.info("[{}]".format(log_body))
 
         context = {u"message": u"Your no judgment on {} has been received!".format(doc_id)}
-
-        # update total timespent on task
-        timeActive = timeVerbose['timeActive']
-        request.user.current_task.timespent += datetime.timedelta(milliseconds=timeActive)
-        request.user.current_task.save()
 
         return self.render_json_response(context)
 

@@ -1,12 +1,14 @@
-from django.db import models
-from model_utils import Choices
 from config.settings.base import AUTH_USER_MODEL as User
-from treccoreweb.topic.models import Topic
-from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.CAL.exceptions import CALError
-
-import datetime
+from config.settings.base import MAX_ACTIVE_TIME
 import uuid
+
+from django.db import models
+from interfaces.Iterative import functions as IterativeEngine
+from model_utils import Choices
+
+from treccoreweb.CAL.exceptions import CALError
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.topic.models import Topic
 
 NA = "---"
 VEN = "Very_Not"
@@ -252,9 +254,6 @@ class PostTask(models.Model):
 
 class ExitTask(models.Model):
     username = models.ForeignKey(User)
-    task = models.ForeignKey('Task', related_name='exit_task', null=True, blank=True)
-
-    # Post-task questions
     difficulty = models.CharField(max_length=35,
                                   choices=INTERFACE_LIKERT_SCALE_CHOICES,
                                   default=NA)
@@ -265,13 +264,12 @@ class ExitTask(models.Model):
     feedback = models.TextField(null=True,
                                 blank=True)
 
-    is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "<User:{}, Task:{}>".format(self.username, self.task)
+        return "<User:{}>".format(self.username)
 
     def __str__(self):
         return self.__unicode__()
@@ -306,8 +304,10 @@ class Task(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,
                             editable=False)
 
-    # current time spent on task
-    timespent = models.DurationField(default=datetime.timedelta)
+    # current task active time (in seconds)
+    timespent = models.FloatField(default=0)
+    # last activity timestamp
+    last_activity = models.FloatField(default=None, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -319,12 +319,40 @@ class Task(models.Model):
 
         super(Task, self).save(*args, **kwargs)
 
+    def is_iterative(self):
+        """
+        Checks if task is an iterative task (fifth treatment)
+        :return: True if it's an iterative task
+        """
+        return self.setting.only_show_doc
+
+    def is_iterative_completed(self):
+        """
+        Check if in iterative mode and completed all documents
+        :return: True if completed
+        """
+        iterative_completed_check = False
+        # if user in iterative mode
+        if self.is_iterative():
+            # keep import here to avoid circular imports issues
+            from treccoreweb.judgment import helpers
+            docs_ids = helpers.remove_judged_docs(IterativeEngine.get_documents(
+                                                  self.username.id),
+                                                  self.username,
+                                                  self)
+
+            # if there's no more un-judged docs
+            if not docs_ids:
+                iterative_completed_check = True
+
+        return iterative_completed_check
+
     def is_time_past(self):
         """
         Check if the task max time been reached.
-        :return: True if task max time has been reched.
+        :return: True if task max time has been reached.
         """
-        return self.timespent >= datetime.timedelta(days=0, hours=1, minutes=0)
+        return self.timespent >= MAX_ACTIVE_TIME
 
     def is_completed(self):
         """

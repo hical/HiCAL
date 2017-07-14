@@ -111,7 +111,7 @@
                         </div>
 
                         <li class="nav-item extra-top-margin">
-                            <span class="gray-text align-left">Judge document:</span>
+                            <div class="gray-text align-left">Judge document:</div>
 
                             <div class="btn-group top-margin" role="group">
                                 <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
@@ -275,6 +275,7 @@
             $("#document_id").html(id);
             $("#document_title").html(title);
             $("#document_date").html(date);
+            $("#document_snippet").html(""); // empty snippet for this interface
             $("#document_content").html(content);
 
             $( "#document_content" ).trigger( "updated" );
@@ -381,6 +382,11 @@
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
                 'timeVerbose': timeVerbose,
+                'search_query': null,
+                'ctrl_f_terms_input': $("#search_content").val(),
+                'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                'found_ctrl_f_terms_in_summary': marked_matches_in_document_snippet,
+                'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
@@ -437,9 +443,9 @@
                         result['message'],
                         "");
                     }
-
+                    console.log(result);
                     console.error("Something went wrong. " +
-                            "Judgment may have not been recorded.", result['message'])
+                            "Judgment may have not been recorded.", result['responseText'])
                 },
                 statusCode: {
                     502: function (xhr) {
@@ -630,7 +636,7 @@
                     }
 
                     console.error("Something went wrong. " +
-                            "Judgment may have not been recorded.", result['message'])
+                            "Judgment may have not been recorded.", result['responseText'])
                 },
                 statusCode: {
                     502: function (xhr) {

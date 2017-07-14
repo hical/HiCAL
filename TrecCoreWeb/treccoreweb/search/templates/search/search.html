@@ -222,7 +222,7 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose) {
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose, ctrlf_terms) {
             if(timeVerbose == null){
                 var now = + new Date();
                 timeVerbose = {
@@ -257,6 +257,11 @@
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
                 'timeVerbose': timeVerbose,
+                'search_query': $("#search_input").val(),
+                'ctrl_f_terms_input': ctrlf_terms,
+                'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                'found_ctrl_f_terms_in_summary': {},
+                'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
@@ -269,7 +274,8 @@
                     console.log(result['message']);
                 },
                 error: function (result) {
-                    console.error(result);
+                    console.error("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['responseText'])
                 }
             });
 
@@ -292,10 +298,14 @@
 
         function hide_modal(doc_id){
             console.log("hiding modal: ", doc_id);
-             $('#doc-'+doc_id+'-modal').modal('hide');
+            $('#doc-'+doc_id+'-modal').modal('hide');
+            resetMatchesDict();
         }
 
         function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard){
+            if(documents_timers[doc_id] == undefined){
+                return;
+            }
             var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
             var timeAway = documents_timers[doc_id].totalAwayTime;
             var now = + new Date;
@@ -309,11 +319,11 @@
                 "non": non,
                 "relevant": relevant
             };
-            send_judgment(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose);
+            var ctrlf_terms = $("#search_content_doc_"+doc_id).val();
+            send_judgment(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose, ctrlf_terms);
             var element = document;
             var event = new CustomEvent("new_judgment");
             element.dispatchEvent(event);
-
             hide_modal(doc_id);
             return false;
         }
@@ -322,6 +332,30 @@
         element.addEventListener("new_judgment", function (e) {
             is_from_judement = true;
         }, false);
+
+        var marked_matches_in_document_title = {};
+        var marked_matches_in_document_content = {};
+        /**
+        * Update dicts of matches in document title, and content
+        */
+        function updateMatchesDictionaries(){
+            resetMatchesDict();
+            var document_title_mark_instances = $("#modal-title-"+currentOpenedModalDocId).find("mark");
+            var document_content_mark_instances = $("#document_"+currentOpenedModalDocId+"_raw_content").find("mark");
+
+            var i;
+            for(i = 0; i < document_title_mark_instances.length; i++){
+                marked_matches_in_document_title[i] = document_title_mark_instances[i].innerHTML;
+            }
+            for(i = 0; i < document_content_mark_instances.length; i++){
+                marked_matches_in_document_content[i] = document_content_mark_instances[i].innerHTML;
+            }
+        }
+
+        function resetMatchesDict(){
+            marked_matches_in_document_title = {};
+            marked_matches_in_document_content = {};
+        }
 
     </script>
 {% endblock %}

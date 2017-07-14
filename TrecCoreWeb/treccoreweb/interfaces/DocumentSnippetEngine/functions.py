@@ -1,6 +1,9 @@
+from config.settings.base import DOCUMENTS_PATH
+from config.settings.base import PARA_PATH
+from datetime import date
 import os
 import traceback
-from datetime import date
+
 from lxml import etree
 
 try:
@@ -9,7 +12,6 @@ try:
 except ImportError:
     from json import loads, dumps
 
-from config.settings.base import DOCUMENTS_PATH, PARA_PATH
 
 
 def exec_xpath(tree, xpath):
@@ -45,9 +47,9 @@ def get_documents(doc_ids, query):
     """
     result = []
     for doc_id in doc_ids:
-        # url = 'http://129.97.84.14:9000/doc/{}/{}.xml'.format(doc_id[:4], doc_id)
-        # tree = etree.parse(url)
-        tree = etree.parse(os.path.join(DOCUMENTS_PATH, doc_id[:4], doc_id + '.xml'))
+        url = 'http://129.97.84.14:9000/doc/{}/{}.xml'.format(doc_id[:4], doc_id)
+        tree = etree.parse(url)
+        # tree = etree.parse(os.path.join(DOCUMENTS_PATH, doc_id[:4], doc_id + '.xml'))
         title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1')
         content = exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')
         date = get_date(tree, '/nitf/head/pubdata/@date.publication')

@@ -6,8 +6,9 @@
 
 __revision__ = '0.1'
 
-import numpy as np
 import json
+
+import numpy as np
 
 LatinSquare = np.array([["A1", "B2", "C3", "D4", "E5"], ["C2", "D3", "E4", "A5", "B1"],
                         ['E3', 'A4', 'B5', 'C1', 'D2'], ['B4', 'C5', 'D1', 'E2', 'A3'],

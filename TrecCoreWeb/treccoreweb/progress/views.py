@@ -1,14 +1,24 @@
+import logging
+
 from braces import views
-from treccoreweb.topic.models import *
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from treccoreweb.progress.models import Demographic, PreTask, PostTask
-from treccoreweb.progress.forms import DemographicForm, PreTaskForm, PostTaskForm
-from django.shortcuts import render, get_object_or_404
-from treccoreweb.progress.logging_messages import LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
 
-import logging
+from treccoreweb.progress.forms import DemographicForm
+from treccoreweb.progress.forms import PostTaskForm
+from treccoreweb.progress.forms import PreTaskForm
+from treccoreweb.progress.forms import ExitTaskForm
+
+from treccoreweb.progress.logging_messages import \
+    LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
+from treccoreweb.progress.models import Demographic
+from treccoreweb.progress.models import PostTask
+from treccoreweb.progress.models import PreTask
+from treccoreweb.progress.models import ExitTask
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,7 +42,10 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         elif current_task.is_last_task() and current_task.is_completed():
             return HttpResponseRedirect(reverse_lazy('progress:exit'))
         # if user time in task is over, move to post-task
-        elif current_task.is_time_past():
+        elif current_task.is_time_past() and not current_task.is_iterative():
+            return HttpResponseRedirect(reverse_lazy('progress:posttask'))
+        # if user is in iterative mode and have judged all documents
+        elif current_task.is_iterative() and current_task.is_iterative_completed():
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
 
         return super(Home, self).get(self, request, *args, **kwargs)
@@ -272,15 +285,31 @@ class PosttaskView(views.LoginRequiredMixin, generic.CreateView):
 class Completed(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'progress/task_completed.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(Completed, self).get_context_data(**kwargs)
-        # TODO: Get any related context here
-        return context
-
     def get(self, request, *args, **kwargs):
         current_task = self.request.user.current_task
+        # check if in iterative mode and completed all documents
+        iterative_mode_check = False
+        if current_task.is_iterative and current_task.is_iterative_completed:
+            iterative_mode_check = True
         # check if current task is not completed, if yes, go to home page
-        if not current_task.is_time_past():
+        if not current_task.is_time_past() and not iterative_mode_check:
             return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(Completed, self).get(self, request, *args, **kwargs)
+
+
+class TasksCompletedView(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = "progress/tasks_completed.html"
+
+
+class ExitCreateView(views.LoginRequiredMixin, generic.CreateView):
+    model = ExitTask
+    template_name = "progress/exit.html"
+    object = None
+    form_class = ExitTaskForm
+    success_url = reverse_lazy("progress:tasks_completed")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.username = self.request.user
+        return super(ExitCreateView, self).form_valid(form)

@@ -1,17 +1,17 @@
+import logging
+
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from treccoreweb.topic.models import Topic
-from treccoreweb.topic.forms import TopicForm
-from treccoreweb.topic.logging_messages import LOGGING_MESSAGES as TOPIC_LOGGING_MESSAGES
-from treccoreweb.interfaces.CAL import functions as CALFunctions
-from treccoreweb.CAL.exceptions import CALError
-from braces import views
 
-import logging
+from treccoreweb.CAL.exceptions import CALError
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.topic.forms import TopicForm
+from treccoreweb.topic.models import Topic
+
 logger = logging.getLogger(__name__)
 
 
@@ -138,5 +138,3 @@ class TopicDeleteView(LoginRequiredMixin, generic.DetailView):
                              messages.SUCCESS,
                              'Your topic has been deleted.')
         return HttpResponseRedirect(self.get_success_url())
-
-

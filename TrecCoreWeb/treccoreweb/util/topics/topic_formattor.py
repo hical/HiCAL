@@ -38,7 +38,7 @@ except StopIteration:
 #     "fields": {
 #       "number": 336,
 #       "title": "Black Bear Attacks",
-#       "seed_query": "Black Bear Attacks",
+#       "seed_query": "Black Bear Attacks Black Bear Attacks",
 #       "description": "Black Bear Attacks",
 #       "narrative": "Black Bear Attacks",
 #       "created_at": "2017-06-22T20:18:35.279Z",
@@ -56,7 +56,7 @@ for t in topics:
         "fields": {
             "number": t,
             "title": topics[t]["title"],
-            "seed_query": topics[t]["title"],
+            "seed_query": "{} {}".format(topics[t]["title"], topics[t]["desc"]),
             "description": topics[t]["desc"],
             "narrative": topics[t]["narr"],
             "created_at": "2017-06-22T20:18:35.279Z",

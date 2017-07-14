@@ -95,7 +95,7 @@ class SearchKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         }
         logger.info("[{}]".format(log_body))
 
-        context = {u"message": u"Your visit has been recorded."}
+        context = {u"message": u"Your keystroke has been recorded."}
         return self.render_json_response(context)
 
 

@@ -1,9 +1,10 @@
-import httplib2
-import urllib.parse
+from config.settings.base import CAL_SERVER_IP
+from config.settings.base import CAL_SERVER_PORT
 import json
-
-from config.settings.base import CAL_SERVER_IP, CAL_SERVER_PORT
 import logging
+import urllib.parse
+
+import httplib2
 
 from treccoreweb.CAL.exceptions import CALServerError
 

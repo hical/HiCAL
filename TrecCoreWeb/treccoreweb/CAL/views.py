@@ -1,15 +1,16 @@
 import json
+import logging
 
 from braces import views
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import generic
-
-from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
-from treccoreweb.CAL.exceptions import CALError
 
-import logging
+from treccoreweb.CAL.exceptions import CALError
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+
 logger = logging.getLogger(__name__)
 
 

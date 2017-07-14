@@ -1,12 +1,19 @@
-from crispy_forms.layout import Submit
 from crispy_forms.helper import FormHelper
-
+from crispy_forms.layout import Submit
 from django import forms
-from treccoreweb.progress.models import Demographic, PreTask, PostTask, ExitTask, \
-    LIKERT_SCALE_CHOICES, \
-    LEFTDOC_SCALE_CHOICES, FAM_LIKERT_SCALE_CHOICES, DIFF_LIKERT_SCALE_CHOICES, \
-    HELP_LIKERT_SCALE_CHOICES, \
-    CLOSE_LIKERT_SCALE_CHOICES, INTERFACE_LIKERT_SCALE_CHOICES, FEAT_LIKERT_SCALE_CHOICES
+
+from treccoreweb.progress.models import CLOSE_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import DIFF_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import FAM_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import FEAT_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import HELP_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import INTERFACE_LIKERT_SCALE_CHOICES
+from treccoreweb.progress.models import LEFTDOC_SCALE_CHOICES
+from treccoreweb.progress.models import Demographic
+from treccoreweb.progress.models import ExitTask
+from treccoreweb.progress.models import PostTask
+from treccoreweb.progress.models import PreTask
+from treccoreweb.progress.models import NA
 
 
 class DemographicForm(forms.ModelForm):
@@ -55,6 +62,17 @@ class DemographicForm(forms.ModelForm):
                    css_class='btn btn-primary')
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+        for key in cleaned_data:
+            if cleaned_data[key] == NA:
+                errors[key] = ["Please select a value."]
+        if errors:
+            raise forms.ValidationError(
+                errors
+            )
+
 
 class PreTaskForm(forms.ModelForm):
     """
@@ -89,6 +107,17 @@ class PreTaskForm(forms.ModelForm):
             Submit(self.submit_name, u'Submit',
                    css_class='btn btn-primary')
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+        for key in cleaned_data:
+            if cleaned_data[key] == NA:
+                errors[key] = ["Please select a value."]
+        if errors:
+            raise forms.ValidationError(
+                errors
+            )
 
 
 class PostTaskForm(forms.ModelForm):
@@ -138,10 +167,21 @@ class PostTaskForm(forms.ModelForm):
                    css_class='btn btn-primary')
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+        for key in cleaned_data:
+            if cleaned_data[key] == NA:
+                errors[key] = ["Please select a value."]
+        if errors:
+            raise forms.ValidationError(
+                errors
+            )
+
 
 class ExitTaskForm(forms.ModelForm):
     """
-    Form for updating Posttask
+    Form for creating exit questionnaire
 
     """
     submit_name = 'submit-exit-form'
@@ -165,7 +205,7 @@ class ExitTaskForm(forms.ModelForm):
 
     class Meta:
         model = ExitTask
-        fields = ['difficulty', 'helpful', 'feedback']
+        exclude = ['username']
 
     def __init__(self, *args, **kwargs):
         super(ExitTaskForm, self).__init__(*args, **kwargs)
@@ -174,3 +214,14 @@ class ExitTaskForm(forms.ModelForm):
             Submit(self.submit_name, u'Submit',
                    css_class='btn btn-primary')
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        errors = {}
+        for key in cleaned_data:
+            if cleaned_data[key] == NA:
+                errors[key] = ["Please select a value."]
+        if errors:
+            raise forms.ValidationError(
+                errors
+            )

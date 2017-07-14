@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block pagetitle %}Post-task{% endblock %}
+{% block pagetitle %}All tasks has been completed{% endblock %}
 {% block nav-header %}{% endblock %}
 {% block sidebar %}{% endblock %}
+{% block nav-left %}{% endblock %}
 {% block nav-right %}
     <li class="nav-item">
         {% if request.user.is_authenticated %}
@@ -16,21 +17,8 @@
     </li>
 {% endblock %}
 
-
 {% block main %}
-    <h4 class="text-primary top-margin">Post-task questionnaire</h4>
-    <hr>
-    <p>Please answer the following questions:</p>
-    <div class="row top-bottom-margin">
-        <div class="col-md-12">
-
-                    <form method="POST">
-                        {% csrf_token %}
-                        {% crispy form %}
-                    </form>
-
-        </div>
-    </div>
-
+    <h3 class="text-primary">The study has been completed</h3>
+    <p>Thank you for participating. The study is now complete.</p>
+    <p>Please contact the study coordinator to receive your remuneration.</p>
 {% endblock %}
-

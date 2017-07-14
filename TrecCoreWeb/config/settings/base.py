@@ -82,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Custom middleware
+    'treccoreweb.middleware.timer.timer_middleware',
     'treccoreweb.middleware.pagefile.PageHTMLMiddleware',
 ]
 
@@ -317,6 +318,12 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
+
+# Timer settings
+# Inactivity trigger time (in seconds)
+INACTIVE_TRIGGER_TIME = 15
+# Maximum active time for a user per task (in seconds)
+MAX_ACTIVE_TIME = 60
 
 # CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
