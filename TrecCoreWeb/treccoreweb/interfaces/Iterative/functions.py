@@ -1,10 +1,12 @@
+from config.latinSquare.HTNISTTopicsTop60 import HTSampledTopics
 
 
-def get_documents(user_id):
+def get_documents(topic_id):
     """
-    :param doc_ids: the ids of documents to return
+    :param topic_id:
     :return: list of document ids
     """
-    # TODO: only get doc ids that are not judged
-    docs_ids = ["0001001", "0008008", "0001003"]
-    return docs_ids
+    try:
+        return HTSampledTopics.get(topic_id)
+    except:
+        return []

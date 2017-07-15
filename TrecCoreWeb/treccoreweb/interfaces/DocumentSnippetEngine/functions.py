@@ -13,7 +13,6 @@ except ImportError:
     from json import loads, dumps
 
 
-
 def exec_xpath(tree, xpath):
     try:
         val = tree.xpath(xpath)[0]
