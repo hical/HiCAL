@@ -46,11 +46,11 @@ class Judgement(models.Model):
     # Search query and Ctrl+F terms related fields
     search_query = models.TextField(null=True, blank=True)
     ctrl_f_terms_input = models.TextField(null=True, blank=True)
-    found_ctrl_f_terms_in_title = JSONField(null=True, blank=True, default=[])
-    found_ctrl_f_terms_in_summary = JSONField(null=True, blank=True, default=[])
-    found_ctrl_f_terms_in_full_doc = JSONField(null=True, blank=True, default=[])
+    found_ctrl_f_terms_in_title = JSONField(null=True, blank=True, default=list)
+    found_ctrl_f_terms_in_summary = JSONField(null=True, blank=True, default=list)
+    found_ctrl_f_terms_in_full_doc = JSONField(null=True, blank=True, default=list)
     # history of active and away time spent on the document
-    timeVerbose = JSONField(null=True, blank=True, default=[], verbose_name="History")
+    timeVerbose = JSONField(null=True, blank=True, default=list, verbose_name="History")
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       editable=False)
