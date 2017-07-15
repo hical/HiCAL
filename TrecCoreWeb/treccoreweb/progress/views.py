@@ -236,7 +236,8 @@ class PosttaskView(views.LoginRequiredMixin, generic.CreateView):
 
     def get(self, request, *args, **kwargs):
         # if user haven't completed the main task, move to main task
-        if not self.request.user.current_task.is_time_past():
+        current_task = self.request.user.current_task
+        if not current_task.is_time_past() and not current_task.is_iterative():
             return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(PosttaskView, self).get(self, request, *args, **kwargs)

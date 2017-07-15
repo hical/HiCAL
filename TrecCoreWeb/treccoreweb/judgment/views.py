@@ -372,11 +372,10 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             number_of_docs_to_show = int(number_of_docs_to_show)
         except ValueError:
             return self.render_json_response([])
-
         latest = Judgement.objects.filter(
                     user=self.request.user,
                     task=self.request.user.current_task,
-                    isFromCAL=True
+                    isFromSearch=False
                  ).order_by('-updated_at')[:number_of_docs_to_show]
         result = []
         for judgment in latest:

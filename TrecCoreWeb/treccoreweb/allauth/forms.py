@@ -24,12 +24,10 @@ class SignupForm(forms.Form):
     def signup(self, request, user):
         user.treatment = int(self.cleaned_data['treatment'])
         treatments = all_treatments[user.treatment]['treatments']
-        print(treatments)
         user.sequence = self.cleaned_data['sequence']
         if not self.cleaned_data['sequence']:
             sequence = []
             for t in treatments:
-                print(t)
                 sequence.append(int(t['topic_num']))
             user.sequence = sequence
         else:

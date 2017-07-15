@@ -341,7 +341,7 @@ class Task(models.Model):
             # keep import here to avoid circular imports issues
             from treccoreweb.judgment import helpers
             docs_ids = helpers.remove_judged_docs(IterativeEngine.get_documents(
-                                                  self.username.id),
+                                                  self.topic.number),
                                                   self.username,
                                                   self)
 
