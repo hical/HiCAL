@@ -1,6 +1,6 @@
-import datetime
 import json
 import logging
+import traceback
 
 from braces import views
 from django.http import HttpResponse
@@ -223,12 +223,15 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                            doc_id,
                                            rel)
             except TimeoutError:
+                traceback.print_exc()
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
             except CALError as e:
+                traceback.print_exc()
                 error_message = "CAL Exception: {}".format(str(e))
             except Exception as e:
+                traceback.print_exc()
                 error_message = str(e)
 
         if error_message:
