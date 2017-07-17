@@ -72,13 +72,14 @@ vector<int> BMI_para::perform_training_iteration(){
             judgments[training.first] = training.second;
             finished_judgments.insert(training.first);
             string doc_id = (*scorer->doc_features)[training.first]->doc_id;
-            for(int i = 0; i<1000; i++){
+            int missing = 0;
+            for(int i = 0; missing<1000; i++){
                 string para_offset = to_string(i);
-                string para_id = doc_id + "." + string(3 - para_offset.size(), '0') + para_offset;
+                string para_id = doc_id + "." + para_offset;
                 if(scorer_para->doc_ids_inv_map.find(para_id) == scorer_para->doc_ids_inv_map.end())
-                    continue;
+                    missing++;
                 else
-                    finished_judgments_para.insert(scorer_para->doc_ids_inv_map[para_id]);
+                    finished_judgments_para.insert(scorer_para->doc_ids_inv_map[para_id]), missing = 0;
             }
         }
         training_cache.clear();
