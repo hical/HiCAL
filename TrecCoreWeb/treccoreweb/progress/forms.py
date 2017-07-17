@@ -143,7 +143,8 @@ class PostTaskForm(forms.ModelForm):
         label=u'How many relevant documents do you think were left behind?')
     familiarity = forms.CharField(
         widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
-        label=u'How familiar are you with this subject of the above topic after completing this task?')
+        label=u'How familiar are you with this subject of the above topic '
+              u'after completing this task?')
 
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,

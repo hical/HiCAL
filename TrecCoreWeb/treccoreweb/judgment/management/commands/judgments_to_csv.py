@@ -26,12 +26,13 @@ class Command(BaseCommand):
                 task = judgment.task.setting
                 topic = judgment.task.topic.number
                 docid = judgment.doc_id
-                time_to_judge = 0
+                time_to_judge = 0.0
                 for d in judgment.timeVerbose:
                     # judgments from search SERP don't have a time counter
                     if d.get('source') == 'searchSERP':
                         continue
                     time_to_judge += d.get('timeActive')
+                time_to_judge /= 100
                 writer.writerow((user, task, topic, docid, value, time_to_judge))
 
         self.stdout.write(self.style.SUCCESS(
