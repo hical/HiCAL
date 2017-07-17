@@ -64,6 +64,9 @@ def get_documents(doc_ids, query=None):
 
 
 def get_documents_with_snippet(doc_ids, query, top_terms):
+    h = httplib2.Http()
+    url = "{}/{}/{}"
+
     result = get_documents([doc['doc_id'] for doc in doc_ids], query)
     for doc_para_id, doc in zip(doc_ids, result):
         if 'para_id' not in doc_para_id:
@@ -71,8 +74,9 @@ def get_documents_with_snippet(doc_ids, query, top_terms):
             continue
         try:
             para_id = doc_para_id['doc_id'] + '.' + doc_para_id['para_id']
-            url = '{}/{}/{}.xml'.format(PARA_URL, para_id[:4], para_id)
-            doc['snippet'] = requests.get(url).text
+            resp, content = h.request(url.format(PARA_URL, para_id[:5], para_id),
+                                      method="GET")
+            doc['snippet'] = content
         except:
             traceback.print_exc()
             doc['snippet'] = 'N/A'
