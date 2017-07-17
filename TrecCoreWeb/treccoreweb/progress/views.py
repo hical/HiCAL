@@ -290,7 +290,7 @@ class Completed(views.LoginRequiredMixin, generic.TemplateView):
         current_task = self.request.user.current_task
         # check if in iterative mode and completed all documents
         iterative_mode_check = False
-        if current_task.is_iterative and current_task.is_iterative_completed:
+        if current_task.is_iterative() and current_task.is_iterative_completed():
             iterative_mode_check = True
         # check if current task is not completed, if yes, go to home page
         if not current_task.is_time_past() and not iterative_mode_check:

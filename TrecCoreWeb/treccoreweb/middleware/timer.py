@@ -34,7 +34,7 @@ def timer_middleware(get_response):
                 current_task.last_activity = cur_time
                 current_task.save()
 
-                if current_task.is_time_past() and not current_task.is_iterative:
+                if current_task.is_time_past() and not current_task.is_iterative():
                     response = HttpResponseRedirect(reverse_lazy('progress:completed'))
                     return response
                 break

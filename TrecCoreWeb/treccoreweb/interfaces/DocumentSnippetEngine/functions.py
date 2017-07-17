@@ -1,9 +1,9 @@
-from config.settings.base import DOCUMENTS_PATH
-from config.settings.base import PARA_PATH
+from config.settings.base import DOCUMENTS_URL
+from config.settings.base import PARA_URL
 from datetime import date
-import os
 import traceback
 
+import httplib2
 from lxml import etree
 
 try:
@@ -31,7 +31,7 @@ def get_date(tree, xpath):
         year = int(d[:4])
         month = int(d[4:6])
         day = int(d[6:8])
-        d = date(year,month,day)
+        d = date(year, month, day)
         return d.strftime("%A %d. %B %Y")
     except:
         traceback.print_exc()
@@ -46,9 +46,8 @@ def get_documents(doc_ids, query=None):
     """
     result = []
     for doc_id in doc_ids:
-        url = 'http://129.97.84.14:9000/doc/{}/{}.xml'.format(doc_id[:4], doc_id)
+        url = '{}/{}/{}.xml'.format(DOCUMENTS_URL, doc_id[:4], doc_id)
         tree = etree.parse(url)
-        # tree = etree.parse(os.path.join(DOCUMENTS_PATH, doc_id[:4], doc_id + '.xml'))
         title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1')
         content = exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')
         date = get_date(tree, '/nitf/head/pubdata/@date.publication')
@@ -64,16 +63,20 @@ def get_documents(doc_ids, query=None):
 
 
 def get_documents_with_snippet(doc_ids, query, top_terms):
+    h = httplib2.Http()
+    url = "{}/{}/{}"
+
     result = get_documents([doc['doc_id'] for doc in doc_ids], query)
     for doc_para_id, doc in zip(doc_ids, result):
         if 'para_id' not in doc_para_id:
-            doc['snippet'] = 'N/A'
+            doc['snippet'] = u'N/A'
             continue
         try:
             para_id = doc_para_id['doc_id'] + '.' + doc_para_id['para_id']
-            with open(os.path.join(PARA_PATH, para_id[:4], para_id)) as f:
-                doc['snippet'] = f.read().strip()
+            resp, content = h.request(url.format(PARA_URL, para_id[:4], para_id),
+                                      method="GET")
+            doc['snippet'] = content.decode('utf-8')
         except:
             traceback.print_exc()
-            doc['snippet'] = 'N/A'
+            doc['snippet'] = u'N/A'
     return result
