@@ -1,10 +1,9 @@
 from config.settings.base import DOCUMENTS_URL
 from config.settings.base import PARA_URL
 from datetime import date
-import os
 import traceback
-import requests
 
+import httplib2
 from lxml import etree
 
 try:
@@ -32,7 +31,7 @@ def get_date(tree, xpath):
         year = int(d[:4])
         month = int(d[4:6])
         day = int(d[6:8])
-        d = date(year,month,day)
+        d = date(year, month, day)
         return d.strftime("%A %d. %B %Y")
     except:
         traceback.print_exc()
@@ -70,14 +69,14 @@ def get_documents_with_snippet(doc_ids, query, top_terms):
     result = get_documents([doc['doc_id'] for doc in doc_ids], query)
     for doc_para_id, doc in zip(doc_ids, result):
         if 'para_id' not in doc_para_id:
-            doc['snippet'] = 'N/A'
+            doc['snippet'] = u'N/A'
             continue
         try:
             para_id = doc_para_id['doc_id'] + '.' + doc_para_id['para_id']
-            resp, content = h.request(url.format(PARA_URL, para_id[:5], para_id),
+            resp, content = h.request(url.format(PARA_URL, para_id[:4], para_id),
                                       method="GET")
-            doc['snippet'] = content
+            doc['snippet'] = content.decode('utf-8')
         except:
             traceback.print_exc()
-            doc['snippet'] = 'N/A'
+            doc['snippet'] = u'N/A'
     return result
