@@ -32,7 +32,7 @@ class Command(BaseCommand):
                     if d.get('source') == 'searchSERP':
                         continue
                     time_to_judge += d.get('timeActive')
-                time_to_judge /= 100
+                time_to_judge /= 1000
                 writer.writerow((user, task, topic, docid, value, time_to_judge))
 
         self.stdout.write(self.style.SUCCESS(
