@@ -29,22 +29,19 @@
             <hr>
             <h6 class="text-primary">You may to switch between any interfaces at any moment. Please choose a judging interface to start with.</h6>
             {% if user.current_task.setting.only_show_doc %}
-            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-list-ol" aria-hidden="true"></i></h2> : Iterative interface.</p>
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-list-ol right-margin" aria-hidden="true"></i> Iterative interface.</h2></p>
             {% else %}
             {% if user.current_task.setting.show_search %}
-            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-search" aria-hidden="true"></i></h2> : Search interface.</p>
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-search right-margin" aria-hidden="true"></i>  Search interface. </h2></p>
             {% endif %}
-            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></h2> : Learning interface.</p>
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-lightbulb-o right-margin" aria-hidden="true"></i> Learning interface.</h2></p>
             {% endif %}
         </div>
         <div class="col-md-6">
             <h2 class="text-primary"> Your current topic </h2>
             <hr>
             <p><strong>Title</strong>: {{ user.current_task.topic.title }}</p>
-            <p><strong>Desc</strong>: {{ user.current_task.topic.description }}
-            </p>
-            <p><strong>Narrative</strong>: {{ user.current_task.topic.narrative }}
-            </p>
+            <p><strong>Desc</strong>: {{ user.current_task.topic.description }}</p>
         </div>
     </div>
 {% endblock %}
