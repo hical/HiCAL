@@ -2,6 +2,7 @@ from config.settings.base import DOCUMENTS_URL
 from config.settings.base import PARA_URL
 from datetime import date
 import traceback
+import re
 
 import httplib2
 from lxml import etree
@@ -13,6 +14,7 @@ except ImportError:
     from json import loads, dumps
 
 
+LEAD_PARA_REGEX = re.compile(r'<p>\s*LEAD:.*?</p>')
 def exec_xpath(tree, xpath):
     try:
         val = tree.xpath(xpath)[0]
@@ -49,7 +51,7 @@ def get_documents(doc_ids, query=None):
         url = '{}/{}/{}.xml'.format(DOCUMENTS_URL, doc_id[:4], doc_id)
         tree = etree.parse(url)
         title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1')
-        content = exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')
+        content = LEAD_PARA_REGEX.sub('', exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]'))
         date = get_date(tree, '/nitf/head/pubdata/@date.publication')
         document = {
             'doc_id': doc_id,
