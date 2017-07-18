@@ -132,6 +132,8 @@
             alert('Handler for .submit() called.');
         };
 
+        var SERPTimer = AwayTimer();
+
         var search_form = document.querySelector('search_form');
         Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
             if(event.type == "keydown" && $("#search_input").is(':focus')){

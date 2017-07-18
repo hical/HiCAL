@@ -31,8 +31,6 @@ def send_judgment(session, doc_id, rel, next_batch_size=5):
     else:
         raise CALServerError(resp['status'])
 
-    return [], None
-
 
 def add_session(session, seed_query):
     """
@@ -78,5 +76,3 @@ def get_documents(session, num_docs, query):
         return content['docs'], content['top-terms']
     else:
         raise CALServerError(resp['status'])
-
-    return [], None

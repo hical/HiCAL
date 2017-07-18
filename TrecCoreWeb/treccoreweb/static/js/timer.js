@@ -1,4 +1,7 @@
-function AwayTimer(){
+function AwayTimer(showAlert){
+    if(showAlert === undefined)
+        showAlert = true;
+
     this.awayTime = 0;
     this.backTime = 0;
     this.hiddenTime = 0;
@@ -15,9 +18,10 @@ function AwayTimer(){
 
     var awayCallback = function() {
         parent.awayTime = Date.now();
-        showAlarm("Are you here? You have been away for more than 1 minute. " +
-            "If your are still available, click ok to continue your progress.");
-
+        if(showAlert){
+            showAlarm("Are you here? You have been away for more than 1 minute. " +
+                "If your are still available, click ok to continue your progress.");
+        }
     };
 
     var awayBackCallback = function() {
