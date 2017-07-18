@@ -67,6 +67,14 @@ def get_documents(doc_ids, query=None):
 def get_documents_with_snippet(doc_ids, query, top_terms):
     h = httplib2.Http()
     url = "{}/{}/{}"
+    doc_ids_unique = []
+    doc_ids_set = set()
+    for doc_id in doc_ids:
+        if doc_id['doc_id'] not in doc_ids_set:
+            doc_ids_set.add(doc_id['doc_id'])
+            doc_ids_unique.append(doc_id)
+
+    doc_ids = doc_ids_unique
 
     result = get_documents([doc['doc_id'] for doc in doc_ids], query)
     for doc_para_id, doc in zip(doc_ids, result):
