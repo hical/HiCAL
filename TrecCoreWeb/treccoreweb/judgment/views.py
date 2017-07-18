@@ -3,6 +3,7 @@ import logging
 import traceback
 
 from braces import views
+from django.db.models import Q
 from django.http import HttpResponse
 from django.views import generic
 from interfaces.DocumentSnippetEngine import functions as DocEngine
@@ -379,7 +380,9 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     user=self.request.user,
                     task=self.request.user.current_task,
                     isFromSearch=False
-                 ).order_by('-updated_at')[:number_of_docs_to_show]
+                 ).filter(
+                    Q(highlyRelevant=True) | Q(relevant=True) | Q(nonrelevant=True)
+                ).order_by('-updated_at')[:number_of_docs_to_show]
         result = []
         for judgment in latest:
             result.append(
