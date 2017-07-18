@@ -6,10 +6,6 @@ function AwayTimer(){
     this.startTime = Date.now();
 
     var parent = this;
-    function showAlarm(msg) {
-        alert(msg);
-        document.body.click();
-    }
 
     parent.resetTimer= function(){
         parent.startTime = Date.now();

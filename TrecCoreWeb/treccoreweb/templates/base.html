@@ -127,6 +127,29 @@
         crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script>
+    function showAlarm(msg) {
+        alert(msg);
+        document.body.click();
+        var now = + new Date();
+        var data = {
+            'action': 'trig_user_came_back',
+            'message': 'User clicked ok to alert message.',
+            'extra_context': {
+                'alert_msg': msg
+            },
+            'client_time': now,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'page_title': document.title
+        };
+        $.ajax({
+            url: '{% url 'progress:post_log_msg' %}',
+            method: 'POST',
+            data: JSON.stringify(data),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
+    }
     window.jquery_ajax = $.ajax;
     $.ajax = function(param){
         var tmp_success_callback = param['success'];
