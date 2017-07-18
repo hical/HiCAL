@@ -5,7 +5,7 @@
 
 {% block nav-header %}
     <li class="nav-item active">
-        <span class="nav-link gray-text">Please choose a judging platform</span>
+        <span class="nav-link gray-text">Start with a judging interface</span>
     </li>
 {% endblock %}
 {% block nav-right%}
@@ -29,13 +29,12 @@
             <hr>
             <h6 class="text-primary">You may to switch between any interfaces at any moment. Please choose a judging interface to start with.</h6>
             {% if user.current_task.setting.only_show_doc %}
-            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-list-ol" aria-hidden="true"></i></h2> : Iterative interface. < insert desc of interface here ></p>
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-list-ol" aria-hidden="true"></i></h2> : Iterative interface.</p>
             {% else %}
             {% if user.current_task.setting.show_search %}
-            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-search" aria-hidden="true"></i></h2> : Search interface. < insert desc of interface here ></p>
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-search" aria-hidden="true"></i></h2> : Search interface.</p>
             {% endif %}
-            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></h2> : Learning
-                interface. < insert desc of interface here ></p>
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></h2> : Learning interface.</p>
             {% endif %}
         </div>
         <div class="col-md-6">
