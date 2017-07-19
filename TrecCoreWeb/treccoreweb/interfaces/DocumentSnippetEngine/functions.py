@@ -8,9 +8,9 @@ from lxml import etree
 
 try:
     # For c speedups
-    from simplejson import loads, dumps
+    from simplejson import loads
 except ImportError:
-    from json import loads, dumps
+    from json import loads
 
 
 def exec_xpath(tree, xpath):
