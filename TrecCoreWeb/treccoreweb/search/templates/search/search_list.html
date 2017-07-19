@@ -256,7 +256,7 @@
                         modal.find('.document_content_date').html(result[0]['date']);
                         modal.find('.document_content_id').html(result[0]['doc_id']);
                         console.log("Initializing document timer for doc: {{ document_values.docno }}");
-                        var documentTimer = AwayTimer();
+                        var documentTimer = AwayTimer(false);
                         documents_timers['{{ document_values.docno }}'] = documentTimer;
                     },
                     error: function (result){
@@ -274,7 +274,7 @@
                 });
             }else{
                 console.log("Re-initializing document timer for doc: {{ document_values.docno }}");
-                var documentTimer = AwayTimer();
+                var documentTimer = AwayTimer(false);
                 documents_timers['{{ document_values.docno }}'] = documentTimer;
             }
 

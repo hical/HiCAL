@@ -93,7 +93,9 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% if user.current_task.setting.toggle_doc %}
                         <div id="document_content"></div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

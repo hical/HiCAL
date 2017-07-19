@@ -13,6 +13,7 @@ ACTIVE_URLS = [
     reverse('judgment:post_nojudgment'),
     reverse('progress:post_ctrlf'),
     reverse('progress:post_find_keystroke'),
+    reverse('progress:post_log_msg'),
     reverse('search:main'),
     reverse('search:get_docs'),
     reverse('search:get_doc'),

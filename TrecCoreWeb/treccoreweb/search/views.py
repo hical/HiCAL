@@ -125,10 +125,23 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
                                                       self.request.user.current_task)
+
         context["documents"] = documents_values
         context["query"] = search_input
         if total_time:
             context["total_time"] = "{0:.2f}".format(round(float(total_time), 2))
+
+        log_body = {
+            "user": self.request.user.username,
+            "result": {
+                "message": "New search query",
+                "query": search_input,
+                "SERP_size": numdisplay,
+                "result": documents_values,
+            }
+        }
+
+        logger.info("[{}]".format(log_body))
 
         rendered_template = template.render(context)
         return HttpResponse(rendered_template, content_type='text/html')

@@ -38,5 +38,9 @@ urlpatterns = [
     url(r'^post_visit/$',
         views.VisitAJAXView.as_view(),
         name='post_visit'),
+    url(r'^post_log/$',
+        views.MessageAJAXView.as_view(),
+        name='post_log_msg'),
+
 
 ]

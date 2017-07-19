@@ -283,6 +283,45 @@ class PosttaskView(views.LoginRequiredMixin, generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                      views.JsonRequestResponseMixin,
+                      generic.View):
+    """
+    Generic view to capture specific log messages from browser
+    """
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time")
+            message = self.request_json.get(u"message")
+            action = self.request_json.get(u"action")
+            page_title = self.request_json.get(u"page_title")
+            extra_context = self.request_json.get(u'extra_context')
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time, "
+                                      u"message, ... etc"}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "action": action,
+                "message": message,
+                "page_title": page_title,
+                "extra_context": extra_context,
+            }
+        }
+
+        logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your log message with action '{}' "
+                               u"has been logged.".format(action)}
+
+        return self.render_json_response(context)
+
+
 class Completed(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'progress/task_completed.html'
 
