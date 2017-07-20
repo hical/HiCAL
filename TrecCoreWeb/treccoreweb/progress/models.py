@@ -102,15 +102,21 @@ class Demographic(models.Model):
 
     username = models.ForeignKey(User)
 
-    age = models.PositiveIntegerField()
+    age = models.PositiveIntegerField(null=True,
+                                      blank=True)
 
     GENDER_CHOICES = Choices(
         ("", ""),
         ("MALE", "Male"),
-        ("FEMALE", "Female")
+        ("FEMALE", "Female"),
+        ("TERM", "I prefer another term"),
+        ("NA", "I prefer not to say")
+
     )
     gender = models.CharField(max_length=56,
-                              choices=GENDER_CHOICES)
+                              choices=GENDER_CHOICES,
+                              null=True,
+                              blank=True)
 
     DEGREE_CHOICES = Choices(
         ("", ""),
@@ -119,7 +125,9 @@ class Demographic(models.Model):
         ("OTHER", "Other. Please specify"),
     )
     student_degree = models.CharField(max_length=56,
-                                      choices=DEGREE_CHOICES)
+                                      choices=DEGREE_CHOICES,
+                                      null=True,
+                                      blank=True)
     student_degree_other = models.CharField(max_length=128,
                                             null=True,
                                             blank=True)
@@ -131,7 +139,9 @@ class Demographic(models.Model):
         ("OTHER", "Other. Please specify")
     )
     student_major = models.CharField(max_length=56,
-                                     choices=MAJOR_CHOICES)
+                                     choices=MAJOR_CHOICES,
+                                     null=True,
+                                     blank=True)
     student_major_other = models.CharField(max_length=128,
                                            null=True,
                                            blank=True)
@@ -146,7 +156,9 @@ class Demographic(models.Model):
         ("NATIVE", "Native")
     )
     language = models.CharField(max_length=56,
-                                choices=LANGUAGE_FLUENCY_CHOICES)
+                                choices=LANGUAGE_FLUENCY_CHOICES,
+                                null=True,
+                                blank=True)
 
     SEARCH_ENGINE_USAGE = Choices(
         ("", ""),
@@ -157,23 +169,33 @@ class Demographic(models.Model):
         ("RARELY", "Rarely (Less than one search a month on average)"),
     )
     search_engine_usage = models.CharField(max_length=56,
-                                           choices=SEARCH_ENGINE_USAGE)
+                                           choices=SEARCH_ENGINE_USAGE,
+                                           null=True,
+                                           blank=True)
 
     EXPERTISE_CHOICES = AGREEMENT_CHOICES
     expertise = models.CharField(max_length=56,
-                                 choices=EXPERTISE_CHOICES)
+                                 choices=EXPERTISE_CHOICES,
+                                 null=True,
+                                 blank=True)
 
     TROUBLE_CHOICES = AGREEMENT_CHOICES
     trouble = models.CharField(max_length=56,
-                               choices=TROUBLE_CHOICES)
+                               choices=TROUBLE_CHOICES,
+                               null=True,
+                               blank=True)
 
     HELP_CHOICES = AGREEMENT_CHOICES
     help = models.CharField(max_length=56,
-                            choices=HELP_CHOICES)
+                            choices=HELP_CHOICES,
+                            null=True,
+                            blank=True)
 
     ENJOYMENT_CHOICES = AGREEMENT_CHOICES
     enjoyment = models.CharField(max_length=56,
-                                 choices=ENJOYMENT_CHOICES)
+                                 choices=ENJOYMENT_CHOICES,
+                                 null=True,
+                                 blank=True)
 
     SPECIAL_TRAINING_CHOICES = Choices(
         ("", ""),
@@ -181,7 +203,9 @@ class Demographic(models.Model):
         ("NO", "No"),
     )
     training = models.CharField(max_length=56,
-                                choices=SPECIAL_TRAINING_CHOICES)
+                                choices=SPECIAL_TRAINING_CHOICES,
+                                null=True,
+                                blank=True)
     training_feedback = models.TextField(null=True,
                                          blank=True)
 

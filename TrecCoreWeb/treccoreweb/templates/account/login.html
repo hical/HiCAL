@@ -3,6 +3,7 @@
 {% load i18n crispy_forms_tags %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block nav-right %}<a href="{% url 'progress:practice' %}" class="btn btn-primary btn-sm">{% trans "Click here to practice" %}</a>{% endblock %}
 
 {% block main %}
 {% block inner %}
@@ -18,7 +19,6 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
   <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
 </form>
 
