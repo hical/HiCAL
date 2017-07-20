@@ -1,5 +1,9 @@
+from allauth.account.utils import perform_login
+from config.settings.base import PRACTICE_PASSWORD
+from config.settings.base import PRACTICE_USERNAME
 import logging
 
+from allauth.account.adapter import get_adapter
 from braces import views
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -8,16 +12,15 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from treccoreweb.progress.forms import DemographicForm
+from treccoreweb.progress.forms import ExitTaskForm
 from treccoreweb.progress.forms import PostTaskForm
 from treccoreweb.progress.forms import PreTaskForm
-from treccoreweb.progress.forms import ExitTaskForm
-
 from treccoreweb.progress.logging_messages import \
     LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
 from treccoreweb.progress.models import Demographic
+from treccoreweb.progress.models import ExitTask
 from treccoreweb.progress.models import PostTask
 from treccoreweb.progress.models import PreTask
-from treccoreweb.progress.models import ExitTask
 
 logger = logging.getLogger(__name__)
 
@@ -336,6 +339,30 @@ class Completed(views.LoginRequiredMixin, generic.TemplateView):
             return HttpResponseRedirect(reverse_lazy('progress:home'))
 
         return super(Completed, self).get(self, request, *args, **kwargs)
+
+
+class PracticeView(generic.TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        credentials = {
+            "username": PRACTICE_USERNAME,
+            "password": PRACTICE_PASSWORD
+        }
+        user = get_adapter(self.request).authenticate(
+            self.request,
+            **credentials)
+        ret = perform_login(request, user,
+                            email_verification=False,
+                            redirect_url=reverse_lazy('progress:home'))
+        return ret
+
+
+class PracticeCompleteView(views.LoginRequiredMixin, generic.TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        adapter = get_adapter(self.request)
+        adapter.logout(self.request)
+        return HttpResponseRedirect(reverse_lazy('account_login'))
 
 
 class TasksCompletedView(views.LoginRequiredMixin, generic.TemplateView):

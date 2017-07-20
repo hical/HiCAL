@@ -27,6 +27,12 @@ urlpatterns = [
     url(r'^tasks_completed/$',
         views.TasksCompletedView.as_view(),
         name='tasks_completed'),
+    url(r'^practice/$',
+        views.PracticeView.as_view(),
+        name='practice'),
+    url(r'^practice_complete/$',
+        views.PracticeCompleteView.as_view(),
+        name='practice_complete'),
 
     # Ajax views
     url(r'^post_ctrlf/$',
