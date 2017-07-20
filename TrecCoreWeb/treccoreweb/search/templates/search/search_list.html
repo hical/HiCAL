@@ -48,9 +48,9 @@
         </div>
         <div class="offset-md-1 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-warning">Relevant</a>
                 <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null, null);" class="btn btn-sm btn-danger">No relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-warning">Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
             </div>
             <div class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
         </div>
@@ -125,9 +125,9 @@
                                         <div class="gray-text align-left">Judge document:</div>
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
                                             <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
                                         </div>
                                     </li>
                                     <div class="extra-top-margin align-left">
@@ -135,10 +135,10 @@
                                         <li class="nav-item top-margin">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <span class="badge badge-success">h</span>
+                                                    <span class="badge badge-danger">s</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin gray-text">Mark as highly relevant
+                                                    <small class="left-margin gray-text">Mark as non-relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -154,13 +154,13 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="nav-item ">
+                                        <li class="nav-item">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <span class="badge badge-danger">s</span>
+                                                    <span class="badge badge-success">h</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin gray-text">Mark as non-relevant
+                                                    <small class="left-margin gray-text">Mark as highly relevant
                                                     </small>
                                                 </div>
                                             </div>
