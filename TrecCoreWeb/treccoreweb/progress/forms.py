@@ -152,11 +152,13 @@ class ExitTaskForm(forms.ModelForm):
         widget=forms.Select(choices=INTERFACE_LIKERT_SCALE_CHOICES),
         label=u'Please rate the 5 user interfaces from most to least useful for '
               u'their intended purpose of helping you find all relevant documents?')
+
+
     keyword_search_helpful = forms.CharField(
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
         label=u'The judging system was composed of many different features. For each'
               u'of these features, how useful was it for its intended purpose of '
-              u'helping you find all relevant documents?'
+              u'helping you find all relevant documents?\t'
               u'Feature: Keyword search within a document or paragraph.')
 
     keyword_shortcut_helpful = forms.CharField(
@@ -170,20 +172,20 @@ class ExitTaskForm(forms.ModelForm):
 
     topic_helpful = forms.CharField(
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
-        label=u'Display of topic statement of what is considered relevant.')
+        label=u'Feature: Display of topic statement of what is considered relevant.')
 
     recent_doc_helpful = forms.CharField(
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
-        label=u'Ability to review recent judgments and change judgment.')
+        label=u'Feature: Ability to review recent judgments and change judgment.')
 
     full_doc_helpful = forms.CharField(
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
-        label=u'Ability to view a full document rather than merely a paragraph summary.')
+        label=u'Feature: Ability to view a full document rather than merely a paragraph summary.')
 
 
     quote_helpful = forms.CharField(
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
-        label=u'For the search engine, the ability to specify phrases (&quot;new york&quot;) or require words (+france).')
+        label=u'Feature: For the search engine, the ability to specify phrases (&quot;new york&quot;) or require words (+france).')
 
 
     feedback = forms.CharField(
