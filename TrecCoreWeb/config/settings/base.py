@@ -323,9 +323,9 @@ MESSAGE_TAGS = {
 
 # Timer settings
 # Inactivity trigger time (in seconds)
-INACTIVE_TRIGGER_TIME = 15
+INACTIVE_TRIGGER_TIME = 60
 # Maximum active time for a user per task (in seconds)
-MAX_ACTIVE_TIME = 60 * 60
+MAX_ACTIVE_TIME = 60
 
 # CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------

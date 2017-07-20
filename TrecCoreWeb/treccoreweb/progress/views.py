@@ -41,6 +41,9 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         # if first task and pre-task is not done, show tutorial.
         elif current_task.is_first_task() and not current_task.pretask.is_completed:
             return HttpResponseRedirect(reverse_lazy('progress:tutorial'))
+        # if the pretask is not completed, go complete it...
+        elif not current_task.pretask.is_completed:
+            return HttpResponseRedirect(reverse_lazy('progress:pretask'))
         # if user time in task is over, move to post-task
         elif current_task.is_time_past() and not current_task.is_iterative():
             return HttpResponseRedirect(reverse_lazy('progress:posttask'))
@@ -380,6 +383,7 @@ class ExitCreateView(views.LoginRequiredMixin, generic.CreateView):
         prev = ExitTask.objects.filter(username=request.user)
         if prev:
             return HttpResponseRedirect(reverse_lazy('progress:tasks_completed'))
+        return super(ExitCreateView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
