@@ -108,17 +108,12 @@ class PostTaskForm(forms.ModelForm):
         widget=forms.Select(choices=DIFF_LIKERT_SCALE_CHOICES),
         label=u'How easy to use did you find this user interface for its intended '
               u'purpose of helping you find all relevant documents?')
-    helpful = forms.CharField(
-        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
-        label=u'How useful was [insert specific feature here, e.g., being able to do '
-              u'keyword searches, scroll down to see the full document, etc.] for its '
-              u'intended purpose of helping you find all relevant documents?')
     close = forms.CharField(
         widget=forms.Select(choices=CLOSE_LIKERT_SCALE_CHOICES),
         label=u'How close to finding all relevant documents do you think you came?')
     complete = forms.CharField(
         widget=forms.Select(choices=LEFTDOC_SCALE_CHOICES),
-        label=u'How many relevant documents do you think were left behind?')
+        label=u'How many relevant documents do you think remain to be found?')
     familiarity = forms.CharField(
         widget=forms.Select(choices=FAM_LIKERT_SCALE_CHOICES),
         label=u'How familiar are you with this subject of the above topic '
@@ -136,7 +131,7 @@ class PostTaskForm(forms.ModelForm):
 
     class Meta:
         model = PostTask
-        fields = ['difficulty', 'helpful', 'close', 'complete', 'familiarity', 'feedback']
+        fields = ['difficulty', 'close', 'complete', 'familiarity', 'feedback']
 
     def __init__(self, *args, **kwargs):
         super(PostTaskForm, self).__init__(*args, **kwargs)
@@ -155,12 +150,41 @@ class ExitTaskForm(forms.ModelForm):
     submit_name = 'submit-exit-form'
     difficulty = forms.CharField(
         widget=forms.Select(choices=INTERFACE_LIKERT_SCALE_CHOICES),
-        label=u'Please rate the [number] user interfaces from most to least useful for '
+        label=u'Please rate the 5 user interfaces from most to least useful for '
               u'their intended purpose of helping you find all relevant documents?')
-    helpful = forms.CharField(
-        widget=forms.Select(choices=FEAT_LIKERT_SCALE_CHOICES),
-        label=u'Please indicate the feature(s) that was (were) most useful to you for '
-              u'the purpose of helping you find all relevant documents.')
+    keyword_search_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'The judging system was composed of many different features. For each'
+              u'of these features, how useful was it for its intended purpose of '
+              u'helping you find all relevant documents?'
+              u'Feature: Keyword search within a document or paragraph.')
+
+    keyword_shortcut_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'Feature: Keyboard shortcuts for submitting relevance judgments.')
+
+
+    doc_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'Feature: Ability to use a search engine to find documents in addition to the learning interface.')
+
+    topic_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'Display of topic statement of what is considered relevant.')
+
+    recent_doc_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'Ability to review recent judgments and change judgment.')
+
+    full_doc_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'Ability to view a full document rather than merely a paragraph summary.')
+
+
+    quote_helpful = forms.CharField(
+        widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
+        label=u'For the search engine, the ability to specify phrases (&quot;new york&quot;) or require words (+france).')
+
 
     feedback = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5,
