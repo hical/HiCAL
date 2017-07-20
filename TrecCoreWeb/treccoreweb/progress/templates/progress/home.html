@@ -43,7 +43,7 @@
             <h2 class="text-primary"> Your current topic </h2>
             <hr>
             <p><strong>Title</strong>: {{ user.current_task.topic.title }}</p>
-            <p><strong>Description</strong>: {{ user.current_task.topic.description }}</p>
+            <p><strong>Description</strong>: {{ user.current_task.topic.display_description }}</p>
         </div>
     </div>
 {% endblock %}

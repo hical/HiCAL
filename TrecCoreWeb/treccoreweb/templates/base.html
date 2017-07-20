@@ -35,7 +35,7 @@
     <div class="collapse navbar-collapse" id="navbars">
         {% block nav-left%}
         <ul class="navbar-nav mt-2">
-            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.description }}">
+            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.display_description }}">
             <strong>Topic</strong>: {{ user.current_task.topic.title }}</a>
         </ul>
         {% endblock %}

@@ -12,6 +12,8 @@ class Topic(models.Model):
                                   max_length=512)
     description = models.TextField(null=False,
                                    blank=False)
+    display_description = models.TextField(null=True,
+                                           blank=True)
     narrative = models.TextField(null=False,
                                  blank=False)
 
