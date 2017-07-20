@@ -15,6 +15,8 @@ except ImportError:
 
 
 LEAD_PARA_REGEX = re.compile(r'<p>\s*LEAD:.*?</p>')
+
+
 def exec_xpath(tree, xpath):
     try:
         val = tree.xpath(xpath)[0]
@@ -52,8 +54,8 @@ def get_documents(doc_ids, query=None):
         content = LEAD_PARA_REGEX.sub('', exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')).strip()
         if len(content) == 0:
             if len(title) == 0:
-                title = '<i>The document title is empty</i>'
-            content = "<i>The document content is empty</i>"
+                title = '<i class="text-warning">The document title is empty</i>'
+            content = '<i class="text-warning">The document content is empty</i>'
         else:
             if len(title) == 0:
                 title = content[:32]
