@@ -19,8 +19,8 @@ function AwayTimer(showAlert){
     var awayCallback = function() {
         parent.awayTime = Date.now();
         if(showAlert){
-            showAlarm("Are you here? You have been away for more than 1 minute. " +
-                "If your are still available, click ok to continue your progress.");
+            showAlarm("Are you still here? " +
+                "If your are still available, please click ok to continue.");
         }
     };
 
