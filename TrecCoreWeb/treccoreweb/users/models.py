@@ -19,7 +19,7 @@ class User(AbstractUser):
     sequence = JSONField(blank=True, null=True, default=list)
     # treatment number
     treatment = models.IntegerField(blank=True, null=True,
-                                    choices=((x, x) for x in range(0, 50)))
+                                    choices=((x, x) for x in range(-1, 50)))
 
     def __str__(self):
         return self.username

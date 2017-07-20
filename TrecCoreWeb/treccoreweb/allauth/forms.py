@@ -19,7 +19,7 @@ class SignupForm(forms.Form):
     sequence = JSONField(required=False,
                          initial=[], help_text="If sequence is defined, the treatment "
                                                "sequence and settings will be ignored. ")
-    treatment = forms.ChoiceField(choices=((x, x) for x in range(0, 50)))
+    treatment = forms.ChoiceField(choices=((x, x) for x in range(-1, 50)))
 
     def signup(self, request, user):
         user.treatment = int(self.cleaned_data['treatment'])

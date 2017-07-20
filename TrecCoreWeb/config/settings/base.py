@@ -82,7 +82,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Custom middleware
-    'treccoreweb.middleware.timer.timer_middleware',
     'treccoreweb.middleware.pagefile.PageHTMLMiddleware',
 ]
 

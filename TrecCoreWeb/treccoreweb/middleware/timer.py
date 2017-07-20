@@ -24,6 +24,9 @@ ACTIVE_URLS = [
 
 def timer_middleware(get_response):
     def middleware(request):
+        if request.user.username == 'test':
+            return get_response(request)
+
         for url_exception in ACTIVE_URLS:
             if request.path.startswith(url_exception):
                 current_task = request.user.current_task

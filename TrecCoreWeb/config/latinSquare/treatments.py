@@ -2248,5 +2248,18 @@ all_treatments = [
                 }
             }
         ]
+    },
+    {
+        "user_ID": 10000,
+        "treatments": [
+            {
+                "topic_num": 304,
+                "setting": {
+                    "toggle_doc": True,
+                    "only_show_doc": False,
+                    "show_search": True
+                }
+            }
+        ]
     }
 ]
