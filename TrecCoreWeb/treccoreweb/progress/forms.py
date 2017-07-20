@@ -62,17 +62,6 @@ class DemographicForm(forms.ModelForm):
                    css_class='btn btn-primary')
         )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        errors = {}
-        for key in cleaned_data:
-            if cleaned_data[key] == NA:
-                errors[key] = ["Please select a value."]
-        if errors:
-            raise forms.ValidationError(
-                errors
-            )
-
 
 class PreTaskForm(forms.ModelForm):
     """
@@ -107,17 +96,6 @@ class PreTaskForm(forms.ModelForm):
             Submit(self.submit_name, u'Submit',
                    css_class='btn btn-primary')
         )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        errors = {}
-        for key in cleaned_data:
-            if cleaned_data[key] == NA:
-                errors[key] = ["Please select a value."]
-        if errors:
-            raise forms.ValidationError(
-                errors
-            )
 
 
 class PostTaskForm(forms.ModelForm):
@@ -168,17 +146,6 @@ class PostTaskForm(forms.ModelForm):
                    css_class='btn btn-primary')
         )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        errors = {}
-        for key in cleaned_data:
-            if cleaned_data[key] == NA:
-                errors[key] = ["Please select a value."]
-        if errors:
-            raise forms.ValidationError(
-                errors
-            )
-
 
 class ExitTaskForm(forms.ModelForm):
     """
@@ -215,14 +182,3 @@ class ExitTaskForm(forms.ModelForm):
             Submit(self.submit_name, u'Submit',
                    css_class='btn btn-primary')
         )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        errors = {}
-        for key in cleaned_data:
-            if cleaned_data[key] == NA:
-                errors[key] = ["Please select a value."]
-        if errors:
-            raise forms.ValidationError(
-                errors
-            )
