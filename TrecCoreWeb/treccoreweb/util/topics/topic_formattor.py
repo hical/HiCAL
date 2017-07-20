@@ -56,9 +56,9 @@ except StopIteration:
 l = []
 pk = 1
 for t in topics:
-    desc = topics[t]["desc"]
+    new_description =None
     if t in nistTopicDict:
-        desc = nistTopicDict[t]
+        new_description = nistTopicDict[t]
     d = {
         "model": "topic.topic",
         "pk": pk,
@@ -66,7 +66,8 @@ for t in topics:
             "number": t,
             "title": topics[t]["title"],
             "seed_query": "{} {}".format(topics[t]["title"], topics[t]["desc"]),
-            "description": desc,
+            "description": topics[t]["desc"],
+            "new_description": new_description,
             "narrative": topics[t]["narr"],
             "created_at": "2017-06-22T20:18:35.279Z",
             "updated_at": "2017-06-22T20:18:35.279Z"
