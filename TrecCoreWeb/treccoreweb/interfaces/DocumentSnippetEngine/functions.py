@@ -19,12 +19,10 @@ def exec_xpath(tree, xpath):
     try:
         val = tree.xpath(xpath)[0]
         val_str = etree.tostring(val, encoding="unicode")
-        if len(val_str) == 0:
-            return "N/A"
         return val_str
     except:
         traceback.print_exc()
-        return "N/A"
+        return ""
 
 
 def get_date(tree, xpath):
@@ -50,8 +48,16 @@ def get_documents(doc_ids, query=None):
     for doc_id in doc_ids:
         url = '{}/{}/{}.xml'.format(DOCUMENTS_URL, doc_id[:4], doc_id)
         tree = etree.parse(url)
-        title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1')
-        content = LEAD_PARA_REGEX.sub('', exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]'))
+        title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1').strip()
+        content = LEAD_PARA_REGEX.sub('', exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')).strip()
+        if len(content) == 0:
+            if len(title) == 0:
+                title = '<i>The document title is empty</i>'
+            content = "<i>The document content is empty</i>"
+        else:
+            if len(title) == 0:
+                title = content[:32]
+
         date = get_date(tree, '/nitf/head/pubdata/@date.publication')
         document = {
             'doc_id': doc_id,
