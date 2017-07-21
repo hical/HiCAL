@@ -342,11 +342,11 @@ PARA_URL = 'http://129.97.84.14:9000/para'
 
 # # RAVEN
 # # ------------------------------------------------------------------------------
-# RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
-# RAVEN_CONFIG = {
-#     'dsn': 'https://{}@sentry.io/186800'.format(RAVEN_SECRET_KEY),
-#     # If you are using git, you can also automatically configure the
-#     # release based on the git info.
-#     'release': raven.fetch_git_sha(os.path.dirname(str(ROOT_DIR))),
-# }
-#
+RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
+RAVEN_CONFIG = {
+    'dsn': 'https://{}@sentry.io/186800'.format(RAVEN_SECRET_KEY),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(str(ROOT_DIR))),
+}
+

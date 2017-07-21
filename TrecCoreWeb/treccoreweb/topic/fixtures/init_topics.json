@@ -49,7 +49,7 @@
       "title": "Endangered Species (Mammals)",
       "seed_query": "Endangered Species (Mammals) Compile a list of mammals that are considered to be endangered, identify their habitat and, if possible, specify what threatens them.",
       "description": "Compile a list of mammals that are considered to be endangered, identify their habitat and, if possible, specify what threatens them.",
-      "display_description": null,
+      "display_description": "Compile a list of mammals that are considered to be endangered, identify their habitat and, if possible, specify what threatens them.",
       "narrative": "Any document identifying a mammal as endangered is relevant. Statements of authorities disputing the endangered status would also be relevant. A document containing information on habitat and populations of a mammal identified elsewhere as endangered would also be relevant even if the document at hand did not identify the species as endangered. Generalized statements about endangered species without reference to specific mammals would not be relevant.",
       "created_at": "2017-06-22T20:18:35.279Z",
       "updated_at": "2017-06-22T20:18:35.279Z"
