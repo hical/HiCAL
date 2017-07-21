@@ -174,7 +174,7 @@
             else if(key == 'r') {
                 send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
             }
-
+            document.click();
         });
 
         Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
@@ -186,7 +186,7 @@
             e.preventDefault();
             var docid = get_current_opened_modal_doc_id();
             $( "#search_content_doc_"+docid).focus();
-
+            document.click();
             return false;
         });
 
