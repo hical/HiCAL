@@ -155,7 +155,7 @@
                 });
                 console.log("Character pressed: '"+character+"'", "at:", now);
             }
-            document.click();
+            document.body.click();
         };
 
         Mousetrap.bind(['h', 'r', 's'], function(e, key) {
@@ -175,7 +175,7 @@
             else if(key == 'r') {
                 send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
             }
-            document.click();
+            document.body.click();
         });
 
         Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
@@ -187,7 +187,7 @@
             e.preventDefault();
             var docid = get_current_opened_modal_doc_id();
             $( "#search_content_doc_"+docid).focus();
-            document.click();
+            document.body.click();
             return false;
         });
 
