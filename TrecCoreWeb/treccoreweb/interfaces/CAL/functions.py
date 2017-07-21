@@ -44,10 +44,11 @@ def add_session(session, seed_query):
     body = {'session_id': str(session),
             'seed_query': seed_query,
             'mode': 'para'}
-    body = urllib.parse.urlencode(body)
+    post_body = '&'.join('%s=%s' % (k, v) for k, v in body.items())
+
     resp, content = h.request(url.format(CAL_SERVER_IP,
                                          CAL_SERVER_PORT),
-                              body=body,
+                              body=post_body,
                               headers={'Content-Type': 'application/json; charset=UTF-8'},
                               method="POST")
     if resp and resp['status'] != '200':
