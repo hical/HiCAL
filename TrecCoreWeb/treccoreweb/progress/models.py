@@ -55,11 +55,11 @@ HELP_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                     )
 
 CLOSE_LIKERT_SCALE_CHOICES = Choices((NA, NA),
-                                     (VEN, "Very Far(still lots of relevant documents to be found)"),
+                                     (VEN, "Very Far (still lots of relevant documents to be found)"),
                                      (SMN, "Somehow Far"),
                                      (NNN, "Neutral"),
                                      (SMT, "Somewhat Close"),
-                                     (VEY, "Very Close(found almost all relevant)")
+                                     (VEY, "Very Close (found almost all relevant)")
                                      )
 
 LEFTDOC_SCALE_CHOICES = Choices((NA, NA),

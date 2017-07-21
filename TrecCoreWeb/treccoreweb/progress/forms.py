@@ -158,7 +158,7 @@ class ExitTaskForm(forms.ModelForm):
         widget=forms.Select(choices=HELP_LIKERT_SCALE_CHOICES),
         label=u'The judging system was composed of many different features. For each'
               u'of these features, how useful was it for its intended purpose of '
-              u'helping you find all relevant documents?\t'
+              u'helping you find all relevant documents?\n'
               u'Feature: Keyword search within a document or paragraph.')
 
     keyword_shortcut_helpful = forms.CharField(
