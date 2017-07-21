@@ -34,9 +34,12 @@
     <a class="navbar-brand font-montserrat" href="/"><strong>IRStudy</strong></a>
     <div class="collapse navbar-collapse" id="navbars">
         {% block nav-left%}
-        <ul class="navbar-nav mt-2">
-            <a href="#" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.display_description }}">
-            <strong>Topic</strong>: {{ user.current_task.topic.title }}</a>
+        <ul class="navbar-nav mt-1">
+            <a id="desc_popover" href="#" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 800px;" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.display_description }}">
+             <strong>Topic</strong>: {{ user.current_task.topic.title }} |
+            <strong>Desc</strong>: {{ user.current_task.topic.display_description }}
+            </a>
+            <span class="small mt-1 text-primary">[Click to view full description]</span>
         </ul>
         {% endblock %}
 
@@ -168,6 +171,28 @@
         }
         window.jquery_ajax(param);
     };
+
+    $('#desc_popover').on('show.bs.popover', function () {
+        var now = + new Date();
+        var data = {
+            'action': 'trig_user_clicked_on_topic_desc',
+            'message': 'User clicked on the topic desc.',
+            'extra_context': {
+                "topic_title": "{{ user.current_task.topic.title|escapejs }}"
+            },
+            'client_time': now,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'page_title': document.title
+        };
+        $.ajax({
+            url: '{% url 'progress:post_log_msg' %}',
+            method: 'POST',
+            data: JSON.stringify(data),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
+    });
 
     $(document).ready(function () {
         $('[data-toggle="popover"]').popover({
