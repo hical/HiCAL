@@ -282,6 +282,7 @@ PRACTICE_PASSWORD = 'test123'
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
+TIME_ZONE = 'America/Toronto'
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
