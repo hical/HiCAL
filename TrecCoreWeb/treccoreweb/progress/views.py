@@ -1,9 +1,10 @@
-from allauth.account.utils import perform_login
 from config.settings.base import PRACTICE_PASSWORD
 from config.settings.base import PRACTICE_USERNAME
+import json
 import logging
 
 from allauth.account.adapter import get_adapter
+from allauth.account.utils import perform_login
 from braces import views
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -82,7 +83,7 @@ class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(log_body))
+        logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your visit has been recorded"}
         return self.render_json_response(context)
@@ -114,7 +115,7 @@ class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(log_body))
+        logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your event has been recorded"}
         return self.render_json_response(context)
@@ -151,7 +152,7 @@ class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "doc_id": doc_id
             }
         }
-        logger.info("[{}]".format(log_body))
+        logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your visit has been recorded."}
         return self.render_json_response(context)
@@ -320,7 +321,7 @@ class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             }
         }
 
-        logger.info("[{}]".format(log_body))
+        logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your log message with action '{}' "
                                u"has been logged.".format(action)}

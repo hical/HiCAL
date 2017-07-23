@@ -122,7 +122,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 }
             }
 
-            logger.info("[{}]".format(log_body))
+            logger.info("[{}]".format(json.dumps(log_body)))
         else:
             Judgement.objects.create(
                 user=self.request.user,
@@ -180,7 +180,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 }
             }
 
-            logger.info("[{}]".format(log_body))
+            logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
         error_message = None
@@ -269,7 +269,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 }
             }
 
-            logger.error("[{}]".format(log_body))
+            logger.error("[{}]".format(json.dumps(log_body)))
 
         return self.render_json_response(context)
 
@@ -322,7 +322,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 }
             }
 
-            logger.info("[{}]".format(log_body))
+            logger.info("[{}]".format(json.dumps(log_body)))
         else:
             Judgement.objects.create(
                 user=self.request.user,
@@ -361,7 +361,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 }
             }
 
-            logger.info("[{}]".format(log_body))
+            logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your no judgment on {} has been received!".format(doc_id)}
 

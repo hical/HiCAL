@@ -1,3 +1,4 @@
+import json
 import logging
 
 from braces.views import LoginRequiredMixin
@@ -84,7 +85,7 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
                 }
             }
 
-            logger.error("[{}]".format(log_body))
+            logger.error("[{}]".format(json.dumps(log_body)))
             messages.add_message(self.request,
                                  messages.ERROR,
                                  'Failed to create session. CAL backend failed to add  '

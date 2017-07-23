@@ -62,7 +62,7 @@ class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             }
         }
 
-        logger.info("[{}]".format(log_body))
+        logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your log message with action '{}' and of "
                                u"document '{}' has been logged.".format(action, doc_id)}
@@ -120,7 +120,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 }
             }
 
-            logger.error("[{}]".format(log_body))
+            logger.error("[{}]".format(json.dumps(log_body)))
             error_dict = {u"message": u"Error occurred. Please inform study coordinators"}
 
             # TODO: add proper http response for CAL errors
