@@ -20,17 +20,15 @@ class Judgement(models.Model):
     doc_id = models.CharField(null=False,
                               blank=False,
                               max_length=512)
-    doc_title = models.CharField(null=False,
-                                 blank=False,
-                                 max_length=512)
+    doc_title = models.TextField(null=False,
+                                 blank=False,)
     doc_CAL_snippet = models.TextField(null=False,
                                        blank=False)
     doc_search_snippet = models.TextField(null=False,
                                           blank=False)
     task = models.ForeignKey(Task)
-    query = models.CharField(null=True,
-                             blank=True,
-                             max_length=512)
+    query = models.TextField(null=True,
+                             blank=True)
     # a judgment can have null fields if its only been viewed but not judged
     highlyRelevant = models.NullBooleanField()
     nonrelevant = models.NullBooleanField()
