@@ -34,7 +34,7 @@
                 <button class="btn btn-outline-primary" type="submit"
                         ic-indicator="#searchSpinner" ic-target="#search_result"
                         ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
-                        tabindex="-1">Search
+                        tabindex="-1" id="search_button">Search
                 </button>
               </span>
               <span class="input-btn left-margin mt-1">
@@ -124,13 +124,24 @@
             console.log("Search input is unfocused.", now);
         });
 
-        var form = document.getElementById('search_form');
-        var formSubmit = form.submit; //save reference to original submit function
-
-        // TODO: currently not working. Need to log when submit is fired.
-        form.onsubmit = function(e) {
-            alert('Handler for .submit() called.');
-        };
+        $('#search_button').on('beforeSend.ic',
+            function(evt, elt, data, settings, xhr, requestId) {
+                var now = + new Date();
+                $.ajax({
+                    url: '{% url 'search:post_search_request' %}',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        'client_time': now,
+                        'query': $("#search_input").val(),
+                        'numdisplay': $("#id_numdisplay").val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'page_title': document.title
+                    }),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+            });
 
         var SERPTimer = AwayTimer();
 

@@ -17,4 +17,7 @@ urlpatterns = [
         name='post_search_status'),
     url(r'^post_keystroke/$', views.SearchKeystrokeAJAXView.as_view(),
         name='post_keystroke'),
+    url(r'^post_search_request/$', views.SearchButtonView.as_view(),
+        name='post_search_request'),
+
 ]

@@ -131,25 +131,45 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
         if total_time:
             context["total_time"] = "{0:.2f}".format(round(float(total_time), 2))
 
-        log_body = {
-            "user": self.request.user.username,
-            "result": {
-                "message": "New search query",
-                "query": search_input,
-                "SERP_size": numdisplay,
-                "result": documents_values,
-            }
-        }
-
-        logger.info("[{}]".format(log_body))
-
         rendered_template = template.render(context)
         return HttpResponse(rendered_template, content_type='text/html')
 
 
+class SearchButtonView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time")
+            page_title = self.request_json.get(u"page_title")
+            query = self.request_json.get(u"query")
+            numdisplay = self.request_json.get(u"numdisplay")
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time,"
+                                      u" page title, query, and numdisplay values"}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "message": "New search query",
+                "query": query,
+                "SERP_size": numdisplay,
+                "page_title": page_title
+            }
+        }
+        logger.info("[{}]".format(log_body))
+
+        context = {u"message": u"Your search request has been recorded."}
+        return self.render_json_response(context)
+
+
 class SearchGetDocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                          views.JsonRequestResponseMixin,
-                          views.AjaxResponseMixin, generic.View):
+                           views.JsonRequestResponseMixin,
+                           views.AjaxResponseMixin, generic.View):
 
     require_json = False
 
