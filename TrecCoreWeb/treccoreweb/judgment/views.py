@@ -186,6 +186,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         error_message = None
 
         if isFromCAL:
+            context[u"next_docs"] = []
             # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
@@ -206,6 +207,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
                                                     self.request.user.current_task.topic.seed_query,
                                                     top_terms)
+                context[u"next_docs"] = documents
+
             except TimeoutError:
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
@@ -215,7 +218,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             except Exception as e:
                 error_message = str(e)
 
-            context[u"next_docs"] = documents
         elif isFromSearch:
             # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
