@@ -219,9 +219,11 @@
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
         var toggle_full_doc = {{ user.current_task.setting.toggle_doc|yesno:"true,false" }};
         var time_on_paragraph = 0;
+        var show_full_doc_button_clicked = false;
         if(toggle_full_doc){
             $("#document_content").hide();
             time_on_paragraph = 0;
+            show_full_doc_button_clicked = false;
         }
 
         function hide_full_doc(){
@@ -231,6 +233,8 @@
             $("#document_content").hide();
             // rest time on paragraph
             time_on_paragraph = 0;
+            // rest boolean
+            show_full_doc_button_clicked = false;
         }
 
         function show_full_doc(){
@@ -246,6 +250,7 @@
             if(documentTimer != null){
                 time_on_paragraph = Date.now() - documentTimer.startTime - documentTimer.totalAwayTime;
             }
+            show_full_doc_button_clicked = true;
 
             var data = {
                 'action': 'trig_show_full_doc',
@@ -254,7 +259,8 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': current_doc_snippet,
                 'extra_context': {
-                    'time_on_paragraph': time_on_paragraph
+                    'time_on_paragraph': time_on_paragraph,
+                    'show_full_doc_button_clicked': show_full_doc_button_clicked
                 },
                 'client_time': now,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -434,12 +440,17 @@
             console.log("Saving '"+current_doc_id+"' to judged_docs JS dict");
             judged_docs[current_doc_id] = true;
 
+            var tA = Date.now() - documentTimer.startTime - documentTimer.totalAwayTime;
+            if(show_full_doc_button_clicked == false){
+                time_on_paragraph = tA;
+            }
             console.log("Sending judgment call to backend for document id: " + current_doc_id);
             var timeVerbose = {
                 "timestamp": now,
-                "timeActive": Date.now() - documentTimer.startTime - documentTimer.totalAwayTime,
+                "timeActive": tA,
                 "timeAway": documentTimer.totalAwayTime,
                 "time_on_paragraph": time_on_paragraph,
+                "show_full_doc_button_clicked": show_full_doc_button_clicked,
                 "source": "CAL",
                 "judged": true,
                 "isMouse": isMouse,
