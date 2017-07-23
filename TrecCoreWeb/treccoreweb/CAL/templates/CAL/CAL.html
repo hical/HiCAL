@@ -676,6 +676,26 @@
         if (doc_content == ""){
             doc_content = "<span class='text-danger'>Please wait.. fetching doc content.</span>"
         }
+        var now = + new Date();
+        var data = {
+            'action': 'trig_show_prev_judged_doc',
+            'message': 'User clicked on a previously judged document from the undo modal',
+            'doc_id': doc_id,
+            'doc_title': doc_title,
+            'doc_CAL_snippet': doc_snippet,
+            'client_time': now,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'page_title': document.title
+        };
+
+        $.ajax({
+            url: '{% url 'CAL:post_log_msg' %}',
+            method: 'POST',
+            data: JSON.stringify(data),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
 
         $('#reviewDocsModal').modal('hide');
 
