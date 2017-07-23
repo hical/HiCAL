@@ -138,6 +138,26 @@
     });
 
     function showAlarm(msg) {
+        var now = + new Date();
+        var data = {
+            'action': 'trig_user_gone_away',
+            'message': 'Alert message is shown to user.',
+            'extra_context': {
+                'alert_msg': msg
+            },
+            'client_time': now,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'page_title': document.title
+        };
+        $.ajax({
+            url: '{% url 'progress:post_log_msg' %}',
+            method: 'POST',
+            data: JSON.stringify(data),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
+
         alert(msg);
         document.body.click();
         var now = + new Date();
