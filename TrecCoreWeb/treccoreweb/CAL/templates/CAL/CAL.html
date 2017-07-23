@@ -218,8 +218,10 @@
 
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
         var toggle_full_doc = {{ user.current_task.setting.toggle_doc|yesno:"true,false" }};
+        var time_on_paragraph = 0;
         if(toggle_full_doc){
             $("#document_content").hide();
+            time_on_paragraph = 0;
         }
 
         function hide_full_doc(){
@@ -227,6 +229,8 @@
             $("#show_full_doc_button").show();
             // hide full document
             $("#document_content").hide();
+            // rest time on paragraph
+            time_on_paragraph = 0;
         }
 
         function show_full_doc(){
@@ -239,13 +243,19 @@
             var current_doc_title = $("#document_title").html();
             var current_doc_id = $("#document_id").html();
 
+            if(documentTimer != null){
+                time_on_paragraph = Date.now() - documentTimer.startTime - documentTimer.totalAwayTime;
+            }
+
             var data = {
                 'action': 'trig_show_full_doc',
                 'message': 'Show full document button is clicked and document is shown',
                 'doc_id': current_doc_id,
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': current_doc_snippet,
-                'extra_context': {},
+                'extra_context': {
+                    'time_on_paragraph': time_on_paragraph
+                },
                 'client_time': now,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
@@ -429,6 +439,7 @@
                 "timestamp": now,
                 "timeActive": Date.now() - documentTimer.startTime - documentTimer.totalAwayTime,
                 "timeAway": documentTimer.totalAwayTime,
+                "time_on_paragraph": time_on_paragraph,
                 "source": "CAL",
                 "judged": true,
                 "isMouse": isMouse,
