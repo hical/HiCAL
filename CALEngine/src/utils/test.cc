@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
             (std::chrono::steady_clock::now() - start);
         cerr<<"Read "<<spvs_orig->size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
-        cerr<<"Testing "<<argv[2]<<endl;
+        cerr<<"Testing "<<argv[2]<<"...";
         for(int i = 0;i< spvs_orig->size(); i++){
             assert((*spvs_orig)[i]->features_.size() == (*spvs_bin)[i]->features_.size());
             for(int j = 0;j < (*spvs_orig)[i]->features_.size(); j++){
@@ -48,6 +48,7 @@ int main(int argc, char *argv[]){
                 assert(abs((*spvs_orig)[i]->features_[j].value_ - (*spvs_bin)[i]->features_[j].value_) < 1e-6);
             }
         }
+        cerr<<"OK!"<<endl;
     }
 
     {
