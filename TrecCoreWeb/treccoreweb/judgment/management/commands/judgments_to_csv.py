@@ -17,7 +17,7 @@ class Command(BaseCommand):
         with open(self.filename, 'wt') as f:
             writer = csv.writer(f)
             writer.writerow(self.header)
-            judgments = Judgement.objects.all()
+            judgments = Judgement.objects.order_by('user', 'created_at')
             for judgment in judgments:
                 value = 2 if judgment.highlyRelevant else 1 if judgment.relevant else 0 if judgment.nonrelevant else None
                 # if value is empty, then user looked at document but not has not judged
