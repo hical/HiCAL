@@ -18,7 +18,9 @@ ACTIVE_URLS = [
     reverse('search:get_docs'),
     reverse('search:get_doc'),
     reverse('search:post_search_status'),
-    reverse('search:post_keystroke')
+    reverse('search:post_keystroke'),
+    reverse('search:post_search_request'),
+    reverse('search:post_search_doc_open'),
 ]
 
 
