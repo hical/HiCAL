@@ -63,13 +63,8 @@ class SfSparseVector {
   // Construct a new vector from a string.  Input format is svm-light format:
   // <label> <feature>:<value> ... <feature:value> # comment<\n>
   // No bias term is used.
-  SfSparseVector(const char* in_string);
   SfSparseVector(const vector<FeatureValuePair> &feature_vector);
   SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector);
-
-  // Constructs a new vector from a string, as above, but also sets the bias
-  // term to 1 iff use_bias_term is set to true.
-  SfSparseVector(const char* in_string, bool use_bias_term);
 
   // Construct a new vector that is the difference of two vectors, (a - b).
   // This is useful for ranking problems, etc.
@@ -84,8 +79,6 @@ class SfSparseVector {
   inline float ValueAt(int i) const { return features_[i].value_; }
 
   // Getters and setters.
-  void SetY(float new_y) { y_ = new_y; }
-  float GetY() const { return y_; }
   float GetSquaredNorm() const { return squared_norm_; }
 
   // Adds a new (id, value) FeatureValuePair to the end of the vector, and
@@ -106,10 +99,6 @@ class SfSparseVector {
  private:
   void AddToSquaredNorm(float addend) { squared_norm_ += addend; }
 
-  // Common initialization method shared by constructors, adding vector data
-  // by parsing a string in SVM-light format.
-  void Init(const char* in_string);
-
   // Sets up the bias term, indexed by feature id 0.
   void SetBias() { PushPair(0, 1); }
 
@@ -120,10 +109,6 @@ class SfSparseVector {
   void DieFormat(const string& reason);
 
   // Members.
-
-  // y_ is the class label.  We store this as a float, rather than an int,
-  // so that this class may be used for regression problems, etc., if desired.
-  float y_;
 
   // squared_norm_ = x1*x1 + ... + xN*xN
   float squared_norm_;

@@ -37,10 +37,6 @@ class SfDataSet {
   // Empty data set.
   SfDataSet(bool use_bias_term);
 
-  // Construct and fill a SfDataSet with data from the given file.
-  // Use buffer_mb megabytes for the buffer.
-  SfDataSet(const string& file_name, int buffer_mb, bool use_bias_term);
-
   // Debug string.
   string AsString() const;
   
@@ -50,10 +46,6 @@ class SfDataSet {
   // Returns a reference to the specified vector.
   const SfSparseVector& VectorAt (long int index) const;
 
-  // Adds the vector represented by this svm-light format string
-  // to the data set.
-  void AddVector(const string& vector_string);
-  void AddVector(const char* vector_string);
   // Adds a copy of the given vector, using label y.
   void AddLabeledVector(const SfSparseVector& x, float y);
   void ModifyLabeledVector(int idx, const SfSparseVector& x, float y);

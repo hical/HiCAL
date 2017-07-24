@@ -27,28 +27,9 @@
 //----------------------------------------------------------------//
 //---------------- SfSparseVector Public Methods ----------------//
 //----------------------------------------------------------------//
-SfSparseVector::SfSparseVector(const char* in_string)
-  : y_(0.0), 
-    squared_norm_(0.0) {
-  NoBias();
-  Init(in_string);
-}
-
-SfSparseVector::SfSparseVector(const char* in_string,
-			       bool use_bias_term)
-  : y_(0.0), 
-    squared_norm_(0.0) {
-  if (use_bias_term) {
-    SetBias();
-  } else {
-    NoBias();
-  }
-  Init(in_string);
-}
 
 SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
-  : y_(0.0), 
-    squared_norm_(0.0)
+  : squared_norm_(0.0)
 {
     SetBias();
     for(auto feature_value_pair: feature_vector)
@@ -56,8 +37,7 @@ SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
 }
 
 SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector)
-  : y_(0.0), 
-    squared_norm_(0.0),
+  : squared_norm_(0.0),
     doc_id(doc_id)
 {
     SetBias();
@@ -68,8 +48,7 @@ SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &fe
 SfSparseVector::SfSparseVector(const SfSparseVector& a,
 				 const SfSparseVector& b,
 				 float y) 
-  : y_(y),
-    squared_norm_(0.0) {
+  : squared_norm_(0.0) {
   int a_i = 0;
   int b_i = 0;
   while (a_i < a.NumFeatures() || b_i < b.NumFeatures()) {
@@ -106,7 +85,6 @@ SfSparseVector::SfSparseVector(const SfSparseVector& a,
 
 string SfSparseVector::AsString() const {
   std::stringstream out_stream;
-  out_stream << y_ << " ";
   for (int i = 0; i < NumFeatures(); ++i) {
     out_stream << FeatureAt(i) << ":" << ValueAt(i) << " ";
   }
@@ -133,45 +111,4 @@ void SfSparseVector::PushPair(uint32_t id, float value) {
 void SfSparseVector::DieFormat(const string& reason) {
   std::cerr << "Wrong format for input data:\n  " << reason << std::endl;
   exit(1);
-}
-
-void SfSparseVector::Init(const char* in_string) {
-  int length = strlen(in_string);
-  if (length == 0) DieFormat("Empty example string.");
- 
-  // Get class label.
-  if (!sscanf(in_string, "%f", &y_))
-    DieFormat("Class label must be real number.");
-
-  // Parse the group id, if any.
-  const char* position;
-  position = strchr(in_string, ' ') + 1;
-  if ((position[0] >= 'a' && position[0] <= 'z') ||
-      (position[0] >= 'A' && position[0] <= 'Z')) {
-    position = strchr(position, ':') + 1;
-    const char* end = strchr(position, ' ');
-    char group_id_c_string[1000];
-    strncpy(group_id_c_string, position, end - position);
-    position = end + 1;
-  } 
-
-  // Get feature:value pairs.
-  for ( ;
-       (position < in_string + length 
-	&& position - 1 != NULL
-	&& position[0] != '#');
-       position = strchr(position, ' ') + 1) {
-    
-    // Consume multiple spaces, if needed.
-    if (position[0] == ' ' || position[0] == '\n' ||
-	position[0] == '\v' || position[0] == '\r') {
-      continue;
-    };
-    
-    // Parse the feature-value pair.
-    int id = atoi(position);
-    position = strchr(position, ':') + 1;
-    float value = atof(position);
-    PushPair(id, value);
-  }
 }
