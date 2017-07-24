@@ -115,39 +115,6 @@ namespace sofia_ml {
 					   int num_iters,
 					   SfWeightVector* w);
 
-  void StochasticClassificationAndRankLoop(const SfDataSet& training_set,
-					   LearnerType learner_type,
-					   EtaType eta_type,
-					   float lambda,
-					   float c,
-					   float rank_step_probability,
-					   int num_iters,
-					   SfWeightVector* w);
-
-  // Trains a model w over training_set, using learner_type and eta_type learner with
-  // given parameters.  Trains a model using the RankSVM objective function, using
-  // indexed-based sampling to sample from the set of all possible canidate pairs
-  // (pairs of examples in the same query but with different rank), training on
-  // the difference of the two vectors in the pair.
-  void StochasticRankLoop(const SfDataSet& training_set,
-			  LearnerType learner_type,
-			  EtaType eta_type,
-			  float lambda,
-			  float c,
-			  int num_iters,
-			  SfWeightVector* w);
-
-  // Optimize RankSVM objective function, but weight each query-id equally (even if some queries
-  // have very few or very many examples).  Currently this is implemented using rejection-sampling,
-  // which is slower than indexed-based sampling.
-  void StochasticQueryNormRankLoop(const SfDataSet& training_set,
-				   LearnerType learner_type,
-				   EtaType eta_type,
-				   float lambda,
-				   float c,
-				   int num_iters,
-				   SfWeightVector* w);
-
   //------------------------------------------------------------------------------//
   //                    Methods for Applying a Model on Data                      //
   //------------------------------------------------------------------------------//

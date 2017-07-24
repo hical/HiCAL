@@ -29,8 +29,7 @@
 //----------------------------------------------------------------//
 SfSparseVector::SfSparseVector(const char* in_string)
   : y_(0.0), 
-    squared_norm_(0.0),
-    group_id_("") {
+    squared_norm_(0.0) {
   NoBias();
   Init(in_string);
 }
@@ -38,8 +37,7 @@ SfSparseVector::SfSparseVector(const char* in_string)
 SfSparseVector::SfSparseVector(const char* in_string,
 			       bool use_bias_term)
   : y_(0.0), 
-    squared_norm_(0.0),
-    group_id_("") {
+    squared_norm_(0.0) {
   if (use_bias_term) {
     SetBias();
   } else {
@@ -50,8 +48,7 @@ SfSparseVector::SfSparseVector(const char* in_string,
 
 SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
   : y_(0.0), 
-    squared_norm_(0.0),
-    group_id_("")
+    squared_norm_(0.0)
 {
     SetBias();
     for(auto feature_value_pair: feature_vector)
@@ -61,7 +58,6 @@ SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
 SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector)
   : y_(0.0), 
     squared_norm_(0.0),
-    group_id_(""),
     doc_id(doc_id)
 {
     SetBias();
@@ -74,7 +70,6 @@ SfSparseVector::SfSparseVector(const SfSparseVector& a,
 				 float y) 
   : y_(y),
     squared_norm_(0.0) {
-  group_id_ = a.GetGroupId();
   int a_i = 0;
   int b_i = 0;
   while (a_i < a.NumFeatures() || b_i < b.NumFeatures()) {
@@ -114,9 +109,6 @@ string SfSparseVector::AsString() const {
   out_stream << y_ << " ";
   for (int i = 0; i < NumFeatures(); ++i) {
     out_stream << FeatureAt(i) << ":" << ValueAt(i) << " ";
-  }
-  if (!comment_.empty()) {
-    out_stream << "#" << comment_;
   }
   return out_stream.str();
 }
@@ -160,7 +152,6 @@ void SfSparseVector::Init(const char* in_string) {
     const char* end = strchr(position, ' ');
     char group_id_c_string[1000];
     strncpy(group_id_c_string, position, end - position);
-    group_id_ = group_id_c_string;
     position = end + 1;
   } 
 
@@ -182,11 +173,5 @@ void SfSparseVector::Init(const char* in_string) {
     position = strchr(position, ':') + 1;
     float value = atof(position);
     PushPair(id, value);
-  }
-
-  // Parse comment, if any.
-  position = strchr(in_string, '#');
-  if (position != NULL) {
-    comment_ = string(position + 1);
   }
 }

@@ -85,12 +85,8 @@ class SfSparseVector {
 
   // Getters and setters.
   void SetY(float new_y) { y_ = new_y; }
-  void SetGroupId(const string& new_id) { group_id_ = new_id; }
-  void SetComment(const string& new_comment) { comment_ = new_comment; }
   float GetY() const { return y_; }
   float GetSquaredNorm() const { return squared_norm_; }
-  const string& GetGroupId() const { return group_id_; }
-  const string& GetComment() const { return comment_; }
 
   // Adds a new (id, value) FeatureValuePair to the end of the vector, and
   // updates the internal squared_norm_ member.
@@ -100,8 +96,6 @@ class SfSparseVector {
   // other information unchanged.
   void ClearFeatures() { features_.clear(); squared_norm_ = 0; }
 
-  // comment_ can be any string-based comment.
-  string comment_;
   string doc_id;
 
   // Typically, only non-zero valued features are stored.  This vector is assumed
@@ -133,11 +127,6 @@ class SfSparseVector {
 
   // squared_norm_ = x1*x1 + ... + xN*xN
   float squared_norm_;
-
-  // Use this member when examples belong to distinct groups.  For instance,
-  // in ranking problems examples are grouped by query id.  By default,
-  // this is set to 0.
-  string group_id_;
 
 };
 
