@@ -19,5 +19,6 @@ urlpatterns = [
         name='post_keystroke'),
     url(r'^post_search_request/$', views.SearchButtonView.as_view(),
         name='post_search_request'),
-
+    url(r'^post_search_doc_open/$', views.SearchSearchDocOpenedView.as_view(),
+        name='post_search_doc_open'),
 ]

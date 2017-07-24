@@ -167,6 +167,42 @@ class SearchButtonView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         return self.render_json_response(context)
 
 
+class SearchSearchDocOpenedView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            client_time = self.request_json.get(u"client_time")
+            page_title = self.request_json.get(u"page_title")
+            query = self.request_json.get(u"query")
+            doc_id = self.request_json.get(u"doc_id")
+            doc_title = self.request_json.get(u"doc_title")
+            doc_search_snippet = self.request_json.get(u"doc_search_snippet")
+        except KeyError:
+            error_dict = {u"message": u"your input must include client_time,"
+                                      u" page title, query, and docid values"}
+            return self.render_bad_request_response(error_dict)
+
+        log_body = {
+            "user": self.request.user.username,
+            "client_time": client_time,
+            "result": {
+                "message": "SERP document modal is shown to user.",
+                "query": query,
+                "doc_id": doc_id,
+                "doc_title": doc_title,
+                "doc_search_snippet": doc_search_snippet,
+                "page_title": page_title
+            }
+        }
+        logger.info("[{}]".format(json.dumps(log_body)))
+
+        context = {u"message": u"Your document click request has been recorded."}
+        return self.render_json_response(context)
+
+
 class SearchGetDocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                            views.JsonRequestResponseMixin,
                            views.AjaxResponseMixin, generic.View):

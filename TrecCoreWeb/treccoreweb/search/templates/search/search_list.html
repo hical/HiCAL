@@ -244,6 +244,24 @@
 
         $('#doc-{{ document_values.docno }}-modal').on('shown.bs.modal', function (e) {
 
+            var now = + new Date();
+                $.ajax({
+                    url: '{% url 'search:post_search_doc_open' %}',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        'client_time': now,
+                        'query': $("#search_input").val(),
+                        'doc_id': '{{ document_values.docno }}',
+                        'doc_title': '{{ document_values.title|escapejs }}',
+                        'doc_search_snippet': '{{ document_values.snippet|escapejs }}',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'page_title': document.title
+                    }),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+
             var modal = $(this);
             if(!('{{ document_values.docno }}' in loaded_docs)){
                 $.ajax({
@@ -286,8 +304,6 @@
             currentOpenedModalDocId = '{{ document_values.docno }}';
         });
     </script>
-
-
 
 
     <!-- MODAL SEARCH CONTENT -->
