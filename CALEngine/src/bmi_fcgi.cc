@@ -168,15 +168,15 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
 }
 
 string get_top_terms_json(string doc_id, const unique_ptr<BMI> &bmi, int num_top_terms){
-    vector<pair<int, float>> top_terms 
-        = bmi->get_ranking_scorer()->get_top_terms(bmi->get_weights(), doc_id, num_top_terms);
+    /* vector<pair<int, float>> top_terms */ 
+    /*     = bmi->get_ranking_scorer()->get_top_terms(bmi->get_weights(), doc_id, num_top_terms); */
 
     string top_terms_json = "{";
-    for(auto top_term: top_terms){
-        if(top_terms_json.length() > 1)
-            top_terms_json.push_back(',');
-        top_terms_json += "\"" + to_string(top_term.first) + "\"" + ":" + to_string(top_term.second);
-    }
+    /* for(auto top_term: top_terms){ */
+    /*     if(top_terms_json.length() > 1) */
+    /*         top_terms_json.push_back(','); */
+    /*     top_terms_json += "\"" + to_string(top_term.first) + "\"" + ":" + to_string(top_term.second); */
+    /* } */
     top_terms_json.push_back('}');
     return top_terms_json;
 }
