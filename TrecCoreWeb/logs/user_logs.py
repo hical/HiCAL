@@ -16,7 +16,9 @@ def user_logs(input, user):
             level = matches.group('level')
             try:
                 jmsg = json.loads(matches.group('jmsg'))[0]
-                user = jmsg['user']
+                log_user = jmsg['user']
+                if log_user != user:
+                    continue
                 client_time = jmsg['client_time']
                 result = jmsg['result']
                 logs.append((client_time, level, user, ":", result))
