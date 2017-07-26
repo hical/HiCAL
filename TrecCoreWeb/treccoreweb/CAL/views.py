@@ -23,7 +23,8 @@ class CALHomePageView(views.LoginRequiredMixin, generic.TemplateView):
         current_task = self.request.user.current_task
         if current_task.is_time_past():
             return HttpResponseRedirect(reverse_lazy('progress:completed'))
-
+        if current_task.setting.only_show_doc:
+            return HttpResponseRedirect(reverse_lazy('progress:home'))
         return super(CALHomePageView, self).get(self, request, *args, **kwargs)
 
 
