@@ -28,12 +28,12 @@ class Command(BaseCommand):
                 task = judgment.task.setting
                 topic = judgment.task.topic.number
                 docid = judgment.doc_id
-                if judgment.isFromSearch:
+                if judgment.isFromSearchModal:
+                    method = 'SEARCHMODAL'
+                elif judgment.isFromSearch:
                     method = 'SERP'
                 elif judgment.isFromCAL:
                     method = 'CAL'
-                elif judgment.isFromSearchModal:
-                    method = 'SEARCHMODAL'
                 elif judgment.isFromIterative:
                     method = 'ITERATIVE'
                 else:

@@ -8,7 +8,7 @@ from treccoreweb.judgment.models import Judgement
 class Command(BaseCommand):
     help = 'Export judgments to csv format'
     filename = 'TRECjudgments.csv'
-    header = ('USER', 'TASK', 'TOPIC', 'DOCID')
+    header = ('USER', 'TASK', 'TOPIC', 'DOCID', 'JUDGMENT')
 
     def handle(self, *args, **option):
         self.stdout.write(self.style.SUCCESS("Writing to "
@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 topic = judgment.task.topic.number
                 docid = judgment.doc_id
 
-                writer.writerow((user, task, topic, docid))
+                writer.writerow((user, task, topic, docid, value))
 
         self.stdout.write(self.style.SUCCESS(
             'Successfully exported judgments to {}'.format(self.filename)))
