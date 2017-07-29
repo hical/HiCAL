@@ -9,6 +9,9 @@ fcgi:
 sofia_cli:
 	$(CC) src/sofia_cli.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc -o sofia_cli
 
+test:
+	$(CC) src/test_scorer.cc src/scorer.cc src/sofiaml/sf-sparse-vector.cc src/utils/feature_parser.cc -o test_scorer
+
 clean:
 	rm -f bmi_cli
 	rm -f bmi_fcgi
