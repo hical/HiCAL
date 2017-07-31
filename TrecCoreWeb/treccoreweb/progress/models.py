@@ -73,14 +73,14 @@ LEFTDOC_SCALE_CHOICES = Choices((NA, NA),
 
 INTERFACE_LIKERT_SCALE_CHOICES = Choices((NA, NA),
                                          (ONE, "Search Interface & Learning Interface showing "
-                                          "Paragraph with Toggle Document"
-                                               ),
+                                               "Paragraph with Toggle Document"
+                                          ),
                                          (TWO,  "Learing Interface showing Paragraph "
                                                 "with Toggle Document"),
                                          (THREE, "Search Interface & "
                                                  " Learning Interface showing Paragraph"),
                                          (FOUR, "Learning Interface showing Paragraph"),
-                                         (FIVE, "Document Interative Interface Only")
+                                         (FIVE, "Document Iterative Interface Only")
                                          )
 
 FEAT_LIKERT_SCALE_CHOICES = Choices((NA, NA),
