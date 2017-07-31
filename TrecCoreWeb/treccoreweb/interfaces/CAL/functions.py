@@ -1,8 +1,14 @@
-import httplib2
-import urllib.parse
+from config.settings.base import CAL_SERVER_IP
+from config.settings.base import CAL_SERVER_PORT
 import json
+import logging
+import urllib.parse
 
-from config.settings.base import CAL_SERVER_IP, CAL_SERVER_PORT
+import httplib2
+
+from treccoreweb.CAL.exceptions import CALServerError
+
+logger = logging.getLogger(__name__)
 
 
 def send_judgment(session, doc_id, rel, next_batch_size=5):
@@ -20,13 +26,10 @@ def send_judgment(session, doc_id, rel, next_batch_size=5):
                               method="POST")
 
     if resp and resp['status'] == '200':
-        content = json.loads(content)
+        content = json.loads(content.decode('utf-8'))
         return content['docs'], content['top-terms']
     else:
-        # TODO: Complete this function
-        print("CAL server returend something not 200. ", resp)
-
-    return [], None
+        raise CALServerError(resp['status'])
 
 
 def add_session(session, seed_query):
@@ -34,7 +37,6 @@ def add_session(session, seed_query):
     Adds session to CAL backend server
     :param session:
     :param seed_query
-    :return: true if succeeded, otherwise false
     """
     h = httplib2.Http()
     url = "http://{}:{}/CAL/begin"
@@ -42,16 +44,17 @@ def add_session(session, seed_query):
     body = {'session_id': str(session),
             'seed_query': seed_query,
             'mode': 'para'}
-    body = urllib.parse.urlencode(body)
+    post_body = '&'.join('%s=%s' % (k, v) for k, v in body.items())
+
     resp, content = h.request(url.format(CAL_SERVER_IP,
                                          CAL_SERVER_PORT),
-                              body=body,
+                              body=post_body,
                               headers={'Content-Type': 'application/json; charset=UTF-8'},
                               method="POST")
     if resp and resp['status'] != '200':
         return False
-
-    return True
+    else:
+        raise CALServerError(resp['status'])
 
 
 def get_documents(session, num_docs, query):
@@ -70,10 +73,7 @@ def get_documents(session, num_docs, query):
                               method="GET")
 
     if resp and resp['status'] == '200':
-        content = json.loads(content)
+        content = json.loads(content.decode('utf-8'))
         return content['docs'], content['top-terms']
     else:
-        # TODO: update this else condition
-        print("CAL server returend something not 200. ", resp)
-
-    return [], None
+        raise CALServerError(resp['status'])

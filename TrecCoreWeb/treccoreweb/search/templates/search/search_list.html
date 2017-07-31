@@ -5,12 +5,26 @@
     </div>
 </div>
 {% endif %}
-
+{% if not  documents.items %}
+<div class="med card-section">
+    <p style="padding-top:.33em">
+        Your search - <em>{{ query }}</em> - did not match any documents.  </p>
+        <p style="margin-top:1em">Suggestions:</p>
+        <ul style="margin-left:1.3em;margin-bottom:2em">
+            <li>Make sure that all words are spelled correctly.</li>
+            <li>Try different keywords.</li>
+            <li>Try more general keywords.</li>
+            <li>Try fewer keywords.</li></ul>
+</div>
+{% endif %}
+{% if total_time %}
+<small class="gray-text">{{ total_time }} seconds.</small>
+{% endif %}
 {% for doc_id, document_values in documents.items %}
     <div class="row flex-items-md-middle">
         <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 15px;">
             {% if document_values.isJudged %}
-                {% if document_values.relevance_judgment.relevant %}
+                {% if document_values.relevance_judgment.highlyRelevant %}
                     <div class="bg-success" style="height: 100%; padding: 5px;" >
                         <i class="fa" aria-hidden="true"></i>
                     </div>
@@ -18,34 +32,27 @@
                     <div class="bg-danger" style="height: 100%; padding: 5px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
-                {% elif document_values.relevance_judgment.ontopic %}
+                {% elif document_values.relevance_judgment.relevant %}
                     <div class="bg-warning" style="height: 100%; padding: 5px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
                 {% endif %}
             {% endif %}
         </div>
-        <div class="col-md-6"  data-toggle="modal" data-target=".doc-{{ document_values.docno }}-modal" style="cursor: pointer; cursor: hand;">
+        <div class="col-md-7"  data-toggle="modal" data-target=".doc-{{ document_values.docno }}-modal" style="cursor: pointer; cursor: hand;">
             <div class="document" data-rank="{{ document_values.rank }}">
                 <div class="title" id="doc-{{ document_values.docno }}-title">{{ document_values.title|safe }}</div>
                 <div class="url">doc_id: {{ document_values.docno }}</div>
                 <div class="snippet" id="doc-{{ document_values.docno }}-snippet"> {{ document_values.snippet|safe }} </div>
             </div>
         </div>
-        <div class="offset-md-0-5 col-md-3 mt-5 center-text">
-            <div class="btn-group top-margin" role="group"
-                 aria-label="Basic example">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false);" class="btn btn-sm btn-success">
-                    Relevant
-                </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false);" class="btn btn-sm btn-warning">On
-                    topic
-                </a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false);" class="btn btn-sm btn-danger">Not
-                    relevant
-                </a>
+        <div class="offset-md-1 col-md-3 mt-5 center-text">
+            <div class="btn-group top-margin" role="group">
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null, null);" class="btn btn-sm btn-danger">Not relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-warning">Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
             </div>
-            <span class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</span>
+            <div class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
         </div>
     </div>
 
@@ -55,26 +62,36 @@
         <div class="modal-dialog modal-xlg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">
-                        {{ document_values.title|safe }}
+                    <h3 class="modal-title" id="modal-title-{{ document_values.docno }}">
+                        <span class="text-danger">Please wait...</span>
                     </h3>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="overflow: auto; min-height: 400px; max-height: inherit;">
+                <div class="modal-body" style="overflow: auto; min-height: 450px; max-height: inherit;">
                     <div class="row">
                         <div class="col-md-8">
                             <div class="document-{{ document_values.docno }}-modal-content" id="document-{{ document_values.docno }}-modal-content"
                                  data-doc-id="">
                                 <div class="document_content" id="document_{{ document_values.docno }}_content">
-                                    <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                    <div class="row bottom-margin small">
+                                        <div class="col-md-6 ">
+                                            <small class="document_content_date"></small>
+                                        </div>
+                                        <div class="col-md-6 align-right small">
+                                            <code class="document_content_id"></code>
+                                        </div>
+                                    </div>
+                                    <div class="document_content_text" id="document_{{ document_values.docno }}_raw_content">
+                                        <p><span class="text-danger">Fetching document. Please wait...</span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" id="{{ document_values.docno }}-sideBar">
                             <nav class="sidebar-nav-fixed bg-faded font-open-sans">
                                 <ul class="nav nav-pills flex-column little-padding">
                                     <div class="cal-search">
@@ -105,29 +122,23 @@
                                     </div>
 
                                     <li class="nav-item extra-top-margin">
-                                        <span class="gray-text align-left">Judge document:</span>
+                                        <div class="gray-text align-left">Judge document:</div>
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">
-                                                Relevant
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">On
-                                                topic
-                                            </a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not
-                                                relevant
-                                            </a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
                                         </div>
                                     </li>
                                     <div class="extra-top-margin align-left">
-                                        <span class="gray-text">Keyboard shortcuts:</span>
+                                        <div class="gray-text">Keyboard shortcuts:</div>
                                         <li class="nav-item top-margin">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <span class="badge badge-success">s</span>
+                                                    <span class="badge badge-danger">s</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as relevant
+                                                    <small class="left-margin gray-text">Mark as non-relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -135,21 +146,21 @@
                                         <li class="nav-item">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <span class="badge badge-warning">k</span>
+                                                    <span class="badge badge-warning">r</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as on topic
+                                                    <small class="left-margin gray-text">Mark as relevant
                                                     </small>
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="nav-item ">
+                                        <li class="nav-item">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <span class="badge badge-danger">h</span>
+                                                    <span class="badge badge-success">h</span>
                                                 </div>
                                                 <div class="col-md-9">
-                                                    <small class="left-margin">Mark as non-relevant
+                                                    <small class="left-margin gray-text">Mark as highly relevant
                                                     </small>
                                                 </div>
                                             </div>
@@ -174,41 +185,125 @@
 
     <!-- MODAL EVENT TRIGGERS -->
     <script>
+
         $('#doc-{{ document_values.docno }}-modal').on('hidden.bs.modal', function (e) {
-            console.log("model has been hidden");
             isModalOpen = false;
             currentOpenedModalDocId = null;
+            if(documents_timers['{{ document_values.docno }}'] == undefined){
+                console.error("Hiding modal with no timer. An error must have happened.");
+                return;
+            }
+            var timeActive = Date.now() - documents_timers['{{ document_values.docno }}'].startTime - documents_timers['{{ document_values.docno }}'].totalAwayTime;
+            var timeAway = documents_timers['{{ document_values.docno }}'].totalAwayTime;
+            console.log("Model has been hidden.");
+            console.log("Destroying document# {{ document_values.docno }} timer.");
+            documents_timers['{{ document_values.docno }}'].idle.stop();
+            delete documents_timers['{{ document_values.docno }}'];
+
+
+            if(is_from_judement == false){
+                console.log("No judgment has been made. Sending no judgment call to backend for document id: " + '{{ document_values.docno }}');
+                var now = + new Date();
+                var ctrlf_terms = $("#search_content_doc_{{ document_values.docno }}").val();
+                var timeVerbose = {
+                    "timestamp": now,
+                    "timeActive": timeActive,
+                    "timeAway": timeAway,
+                    "source": "searchModal",
+                    "judged": false,
+                    'ctrl_f_terms_input': ctrlf_terms,
+                    'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                    'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
+                };
+                var data = {
+                    'doc_id': '{{ document_values.docno }}',
+                    'doc_title': '{{ document_values.title|escapejs }}',
+                    'doc_search_snippet': '{{ document_values.snippet|escapejs }}',
+                    'client_time': now,
+                    'timeVerbose': timeVerbose,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                };
+
+                $.ajax({
+                    url: '{% url 'judgment:post_nojudgment' %}',
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        console.log(result['message']);
+                    },
+                    error: function (result) {
+                        console.error(result);
+                    }
+                });
+            }else{
+                // reset flag
+                is_from_judement = false;
+            }
         });
 
         $('#doc-{{ document_values.docno }}-modal').on('shown.bs.modal', function (e) {
 
+            var now = + new Date();
+                $.ajax({
+                    url: '{% url 'search:post_search_doc_open' %}',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        'client_time': now,
+                        'query': $("#search_input").val(),
+                        'doc_id': '{{ document_values.docno }}',
+                        'doc_title': '{{ document_values.title|escapejs }}',
+                        'doc_search_snippet': '{{ document_values.snippet|escapejs }}',
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'page_title': document.title
+                    }),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+
             var modal = $(this);
             if(!('{{ document_values.docno }}' in loaded_docs)){
                 $.ajax({
-                    url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}&query={{ query }}',
+                    url: '{% url 'search:get_doc' %}?docid={{ document_values.docno }}',
                     method: 'GET',
                     success: function (result) {
-                        modal.find('.document_content').html(result[0]['content']);
+                        $("#modal-title-{{ document_values.docno }}").html(result[0]['title']);
+                        modal.find('.document_content_text').html(result[0]['content']);
                         loaded_docs['{{ document_values.docno }}'] = true;
+                        modal.find('.document_content_date').html(result[0]['date']);
+                        modal.find('.document_content_id').html(result[0]['doc_id']);
+                        console.log("Initializing document timer for doc: {{ document_values.docno }}");
+                        var documentTimer = AwayTimer(false);
+                        documents_timers['{{ document_values.docno }}'] = documentTimer;
                     },
                     error: function (result){
-                        modal.find('.document_content').html("Failed to get doc. Error message: "+result);
+                        var error_msg = "["+result['status']+"] "+"Failed to get document. Error message: "+result["statusText"]+".";
+                        modal.find('.document_content').html(error_msg).addClass("text-danger");
+                        console.error(error_msg);
                     },
                     statusCode: {
                         502: function (xhr) {
-                            modal.find('.document_content').html("502 Failed to get doc. Error message: "+xhr.responseText);
+                            var error_msg = "[502] Failed to get document. Error message: "+xhr.responseText;
+                            modal.find('.document_content').html(error_msg).addClass("text-danger");
+                            console.error(error_msg);
                         }
                     }
                 });
+            }else{
+                console.log("Re-initializing document timer for doc: {{ document_values.docno }}");
+                var documentTimer = AwayTimer(false);
+                documents_timers['{{ document_values.docno }}'] = documentTimer;
             }
 
-            console.log("model has been shown");
+            // fake an updated on the ctrl+f search bar to update
+            $("#search_content_doc_{{ document_values.docno }}").trigger("updated");
+            updateMatchesLists();
+            console.log("Model has been shown");
             isModalOpen = true;
             currentOpenedModalDocId = '{{ document_values.docno }}';
         });
     </script>
-
-
 
 
     <!-- MODAL SEARCH CONTENT -->
@@ -231,7 +326,9 @@
             // next button
             $nextBtn = $("button[data-search='next']"),
             // the context where to search
-            $content = $(".document-{{ document_values.docno }}-modal-content"),
+            $content = $("#doc-{{ document_values.docno }}-modal"),
+            // list of selectors to ignore during the search
+            $exclude = [".document_content_date", ".document_content_id", ".sidebar-nav-fixed", ".btn", ".gray-text", ".badge"],
             // jQuery object to save <mark> elements
             $results = "",
             // the class that will be appended to the current
@@ -242,19 +339,53 @@
             // the current index of the focused element
             currentIndex = 0;
 
+            var search_form = document.getElementById("search_content_doc_{{ document_values.docno }}");
+            Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
+                if(event.type == "keydown" && $(search_form).is(':focus')){
+                    var now = + new Date();
+                    $.ajax({
+                        url: '{% url 'progress:post_find_keystroke' %}',
+                        method: 'POST',
+                        data: JSON.stringify({
+                            'client_time': now,
+                            'doc_id': "{{ document_values.docno }}",
+                            'character': character,
+                            'page_title': document.title,
+                            'search_bar_value': $(search_form).val(),
+                            'isSearchbarFocused': $(search_form).is(':focus'),
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        }),
+                        success: function (result) {
+                            console.log(result['message']);
+                        }
+                    });
+                    console.log("Character pressed: '"+character+"'", "at:", now);
+                }
+                document.body.click();
+            };
+
+
           /**
            * Jumps to the element matching the currentIndex
            */
           function jumpTo() {
             if ($results.length) {
+              $input.addClass("greenBorder").css("border-color","#449D44");
               var position,
                 $current = $results.eq(currentIndex);
               $results.removeClass(currentClass);
               if ($current.length) {
                 $current.addClass(currentClass);
-                position = $current.offset().top - offsetTop;
-                window.scrollTo(0, position);
+                position = $current[0].offsetTop - offsetTop;
+                $("#doc-{{ document_values.docno }}-modal").scrollTop(position);
               }
+            }else{
+              if(!$input.val()){
+                  $input.removeAttr( 'style' );
+              }else if ($input.is(':focus')){
+                $input.addClass("redBorder").css("border-color","#C9302C");
+              }
+              $("#doc-{{ document_values.docno }}-modal").scrollTop(0);
             }
           }
 
@@ -268,7 +399,9 @@
               done: function() {
                 $content.mark(searchVal, {
                   separateWordSearch: true,
+                  exclude: $exclude,
                   done: function() {
+                    updateMatchesLists();
                     $results = $content.find("mark");
                     currentIndex = 0;
                     jumpTo();
@@ -278,10 +411,30 @@
             });
           });
 
+          $content.on( "updated", function() {
+              var searchVal = $input.val();
+               if(searchVal != undefined){
+                   $content.unmark({
+                      done: function () {
+                          $content.mark(searchVal, {
+                              separateWordSearch: true,
+                              exclude: $exclude,
+                              done: function () {
+                                  updateMatchesLists();
+                                  $results = $content.find("mark");
+                                  currentIndex = 0;
+                              }
+                          });
+                      }
+                  });
+               }
+            });
+
           /**
            * Clears the search
            */
           $clearBtn.on("click", function() {
+            resetMatchesDict();
             $content.unmark();
             $input.val("").focus();
           });

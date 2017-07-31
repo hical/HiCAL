@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block pagetitle %}Demographic{% endblock %}
+{% block nav-header %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block nav-left %}{% endblock %}
+{% block nav-right %}
+    <li class="nav-item">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_logout' %}">Sign out</a>
+        {% else %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-primary top-margin">Demographic questionnaire</h1>
+            <p>Please answer the demographic questions.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+                {% crispy form %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

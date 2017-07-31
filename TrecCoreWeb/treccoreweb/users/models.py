@@ -1,10 +1,12 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import JSONField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from treccoreweb.topic.models import Topic
+from treccoreweb.progress.models import Task
+
 
 @python_2_unicode_compatible
 class User(AbstractUser):
@@ -12,7 +14,12 @@ class User(AbstractUser):
     # First Name and Last Name do not cover name patterns
     # around the globe.
     name = models.CharField(_('Name of User'), blank=True, max_length=255)
-    current_topic = models.ForeignKey(Topic, blank=True, null=True)
+    current_task = models.ForeignKey(Task, blank=True, null=True)
+    # sequence of topics assigned to user.
+    sequence = JSONField(blank=True, null=True, default=list)
+    # treatment number
+    treatment = models.IntegerField(blank=True, null=True,
+                                    choices=((x, x) for x in range(-1, 50)))
 
     def __str__(self):
         return self.username

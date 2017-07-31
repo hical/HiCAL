@@ -5,19 +5,19 @@
 {% block main %}
 <h3 class="text-primary">Current active topic</h3>
 
-{% if user.current_topic %}
+{% if user.current_task.topic %}
 <div class="card top-margin">
     <div class="card-block">
-        <a href="{% url 'topic:detail' pk=user.current_topic.id %}">
+        <a href="{% url 'topic:detail' pk=user.current_task.topic.id %}">
             <div class="row">
                 <div class="col-md-2 text-primary">
-                    {{ user.current_topic.title }}
+                    {{ user.current_task.topic.title }}
                 </div>
                 <div class="col-md-8 gray-text">
-                    {{ user.current_topic.seed_query }}
+                    {{ user.current_task.topic.seed_query }}
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" name="topic_id" value="{{ user.current_topic.topic.id }}" class="btn btn-primary disabled">Activated <small>(current)</small></button>
+                    <button type="submit" name="topic_id" value="{{ user.current_task.topic.topic.id }}" class="btn btn-primary disabled">Activated <small>(current)</small></button>
                 </div>
             </div>
         </a>
@@ -35,7 +35,7 @@
 </div>
 
 {% for topic in object_list %}
-{% if topic == user.current_topic %}{% else %}
+{% if topic == user.current_task.topic %}{% else %}
 <div class="card top-margin">
     <div class="card-block">
         <div class="row">
@@ -61,24 +61,4 @@
 {% endif %}
 {% endfor %}
 
-{% endblock %}
-
-
-{% block extra_scripts %}
-    <script>
-        // Nofity server of page visit on pageload
-        window.onload = function () {
-            var now = + new Date();
-            $.ajax({
-                url: '{% url 'topic:post_visit' %}',
-                method: 'POST',
-                data: JSON.stringify({
-                    'client_time': now,
-                    'type': "list",
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                }),
-                success: function (result) {}
-            });
-        };
-    </script>
 {% endblock %}

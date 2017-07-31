@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags static %}
+
+{% block pagetitle %}Exit{% endblock %}
+
+
+{% block sidebar %}{% endblock %}
+
+{% block nav-left%}{% endblock %}
+{% block nav-header %}
+    <li class="nav-item active">
+        <span class="nav-link gray-text">Exit questionnaire</span>
+    </li>
+{% endblock %}
+{% block nav-right%}
+<li class="nav-item">
+        {% if request.user.is_authenticated %}
+        <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_logout'  %}">Sign out</a>
+        {% else %}
+        <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
+
+{% block main %}
+
+    <div class="row flex-items-md-center">
+        <div class="col-md-12 mt-4">
+            <h1 class="text-primary"> Exit questionnaire </h1>
+            <p>Thank you for completing the study and using all of the interfaces and judging interfaces.</p>
+            <p>You have been given the following interfaces to judge documents. For some topics, you were provided with a combination of these interfaces. As a reminder, below are screenshots of the interfaces you have used.</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <figure class="figure align-left">
+                        <img src="{% static 'images/search.png' %}"
+                             class="figure-img img-fluid rounded"
+                             alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption center-text">
+                        <i class="fa fa-search" aria-hidden="true"></i> Search interface.
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="col-md-4">
+                    <figure class="figure align-left">
+                        <img src="{% static 'images/cal_para.png' %}"
+                             class="figure-img img-fluid rounded"
+                             alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption center-text">
+                            <i class="fa fa-lightbulb-o" aria-hidden="true"></i> Learning interface with paragraph shown only.
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="col-md-4">
+                    <figure class="figure align-left">
+                        <img src="{% static 'images/cal.png' %}"
+                             class="figure-img img-fluid rounded"
+                             alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption center-text">
+                            <i class="fa fa-lightbulb-o" aria-hidden="true"></i> Learning interface with paragrah and toggleable full document content.
+                        </figcaption>
+                    </figure>
+                </div>
+
+            </div>
+            <strong>Please answer the following questions:</strong>
+        </div>
+    </div>
+    <div class="row extra-top-margin">
+        <div class="col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+                {% crispy form %}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

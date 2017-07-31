@@ -1,0 +1,723 @@
+{% extends "base.html" %}
+{% load static %}
+
+{# TODO: Change page title to something user-study friendly #}
+{% block pagetitle %}Iterative{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
+    </li>
+{% endblock %}
+
+{% block nav-header-title %}{% endblock %}
+
+{% block nav-right%}
+    {% if request.user.is_authenticated %}
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="modal" data-target="#reviewDocsModal" href="#"
+            id="reviewDocs">Latest judgments</a>
+    </li>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <!-- Modal -->
+    <div class="modal" id="reviewDocsModal" tabindex="-1" role="dialog"
+         aria-labelledby="reviewDocsModalTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest judged
+                        docs.</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="reviewDocsIterative">
+                        <div class="row">
+                            <div class="col-md-12 center-text">
+                                <i id="reviewSpinner" style="display: none;"
+                                class="fa fa-refresh fa-spin text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="extra-bottom-margin">
+
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-block document-cal" id="cal-document"
+                         data-doc-id="">
+                        <h1 id="document_title" style="font-family: 'Playfair Display', georgia, 'times new roman',times,serif;"><span class="text-danger">Loading</span></h1>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small id="document_date"></small>
+                            </div>
+                            <div class="col-md-6 small align-right">
+                                <code>docno: </code><code id="document_id"></code>
+                            </div>
+                        </div>
+                        <div id="document_snippet">
+                            <p>Please wait...</p>
+                        </div>
+                        <div id="document_content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <nav class="sidebar-nav-fixed bg-faded font-open-sans">
+                    <ul class="nav nav-pills flex-column little-padding">
+                        <div class="cal-search">
+
+                            <li class=" top-margin">
+                                <span class="gray-text align-left">Search content:</span>
+                                <form id="searchContentForm" class="top-margin">
+                                    <div class="input-group">
+                                        <input id="search_content" type="search"
+                                               class="form-control" placeholder="Search">
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-search="next" id="searchNext"
+                                            type="button">&darr;</button>
+                                  </span>
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-search="prev"
+                                            type="button">&uarr;</button>
+                                  </span>
+                                  <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-secondary"
+                                            data-search="clear" type="button">✖
+                                    </button>
+                                  </span>
+                                    </div>
+                                </form>
+                            </li>
+                        </div>
+
+                        <li class="nav-item extra-top-margin">
+                            <div class="gray-text align-left">Judge document:</div>
+
+                            <div class="btn-group top-margin" role="group">
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
+                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
+                            </div>
+                        </li>
+
+                        <div class="extra-top-margin align-left">
+                            <span class="gray-text">Keyboard shortcuts:</span>
+                            <li class="nav-item top-margin">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-danger">s</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Mark as non-relevant
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-warning">r</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Mark as relevant
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-success">h</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Mark as highly relevant
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                            <hr>
+                            <li class="nav-item ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span class="badge badge-primary">u</span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <small class="left-margin">Show latest judged docs
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+
+                    </ul>
+
+                </nav>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+    <script src="{% static 'js/Queue.src.js' %}"></script>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>#}
+{#    <script src="{% static 'js/jquery.mark.min.js' %}"></script>#}
+    <script src="{% static 'js/mousetrap.min.js' %}"></script>
+    <script src="{% static 'js/CAL.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/idle.js' %}"></script>
+    <script src="{% static 'js/timer.js' %}"></script>
+
+    <script>
+
+        var queue = new Queue();
+        var latestJudgedDocsQueue = new Queue();
+
+        var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh.
+        var documentTimer = null;
+
+        // Get initial document at page visit
+        $.ajax({
+            url: '{% url 'iterative:get_docs' %}',
+            method: 'GET',
+            success: function (result) {
+                console.log(JSON.stringify(result));
+                if (result.length) {
+                    for (var i = 0; i < result.length; i++) {
+                        queue.enqueue(result[i]);
+                    }
+                    if(!queue.isEmpty()){
+                        var next_doc = queue.dequeue();
+                        updateDocument(
+                                next_doc["doc_id"],
+                                next_doc["title"],
+                                next_doc["date"],
+                                "", // empty snippet
+                                next_doc["content"]
+                        );
+                    }
+                }else{
+                    updateDocument(
+                            "",
+                            "<span class='text-danger'>Server returned empty list.</span>",
+                            "",
+                            "",
+                            "Something went wrong.. Please contact the study coordinators."
+                        );
+                }
+            },
+            error: function (result){
+                if(document_isEmpty()){
+                    updateDocument("",
+                    "<span class='text-danger'>Failed to retrieve...</span>",
+                    "",
+                    result['status'] + " " +result['statusText'],
+                    "");
+                }
+                console.error("Error occurred: " + JSON.stringify(result));
+            },
+            statusCode: {
+                502: function (xhr) {
+                    if(document_isEmpty()){
+                        updateDocument("",
+                        "<span class='text-danger'>Failed to retrieve docs..</sapn>",
+                        "",
+                        xhr.responseText,
+                        "");
+                    }
+                    console.error("Failed to get documents. Error message: "+xhr.responseText);
+                }
+            }
+        });
+
+
+        // Get populate prev judged document queue
+        $.ajax({
+            url: '{% url 'judgment:get_latest' number_of_docs_to_show=10 %}',
+            method: 'GET',
+            success: function (result) {
+                for(var i = result.length - 1; i >= 0; i--){
+                    latestJudgedDocsQueue.enqueue(
+                        result[i]
+                    );
+                }
+                update_latest_judged_doc_view();
+            }
+        });
+
+
+        function updateDocument(id, title, date, snippet, content){
+            console.log("Updating document view for document id: " + id);
+            $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
+            $("#document_id").html(id);
+            $("#document_title").html(title);
+            $("#document_date").html(date);
+            $("#document_snippet").html(""); // empty snippet for this interface
+            $("#document_content").html(content);
+
+            $( "#document_content" ).trigger( "updated" );
+            window.scrollTo(0, 0);
+
+            if(id){
+                console.log("Initializing timer for document " + id);
+                if(documentTimer != null){
+                    documentTimer.idle.stop();
+                }
+                documentTimer = AwayTimer();
+
+                var now = + new Date();
+                var data = {
+                    'action': 'trig_update_document_view',
+                    'message': 'The view of current document has been updated to a new document.',
+                    'doc_id': id,
+                    'doc_title': title,
+                    'extra_context': {},
+                    'client_time': now,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'page_title': document.title
+                };
+
+                $.ajax({
+                    url: '{% url 'iterative:post_log_msg' %}',
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+            }else{
+                if(documentTimer != null){
+                    documentTimer.idle.stop();
+                }
+            }
+        }
+
+
+        function update_documents_to_judge_list() {
+            $.ajax({
+                url: '{% url 'iterative:get_docs' %}',
+                method: 'GET',
+                data: JSON.stringify({csrfmiddlewaretoken: '{{ csrf_token }}'}),
+                success: function (result) {
+                    if (result.length) {
+                        for (var i = 0; i < result.length; i++) {
+                            queue.enqueue(result[i]);
+                        }
+                    }
+                }
+            });
+        }
+
+        function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
+                               highlyRelevant, notrelevant, relevant, isMouse, isKeyboard) {
+            window.scrollTo(0, 0);
+            if(current_doc_id == "") {
+                console.log("Please wait...");
+                return false;
+            }
+            var current_doc_content = $("#document_content").html();
+            var current_doc_date = $("#document_date").html();
+
+            var now = + new Date();
+
+            // if(queue.isEmpty()){
+            //    console.log("The queue of documents to judge is empty. Please wait");
+            //    alert("The queue of documents to judge is empty. Please wait");
+            //    return;
+            //}
+
+            console.log("Saving '"+current_doc_id+"' to judged_docs JS dict");
+            judged_docs[current_doc_id] = true;
+
+            console.log("Sending judgment call to backend for document id: " + current_doc_id);
+            var timeVerbose = {
+                "timestamp": now,
+                "timeActive": Date.now() - documentTimer.startTime - documentTimer.totalAwayTime,
+                "timeAway": documentTimer.totalAwayTime,
+                "source": "Iterative",
+                "judged": true,
+                "isMouse": isMouse,
+                "isKeyboard": isKeyboard,
+                "highlyRelevant": highlyRelevant,
+                "nonrelevant": notrelevant,
+                "relevant": relevant
+            };
+
+            var data = {
+                'doc_id': current_doc_id,
+                'doc_title': current_doc_title,
+                'doc_CAL_snippet': "",
+                'doc_search_snippet': "",
+                'highlyRelevant': highlyRelevant,
+                'nonrelevant': notrelevant,
+                'relevant': relevant,
+                'isFromCAL': false,
+                'isFromSearch': false,
+                'isFromSearchModal': false,
+                'isFromIterative': true,
+                'client_time': now,
+                'fromMouse': isMouse,
+                'fromKeyboard': isKeyboard,
+                'timeVerbose': timeVerbose,
+                'search_query': null,
+                'ctrl_f_terms_input': $("#search_content").val(),
+                'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                'found_ctrl_f_terms_in_summary': marked_matches_in_document_snippet,
+                'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'page_title': document.title
+            };
+
+
+            $.ajax({
+                url: '{% url 'judgment:post_judgment' %}',
+                method: 'POST',
+                data: JSON.stringify(data),
+                success: function (result) {
+                    console.log(result['message'], " - Dequing after sending judgment of document: " + data["doc_id"]);
+
+                    var isempty_view = document_isEmpty();
+                    if(isempty_view){
+                        console.log("Empty view. Updating the view with a document.");
+                        if(queue.isEmpty()){
+                            updateDocument(
+                                    "",
+                                    "<span class='text-success'>Done judging the set of documents.</span>",
+                                    "",
+                                    "",
+                                    "You have finished judging the " +
+                                    "set of documents. Please click on the IRStudy on the left top corner. "
+                            );
+                        }else{
+                            var next_doc = false;
+                            while(next_doc === false){
+                                var next_doc_tmp = queue.dequeue();
+                                if(next_doc_tmp == undefined)
+                                    break;
+                                if(!(next_doc_tmp["doc_id"] in judged_docs)){
+                                    next_doc = next_doc_tmp;
+                                }
+                            }
+                            if(next_doc !== false){
+                                updateDocument(
+                                        next_doc["doc_id"],
+                                        next_doc["title"],
+                                        next_doc["date"],
+                                        next_doc["snippet"],
+                                        next_doc["content"]
+                                );
+                            }
+
+                        }
+                    }
+
+                },
+                error: function (result){
+                    if(document_isEmpty()){
+                        updateDocument("",
+                        "<span class='text-danger'>Something went wrong..</sapn>",
+                        "",
+                        result['message'],
+                        "");
+                    }
+                    console.log(result);
+                    console.error("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['responseText'])
+                },
+                statusCode: {
+                    502: function (xhr) {
+                        if(document_isEmpty()){
+                            updateDocument("",
+                            "<span class='text-danger'>Something went wrong..</sapn>",
+                            "",
+                            xhr.responseText,
+                            "");
+                        }
+                        console.log("Something went wrong. Timeout error." +
+                            "Judgment may have not been recorded.", xhr.responseText);
+                    }
+                }
+            });
+
+            var next_doc = false;
+            while(next_doc === false){
+                var next_doc_tmp = queue.dequeue();
+                if(next_doc_tmp == undefined)
+                    break;
+                if(!(next_doc_tmp["doc_id"] in judged_docs)){
+                    next_doc = next_doc_tmp;
+                }
+            }
+
+            if(next_doc !== false){
+                // console.log("Size of queue: " + queue.getLength());
+                updateDocument(
+                        next_doc["doc_id"],
+                        next_doc["title"],
+                        next_doc["date"],
+                        next_doc["snippet"],
+                        next_doc["content"]
+                );
+
+            }else{
+                updateDocument(
+                        "",
+                        "<span class='text-danger'>Done..</span>",
+                        "",
+                        "The queue is empty.",
+                        "");
+            }
+
+            // check if doc_id already in latestJudgedDocsQueue
+            var isInLatestJudgedDocsQueue = false;
+            var list = latestJudgedDocsQueue.getList();
+            for(var i = 0; i < latestJudgedDocsQueue.getLength();i++){
+                if(list[i]['doc_id'] == current_doc_id){
+                    isInLatestJudgedDocsQueue = true;
+                    break;
+                }
+            }
+            var doc = {
+                "doc_id": current_doc_id,
+                "doc_title": current_doc_title,
+                "doc_date": current_doc_date,
+                "doc_content": current_doc_content,
+                'highlyRelevant': highlyRelevant,
+                'nonrelevant': notrelevant,
+                'relevant': relevant
+            };
+
+            if(isInLatestJudgedDocsQueue){
+                list.splice(i, 1);
+                latestJudgedDocsQueue.enqueue(doc);
+            }else if(latestJudgedDocsQueue.getLength() == 10){
+                console.log("Latest judged docs queue reached its limit. Dequeuing then enquing");
+                latestJudgedDocsQueue.dequeueForce();
+                latestJudgedDocsQueue.enqueue(doc);
+            }else{
+                latestJudgedDocsQueue.enqueue(doc);
+            }
+
+            update_latest_judged_doc_view();
+        }
+
+
+
+    function show_doc_view(doc){
+        $('#cal-document').attr("data-doc-id", doc["doc_id"]).data("doc-id", doc["doc_id"]);
+        $("#document_title").text(doc["title"]);
+        $("#document_content").html(doc["snippet"]);
+    }
+
+    function reset_doc_view(){
+        $('#cal-document').attr("data-doc-id", "None").data("doc-id", "None");
+        $("#document_title").text("");
+        $("#document_content").text("");
+    }
+
+
+    function post_ctrlf(){
+        var now = + new Date();
+        $.ajax({
+            url: '{% url 'progress:post_ctrlf' %}',
+            method: 'POST',
+            data: JSON.stringify({
+                'client_time': now,
+                'page_title': document.title,
+                'extra_context': {
+                    'doc_id': $("#document_id").html()
+                },
+                'search_field_value': $("#search_content").val(),
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            }),
+            success: function (result) {
+                console.log(result['message']);
+            }
+        });
+    }
+
+
+    function show_prev_judged_doc_and_hide_modal(doc_index){
+        // get current doc
+        var current_doc = null;
+        var current_doc_id = $("#document_id").html();
+        if(current_doc_id){
+            var current_doc_title = $('#document_title').html();
+            var current_doc_content = $('#document_content').html();
+            var current_doc_date = $("#document_date").html();
+            current_doc = {
+                'doc_id': current_doc_id,
+                'date': current_doc_date,
+                'title': current_doc_title,
+                'content': current_doc_content
+            }
+        }
+
+
+
+        var list = latestJudgedDocsQueue.getList();
+        var doc = list[doc_index];
+        var doFetch = false;
+
+        var doc_id = doc['doc_id'];
+        var doc_title = doc['doc_title'];
+        var doc_date = doc['doc_date'];
+        if (doc_date == ""){
+            doFetch = true;
+            doc_date = "Fetching date..."
+        }
+        var doc_content = doc['doc_content'];
+        if (doc_content == ""){
+            doc_content = "<span class='text-danger'>Please wait.. fetching doc content.</span>"
+        }
+
+        $('#reviewDocsModal').modal('hide');
+
+        updateDocument(
+            doc_id,
+            doc_title,
+            doc_date,
+            "", // empty snippet
+            doc_content
+        );
+
+        // push the prev document to infront of queue
+        if(current_doc){
+            queue.insertFront(current_doc);
+        }
+
+        if(doFetch){
+            $.ajax({
+                url: '{% url 'search:get_doc' %}?docid='+doc_id+'&query=',
+                method: 'GET',
+                success: function (result) {
+                    updateDocument(
+                        doc_id,
+                        doc_title,
+                        result[0]['date'],
+                        "", // empty snippet,
+                        result[0]['content']
+                    );
+
+                    // update instance so that we don't make another call.
+                    doc['doc_date'] = result[0]['date'];
+                    doc['doc_content'] = result[0]['content'];
+                },
+                error: function (result){
+                    if(document_isEmpty()){
+                        updateDocument("",
+                        "<span class='text-danger'>Something went wrong..</sapn>",
+                        "",
+                        result['message'],
+                        "");
+                    }
+
+                    console.error("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['responseText'])
+                },
+                statusCode: {
+                    502: function (xhr) {
+                        if(document_isEmpty()){
+                            updateDocument("",
+                            "<span class='text-danger'>Something went wrong..</sapn>",
+                            "",
+                            xhr.responseText,
+                            "");
+                        }
+                        console.error("Something went wrong. Timeout error." +
+                            ".", xhr.responseText);
+                    }
+                }
+            });
+        }
+
+    }
+
+    function update_latest_judged_doc_view(){
+        console.log("Updating latest judged docs modal view");
+
+        // empty content of modal
+        $("#reviewDocsIterative").html("");
+
+        var list = latestJudgedDocsQueue.getList();
+        for(var i = latestJudgedDocsQueue.getLength() - 1; i >= 0; i--){
+            var doc = list[i];
+
+            if(doc == undefined) break;
+
+            var doc_status_div = "";
+
+            if (doc["highlyRelevant"]){
+                doc_status_div = '<div class="bg-success" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+            }else if(doc["nonrelevant"]){
+                doc_status_div = '<div class="bg-danger" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+            }else if(doc["relevant"]){
+                doc_status_div = '<div class="bg-warning" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+            }
+
+            var doc_div = '' +
+            '<a href="#" onclick="show_prev_judged_doc_and_hide_modal(' + i + ')"> \n\
+                <div class="row top-margin"> \n\
+                    <div class="col-md-1" style="min-width: 15px;"> \n\
+                        ' + doc_status_div + ' \n\
+                    </div> \n\
+                    <div class="col-md-11 text-truncate" style="font-family: georgia"> \n\
+                        ' + doc["doc_title"] + ' \n\
+                    </div> \n\
+                </div> \n\
+            </a>';
+            $( "#reviewDocsIterative" ).append( doc_div );
+        }
+    }
+
+
+    var search_form = document.getElementById("search_content");
+    Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
+        if(event.type == "keydown" && $(search_form).is(':focus')){
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'progress:post_find_keystroke' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'doc_id': $("#document_id").html(),
+                    'character': character,
+                    'page_title': document.title,
+                    'search_bar_value': $(search_form).val(),
+                    'isSearchbarFocused': $(search_form).is(':focus'),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+            console.log("Character pressed: '"+character+"'", "at:", now);
+        }
+        document.body.click();
+    };
+
+    </script>
+
+{% endblock %}

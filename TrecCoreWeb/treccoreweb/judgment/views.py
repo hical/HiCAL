@@ -1,14 +1,16 @@
 import json
+import logging
+import traceback
 
 from braces import views
+from django.db.models import Q
 from django.http import HttpResponse
-from django.template import loader
 from django.views import generic
-from treccoreweb.interfaces.CAL import functions as CALFunctions
 from interfaces.DocumentSnippetEngine import functions as DocEngine
-from treccoreweb.judgment.models import Judgement
 
-import logging
+from treccoreweb.CAL.exceptions import CALError
+from treccoreweb.interfaces.CAL import functions as CALFunctions
+from treccoreweb.judgment.models import Judgement
 
 logger = logging.getLogger(__name__)
 
@@ -35,27 +37,34 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             doc_title = self.request_json[u"doc_title"]
             doc_CAL_snippet = self.request_json[u"doc_CAL_snippet"]
             doc_search_snippet = self.request_json[u"doc_search_snippet"]
-            relevant = self.request_json[u"relevant"]
+            highlyRelevant = self.request_json[u"highlyRelevant"]
             nonrelevant = self.request_json[u"nonrelevant"]
-            ontopic = self.request_json[u"ontopic"]
-            time_to_judge = self.request_json[u"time_to_judge"]
+            relevant = self.request_json[u"relevant"]
             isFromCAL = self.request_json[u"isFromCAL"]
             isFromSearch = self.request_json[u"isFromSearch"]
             isFromSearchModal = self.request_json[u"isFromSearchModal"]
+            isFromIterative = self.request_json[u"isFromIterative"]
             fromMouse = self.request_json[u"fromMouse"]
             fromKeyboard = self.request_json[u"fromKeyboard"]
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
+            timeVerbose = self.request_json.get(u"timeVerbose")
+            search_query = self.request_json[u"search_query"]
+            ctrl_f_terms_input = self.request_json[u"ctrl_f_terms_input"]
+            found_ctrl_f_terms_in_title = self.request_json[u"found_ctrl_f_terms_in_title"]
+            found_ctrl_f_terms_in_summary = self.request_json[u"found_ctrl_f_terms_in_summary"]
+            found_ctrl_f_terms_in_full_doc = self.request_json[u"found_ctrl_f_terms_in_full_doc"]
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
-                                      u"relevant, nonrelevant, ontopic, time_to_judge, "
+                                      u"highlyRelevant, nonrelevant, relevant, "
                                       u"doc_CAL_snippet, doc_search_snippet, etc.."}
+
             return self.render_bad_request_response(error_dict)
 
         # Check if a judgment exists already, if so, update the db row.
         exists = Judgement.objects.filter(user=self.request.user,
                                           doc_id=doc_id,
-                                          topic=self.request.user.current_topic)
+                                          task=self.request.user.current_task)
 
         if exists:
             exists = exists.first()
@@ -65,15 +74,21 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 exists.doc_CAL_snippet = doc_CAL_snippet
             if doc_search_snippet != "":
                 exists.doc_search_snippet = doc_search_snippet
-            exists.relevant = relevant
+            exists.highlyRelevant = highlyRelevant
             exists.nonrelevant = nonrelevant
-            exists.ontopic = ontopic
-            exists.time_to_judge = time_to_judge
+            exists.relevant = relevant
             exists.isFromCAL = isFromCAL
             exists.isFromSearch = isFromSearch
             exists.isFromSearchModal = isFromSearchModal
+            exists.isFromIterative = isFromIterative
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
+            exists.timeVerbose.append(timeVerbose)
+            exists.search_query = search_query
+            exists.ctrl_f_terms_input = ctrl_f_terms_input
+            exists.found_ctrl_f_terms_in_title = found_ctrl_f_terms_in_title
+            exists.found_ctrl_f_terms_in_summary = found_ctrl_f_terms_in_summary
+            exists.found_ctrl_f_terms_in_full_doc = found_ctrl_f_terms_in_full_doc
             exists.save()
 
             log_body = {
@@ -85,23 +100,29 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "doc_title": doc_title,
-                        "topic_id": self.request.user.current_topic.id,
-                        "session": str(self.request.user.current_topic.uuid),
+                        "topic_number": self.request.user.current_task.topic.number,
+                        "session": str(self.request.user.current_task.uuid),
                         "query": query,
-                        "relevant": relevant,
+                        "highlyRelevant": highlyRelevant,
                         "nonrelevant": nonrelevant,
-                        "ontopic": ontopic,
-                        "time_to_judge": time_to_judge,
+                        "relevant": relevant,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
+                        "isFromIterative": isFromIterative,
                         "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard
+                        "fromKeyboard": fromKeyboard,
+                        "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
 
-            logger.info("[{}]".format(log_body))
+            logger.info("[{}]".format(json.dumps(log_body)))
         else:
             Judgement.objects.create(
                 user=self.request.user,
@@ -109,17 +130,23 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_title=doc_title,
                 doc_CAL_snippet=doc_CAL_snippet,
                 doc_search_snippet=doc_search_snippet,
-                topic=self.request.user.current_topic,
+                task=self.request.user.current_task,
                 query=query,
-                relevant=relevant,
+                highlyRelevant=highlyRelevant,
                 nonrelevant=nonrelevant,
-                ontopic=ontopic,
-                time_to_judge=time_to_judge,
+                relevant=relevant,
                 isFromCAL=isFromCAL,
                 isFromSearch=isFromSearch,
                 isFromSearchModal=isFromSearchModal,
+                isFromIterative=isFromIterative,
                 fromMouse=fromMouse,
-                fromKeyboard=fromKeyboard
+                fromKeyboard=fromKeyboard,
+                timeVerbose=[timeVerbose],
+                search_query=search_query,
+                ctrl_f_terms_input=ctrl_f_terms_input,
+                found_ctrl_f_terms_in_title=found_ctrl_f_terms_in_title,
+                found_ctrl_f_terms_in_summary=found_ctrl_f_terms_in_summary,
+                found_ctrl_f_terms_in_full_doc=found_ctrl_f_terms_in_full_doc
             )
 
             log_body = {
@@ -131,31 +158,40 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "doc_title": doc_title,
-                        "topic_id": self.request.user.current_topic.id,
-                        "session": str(self.request.user.current_topic.uuid),
+                        "topic_number": self.request.user.current_task.topic.number,
+                        "session": str(self.request.user.current_task.uuid),
                         "query": query,
-                        "relevant": relevant,
+                        "highlyRelevant": highlyRelevant,
                         "nonrelevant": nonrelevant,
-                        "ontopic": ontopic,
-                        "time_to_judge": time_to_judge,
+                        "relevant": relevant,
                         "isFromCAL": isFromCAL,
                         "isFromSearch": isFromSearch,
                         "isFromSearchModal": isFromSearchModal,
+                        "isFromIterative": isFromIterative,
                         "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard
+                        "fromKeyboard": fromKeyboard,
+                        "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
                     }
                 }
             }
 
-            logger.info("[{}]".format(log_body))
+            logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
+        error_message = None
+
         if isFromCAL:
-            # mark on topic documents as relevant only to CAL.
+            context[u"next_docs"] = []
+            # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 next_patch, top_terms = CALFunctions.send_judgment(
-                    self.request.user.current_topic.uuid,
+                    self.request.user.current_task.uuid,
                     doc_id,
                     rel)
                 if not next_patch:
@@ -169,28 +205,167 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     doc_ids_hack.append(doc)
 
                 documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
-                                                    self.request.user.current_topic.seed_query,
+                                                    self.request.user.current_task.topic.seed_query,
                                                     top_terms)
+                context[u"next_docs"] = documents
+
             except TimeoutError:
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
+            except CALError as e:
+                error_message = "CAL Exception: {}".format(str(e))
+            except Exception as e:
+                error_message = str(e)
 
-            context[u"next_docs"] = documents
-            return self.render_json_response(context)
-        else:
-            # mark on topic documents as relevant only to CAL.
+        elif isFromSearch:
+            # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
-                CALFunctions.send_judgment(self.request.user.current_topic.uuid,
+                CALFunctions.send_judgment(self.request.user.current_task.uuid,
                                            doc_id,
                                            rel)
             except TimeoutError:
+                traceback.print_exc()
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
                 return self.render_timeout_request_response(error_dict)
+            except CALError as e:
+                traceback.print_exc()
+                error_message = "CAL Exception: {}".format(str(e))
+            except Exception as e:
+                traceback.print_exc()
+                error_message = str(e)
 
-            return self.render_json_response(context)
+        if error_message:
+            log_body = {
+                "user": self.request.user.username,
+                "client_time": client_time,
+                "result": {
+                    "message": error_message,
+                    "action": "create",
+                    "doc_judgment": {
+                        "doc_id": doc_id,
+                        "doc_title": doc_title,
+                        "topic_number": self.request.user.current_task.topic.number,
+                        "session": str(self.request.user.current_task.uuid),
+                        "query": query,
+                        "highlyRelevant": highlyRelevant,
+                        "nonrelevant": nonrelevant,
+                        "relevant": relevant,
+                        "isFromCAL": isFromCAL,
+                        "isFromSearch": isFromSearch,
+                        "isFromSearchModal": isFromSearchModal,
+                        "isFromIterative": isFromIterative,
+                        "fromMouse": fromMouse,
+                        "fromKeyboard": fromKeyboard,
+                        "timeVerbose": timeVerbose,
+                        "search_query": search_query,
+                        "ctrl_f_terms_input": ctrl_f_terms_input,
+                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
+                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
+                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
+                    }
+                }
+            }
+
+            logger.error("[{}]".format(json.dumps(log_body)))
+
+        return self.render_json_response(context)
+
+
+class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                       views.JsonRequestResponseMixin,
+                       generic.View):
+    require_json = False
+
+    def post(self, request, *args, **kwargs):
+        try:
+            doc_id = self.request_json[u"doc_id"]
+            doc_title = self.request_json[u"doc_title"]
+            doc_search_snippet = self.request_json[u"doc_search_snippet"]
+            query = self.request_json.get(u"query", None)
+            client_time = self.request_json.get(u"client_time", None)
+            timeVerbose = self.request_json.get(u"timeVerbose")
+        except KeyError:
+            error_dict = {u"message": u"your input must include doc_id, doc_title, "
+                                      u"doc_search_snippet, etc.."}
+            return self.render_bad_request_response(error_dict)
+
+        # Check if a judgment exists already, if so, update the db row.
+        exists = Judgement.objects.filter(user=self.request.user,
+                                          doc_id=doc_id,
+                                          task=self.request.user.current_task)
+
+        if exists:
+            exists = exists.first()
+            exists.query = query
+            exists.doc_title = doc_title
+            exists.doc_search_snippet = doc_search_snippet
+            exists.timeVerbose.append(timeVerbose)
+            exists.save()
+
+            log_body = {
+                "user": self.request.user.username,
+                "client_time": client_time,
+                "result": {
+                    "message": Judgement.LOGGING_MESSAGES.get("update", None),
+                    "action": "update - no judgment",
+                    "doc_judgment": {
+                        "doc_id": doc_id,
+                        "doc_title": doc_title,
+                        "topic_number": self.request.user.current_task.topic.number,
+                        "session": str(self.request.user.current_task.uuid),
+                        "query": query,
+                        "timeVerbose": timeVerbose,
+                    }
+                }
+            }
+
+            logger.info("[{}]".format(json.dumps(log_body)))
+        else:
+            Judgement.objects.create(
+                user=self.request.user,
+                doc_id=doc_id,
+                doc_title=doc_title,
+                doc_CAL_snippet="",
+                doc_search_snippet=doc_search_snippet,
+                task=self.request.user.current_task,
+                query=query,
+                highlyRelevant=False,
+                nonrelevant=False,
+                relevant=False,
+                isFromCAL=False,
+                isFromSearch=False,
+                isFromSearchModal=False,
+                isFromIterative=False,
+                fromMouse=False,
+                fromKeyboard=False,
+                timeVerbose=[timeVerbose],
+            )
+
+            log_body = {
+                "user": self.request.user.username,
+                "client_time": client_time,
+                "result": {
+                    "message": Judgement.LOGGING_MESSAGES.get("create", None),
+                    "action": "create",
+                    "doc_judgment": {
+                        "doc_id": doc_id,
+                        "doc_title": doc_title,
+                        "topic_number": self.request.user.current_task.topic.number,
+                        "session": str(self.request.user.current_task.uuid),
+                        "query": query,
+                        "timeVerbose": timeVerbose
+                    }
+                }
+            }
+
+            logger.info("[{}]".format(json.dumps(log_body)))
+
+        context = {u"message": u"Your no judgment on {} has been received!".format(doc_id)}
+
+        return self.render_json_response(context)
 
 
 class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
@@ -203,12 +378,13 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             number_of_docs_to_show = int(number_of_docs_to_show)
         except ValueError:
             return self.render_json_response([])
-
         latest = Judgement.objects.filter(
                     user=self.request.user,
-                    topic=self.request.user.current_topic,
-                    isFromCAL=True
-                 ).order_by('-updated_at')[:number_of_docs_to_show]
+                    task=self.request.user.current_task,
+                    isFromSearch=False
+                 ).filter(
+                    Q(highlyRelevant=True) | Q(relevant=True) | Q(nonrelevant=True)
+                ).order_by('-updated_at')[:number_of_docs_to_show]
         result = []
         for judgment in latest:
             result.append(
@@ -218,9 +394,9 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_date": "",
                     "doc_CAL_snippet": judgment.doc_CAL_snippet,
                     "doc_content": "",
-                    "relevant": judgment.relevant,
+                    "highlyRelevant": judgment.highlyRelevant,
                     "nonrelevant": judgment.nonrelevant,
-                    "ontopic": judgment.ontopic,
+                    "relevant": judgment.relevant,
                 }
             )
 
@@ -234,7 +410,7 @@ class GetAllView(views.LoginRequiredMixin, generic.TemplateView):
         context = {
             "judgments_list": Judgement.objects.filter(
                     user=self.request.user,
-                    topic=self.request.user.current_topic,
+                    task=self.request.user.current_task,
                  ).order_by('-updated_at')
         }
 

@@ -7,7 +7,9 @@ https://docs.djangoproject.com/en/dev/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
+import os
 import environ
+import raven
 from django.contrib.messages import constants as messages
 
 ROOT_DIR = environ.Path(__file__) - 3  # (treccoreweb/config/settings/base.py - 3 = treccoreweb/)
@@ -17,7 +19,7 @@ APPS_DIR = ROOT_DIR.path('treccoreweb')
 env = environ.Env()
 
 # .env file, should load only in development environment
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 
 if READ_DOT_ENV_FILE:
     # Operating System Environment variables have precedence over variables defined in the .env file,
@@ -49,18 +51,21 @@ THIRD_PARTY_APPS = [
     'crispy_forms',  # Form layouts
     'allauth',  # registration
     'allauth.account',  # registration
-    'allauth.socialaccount',  # registration
+    # 'allauth.socialaccount',  # registration
+    'raven.contrib.django.raven_compat',
 ]
 
 # Apps specific for this project go here.
 LOCAL_APPS = [
     # custom users app
     'treccoreweb.users.apps.UsersConfig',
+    'treccoreweb.progress',
     'treccoreweb.CAL',
     'treccoreweb.topic',
     'treccoreweb.judgment',
     'treccoreweb.search',
     'treccoreweb.stats',
+    'treccoreweb.iterative'
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -76,6 +81,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Custom middleware
+    'treccoreweb.middleware.pagefile.PageHTMLMiddleware',
+    'treccoreweb.middleware.timer.timer_middleware',
 ]
 
 # MIGRATIONS CONFIGURATION
@@ -265,12 +273,16 @@ SOCIALACCOUNT_ADAPTER = 'treccoreweb.users.adapters.SocialAccountAdapter'
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'progress:home'
 LOGIN_URL = 'account_login'
+
+PRACTICE_USERNAME = 'test'
+PRACTICE_PASSWORD = 'test123'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
+TIME_ZONE = 'America/Toronto'
 
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
@@ -311,17 +323,32 @@ MESSAGE_TAGS = {
 }
 
 
-# CORE TREC COMPONENTS IPS (Required)
+# Timer settings
+# Inactivity trigger time (in seconds)
+INACTIVE_TRIGGER_TIME = 60
+# Maximum active time for a user per task (in seconds)
+MAX_ACTIVE_TIME = 60 * 60
+
+# CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = '129.97.84.14'
 CAL_SERVER_PORT = '9001'
 SEARCH_SERVER_IP = '129.97.25.37'
 SEARCH_SERVER_PORT = '80'
-DOCUMENTS_PATH = '/home/nghelani/nyt/docs'
-PARA_PATH = '/home/nghelani/nyt/para'
+DOCUMENTS_URL = 'http://129.97.84.14:9000/doc'
+PARA_URL = 'http://129.97.84.14:9000/para'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 
 
+# # RAVEN
+# # ------------------------------------------------------------------------------
+RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
+RAVEN_CONFIG = {
+    'dsn': 'https://{}@sentry.io/186800'.format(RAVEN_SECRET_KEY),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(str(ROOT_DIR))),
+}
 

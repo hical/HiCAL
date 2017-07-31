@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n has_group %}
+
+{% block pagetitle %}Home{% endblock %}
+
+{% block nav-header %}{% endblock %}
+{% block nav-right%}
+<li class="nav-item right-margin">
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'progress:tutorial' %}">Tutorial</a>
+</li>
+<li class="nav-item">
+    {% if request.user.is_authenticated and request.user|has_group:"practice" %}
+    <a href="{% url 'progress:practice_complete' %}" class="btn btn-primary btn-sm">{% trans "Complete practice" %}</a>
+    {% elif request.user.is_authenticated %}
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_logout'  %}">Sign out</a>
+    {% else %}
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_login' %}">Sign In</a>
+    {% endif %}
+</li>
+{% endblock %}
+
+
+{% block main %}
+    <div class="row top-bottom-margin">
+        <div class="col-md-6">
+            <h2 class="text-primary"> Your task </h2>
+            <hr>
+            <h6 class="text-primary extra-bottom-margin"><strong>You may switch between any interfaces at any moment.</strong> Please choose a judging interface to start with from the left navigation bar.</h6>
+            {% if user.current_task.setting.only_show_doc %}
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-list-ol right-margin" aria-hidden="true"></i> Iterative interface.</h2></p>
+            {% else %}
+            {% if user.current_task.setting.show_search %}
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-search right-margin" aria-hidden="true"></i>  Search interface. </h2></p>
+            {% endif %}
+            <p><h2 class="text-primary display-inline-flex"><i class="fa fa-lightbulb-o right-margin" aria-hidden="true"></i> Learning interface.</h2></p>
+            {% endif %}
+            <hr>
+            <h2 class="text-primary">Remember.. </h2>
+            <ul>
+                <li>
+                    <p> Do not work too fast or too slow. Please work as fast as you can while maintaining your accuracy.</p>
+                </li>
+                <li>
+                    <p>If any portion of the document is relevant, the whole document should be marked as relevant.</p>
+                </li>
+                <li>
+                    <p><span class="text-danger">Randomly judging documents is a violation of the study rules </span> and will result in us ending your participation</p>
+                </li>
+
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-primary"> Your current topic </h2>
+            <hr>
+            <p><strong>Title</strong>: {{ user.current_task.topic.title }}</p>
+            <p><strong>Description</strong>: {{ user.current_task.topic.display_description }}</p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block pagetitle %}Tutorial{% endblock %}
+{% block extra_head %}
+    <style>
+        kbd {
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            border: 1px solid gray;
+            padding: 1px 5px;
+            margin: 0 5px;
+            font-family: courier new;
+            font-size: 1.2em;
+            -webkit-box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+            -moz-box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+            box-shadow: 1px 0 1px 0 #fff, 0 2px 0 2px lightGray, 0 2px 0 3px #333;
+            background: -moz-linear-gradient(left, #fff 0%, #e2e2e2 25%);
+            background: -webkit-gradient(linear, left top, right top, color-stop(0%, #ffffff), color-stop(25%, #e2e2e2));
+            background: -webkit-linear-gradient(left, #fff 0%, #e2e2e2 25%);
+            background: -o-linear-gradient(left, #fff 0%, #e2e2e2 25%);
+            background: -ms-linear-gradient(left, #fff 0%, #e2e2e2 25%);
+            background: linear-gradient(left, #fff 0%, #e2e2e2 25%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e2e2e2', GradientType=1)
+        }
+
+        kbd.space {
+            padding: 0 90px
+        }
+
+        kbd:hover {
+            cursor: default
+        }
+    </style>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block nav-left %}{% endblock %}
+{% block nav-header %}
+    <li class="nav-item active">
+        <span class="nav-link gray-text">Tutorial</span>
+    </li>
+{% endblock %}
+{% block nav-right %}
+    <li class="nav-item">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_logout' %}">Sign out</a>
+        {% else %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
+
+{% block main %}
+
+    <div class="row flex-items-md-center">
+        <div class="col-md-12 mt-4">
+            <h1 class="text-primary"> Tutorial </h1>
+            <strong>Please read the tutorial carefully. If you have any questions, please
+                email one of the study coordinators.</strong>
+        </div>
+    </div>
+    <div class="row extra-top-margin">
+        <div class="col-md-12">
+            <h2 class="text-primary">1. Intro</h2>
+            <p>
+                For this study, you are required to find and label documents using our specially designed review tools.
+            </p>
+            <p>
+                You will be asked to use a judging interface to view document summaries or the full document content and judge the document's relevance to a given topic.
+            </p>
+            <p>
+                You are also allowed to enter their own queries and search for documents that they feel will help you find more relevant documents in some tasks.
+
+            </p>
+            <p>
+                The study will involve about <strong>six hours</strong> of work. The first hour will be a tutorial and the next five hours will be dedicated to spending <strong>one hour</strong> per search task.
+
+            </p>
+            <p>
+                You are required to complete <strong>five search tasks</strong>.  You should finish the five tasks on your own computer <strong>within one week</strong>.
+            </p>
+            <p>
+                1. In the beginning of the study, you are required to complete a demographic questionnaire.
+            </p>
+            <p>
+                2. Next, you will complete 5 tasks.  Each task consists of:
+                <ul style="list-style-type:disc">
+                <li>
+                a pre-task questionnaire,
+                </li>
+                <li>
+                a judging task(<i>Section 3</i>),
+                </li>
+                <li>
+                and a post-task questionnaire.
+                </li>
+                </ul>
+            </p>
+            <p>
+                3. After completing the 5 tasks, there will be an End-of-Study questionnaire.
+            </p>
+            <p>
+
+            <!-- <div class="row center-text">
+                <div class="col-md-12">
+                    <figure class="figure align-left">
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_15ccc93b89e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A20pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_15ccc93b89e%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22148.8515625%22%20y%3D%22159.15%22%3E400x300%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                             class="figure-img img-fluid rounded"
+                             alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption">A caption for the above
+                            image.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div> -->
+
+            </p>
+            <!-- <h2 class="text-primary">2. Pre-task questionnaire</h2>
+            <p>
+                In the pre-task questionnaire, you will be asked few questions about the
+                topic to better understand your familiarity with the topic and your
+                knowledge level.
+                You will also be given the topic description. Please read it and answer
+                the questions provided.
+            <div class="row center-text">
+                <div class="col-md-12">
+                    <figure class="figure align-left">
+                        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22400%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_15ccc93b89e%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A20pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_15ccc93b89e%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22148.8515625%22%20y%3D%22159.15%22%3E400x300%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                             class="figure-img img-fluid rounded"
+                             alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption">A caption for the above
+                            image.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+            </p> -->
+
+            <hr>
+
+            <h2 class="text-primary">2. Judging interfaces</h2>
+
+            <p>
+                <div class="row">
+                    <div class="col-md-6">
+                    <h5 class="text-primary">2.1 Search interface</h5>
+                        <figure class="figure align-left">
+                            <img src="{% static 'images/search.png' %}"
+                                 class="figure-img img-fluid rounded borderd-circle"
+                                 alt="A generic square placeholder image with rounded corners in a figure.">
+                            <figcaption class="figure-caption">You will be allowed to enter your own queries and search for documents that you feel will help them find more relevant documents.
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <div class="col-md-6">
+                    <h5 class="text-primary">2.2 Learning interface</h5>
+                        <figure class="figure align-left">
+                        <img src="{% static 'images/cal.png' %}"
+                             class="figure-img img-fluid rounded borderd-circle"
+                             alt="A generic square placeholder image with rounded corners in a figure.">
+                        <figcaption class="figure-caption">The learning interface will automatically provide documents or paragraphs for you to judge. You can also check the latest judged 10 documents or paragraphs.
+                        </figcaption>
+                    </figure>
+                    </div>
+                </div>
+            </p>
+
+    <hr>
+
+    <h2 class="text-primary">3. Judging criteria</h2>
+    </p>
+    <h5 class="text-primary">3.1 Definition of Relevance</h5>
+    <p>
+        <p>
+            We use three point relevance scales for relevance judgment. The three scales are <strong class="text-success">Highly Relevant</strong>, <strong class="text-warning">Relevant</strong> and <strong class="text-danger">Not Relevant</strong> respectively.
+        </p>
+        <p>
+            Assume that you have the information need stated in the topic and that you are at home searching the web for appropriate material.
+        </p>
+        <ul style="list-style-type:disc">
+            <li>
+            If the document contains information that you would find helpful in meeting your information need, mark it <strong class="text-success">Relevant</strong>.
+            </li>
+            <li>
+            If the document directly addresses the core issue of the topic, mark it <strong class="text-warning">Highly Relevant. </strong>
+            </li>
+            <li>
+            Otherwise, mark it <strong class="text-danger">Not Relevant</strong>.
+            </li>
+        </ul>
+    </p>
+
+    <h5 class="text-primary">3.2 Consistency of Judgments</h5>
+    <p>
+        <p>
+            Be consistent in your judgments. Referring to the topic text from time to time will help you maintain consistency in your judgments.
+        </p>
+        <p>
+            The number of relevant or irrelevant documents has no bearing on the "value" or "goodness" of the topic.  So, don't feel that you have to "stretch" your definition of relevant.
+        </p>
+        <p>
+            Judge duplicate documents the same. In other words, if you judge a document as relevant and find an identical document, judge that document as relevant too.
+        </p>
+    </p>
+
+
+    <h5 class="text-primary">3.3 Pitfalls</h5>
+    <p>
+        <p>
+            Relying too heavily on keywords to make your relevance judgments could be misleading and cause your judgments to be inaccurate. The keyword search feature is provided as an aid to help you identify the areas of the document that may relate specifically to your topic. Keywords are not meant to be relied upon exclusively as a means to make the relevance judgments .
+
+        </p>
+        <p>
+            Don’t work too fast or too low. You should try to work as fast as possible while maintaining your accuracy.
+
+        </p>
+    </p>
+
+    <hr>
+
+    <h5 class="text-primary">3.4 How to judge</h5>
+    <p>
+        While viewing a document you can judge it in two ways, using keyboard shortcuts or
+        using your mouse.
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="text-primary">3.4.a. Keyboard shortcuts</h6>
+                <p>
+                    To speed up the process of judging documents, you can use the following keyboard
+                    shortcuts to judge documents.
+                    <div class="bottom-margin">
+                        <p>
+                            <kbd class="text-danger bold">S</kbd>: marks the document as <strong
+                                class="text-danger">"not relevant"</strong>
+                        </p>
+                        <p>
+                            <kbd class="text-warning bold">R</kbd>: marks the document as <strong
+                                class="text-warning">"relevant"</strong>
+                        </p>
+                        <p>
+                            <kbd class="text-success bold">H</kbd>: marks the document as <strong
+                                class="text-success">"highly relevant"</strong>
+                        </p>
+                    </div>
+                    Clicking on one of those keys while viewing document will mark the judgment of the
+                    document.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h6 class="text-primary">3.4.b. Mouse clicks</h6>
+                <p>Beside the document content, you will see three buttons similar to the buttons
+                    below. Please click on the button to judge the document relevancy.</p>
+                <div class="center-text">
+                    <figure class="figure">
+                        <div class="btn-group top-margin" role="group">
+                            <a href="#" onclick="return false;" class="btn btn-sm btn-danger">Not relevant</a>
+                            <a href="#" onclick="return false;" class="btn btn-sm btn-warning">Relevant</a>
+                            <a href="#" onclick="return false;" class="btn btn-sm btn-success">Highly relevant</a>
+                        </div>
+                        <figcaption class="figure-caption">The three buttons shown beside document
+                            content.
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </p>
+
+    <hr>
+
+    <h2 class="text-primary">4. Proper Behavior of User Study</h2>
+    <p>
+        This scientific research study requires your full attention. If you are unable to give this research your full attention, please excuse yourself from the study. In particular, while working on a task:
+    </p>
+        <ul style="list-style-type:disc">
+        <li>You should not use your mobile phones during the study [Please keep your phones on silent mode]</li>
+
+        <li>You should not listen to music during the study</li>
+
+        <li>You should not use the computer for checking email, or other unrelated activities during the study</li>
+
+        <li>We would prefer it if you could do each task from start to end without interruption. If you need to take a break, you should close the application.  To resume working, simply start the application back up.</li>
+        </ul>
+
+    <h2 class="text-primary">5. Important Notice</h2>
+    <p>Four tasks require you to work for one hour. The system has an endless  number  of  documents  for  judging.   Any  attempt  to  randomly judge documents quickly will not end the task before one hour</p>
+    <p>Randomly  judging  documents  is  a  violation of  the  study  rules  and  will result in us ending your participation.</p>
+    <p>For one task, you will have a fixed number of documents to judge (60).  Once you have judged all 60, the task will finish.  We trust that you will attempt to work accurately on this task.   Randomly judging documents will invalidate our study.</p>
+    <hr>
+    <!-- <h1>Draft...</h1>
+    <p class="gray-text">
+
+        We will collect timing information and associated computer usage data
+        unobtrusively during both phases of the
+        study. This study will have you complete five phases. Each phase will have you
+        judge one single
+        topic and it takes around one hour.
+        Each time you start a new phase, we will ask you some pre-phase related questions
+        to assess
+        your knowledge on the subject of the topic. After completing the pre-phase
+        questions, you will be
+        provided with an interface to review documents according to this topic. The
+        interface will include
+        information on the topic you need to judge, a search interface to search for the
+        documents using
+        our search engine, a document and summary review interface. Your task for each
+        phase is to
+        label documents using our provided interface. You can judge as many documents as
+        you want.
+        Once you believe you know the correct label for this document, you should click on
+        the
+        relevant/on-topic/non-relevant button and submit your label. After the phase lasts
+        for one hour,
+        you will be forwarded to a post-phase page to answer some follow up questions on
+        how you felt
+        during the process.
+        Let's familiarize ourselves with the pre-phase interface:
+        At the top of the page, you will be given information on the question you need to
+        answer. You will
+        be shown this page before each task to assess your knowledge on the subject of the
+        question.
+    </p>
+    <p>{% lorem 1 p %}</p>
+
+    <div id="tutorial_content">
+        <p>{% lorem 1 p %}</p>
+    </div>
+
+    <div id="page-selection">page selection here</div> -->
+
+    <div class="row">
+        <div class="col-md-12 align-right">
+            <a class="btn btn-primary btn" href="{% url 'progress:pretask' %}">I
+                understand and accept the terms and conditions</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{% static 'js/jquery.bootpag.min.js' %}"></script>
+
+    <script>
+    function show_tutorial_part(num){
+        // function to hide all parts of tutorial divs except div with `num` on.
+        var i = 0;
+        for(;i < 10; i++){
+            var content = $("#tutorial_part_" + i);
+            if(i == num){
+                content.show();
+                return;
+            }
+            content.hide();
+        }
+    }
+    $('#page-selection').bootpag({
+        total: 5
+    }).on("page", function(event, num){
+        $("#tutorial_content").html("Page " + num); // or some ajax content loading...
+
+    });
+    </script>
+{% endblock %}

@@ -1,20 +1,20 @@
 /* Mousetraps keyboard shortcuts */
-Mousetrap.bind(['s', 'h', 'k', 'u'], function(e, key) {
+Mousetrap.bind(['h', 's', 'r', 'u'], function(e, key) {
     var current_doc_id = $('#cal-document').data("doc-id");
     var doc_title = $('#document_title').text();
     var doc_snippet = $('#document_snippet').html();
-    if(key == 's') {
+    if(key == 'h') {
         send_judgment(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
     }
-    else if(key == 'h') {
+    else if(key == 's') {
         send_judgment(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
     }
-    else if(key == 'k') {
+    else if(key == 'r') {
         send_judgment(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
     }else if(key == 'u') {
         $('#reviewDocsModal').modal('toggle');
     }
-
+    document.body.click();
     //if(queue.getLength() == 0){
     //    console.log("Getting the next patch of documents to judge");
     //    update_documents_to_judge_list();
@@ -25,6 +25,7 @@ Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
     e.preventDefault();
     post_ctrlf();
     $( "#search_content" ).focus();
+    document.body.click();
     return false;
 });
 
@@ -33,6 +34,7 @@ var search_content_form_mousetrap = new Mousetrap(search_content_form);
 search_content_form_mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
     $( "#search_content" ).focus();
     post_ctrlf();
+    document.body.click();
     return false;
 });
 
@@ -46,40 +48,6 @@ function document_isEmpty(){
 }
 
 
-function updateDocument(id, title, date, snippet, content){
-    console.log("Updating document view for document id: " + id);
-    $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
-    $("#document_id").html("docno: " + id);
-    $("#document_title").html(title);
-    $("#document_date").html(date);
-    $("#document_snippet").html(snippet);
-    $("#document_content").html(content);
-
-    $( "#document_content" ).trigger( "updated" );
-    window.scrollTo(0, 0);
-}
-
-
-function updateTimer(){
-    $("#nav_timer_header").hide().fadeIn();
-
-    timer.stop();
-    timer.start({precision: 'secondTenths', callback: function (values) {
-        $('#nav_timer_header').html(values.toString(['hours', 'minutes', 'seconds', 'secondTenths']));
-    }});
-}
-
-function  updateCounter(key){
-    if(key == "s"){
-        $("#nav_stats_rel_header").hide().fadeIn().html(++relCounter);
-    }else if(key == "h"){
-        $("#nav_stats_nonrel_header").hide().fadeIn().html(++nonRelCounter);
-    }else if (key == "k"){
-        $("#nav_stats_ontopic_header").hide().fadeIn().html(++onTopicCounter);
-    }
-}
-
-
 /* SEARCH BAR and highlighter */
 
 $('#searchContentForm').submit(function (e) {
@@ -88,6 +56,9 @@ $('#searchContentForm').submit(function (e) {
     return false;
 });
 
+var marked_matches_in_document_title = [];
+var marked_matches_in_document_snippet = [];
+var marked_matches_in_document_content = [];
 
 
 $(function() {
@@ -102,6 +73,8 @@ $(function() {
     $nextBtn = $("button[data-search='next']"),
     // the context where to search
     $content = $(".document-cal"),
+    // list of selectors to ignore during the search
+    $exclude = ["#show_full_doc_button", "#docno_text"],
     // jQuery object to save <mark> elements
     $results = "",
     // the class that will be appended to the current
@@ -117,6 +90,7 @@ $(function() {
    */
   function jumpTo() {
     if ($results.length) {
+      $input.addClass("greenBorder").css("border-color","#449D44");
       var position,
         $current = $results.eq(currentIndex);
       $results.removeClass(currentClass);
@@ -124,8 +98,94 @@ $(function() {
         $current.addClass(currentClass);
         position = $current.offset().top - offsetTop;
         window.scrollTo(0, position);
+      }else{
+        if(!$input.val()){
+          $input.removeAttr('style');
+        }else if ($input.is(':focus')){
+          $input.addClass("redBorder").css("border-color","#C9302C");
+        }
       }
     }
+  }
+
+  /**
+   * Update dicts of matches in document title, snippet, and content
+   */
+  function updateMatchesDictionaries(){
+    resetMatchesDict();
+    var document_title_mark_instances = $("#document_title").find("mark");
+    var document_snippet_mark_instances = $("#document_snippet").find("mark");
+    var document_content_mark_instances = $("#document_content").find("mark");
+
+    var i;
+    for(i = 0; i < document_title_mark_instances.length; i++){
+        var data = {
+            "match": document_title_mark_instances[i].innerHTML,
+            "wholeWord": get_surroundings_of_match(document_title_mark_instances[i])
+        };
+        marked_matches_in_document_title.push(data);
+    }
+    for(i = 0; i < document_snippet_mark_instances.length; i++){
+        var data = {
+            "match": document_snippet_mark_instances[i].innerHTML,
+            "wholeWord": get_surroundings_of_match(document_snippet_mark_instances[i])
+        };
+        marked_matches_in_document_snippet.push(data);
+    }
+    for(i = 0; i < document_content_mark_instances.length; i++){
+        var data = {
+            "match": document_content_mark_instances[i].innerHTML,
+            "wholeWord": get_surroundings_of_match(document_content_mark_instances[i])
+        };
+        marked_matches_in_document_content.push(data);
+    }
+
+  }
+
+  /**
+     * Gets the surrounding letters of a highlighted match.
+     * E.g. "The company is ba<mark>se</mark>d in California"
+     * retrun "based".
+     */
+    function get_surroundings_of_match(match){
+        if(match.previousSibling != undefined && match.nextSibling != undefined){
+            var prev = match.previousSibling.nodeValue;
+            var next = match.nextSibling.nodeValue;
+            if(prev == ""){
+                prev = " ";
+            }
+            if(next == ""){
+                next = " ";
+            }
+            var wholeMatch = [];
+            var i;
+            for(i = 0; i < prev.length; i++){
+                var index = prev.length - i - 1;
+                if(prev[index] != "" && prev[index] != " ") {
+                    wholeMatch.push(prev[index]);
+                } else {
+                    break;
+                }
+            }
+            wholeMatch.reverse();
+            wholeMatch.push.apply(wholeMatch, match.innerHTML.split());
+            for(i = 0; i < next.length; i++){
+                if(next[i] != "" && next[i] != " "){
+                    wholeMatch.push(next[i]);
+                }else{
+                    break;
+                }
+            }
+            return wholeMatch.join("");
+        }else {
+            return null;
+        }
+    }
+
+  function resetMatchesDict(){
+    marked_matches_in_document_title = [];
+    marked_matches_in_document_snippet = [];
+    marked_matches_in_document_content = [];
   }
 
   /**
@@ -138,7 +198,9 @@ $(function() {
       done: function() {
         $content.mark(searchVal, {
           separateWordSearch: true,
+          exclude: $exclude,
           done: function() {
+            updateMatchesDictionaries();
             $results = $content.find("mark");
             currentIndex = 0;
             jumpTo();
@@ -155,7 +217,9 @@ $(function() {
               done: function () {
                   $content.mark(searchVal, {
                       separateWordSearch: true,
+                      exclude: $exclude,
                       done: function () {
+                          updateMatchesDictionaries();
                           $results = $content.find("mark");
                           currentIndex = 0;
                       }
@@ -171,6 +235,7 @@ $(function() {
    * Clears the search
    */
   $clearBtn.on("click", function() {
+    resetMatchesDict();
     $content.unmark();
     $input.val("").focus();
   });

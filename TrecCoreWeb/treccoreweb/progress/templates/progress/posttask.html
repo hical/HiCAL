@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block pagetitle %}Post-task{% endblock %}
+{% block nav-header %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block nav-right %}
+    <li class="nav-item">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_logout' %}">Sign out</a>
+        {% else %}
+            <a class="btn btn-outline-primary btn-sm small"
+               href="{% url 'account_login' %}">Sign In</a>
+        {% endif %}
+    </li>
+{% endblock %}
+
+
+{% block main %}
+    <h4 class="text-primary top-margin">Post-task questionnaire</h4>
+    <hr>
+    <p>Please answer the following questions:</p>
+    <div class="row top-bottom-margin">
+        <div class="col-md-12">
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% crispy form %}
+                    </form>
+
+        </div>
+    </div>
+
+{% endblock %}
+

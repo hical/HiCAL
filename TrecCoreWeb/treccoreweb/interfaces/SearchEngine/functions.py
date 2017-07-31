@@ -1,13 +1,20 @@
 from collections import OrderedDict
+from config.settings.base import SEARCH_SERVER_IP
+from config.settings.base import SEARCH_SERVER_PORT
+import urllib.parse
 
 import httplib2
-import urllib.parse
 import xmltodict
-
-from config.settings.base import SEARCH_SERVER_IP, SEARCH_SERVER_PORT
 
 
 def get_documents(query, start=0, numdisplay=20):
+    """
+
+    :param query:
+    :param start:
+    :param numdisplay:
+    :return:
+    """
     h = httplib2.Http()
     url = "http://{}:{}/treccore/websearchapi/search.php?{}"
 
@@ -23,7 +30,7 @@ def get_documents(query, start=0, numdisplay=20):
         try:
             xmlResult = xmlDict['search-response']['results']['result']
         except TypeError:
-            return None, None
+            return None, None, None
 
         doc_ids = []
         result = OrderedDict()
@@ -42,6 +49,6 @@ def get_documents(query, start=0, numdisplay=20):
             result[docno] = parsed_doc
             doc_ids.append(docno)
 
-        return result, doc_ids
+        return result, doc_ids,  xmlDict['search-response']['total-time']
 
-    return None, None
+    return None, None, None

@@ -6,49 +6,27 @@
 
 {% block sidebar %}
     <li class="nav-item">
-        <a class="nav-link active bold" href="{% url 'search:main' %}">S<span
+        <a class="nav-link active bold" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i><span
                 class="sr-only">(current)</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
-    </li>
-{% endblock %}
-
-{% block nav-header %}
-    {% block nav-header-title %}{% endblock %}
-    <li class="nav-item active">
-    <span class="nav-link thin text-primary">
-       <strong>TrecSearch</strong>
-    </span>
+        <a class="nav-link" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></a>
     </li>
     {% comment %}
-    <li class="nav-item active">
-    <span class="nav-link thin gray-text">
-       <strong>Document judged: </strong><span class="badge badge-success"
-                                               id="nav_stats_rel_header">{{ total_relevant }}</span> <span
-            class="badge badge-danger"
-            id="nav_stats_nonrel_header">{{ total_nonrelevant }}</span> <span
-            class="badge badge-warning"
-            id="nav_stats_ontopic_header">{{ total_ontopic }}</span>
-    </span>
-    </li>
-    <li class="nav-item active" style="width: 200px">
-    <span class="nav-link thin gray-text">
-        <strong>Time spent:</strong>
-        <div id="nav_timer_header" class="display-inline">
-            <span class="values" id="timer_counter">counters</span>
-        </div>
-    </span>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
     </li>
     {% endcomment %}
 {% endblock %}
 
+{% block nav-header %}{% endblock %}
+
 {% block main %}
     <div class="row flex-items-lg-middle">
         <div class="col-lg-2 mt-1 text-primary font-montserrat">
-            <h3>TrecSearch</h3>
+            <h3>Search</h3>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-10">
           <form class="input-group" id="search_form">
               <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
                    name="search_input">
@@ -56,8 +34,17 @@
                 <button class="btn btn-outline-primary" type="submit"
                         ic-indicator="#searchSpinner" ic-target="#search_result"
                         ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
-                        tabindex="-1">Search
+                        tabindex="-1" id="search_button">Search
                 </button>
+              </span>
+              <span class="input-btn left-margin mt-1">
+                #docs:
+                <select class="select btn btn-lg btn-outline-primary" id="id_numdisplay" name="numdisplay">
+                    <option value="10" selected="selected">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
               </span>
           </form>
         </div>
@@ -85,31 +72,18 @@
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/idle.js' %}"></script>
+    <script src="{% static 'js/timer.js' %}"></script>
 
     <script>
 
         var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
+        var documents_timers = {}; // dict of timers for each loaded doc.
 
         // flag to check if a modal is currently opened
         var isModalOpen = false;
         var currentOpenedModalDocId = null;
-
-        // Nofity server of page visit on pageload
-        window.onload = function () {
-            var now = + new Date();
-            $.ajax({
-                url: '{% url 'search:post_visit' %}',
-                method: 'POST',
-                data: JSON.stringify({
-                    'client_time': now,
-                    'page_title': document.title,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                }),
-                success: function (result) {
-                    console.log(result['message']);
-                }
-            });
-        };
 
         $( "#search_input" ).focus(function() {
             var now = + new Date();
@@ -150,13 +124,26 @@
             console.log("Search input is unfocused.", now);
         });
 
-        var form = document.getElementById('search_form');
-        var formSubmit = form.submit; //save reference to original submit function
+        $('#search_button').on('beforeSend.ic',
+            function(evt, elt, data, settings, xhr, requestId) {
+                var now = + new Date();
+                $.ajax({
+                    url: '{% url 'search:post_search_request' %}',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        'client_time': now,
+                        'query': $("#search_input").val(),
+                        'numdisplay': $("#id_numdisplay").val(),
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'page_title': document.title
+                    }),
+                    success: function (result) {
+                        console.log(result['message']);
+                    }
+                });
+            });
 
-        // TODO: currently not working. Need to log when submit is fired.
-        form.onsubmit = function(e) {
-            alert('Handler for .submit() called.');
-        };
+        var SERPTimer = AwayTimer();
 
         var search_form = document.querySelector('search_form');
         Mousetrap(search_form).handleKey = function handleKey(character, modifiers, event){
@@ -177,11 +164,12 @@
                         console.log(result['message']);
                     }
                 });
-                console.log("Character pressed: ", character, now);
+                console.log("Character pressed: '"+character+"'", "at:", now);
             }
+            document.body.click();
         };
 
-        Mousetrap.bind(['s', 'h', 'k'], function(e, key) {
+        Mousetrap.bind(['h', 'r', 's'], function(e, key) {
             var current_doc_id = get_current_opened_modal_doc_id();
             if(current_doc_id == null){
                 return;
@@ -189,29 +177,57 @@
             var doc_title = $("#doc-"+current_doc_id+"-title").html();
             var doc_snippet = $("#doc-"+current_doc_id+"-snippet").html();
 
-            if(key == 's') {
+            if(key == 'h') {
                 send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
             }
-            else if(key == 'h') {
+            else if(key == 's') {
                 send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
             }
-            else if(key == 'k') {
+            else if(key == 'r') {
                 send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
             }
-
+            document.body.click();
         });
 
         Mousetrap.bind(['ctrl+f', 'command+f'], function(e) {
-            console.log("in cntrf", isModalOpen, currentOpenedModalDocId);
-            e.preventDefault();
-
+            console.log("Ctrl+f triggered. isModalOpen: " + isModalOpen + ". currentOpenedModalDocId: " +  currentOpenedModalDocId);
+            post_ctrlf();
             if(!isModalOpen){
                 return;
             }
+            e.preventDefault();
             var docid = get_current_opened_modal_doc_id();
             $( "#search_content_doc_"+docid).focus();
+            document.body.click();
             return false;
         });
+
+        function post_ctrlf(){
+            var isOnSERP = !isModalOpen;
+            var docid = null;
+            if(isModalOpen){
+                docid = get_current_opened_modal_doc_id();
+            }
+            var now = + new Date();
+            $.ajax({
+                url: '{% url 'progress:post_ctrlf' %}',
+                method: 'POST',
+                data: JSON.stringify({
+                    'client_time': now,
+                    'page_title': document.title,
+                    'extra_context': {
+                        'doc_id': docid,
+                        'isOnSERP': isOnSERP,
+                        'isModalOpen': isModalOpen
+                    },
+                    'search_field_value': $("#search_content_doc_"+docid).val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }),
+                success: function (result) {
+                    console.log(result['message']);
+                }
+            });
+        }
 
         function get_current_opened_modal_doc_id(){
             if(isModalOpen){
@@ -220,9 +236,25 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, rel, non, ontopic, isMouse, isKeyboard, isFromSearchModal) {
-            var now = + new Date();
-
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose, ctrlf_terms) {
+            if(timeVerbose == null){
+                var now = + new Date();
+                timeVerbose = {
+                    "timestamp": now,
+                    "timeActive": null,
+                    "timeAway": null,
+                    "source": "searchSERP",
+                    "judged": true,
+                    "highlyRelevant": highlyRelevant,
+                    "nonrelevant": non,
+                    "relevant": relevant,
+                    'ctrl_f_terms_input': ctrlf_terms,
+                    'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                    'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
+                };
+            }else{
+                var now = timeVerbose['timestamp'];
+            }
             console.log("Sending judgment call to backend for document id: " + doc_id);
 
             var data = {
@@ -230,20 +262,27 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': "",
                 'doc_search_snippet': current_doc_snippet,
-                'relevant': rel,
+                'query': $("#search_input").val(),
+                'highlyRelevant': highlyRelevant,
                 'nonrelevant': non,
-                'ontopic': ontopic,
+                'relevant': relevant,
                 'time_to_judge': "NA",
                 'isFromCAL': false,
                 'isFromSearch': true,
                 'isFromSearchModal': isFromSearchModal,
+                'isFromIterative': false,
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,
+                'timeVerbose': timeVerbose,
+                'search_query': $("#search_input").val(),
+                'ctrl_f_terms_input': ctrlf_terms,
+                'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                'found_ctrl_f_terms_in_summary': [],
+                'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
                 'page_title': document.title
             };
-
 
             $.ajax({
                 url: '{% url 'judgment:post_judgment' %}',
@@ -253,22 +292,23 @@
                     console.log(result['message']);
                 },
                 error: function (result) {
-                    console.log(result);
+                    console.error("Something went wrong. " +
+                            "Judgment may have not been recorded.", result['responseText'])
                 }
             });
 
-            update_doc_status(doc_id, rel, non, ontopic);
+            update_doc_status(doc_id, highlyRelevant, non, relevant);
 
             return false;
         }
 
-        function update_doc_status(doc_id, rel, non, ontopic){
+        function update_doc_status(doc_id, highlyRelevant, non, relevant){
             console.log("Updating document " + doc_id + " status");
-            if(rel){
+            if(highlyRelevant){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
-            }else if(ontopic){
+            }else if(relevant){
                 $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
@@ -276,13 +316,116 @@
 
         function hide_modal(doc_id){
             console.log("hiding modal: ", doc_id);
-             $('#doc-'+doc_id+'-modal').modal('hide');
+            $('#doc-'+doc_id+'-modal').modal('hide');
+            resetMatchesLists();
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard){
-            send_judgment(doc_id, doc_title, doc_snippet, rel, non, ontopic, isMouse, isKeyboard, true);
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard){
+            var now = + new Date;
+            if(documents_timers[doc_id] == undefined){
+                return;
+            }
+            var timeActive = Date.now() - documents_timers[doc_id].startTime - documents_timers[doc_id].totalAwayTime;
+            var timeAway = documents_timers[doc_id].totalAwayTime;
+            var ctrlf_terms = $("#search_content_doc_"+doc_id).val();
+            var timeVerbose = {
+                "timestamp": now,
+                "timeActive": timeActive,
+                "timeAway": timeAway,
+                "source": "searchModal",
+                "judged": true,
+                "highlyRelevant": highlyRelevant,
+                "nonrelevant": non,
+                "relevant": relevant,
+                "ctrl_f_terms_input": ctrlf_terms,
+                "found_ctrl_f_terms_in_title": marked_matches_in_document_title,
+                "found_ctrl_f_terms_in_full_doc": marked_matches_in_document_content
+            };
+            send_judgment(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose, ctrlf_terms);
+            var element = document;
+            var event = new CustomEvent("new_judgment");
+            element.dispatchEvent(event);
             hide_modal(doc_id);
             return false;
         }
+        var is_from_judement = false;
+        var element = document;
+        element.addEventListener("new_judgment", function (e) {
+            is_from_judement = true;
+        }, false);
+
+        var marked_matches_in_document_title = [];
+        var marked_matches_in_document_content = [];
+        /**
+        * Update dicts of matches in document title, and content
+        */
+        function updateMatchesLists(){
+            resetMatchesLists();
+            var document_title_mark_instances = $("#modal-title-"+currentOpenedModalDocId).find("mark");
+            var document_content_mark_instances = $("#document_"+currentOpenedModalDocId+"_raw_content").find("mark");
+
+            var i;
+            for(i = 0; i < document_title_mark_instances.length; i++){
+                var data = {
+                    "match": document_title_mark_instances[i].innerHTML,
+                    "wholeWord": get_surroundings_of_match(document_title_mark_instances[i])
+                };
+                marked_matches_in_document_title.push(data);
+            }
+            for(i = 0; i < document_content_mark_instances.length; i++){
+                var data = {
+                    "match": document_content_mark_instances[i].innerHTML,
+                    "wholeWord": get_surroundings_of_match(document_content_mark_instances[i])
+                };
+                marked_matches_in_document_content.push(data);
+            }
+        }
+
+        /**
+         * Gets the surrounding letters of a highlighted match.
+         * E.g. "The company is ba<mark>se</mark>d in California"
+         * retrun "based".
+         */
+        function get_surroundings_of_match(match){
+            if(match.previousSibling != undefined && match.nextSibling != undefined){
+                var prev = match.previousSibling.nodeValue;
+                var next = match.nextSibling.nodeValue;
+                if(prev == ""){
+                    prev = " ";
+                }
+                if(next == ""){
+                    next = " ";
+                }
+
+                var wholeMatch = [];
+                var i;
+                for(i = 0; i < prev.length; i++){
+                    var index = prev.length - i - 1;
+                    if(prev[index] != "" && prev[index] != " ") {
+                        wholeMatch.push(prev[index]);
+                    } else {
+                        break;
+                    }
+                }
+                wholeMatch.reverse();
+                wholeMatch.push.apply(wholeMatch, match.innerHTML.split());
+                for(i = 0; i < next.length; i++){
+                    if(next[i] != "" && next[i] != " "){
+                        wholeMatch.push(next[i]);
+                    }else{
+                        break;
+                    }
+                }
+                return wholeMatch.join("");
+            }else {
+                return null;
+            }
+        }
+
+        function resetMatchesLists(){
+            marked_matches_in_document_title = [];
+            marked_matches_in_document_content = [];
+        }
+
     </script>
 {% endblock %}

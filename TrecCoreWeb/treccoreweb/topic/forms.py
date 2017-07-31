@@ -25,6 +25,7 @@ class TopicForm(forms.ModelForm):
 
         self.helper = FormHelper(self)
         self.helper.layout.append(
-                Submit(self.submit_name, u'Submit',
-                       css_class='btn btn-primary')
+            Submit(self.submit_name, u'Submit',
+                   css_class='btn btn-primary')
         )
+

@@ -1,26 +1,31 @@
-import os
-import traceback
+from config.settings.base import DOCUMENTS_URL
+from config.settings.base import PARA_URL
 from datetime import date
+import traceback
+import re
+
+import httplib2
 from lxml import etree
 
 try:
     # For c speedups
-    from simplejson import loads, dumps
+    from simplejson import loads
 except ImportError:
-    from json import loads, dumps
+    from json import loads
 
-from config.settings.base import DOCUMENTS_PATH, PARA_PATH
+
+LEAD_PARA_REGEX = re.compile(r'<p>\s*LEAD:.*?</p>')
+
 
 def exec_xpath(tree, xpath):
     try:
         val = tree.xpath(xpath)[0]
         val_str = etree.tostring(val, encoding="unicode")
-        if len(val_str) == 0:
-            return "N/A"
         return val_str
     except:
         traceback.print_exc()
-        return "N/A"
+        return ""
+
 
 def get_date(tree, xpath):
     try:
@@ -28,13 +33,14 @@ def get_date(tree, xpath):
         year = int(d[:4])
         month = int(d[4:6])
         day = int(d[6:8])
-        d = date(year,month,day)
+        d = date(year, month, day)
         return d.strftime("%A %d. %B %Y")
     except:
         traceback.print_exc()
         return "N/A"
 
-def get_documents(doc_ids, query):
+
+def get_documents(doc_ids, query=None):
     """
     :param query:
     :param doc_ids: the ids of documents to return
@@ -42,9 +48,18 @@ def get_documents(doc_ids, query):
     """
     result = []
     for doc_id in doc_ids:
-        tree = etree.parse(os.path.join(DOCUMENTS_PATH, doc_id[:4], doc_id + '.xml'))
-        title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1')
-        content = exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')
+        url = '{}/{}/{}.xml'.format(DOCUMENTS_URL, doc_id[:4], doc_id)
+        tree = etree.parse(url)
+        title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1').strip()
+        content = LEAD_PARA_REGEX.sub('', exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')).strip()
+        if len(content) == 0:
+            if len(title) == 0:
+                title = '<i class="text-warning">The document title is empty</i>'
+            content = '<i class="text-warning">The document content is empty</i>'
+        else:
+            if len(title) == 0:
+                title = content[:32]
+
         date = get_date(tree, '/nitf/head/pubdata/@date.publication')
         document = {
             'doc_id': doc_id,
@@ -58,16 +73,28 @@ def get_documents(doc_ids, query):
 
 
 def get_documents_with_snippet(doc_ids, query, top_terms):
+    h = httplib2.Http()
+    url = "{}/{}/{}"
+    doc_ids_unique = []
+    doc_ids_set = set()
+    for doc_id in doc_ids:
+        if doc_id['doc_id'] not in doc_ids_set:
+            doc_ids_set.add(doc_id['doc_id'])
+            doc_ids_unique.append(doc_id)
+
+    doc_ids = doc_ids_unique
+
     result = get_documents([doc['doc_id'] for doc in doc_ids], query)
     for doc_para_id, doc in zip(doc_ids, result):
         if 'para_id' not in doc_para_id:
-            doc['snippet'] = 'N/A'
+            doc['snippet'] = u'N/A'
             continue
         try:
             para_id = doc_para_id['doc_id'] + '.' + doc_para_id['para_id']
-            with open(os.path.join(PARA_PATH, para_id[:4], para_id)) as f:
-                doc['snippet'] = f.read().strip()
+            resp, content = h.request(url.format(PARA_URL, para_id[:4], para_id),
+                                      method="GET")
+            doc['snippet'] = content.decode('utf-8')
         except:
             traceback.print_exc()
-            doc['snippet'] = 'N/A'
+            doc['snippet'] = u'N/A'
     return result

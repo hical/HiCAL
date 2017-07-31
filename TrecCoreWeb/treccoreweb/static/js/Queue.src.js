@@ -96,6 +96,13 @@ function Queue(){
 
   }
 
+  /* Inserts an item at the front of the list
+  */
+  this.insertFront = function (item) {
+    queue.unshift(item);
+    return item;
+  }
+
   /* Returns the item at the front of the queue (without dequeuing it). If the
    * queue is empty then undefined is returned.
    */
