@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from treccoreweb.judgment.models import Judgement
 from treccoreweb.progress.models import Task
 from config.settings.base import CAL_SERVER_IP, CAL_SERVER_PORT
+import time
 import requests
 
 
@@ -25,6 +26,13 @@ class Command(BaseCommand):
 
             judgments[(session_id, seed_query)].append((row.doc_id, -1 if row.nonrelevant else 1))
 
+        while True:
+            print("Waiting for cal server to come online")
+            try:
+                requests.get('http://localhost:9001/CAL/begin', timeout=1)
+                break
+            except requests.Timeout:
+                time.sleep(5)
 
         for session_id, seed_query in judgments:
             url = "http://{}:{}/CAL/begin".format(CAL_SERVER_IP, CAL_SERVER_PORT)
