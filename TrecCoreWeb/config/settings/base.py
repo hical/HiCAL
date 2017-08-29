@@ -331,12 +331,12 @@ MAX_ACTIVE_TIME = 60 * 60
 
 # CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
-CAL_SERVER_IP = '129.97.84.14'
+CAL_SERVER_IP = 'localhost'
 CAL_SERVER_PORT = '9001'
-SEARCH_SERVER_IP = '129.97.25.37'
-SEARCH_SERVER_PORT = '80'
-DOCUMENTS_URL = 'http://129.97.84.14:9000/doc'
-PARA_URL = 'http://129.97.84.14:9000/para'
+SEARCH_SERVER_IP = 'localhost'
+SEARCH_SERVER_PORT = '9003'
+DOCUMENTS_URL = 'http://localhost/doc'
+PARA_URL = 'http://localhost/para'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------

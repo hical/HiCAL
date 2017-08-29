@@ -345,6 +345,7 @@ int main(int argc, char **argv){
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
+    AddFlag("--restore-script", "Restore script to run after documents are loaded", string(""));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
@@ -364,6 +365,10 @@ int main(int argc, char **argv){
         return -1;
     }
 
+    string command = (string("nohup ") + string(CMD_LINE_STRINGS["--restore-script"]) + string(" &"));
+    if(CMD_LINE_STRINGS["--restore-script"].length() > 0){
+        cout<<system(command.c_str())<<endl;;
+    }
     // Load docs
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
@@ -390,7 +395,6 @@ int main(int argc, char **argv){
     FCGX_Request request;
     FCGX_Init();
     FCGX_InitRequest(&request, 0, 0);
-
     while (FCGX_Accept_r(&request) == 0) {
         process_request(request);
     }
