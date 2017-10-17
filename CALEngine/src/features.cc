@@ -6,55 +6,12 @@
 #include <unordered_map>
 #include <cmath>
 #include <algorithm>
-#include "porter.c"
 
 #include "features.h"
+#include "utils/text_utils.h"
 using namespace std;
 
 unordered_map<string, features::TermInfo> features::dictionary;
-
-vector<string> features::tokenize(const string &text){
-    vector<string> words;
-    int st = 0;
-    while(st < (int)text.length()){
-        int end = 0;
-        while(isalpha(text[st+end])){
-            end++;
-        }
-        if(end > 0){
-            words.push_back(text.substr(st, end));
-        }
-        st += end + 1;
-    }
-    return words;
-}
-
-vector<string> features::get_stemmed_words(const string &str){
-    char temp_str[str.length()+1];
-    strcpy(temp_str, str.c_str());
-    int st = 0, end = 0;
-    string stemmed_text;
-
-    while(temp_str[st]){
-        if(!isalpha(temp_str[st])){
-            stemmed_text.push_back(temp_str[st++]);
-        }else{
-            end = 0;
-            while(isalpha(temp_str[st+end])){
-                temp_str[st+end] = tolower(temp_str[st+end]);
-                end++;
-            }
-            end--;
-            int new_end = stem(temp_str, st, st + end);
-            int final_st = st + end + 1;
-            while(st <= new_end){
-                stemmed_text.push_back(temp_str[st++]);
-            }
-            st = final_st;
-        }
-    }
-    return tokenize(stemmed_text);
-}
 
 void features::init(const string &fname){
     int df;
@@ -85,7 +42,7 @@ SfSparseVector features::get_features(const string &text, int N){
     vector<pair<uint32_t, double>> tmp_features;
 
     double sum = 0;
-    for(pair<string, int> term: get_tf(get_stemmed_words(text))){
+    for(pair<string, int> term: get_tf(text_utils::get_stemmed_words(text))){
         if(dictionary.find(term.first) != dictionary.end()){
             int id = dictionary[term.first].id;
             int df = dictionary[term.first].df;
