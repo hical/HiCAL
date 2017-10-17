@@ -19,6 +19,12 @@
    The algorithm as encoded here is particularly fast.
 */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wparentheses"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -312,3 +318,6 @@ int stem(char * p, int i, int j)
    step1ab(); step1c(); step2(); step3(); step4(); step5();
    return k;
 }
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
