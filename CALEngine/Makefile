@@ -1,23 +1,34 @@
-CC = g++ -O3 -Wall -pthread --std=c++14
-ODIR=obj
+CXX = g++
+CXXFLAGS = -O3 -Wall -pthread --std=c++14
 
-cli:
-	$(CC) src/bmi_cli.cc src/bmi_para.cc src/bmi.cc src/features.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc src/utils/feature_parser.cc src/utils/text_utils.cc -o bmi_cli
+OBJ_DIR ?= obj
+SRC_DIRS ?= src
 
-fcgi:
-	$(CC) src/bmi_fcgi.cc src/bmi_para.cc src/bmi.cc src/features.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc src/utils/feature_parser.cc  src/utils/text_utils.cc -o bmi_fcgi -lfcgi -lfcgi++
+# Modify BIN_SRCS to add targets
+BIN_SRCS := $(SRC_DIRS)/bmi_fcgi.cc $(SRC_DIRS)/bmi_cli.cc $(SRC_DIRS)/corpus_parser.cc
+BIN_OBJS := $(BIN_SRCS:%=$(OBJ_DIR)/%.o)
+BIN_TARGETS := $(notdir $(basename $(BIN_SRCS)))
 
-all: cli fcgi
+SRCS := $(shell find $(SRC_DIRS) -name *.cc)
+SRCS := $(filter-out $(BIN_SRCS),$(SRCS))
+OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 
-sofia_cli:
-	$(CC) src/sofia_cli.cc src/sofiaml/sf-data-set.cc src/sofiaml/sf-sparse-vector.cc src/sofiaml/sf-weight-vector.cc src/scorer.cc src/sofiaml/sofia-ml-methods.cc -o sofia_cli
 
-test_scorer: 
-	$(CC) src/test_scorer.cc src/scorer.cc src/sofiaml/sf-sparse-vector.cc src/utils/feature_parser.cc -o test_scorer
-	./test_scorer
+DEPS := $(OBJS:.o=.d)
+DEP_FLAGS = -MMD -MP
 
-test: test_scorer
+$(BIN_TARGETS): % : $(OBJ_DIR)/$(SRC_DIRS)/%.cc.o $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(SRC_DIRS)/$@.cc.o -o $@
+
+$(OBJ_DIR)/%.cc.o: %.cc
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(DEP_FLAGS) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f bmi_cli
-	rm -f bmi_fcgi
+	rm -f $(BIN_TARGETS)
+	rm -r $(OBJ_DIR)
+
+# print-%  : ; @echo $* = $($*)
+-include $(DEPS)
+
+MKDIR_P ?= mkdir -p
