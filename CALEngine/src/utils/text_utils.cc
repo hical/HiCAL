@@ -2,15 +2,18 @@
 #include "porter.c"
 
 using namespace std;
-vector<string> text_utils::tokenize(const string &text){
+vector<string> text_utils::tokenize(const string &text, bool skip_numeric_terms = false){
     vector<string> words;
     int st = 0;
     while(st < (int)text.length()){
         int end = 0;
+        bool skip = false;
         while(isalnum(text[st+end])){
             end++;
+            if(skip_numeric_terms && isdigit(text[st+end]))
+                skip = true;
         }
-        if(end > 0){
+        if(end > 0 && !skip){
             words.push_back(text.substr(st, end));
         }
         st += end + 1;
