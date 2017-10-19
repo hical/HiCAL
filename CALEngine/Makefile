@@ -1,13 +1,17 @@
 CXX = g++
-CXXFLAGS = -O3 -Wall -pthread --std=c++14
+CXXFLAGS = -O3 -Wall -pthread --std=c++14 -lfcgi -lfcgi++ -larchive
 
 OBJ_DIR ?= obj
 SRC_DIRS ?= src
+TEST_DIRS ?= tests
 
 # Modify BIN_SRCS to add targets
 BIN_SRCS := $(SRC_DIRS)/bmi_fcgi.cc $(SRC_DIRS)/bmi_cli.cc $(SRC_DIRS)/corpus_parser.cc
 BIN_OBJS := $(BIN_SRCS:%=$(OBJ_DIR)/%.o)
 BIN_TARGETS := $(notdir $(basename $(BIN_SRCS)))
+
+TEST_SRCS := $(shell find $(TEST_DIRS) -name *.cc)
+TEST_TARGETS := $(notdir $(basename $(TEST_SRCS)))
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cc)
 SRCS := $(filter-out $(BIN_SRCS),$(SRCS))
@@ -17,12 +21,22 @@ OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 DEP_FLAGS = -MMD -MP
 
+all_targets: $(BIN_TARGETS)
+
 $(BIN_TARGETS): % : $(OBJ_DIR)/$(SRC_DIRS)/%.cc.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(SRC_DIRS)/$@.cc.o -o $@
+
+$(TEST_TARGETS): % : $(OBJ_DIR)/$(TEST_DIRS)/%.cc.o $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(TEST_DIRS)/$@.cc.o -o $(TEST_DIRS)/$@
+	$(TEST_DIRS)/$@ ./athome1.bin 8
 
 $(OBJ_DIR)/%.cc.o: %.cc
 	$(MKDIR_P) $(dir $@)
 	$(CXX) $(DEP_FLAGS) $(CXXFLAGS) -c $< -o $@
+
+test: $(TEST_TARGETS)
+
+all: $(BIN_TARGETS) test 
 
 clean:
 	rm -f $(BIN_TARGETS)
