@@ -62,9 +62,9 @@ bool CAL::utils::SVMlightFeatureParser::read_line(){
 // Bad things will happen if file is not proper!
 std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
     if(!read_line())
-        return NULL;
+        return nullptr;
 
-    string doc_id = "";
+    string doc_id;
     vector<FeatureValuePair> features;
     char *moving_chr = buffer;
     while(*moving_chr != ' ' && *moving_chr != 0){
