@@ -1,8 +1,8 @@
 #include <iostream>
 #include <chrono>
 #include <algorithm>
-#include "scorer.h"
-#include "utils/feature_parser.h"
+#include "../src/scorer.h"
+#include "../src/utils/feature_parser.h"
 using namespace std;
 
 int main(int argc, char *argv[]){
