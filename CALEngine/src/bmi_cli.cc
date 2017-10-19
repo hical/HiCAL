@@ -62,14 +62,14 @@ vector<pair<string, SfSparseVector>> generate_seed_queries(string fname, int num
     return seed_queries;
 }
 
-void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<Scorer> &scorer, const unique_ptr<Scorer> &scorer_para){
+void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs){
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
-    if(scorer_para != NULL){
+    if(paragraphs != NULL){
         bmi = make_unique<BMI_para>(seed_query.second,
-            scorer.get(),
-            scorer_para.get(),
+            documents.get(),
+            paragraphs.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
@@ -77,7 +77,7 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<
             CMD_LINE_INTS["--async-mode"]);
     }else{
         bmi = make_unique<BMI>(seed_query.second,
-            scorer.get(),
+            documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
@@ -141,36 +141,36 @@ int main(int argc, char **argv){
     }
 
     // Load docs
-    unique_ptr<Scorer> scorer_doc = NULL;
-    unique_ptr<Scorer> scorer_para = NULL;
+    unique_ptr<Dataset> documents = nullptr;
+    unique_ptr<Dataset> paragraphs = nullptr;
 
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
     string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
-    scorer_doc = make_unique<Scorer>(CAL::utils::BinFeatureParser(doc_features_path).get_all());
+    documents = CAL::utils::BinFeatureParser(doc_features_path).get_all();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<scorer_doc->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Read "<<documents->size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
     // Load para
     string para_features_path = CMD_LINE_STRINGS["--para-features"];
     if(para_features_path.length() > 0){
         start = std::chrono::steady_clock::now();
         cerr<<"Loading paragraph features on memory"<<endl;
-        scorer_para = make_unique<Scorer>(CAL::utils::BinFeatureParser(para_features_path).get_all());
+        paragraphs = CAL::utils::BinFeatureParser(para_features_path).get_all();
         duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
-        cerr<<"Read "<<scorer_para->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+        cerr<<"Read "<<paragraphs->size()<<" docs in "<<duration.count()<<"ms"<<endl;
     }
 
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
     vector<pair<string, SfSparseVector>> seed_queries = 
-        generate_seed_queries(CMD_LINE_STRINGS["--query"], scorer_doc->doc_features->size());
+        generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
 
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
-        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(scorer_doc), cref(scorer_para)));
+        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
         if(jobs.size() == 8){
             for(auto &t: jobs)
                 t.join();

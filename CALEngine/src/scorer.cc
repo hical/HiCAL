@@ -9,21 +9,23 @@
 
 using namespace std;
 
-void Scorer::score_docs(const vector<float> &weights, 
+void Scorer::score_docs(
+        const Dataset &dataset,
+        const vector<float> &weights,
         int st,
-        int end, 
+        int end,
         pair<float, int> *top_docs,
         int num_top_docs,
-        const set<int> &judgments)
-{
+        const set<int> &judgments) {
     auto iterator = judgments.lower_bound(st);
     for(int i = st;i<end; i++){
         while(iterator != judgments.end() && *iterator < i)
             iterator++;
         if(iterator != judgments.end() && *iterator == i)
             continue;
+
         float score = 0;
-        for(auto feature: (*doc_features)[i]->features_){
+        for(auto feature: dataset.get_sf_sparse_vector(i).features_){
             score += weights[feature.id_] * feature.value_;
         }
 
@@ -39,7 +41,8 @@ void Scorer::score_docs(const vector<float> &weights,
 }
 
 // Only use for small values of top_docs_per_thread
-void Scorer::rescore_documents(const vector<float> &weights,
+void Scorer::rescore_documents(const Dataset &dataset,
+        const vector<float> &weights,
         int num_threads, 
         int top_docs_per_thread,
         const set<int> &judgments,
@@ -56,10 +59,10 @@ void Scorer::rescore_documents(const vector<float> &weights,
         t.push_back(
             thread(
                 &Scorer::score_docs,
-                this,
-                ref(weights),
-                i * doc_features->size()/num_threads,
-                (i == num_threads - 1)?doc_features->size():(i+1) * doc_features->size()/num_threads,
+                cref(dataset),
+                cref(weights),
+                i * dataset.size()/num_threads,
+                (i == num_threads - 1)?dataset.size():(i+1) * dataset.size()/num_threads,
                 top_docs + top_docs_per_thread * i,
                 top_docs_per_thread,
                 ref(judgments)
@@ -75,12 +78,14 @@ void Scorer::rescore_documents(const vector<float> &weights,
     }
 }
 
-// Todo: replace the current rescore_documents with this version
-vector<pair<int, float>> Scorer::rescore_all_documents(const vector<float> &weights, int num_threads){
+// Todo: Do something about this!
+vector<pair<int, float>> Scorer::rescore_all_documents(
+        const Dataset &dataset,
+        const vector<float> &weights, int num_threads){
     vector<pair<int, float>> top_docs_results;
-    for(int i = 0;i<doc_features->size(); i++){
+    for(int i = 0;i<dataset.size(); i++){
         float score = 0.0;
-        for(auto feature: (*doc_features)[i]->features_){
+        for(auto feature: dataset.get_sf_sparse_vector(i).features_){
             score += weights[feature.id_] * feature.value_;
         }
         top_docs_results.push_back({i, score});
@@ -89,23 +94,12 @@ vector<pair<int, float>> Scorer::rescore_all_documents(const vector<float> &weig
     return top_docs_results;
 }
 
-vector<pair<int, float>> Scorer::get_top_terms(const vector<float> &weights, string doc_id, int num_top_terms){
+vector<pair<int, float>> Scorer::get_top_terms(const vector<float> &weights, const SfSparseVector &document, int num_top_terms){
     vector<pair<int, float>> feature_weights;
-    int doc_idx = doc_ids_inv_map[doc_id];
-    for(auto feature: (*doc_features)[doc_idx]->features_){
+    for(auto feature: document.features_){
         feature_weights.push_back({feature.id_, weights[feature.id_]});
     }
     sort(feature_weights.begin(), feature_weights.end(),
             [](const pair<int, float> &a, const pair<int, float> &b)->bool{return a.second > b.second;});
     return vector<pair<int, float>>(feature_weights.begin(),feature_weights.begin() + min(num_top_terms, (int)feature_weights.size()));
-}
-
-Scorer::Scorer(std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>> _doc_features):doc_features(_doc_features){
-    dimensionality = 0;
-    for(size_t i = 0; i < doc_features->size(); i++){
-        doc_ids_inv_map[(*doc_features)[i]->doc_id] = i;
-        for(auto feature: (*doc_features)[i]->features_)
-            dimensionality = max(dimensionality, feature.id_);
-    }
-    dimensionality++;
 }

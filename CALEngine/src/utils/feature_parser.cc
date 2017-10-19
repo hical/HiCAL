@@ -80,16 +80,16 @@ std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
         moving_chr = strchr(moving_chr, ' ');
 
         features.push_back({feature_id, feature_weight});
-        if(moving_chr == NULL)
+        if(moving_chr == nullptr)
             break;
     }
     return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>> CAL::utils::FeatureParser::get_all(){
-    auto sparse_feature_vectors = std::make_shared<vector<std::unique_ptr<SfSparseVector>>>();
+std::unique_ptr<Dataset> CAL::utils::FeatureParser::get_all(){
+    auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
     std::unique_ptr<SfSparseVector> spv;
-    while((spv = next()) != NULL)
+    while((spv = next()) != nullptr)
         sparse_feature_vectors->push_back(std::move(spv));
-    return sparse_feature_vectors;
+    return std::make_unique<Dataset>(move(sparse_feature_vectors));
 }

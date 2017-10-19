@@ -25,7 +25,6 @@
 #ifndef SOFIA_ML_METHODS_H__
 #define SOFIA_ML_METHODS_H__
 
-#include "sf-data-set.h"
 #include "sf-sparse-vector.h"
 #include "sf-weight-vector.h"
 
