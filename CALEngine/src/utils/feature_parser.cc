@@ -2,11 +2,11 @@
 
 #include <cstring>
 
-CAL::utils::BinFeatureParser::BinFeatureParser(std::string file_name):FeatureParser(file_name){
+CAL::utils::BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
     fread(&num_records, sizeof(num_records), 1, fp);
 }
 
-CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(std::string file_name):FeatureParser(file_name){
+CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name): FeatureParser(file_name){
     buffer_size = 1<<10;
     buffer = (char*)malloc(buffer_size);
 }
