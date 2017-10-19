@@ -1,10 +1,10 @@
 #include "feature_writer.h"
 
-CAL::utils::BinFeatureWriter::BinFeatureWriter(std::string file_name):FeatureWriter(file_name){
+CAL::utils::BinFeatureWriter::BinFeatureWriter(const string &file_name): FeatureWriter(file_name){
     fseeko(fp, sizeof(uint32_t), SEEK_CUR);
 }
 
-CAL::utils::SVMlightFeatureWriter::SVMlightFeatureWriter(std::string file_name):FeatureWriter(file_name){
+CAL::utils::SVMlightFeatureWriter::SVMlightFeatureWriter(const string &file_name): FeatureWriter(file_name){
 }
 
 void CAL::utils::BinFeatureWriter::write(const std::unique_ptr<SfSparseVector> &spv){
