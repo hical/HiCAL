@@ -54,7 +54,7 @@ void BMI::perform_iteration(){
 
 void BMI::perform_iteration_async(){
     if(async_training_mutex.try_lock()){
-        while(training_cache.size() > 0){
+        while(!training_cache.empty()){
             if(max_iterations != -1 && state.cur_iteration >= max_iterations){
                 finish_session();
                 return;
@@ -132,7 +132,7 @@ void BMI::wait_for_judgments(){
             // NOTE: avoid deadlock by making sure whichever thread locks these two mutexes,
             // they always do in the same order
             lock_guard<mutex> lock(judgment_list_mutex);
-            if(judgment_list.size() == 0)
+            if(judgment_list.empty())
                 return;
         }
         this_thread::sleep_for(chrono::milliseconds(100));
