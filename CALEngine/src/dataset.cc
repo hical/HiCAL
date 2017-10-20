@@ -34,3 +34,15 @@ size_t Dataset::get_index(const std::string &id) const {
         return NPOS;
     return result->second;
 }
+
+float Dataset::inner_product(size_t index, const std::vector<float> &weights) const {
+    auto &features = get_sf_sparse_vector(index).features_;
+    float score1 = 0, score2 = 0, score3 = 0, score4 = 0;
+    for(int i = 3; i < features.size(); i+=4){
+        score1 += weights[features[i].id_] * features[i].value_;
+        score2 += weights[features[i-1].id_] * features[i-1].value_;
+        score3 += weights[features[i-2].id_] * features[i-2].value_;
+        score4 += weights[features[i-3].id_] * features[i-3].value_;
+    }
+    return score1 + score2 + score3 + score4;
+}
