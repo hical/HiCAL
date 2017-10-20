@@ -22,10 +22,7 @@ void Scorer::score_docs(
         if(iterator != judgments.end() && *iterator == i)
             continue;
 
-        float score = 0;
-        for(auto feature: dataset.get_sf_sparse_vector(i).features_){
-            score += weights[feature.id_] * feature.value_;
-        }
+        float score = dataset.inner_product(i, weights);
 
         int idx = num_top_docs-1;
         while(idx >= 0 && top_docs[idx].first < score){
