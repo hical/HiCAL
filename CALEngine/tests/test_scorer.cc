@@ -5,10 +5,11 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
-    int threads = atoi(argv[2]);
+    string bin_file = "data/oldreut.bin";
+    int threads = 1;
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
-    auto dataset = CAL::utils::BinFeatureParser(argv[1]).get_all();
+    auto dataset = CAL::utils::BinFeatureParser(bin_file).get_all();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
 
@@ -21,7 +22,7 @@ int main(int argc, char *argv[]){
         for(int j = 0;j<i*500;j++){
             judgments.insert(rand() % dataset->size());
         }
-        vector<float> weights(dataset->size());
+        vector<float> weights(dataset->get_dimensionality());
         for(float &wt: weights)
             wt = (float)rand()/(float)(RAND_MAX);
 
