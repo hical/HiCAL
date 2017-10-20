@@ -28,7 +28,7 @@ $(BIN_TARGETS): % : $(OBJ_DIR)/$(SRC_DIRS)/%.cc.o $(OBJS)
 
 $(TEST_TARGETS): % : $(OBJ_DIR)/$(TEST_DIRS)/%.cc.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(TEST_DIRS)/$@.cc.o -o $(TEST_DIRS)/$@
-	$(TEST_DIRS)/$@ ./athome1.bin 8
+	cd $(TEST_DIRS) && (./$@; cd ..)
 
 $(OBJ_DIR)/%.cc.o: %.cc
 	$(MKDIR_P) $(dir $@)
