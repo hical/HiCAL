@@ -5,7 +5,6 @@
 #include "bmi_para.h"
 #include "features.h"
 #include "utils/feature_parser.h"
-#include "dataset.h"
 
 using namespace std;
 unordered_map<string, unique_ptr<BMI>> SESSIONS;
