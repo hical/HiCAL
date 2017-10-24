@@ -14,8 +14,8 @@ unordered_map<string, size_t> generate_inverted_index(const SparseVectors &spars
 
 uint32_t compute_dimensionality(const SparseVectors &sparse_vectors) {
     uint32_t dimensionality = 0;
-    for(size_t i = 0; i < sparse_vectors->size(); i++){
-        for(auto feature: sparse_vectors->at(i)->features_)
+    for (auto &spv : *sparse_vectors) {
+        for(auto feature: spv->features_)
             dimensionality = max(dimensionality, feature.id_);
     }
     return 1 + dimensionality;
@@ -42,6 +42,11 @@ float Dataset::inner_product(size_t index, const std::vector<float> &weights) co
         score += weights[feature.id_] * feature.value_;
     }
     return score;
+//    std::vector<float> a, b;
+//    for(auto &feature: features){
+//        a.push_back(weights[feature.id_]);
+//        b.push_back(feature.value_);
+//    }
 //    float score1 = 0, score2 = 0, score3 = 0, score4 = 0;
 //    for(int i = 3; i < features.size(); i+=4){
 //        score1 += weights[features[i].id_] * features[i].value_;
