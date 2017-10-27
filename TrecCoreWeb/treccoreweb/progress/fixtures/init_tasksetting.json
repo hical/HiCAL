@@ -3,8 +3,8 @@
     "model": "progress.tasksetting",
     "pk": 1,
     "fields": {
-      "show_search": false,
-      "toggle_doc": false,
+      "show_search": true,
+      "toggle_doc": true,
       "only_show_doc": false
     }
   },
@@ -21,8 +21,8 @@
     "model": "progress.tasksetting",
     "pk": 3,
     "fields": {
-      "show_search": true,
-      "toggle_doc": true,
+      "show_search": false,
+      "toggle_doc": false,
       "only_show_doc": false
     }
   },

@@ -31,15 +31,14 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand font-montserrat" href="/"><strong>IRStudy</strong></a>
+    <a class="navbar-brand font-montserrat" href="/"><strong>Core</strong></a>
     <div class="collapse navbar-collapse" id="navbars">
         {% block nav-left%}
         <ul class="navbar-nav mt-1">
-            <a id="desc_popover" href="#" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 800px;" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{{ user.current_task.topic.display_description }}">
-             <strong>Topic</strong>: {{ user.current_task.topic.title }} |
-            <strong>Desc</strong>: {{ user.current_task.topic.display_description }}
+            <a id="desc_popover" href="#" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 800px;" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{% if user.current_task.topic.description %}{{ user.current_task.topic.description }}{% else %}No description provided.{% endif %}">
+             <strong>Topic</strong>: {{ user.current_task.topic.title }}
             </a>
-            <span class="small mt-1 text-primary">[Click to view full description]</span>
+            <span class="small mt-1 text-primary left-margin"> [Click on topic to view full description]</span>
         </ul>
         {% endblock %}
 
@@ -70,6 +69,7 @@
         <nav class="col-sm-2 col-md-0-5 hidden-xs-down sidebar bg-faded font-open-sans">
             <ul class="nav nav-pills flex-column center-text">
                 {% block sidebar %}
+                {% if user.current_task %}
                 {% if user.current_task.setting.only_show_doc %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
@@ -89,12 +89,13 @@
                     <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
                 </li>
                 {% endcomment %}
+                {% endif %}
                 {% endblock %}
             </ul>
 
         </nav>
 
-        <main class="col-sm-10 offset-sm-1 col-md-11 offset-md-0-5 pt-3 top-margin extra-padding">
+        <main class="col-sm-10 offset-sm-1  offset-md-0-5 col-md-11 pt-3 top-margin extra-padding">
             {% block messages %}
                 {% if messages %}
                     <div class="alert alert-info"
@@ -130,12 +131,6 @@
         crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script>
-    document.addEventListener("keydown", event => {
-        switch (event.key) {
-            case "Escape":
-                window.close();
-             }
-    });
 
     function showAlarm(msg) {
         var now = + new Date();

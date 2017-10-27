@@ -1,6 +1,6 @@
 function AwayTimer(showAlert){
     if(showAlert === undefined)
-        showAlert = true;
+        showAlert = false;
 
     this.awayTime = 0;
     this.backTime = 0;

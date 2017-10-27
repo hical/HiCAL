@@ -83,7 +83,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Custom middleware
     'treccoreweb.middleware.pagefile.PageHTMLMiddleware',
-    'treccoreweb.middleware.timer.timer_middleware',
 ]
 
 # MIGRATIONS CONFIGURATION
@@ -122,7 +121,7 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///treccoreweb'),
+    'default': env.db('DATABASE_URL', default='postgres:///treccorewebdemo'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 

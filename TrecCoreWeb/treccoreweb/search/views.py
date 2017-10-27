@@ -2,9 +2,8 @@ import json
 
 import httplib2
 from braces import views
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import loader
-from django.urls import reverse_lazy
 from django.views import generic
 
 from treccoreweb.search import helpers
@@ -20,15 +19,6 @@ class SearchHomePageView(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'search/search.html'
 
     def get(self, request, *args, **kwargs):
-        # TODO: If we're not going to use electron.js, make sure the view
-        # is only allowed to people with permission to access this page
-        current_task = self.request.user.current_task
-        if current_task.is_time_past():
-            return HttpResponseRedirect(reverse_lazy('progress:completed'))
-
-        if not current_task.setting.show_search:
-            return HttpResponseRedirect(reverse_lazy('progress:home'))
-
         return super(SearchHomePageView, self).get(self, request, *args, **kwargs)
 
 
