@@ -1,50 +1,54 @@
+#include <iostream>
+#include <algorithm>
 #include "text_utils.h"
 #include "porter.c"
 
 using namespace std;
-vector<string> text_utils::tokenize(const string &text, bool skip_numeric_terms = false){
-    vector<string> words;
+bool AlphaFilter::filter(const std::string &token) {
+    if(token.length() < 2)
+        return false;
+    for(char c: token){
+        if(!isalpha(c))
+            return false;
+    }
+    return true;
+}
+
+bool MinLengthFilter::filter(const string &token) {
+    return token.length() >= min_length;
+}
+
+std::string PorterTransform::transform(const std::string &token) {
+    char temp_str[token.length()+1];
+    strcpy(temp_str, token.c_str());
+
+    int end = stem(temp_str, 0, (int)token.length()-1);
+    return std::string(temp_str, end+1);
+}
+
+std::string LowerTransform::transform(const std::string &token) {
+    string transformed_token = token;
+    std::transform(transformed_token.begin(), transformed_token.end(), transformed_token.begin(), ::tolower);
+    return transformed_token;
+}
+
+std::vector<std::string> BMITokenizer::tokenize(const std::string &text) {
+    vector<string> tokens;
     int st = 0;
     while(st < (int)text.length()){
         int end = 0;
-        bool skip = false;
         while(isalnum(text[st+end])){
             end++;
-            if(skip_numeric_terms && isdigit(text[st+end]))
-                skip = true;
         }
-        if(end > 0 && !skip){
-            words.push_back(text.substr(st, end));
+        if(end > 0){
+            auto token = text.substr(st, end);
+            if(alpha_filter.filter(token)){
+                token = porter_transform.transform(lower_transform.transform(token));
+                if(min_length_filter.filter(token))
+                    tokens.push_back(token);
+            }
         }
         st += end + 1;
     }
-    return words;
+    return tokens;
 }
-
-vector<string> text_utils::get_stemmed_words(const string &str){
-    char temp_str[str.length()+1];
-    strcpy(temp_str, str.c_str());
-    int st = 0, end = 0;
-    string stemmed_text;
-
-    while(temp_str[st]){
-        if(!isalpha(temp_str[st])){
-            stemmed_text.push_back(temp_str[st++]);
-        }else{
-            end = 0;
-            while(isalpha(temp_str[st+end])){
-                temp_str[st+end] = tolower(temp_str[st+end]);
-                end++;
-            }
-            end--;
-            int new_end = stem(temp_str, st, st + end);
-            int final_st = st + end + 1;
-            while(st <= new_end){
-                stemmed_text.push_back(temp_str[st++]);
-            }
-            st = final_st;
-        }
-    }
-    return tokenize(stemmed_text);
-}
-
