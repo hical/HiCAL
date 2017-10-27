@@ -55,12 +55,12 @@ public:
     virtual std::vector<std::string> tokenize(const std::string &text) = 0;
 };
 
-class BMITokenizer {
+class BMITokenizer:public Tokenizer {
     AlphaFilter alpha_filter = AlphaFilter();
     MinLengthFilter min_length_filter = MinLengthFilter(2);
     PorterTransform porter_transform = PorterTransform();
     LowerTransform lower_transform = LowerTransform();
 public:
-    std::vector<std::string> tokenize(const std::string &text);
+    std::vector<std::string> tokenize(const std::string &text) override;
 };
 #endif // TEXT_UTILS_H
