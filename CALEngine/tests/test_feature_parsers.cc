@@ -1,11 +1,22 @@
 #include <iostream>
 #include <chrono>
 #include <cassert>
-#include <cstdlib>
 #include "../src/utils/feature_parser.h"
 #include "../src/utils/feature_writer.h"
 
 using namespace std;
+
+bool verify_dataset(const Dataset &d1, const Dataset &d2){
+    for(int i = 0;i< d1.size(); i++){
+        assert(d1.get_sf_sparse_vector(i).features_.size() == d2.get_sf_sparse_vector(i).features_.size());
+        for(int j = 0;j < d1.get_sf_sparse_vector(i).features_.size(); j++){
+            auto &feature1 = d1.get_sf_sparse_vector(i).features_[j];
+            auto &feature2 = d2.get_sf_sparse_vector(i).features_[j];
+            assert(feature1.id_ == feature2.id_);
+            assert(abs(feature1.value_ - feature2.value_) < 1e-6);
+        }
+    }
+}
 int main(int argc, char *argv[]){
     system("mkdir data_tmp/");
     string input_svm_file = "data/oldreut.svm.fil";
