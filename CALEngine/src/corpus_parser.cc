@@ -88,6 +88,9 @@ int main(int argc, char **argv){
                 continue;
 
             string doc_name = (archive_entry_pathname(entry));
+            if(doc_name.find_last_of('/') != doc_name.npos){
+                doc_name = doc_name.substr(doc_name.find_last_of('/') + 1);
+            }
             string content = read_content(a);
             num_docs++;
             vector<string> tokens = tokenizer.tokenize(content);
