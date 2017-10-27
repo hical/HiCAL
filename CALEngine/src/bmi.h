@@ -4,14 +4,13 @@
 #include <random>
 #include <mutex>
 #include <set>
-#include "scorer.h"
+#include "dataset.h"
 #include "sofiaml/sofia-ml-methods.h"
-#include "sofiaml/sf-data-set.h"
 
 class BMI{
     protected:
 
-    Scorer *scorer;
+    Dataset *documents;
 
     // Number of threads used for rescoring docs
     int num_threads;
@@ -74,9 +73,6 @@ class BMI{
     // Tasks to perform in order to finish the session
     void finish_session();
 
-    // Initializes training_data with seed query
-    static SfDataSet get_initial_training_data(const SfSparseVector &seed);
-
     // train using the current training set and assign the weights to `w`
     void train(SfWeightVector &w);
 
@@ -101,7 +97,7 @@ class BMI{
 
     public:
     BMI(const SfSparseVector &seed,
-        Scorer *scorer,
+        Dataset *documents,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
@@ -124,11 +120,8 @@ class BMI{
     // Get ranklist for current classifier state
     virtual vector<std::pair<string, float>> get_ranklist();
 
-    // Begin CAL
-    void run();
-
-    virtual Scorer *get_ranking_scorer() {return scorer;};
-    Scorer *get_scorer() {return scorer;};
+    virtual Dataset *get_ranking_dataset() {return documents;};
+    Dataset *get_dataset() {return documents;};
 };
 
 #endif // BMI_H

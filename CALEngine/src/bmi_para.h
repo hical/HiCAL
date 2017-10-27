@@ -4,22 +4,20 @@
 #include <random>
 #include <mutex>
 #include <set>
-#include "scorer.h"
 #include "sofiaml/sofia-ml-methods.h"
-#include "sofiaml/sf-data-set.h"
 #include "bmi.h"
 
 class BMI_para:public BMI {
     private:
-    Scorer *scorer_para;
+    Dataset *paragraphs;
     std::set<int> finished_judgments_para;
     std::vector<int> perform_training_iteration();
     virtual void remove_from_judgment_list(int id);
 
     public:
     BMI_para(const SfSparseVector &seed,
-        Scorer *scorer,
-        Scorer *scorer_para,
+        Dataset *documents,
+        Dataset *paragraphs,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
@@ -28,7 +26,7 @@ class BMI_para:public BMI {
 
     std::vector<std::string> get_doc_to_judge(uint32_t count);
     void record_judgment(std::string doc_id, int judgment);
-    Scorer *get_ranking_scorer() {return scorer_para;};
+    Dataset *get_ranking_dataset() {return paragraphs;};
     vector<std::pair<string, float>> get_ranklist();
 };
 

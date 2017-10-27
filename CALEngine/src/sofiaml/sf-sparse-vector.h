@@ -85,10 +85,6 @@ class SfSparseVector {
   // updates the internal squared_norm_ member.
   void PushPair (uint32_t id, float value);
 
-  // Clear all feature values and the cached squared_norm_, leaving all
-  // other information unchanged.
-  void ClearFeatures() { features_.clear(); squared_norm_ = 0; }
-
   string doc_id;
 
   // Typically, only non-zero valued features are stored.  This vector is assumed
@@ -97,15 +93,11 @@ class SfSparseVector {
   vector<FeatureValuePair> features_;
 
  private:
-  void AddToSquaredNorm(float addend) { squared_norm_ += addend; }
 
-  // Sets up the bias term, indexed by feature id 0.
+    // Sets up the bias term, indexed by feature id 0.
   void SetBias() { PushPair(0, 1); }
 
-  // Sets up the bias term as null value, indexed by feature id 0.
-  void NoBias() { PushPair(0, 0); }
-
-  // Exits if the input format of the file is incorrect.
+    // Exits if the input format of the file is incorrect.
   void DieFormat(const string& reason);
 
   // Members.

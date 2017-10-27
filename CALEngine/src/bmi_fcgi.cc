@@ -1,15 +1,15 @@
 #include <fstream>
 #include <thread>
 #include <fcgio.h>
-#include "simple-cmd-line-helper.h"
+#include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
 using namespace std;
 unordered_map<string, unique_ptr<BMI>> SESSIONS;
-unordered_map<string, thread> SESSION_THREADS;
-unique_ptr<Scorer> scorer_doc = NULL, scorer_para = NULL;
+unique_ptr<Dataset> documents = nullptr;
+unique_ptr<Dataset> paragraphs = nullptr;
 
 // Get the uri without following and preceding slashes
 string parse_action_from_uri(string uri){
@@ -143,17 +143,17 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
     }
 
     if(mode == "doc"){
-        SESSIONS[session_id] = make_unique<BMI>(features::get_features(query, scorer_doc->doc_features->size()),
-                scorer_doc.get(),
+        SESSIONS[session_id] = make_unique<BMI>(features::get_features(query, documents->size()),
+                documents.get(),
                 CMD_LINE_INTS["--threads"],
                 CMD_LINE_INTS["--judgments-per-iteration"],
                 CMD_LINE_INTS["--max-effort"],
                 CMD_LINE_INTS["--num-iterations"],
                 CMD_LINE_BOOLS["--async-mode"]);
     }else if(mode == "para"){
-        SESSIONS[session_id] = make_unique<BMI_para>(features::get_features(query, scorer_doc->doc_features->size()),
-                scorer_doc.get(),
-                scorer_para.get(),
+        SESSIONS[session_id] = make_unique<BMI_para>(features::get_features(query, documents->size()),
+                documents.get(),
+                paragraphs.get(),
                 CMD_LINE_INTS["--threads"],
                 CMD_LINE_INTS["--judgments-per-iteration"],
                 CMD_LINE_INTS["--max-effort"],
@@ -280,7 +280,7 @@ void judge_view(const FCGX_Request & request, const vector<pair<string, string>>
     }
 
     const unique_ptr<BMI> &bmi = SESSIONS[session_id];
-    if(bmi->get_scorer()->doc_ids_inv_map.find(doc_id) == bmi->get_scorer()->doc_ids_inv_map.end()){
+    if(bmi->get_dataset()->get_index(doc_id) == bmi->get_dataset()->NPOS){
         write_response(request, 404, "application/json", "{\"error\": \"doc_id not found\"}");
         return;
     }
@@ -369,24 +369,26 @@ int main(int argc, char **argv){
     if(CMD_LINE_STRINGS["--restore-script"].length() > 0){
         cout<<system(command.c_str())<<endl;;
     }
+
+
     // Load docs
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
     string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
-    scorer_doc = make_unique<Scorer>(CAL::utils::BinFeatureParser(doc_features_path).get_all());
+    documents = CAL::utils::BinFeatureParser(doc_features_path).get_all();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<scorer_doc->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Read "<<documents->size()<<" docs in "<<duration.count()<<"ms"<<endl;
 
     // Load para
     string para_features_path = CMD_LINE_STRINGS["--para-features"];
     if(para_features_path.length() > 0){
         start = std::chrono::steady_clock::now();
         cerr<<"Loading paragraph features on memory"<<endl;
-        scorer_para = make_unique<Scorer>(CAL::utils::BinFeatureParser(para_features_path).get_all());
+        paragraphs = CAL::utils::BinFeatureParser(para_features_path).get_all();
         duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
-        cerr<<"Read "<<scorer_para->doc_features->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+        cerr<<"Read "<<paragraphs->size()<<" docs in "<<duration.count()<<"ms"<<endl;
     }
 
     // Load queries

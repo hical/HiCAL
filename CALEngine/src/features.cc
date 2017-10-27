@@ -1,6 +1,4 @@
 #include <fstream>
-#include<iostream>
-#include <string>
 #include <cstring>
 #include <vector>
 #include <unordered_map>
@@ -42,7 +40,7 @@ SfSparseVector features::get_features(const string &text, int N){
     vector<pair<uint32_t, double>> tmp_features;
 
     double sum = 0;
-    for(pair<string, int> term: get_tf(text_utils::get_stemmed_words(text))){
+    for(pair<string, int> term: get_tf(BMITokenizer().tokenize(text))){
         if(dictionary.find(term.first) != dictionary.end()){
             int id = dictionary[term.first].id;
             int df = dictionary[term.first].df;
@@ -58,138 +56,4 @@ SfSparseVector features::get_features(const string &text, int N){
     }
     sort(features.begin(), features.end(), [](auto &a, auto &b) -> bool{return a.id_ < b.id_;});
     return SfSparseVector("Q", features);
-}
-
-void features::svmlight_to_bin(string input_fname, string output_fname){
-    ifstream input_file(input_fname);
-    FILE *output_file = fopen(output_fname.c_str(), "wb");
-    string line;
-
-    // Leave space for header
-    fseeko(output_file, sizeof(uint32_t), SEEK_SET);
-
-    uint32_t num_records = 0;
-    uint32_t dimen = 0;
-    while(getline(input_file, line)){
-        dimen++;
-        const char* line_chr = line.c_str();
-        int len = line.size();
-        while(line_chr[len-1] == '\n')
-            len--;
-        const char* moving_chr = line_chr;
-
-        int i = 0;
-        for(i = 0;moving_chr[i]!=' ';i++);
-        fwrite(moving_chr, i, 1, output_file);
-        fputc(DELIM_CHAR, output_file);
-        off_t record_len_offset = ftello(output_file);
-        fseeko(output_file, sizeof(uint32_t), SEEK_CUR);
-
-        uint32_t num_pairs = 0;
-        vector<FeatureValuePair> features;
-        while(moving_chr < line_chr + len){
-            moving_chr = strchr(moving_chr, ' ');
-            if(moving_chr == NULL)
-                break;
-            moving_chr++;
-
-            uint32_t feature_id = atoi(moving_chr);
-            moving_chr = strchr(moving_chr, ':') + 1;
-            float feature_weight = atof(moving_chr);
-
-            fwrite(&feature_id, sizeof(uint32_t), 1, output_file);
-            fwrite(&feature_weight, sizeof(float), 1, output_file);
-            num_pairs++;
-        }
-
-        off_t backup_offset = ftello(output_file);
-        fseeko(output_file, record_len_offset, SEEK_SET);
-        fwrite(&num_pairs, sizeof(uint32_t), 1, output_file);
-        fseeko(output_file, backup_offset, SEEK_SET);
-        num_records++;
-    }
-    input_file.close();
-    // Write header
-    fseeko(output_file, 0, SEEK_SET);
-    fwrite(&num_records, sizeof(uint32_t), 1, output_file);
-    fclose(output_file);
-}
-
-void features::bin_to_svmlight(string input_fname, string output_fname){
-    vector<SfSparseVector> sparse_feature_vectors = features::parse_bin_features(input_fname);
-    FILE *output_file = fopen(output_fname.c_str(), "wb");
-    for(auto &spv: sparse_feature_vectors){
-        fprintf(output_file, "%s", spv.doc_id.c_str());
-        for(auto &fpv: spv.features_){
-            if(fpv.id_ != 0)
-                fprintf(output_file, " %d:%.8f", fpv.id_, fpv.value_);
-        }
-        fprintf(output_file, "\n");
-    }
-    fclose(output_file);
-}
-
-vector<SfSparseVector> features::parse_svmlight_features(string fname){
-    vector<SfSparseVector> sparse_feature_vectors;
-    ifstream doc_features_file(fname);
-
-    string line;
-    while(getline(doc_features_file, line)){
-        const char* line_chr = line.c_str();
-        int len = line.size();
-        while(line_chr[len-1] == '\n')
-            len--;
-        const char* moving_chr = line_chr;
-
-        string doc_id = "";
-        for(int i = 0;moving_chr[i]!=' ';i++)
-            doc_id.push_back(moving_chr[i]);
-
-        vector<FeatureValuePair> features;
-        while(moving_chr < line_chr + len){
-            moving_chr = strchr(moving_chr, ' ');
-            if(moving_chr == NULL)
-                break;
-            moving_chr++;
-
-            uint32_t feature_id = atoi(moving_chr);
-            moving_chr = strchr(moving_chr, ':') + 1;
-            float feature_weight = atof(moving_chr);
-
-            features.push_back({feature_id, feature_weight});
-        }
-        sparse_feature_vectors.push_back(SfSparseVector(doc_id, features));
-    }
-    doc_features_file.close();
-    return sparse_feature_vectors;
-}
-
-vector<SfSparseVector> features::parse_bin_features(string fname){
-    vector<SfSparseVector> sparse_feature_vectors;
-    FILE *input_file = fopen(fname.c_str(), "rb");
-    uint32_t num_records = 0;
-    fread(&num_records, sizeof(num_records), 1, input_file);
-
-    for(uint32_t i = 0;i<num_records; i++){
-        string doc_id;
-        char c = fgetc(input_file);
-        while(c != DELIM_CHAR){
-            doc_id.push_back(c);
-            c = fgetc(input_file);
-        }
-        uint32_t num_pairs = 0;
-        fread(&num_pairs, sizeof(num_pairs), 1, input_file);
-
-        vector<FeatureValuePair> features(num_pairs);
-        for(auto &fvp: features){
-            uint32_t x;
-            fread(&x, sizeof(uint32_t), 1, input_file);
-            fvp.id_ = x;
-            fread(&fvp.value_, sizeof(float), 1, input_file);
-        }
-        sparse_feature_vectors.push_back(SfSparseVector(doc_id, features));
-    }
-
-    fclose(input_file);
-    return sparse_feature_vectors;
 }

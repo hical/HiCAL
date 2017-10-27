@@ -2,11 +2,11 @@
 
 #include <cstring>
 
-CAL::utils::BinFeatureParser::BinFeatureParser(std::string file_name):FeatureParser(file_name){
+CAL::utils::BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
     fread(&num_records, sizeof(num_records), 1, fp);
 }
 
-CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(std::string file_name):FeatureParser(file_name){
+CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name): FeatureParser(file_name){
     buffer_size = 1<<10;
     buffer = (char*)malloc(buffer_size);
 }
@@ -62,9 +62,9 @@ bool CAL::utils::SVMlightFeatureParser::read_line(){
 // Bad things will happen if file is not proper!
 std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
     if(!read_line())
-        return NULL;
+        return nullptr;
 
-    string doc_id = "";
+    string doc_id;
     vector<FeatureValuePair> features;
     char *moving_chr = buffer;
     while(*moving_chr != ' ' && *moving_chr != 0){
@@ -80,16 +80,16 @@ std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
         moving_chr = strchr(moving_chr, ' ');
 
         features.push_back({feature_id, feature_weight});
-        if(moving_chr == NULL)
+        if(moving_chr == nullptr)
             break;
     }
     return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-std::shared_ptr<std::vector<std::unique_ptr<SfSparseVector>>> CAL::utils::FeatureParser::get_all(){
-    auto sparse_feature_vectors = std::make_shared<vector<std::unique_ptr<SfSparseVector>>>();
+std::unique_ptr<Dataset> CAL::utils::FeatureParser::get_all(){
+    auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
     std::unique_ptr<SfSparseVector> spv;
-    while((spv = next()) != NULL)
+    while((spv = next()) != nullptr)
         sparse_feature_vectors->push_back(std::move(spv));
-    return sparse_feature_vectors;
+    return std::make_unique<Dataset>(move(sparse_feature_vectors));
 }
