@@ -40,7 +40,7 @@ SfSparseVector features::get_features(const string &text, int N){
     vector<pair<uint32_t, double>> tmp_features;
 
     double sum = 0;
-    for(pair<string, int> term: get_tf(text_utils::get_stemmed_words(text))){
+    for(pair<string, int> term: get_tf(BMITokenizer().tokenize(text))){
         if(dictionary.find(term.first) != dictionary.end()){
             int id = dictionary[term.first].id;
             int df = dictionary[term.first].df;
