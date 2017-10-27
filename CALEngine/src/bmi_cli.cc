@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
-#include "simple-cmd-line-helper.h"
+#include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
 #include "features.h"
 #include "utils/feature_parser.h"
