@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block pagetitle %}Archive{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive" aria-hidden="true"></i></a>
+    </li>
+{% endblock %}
+
+{% block nav-header-title %}{% endblock %}
+
+
+{% block main %}
+    <div class="row top-bottom-margin">
+        <div class="col-md-9">
+            <div class="card bottom-margin">
+                <div class="card-block">
+                    <h2 class="text-primary"> Judged documents </h2>
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>DocID</th>
+                                    <th>Document Title</th>
+                                    <th>Judgment</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in judgments %}
+                                <tr>
+                                    <th scope="row"><code><span class="text-primary">{{ row.doc_id }}</span></code></th>
+                                    <td>{{ row.doc_title }} </td>
+                                    <td>
+                                    {% if row.highlyRelevant %}
+                                    <span class="text-success">Highly relevant</span>
+                                    {% elif row.relevant %}
+                                    <span class="text-warning">Relevant</span>
+                                    {% else %}
+                                    <span class="text-danger">Non-relevant</span>
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card"  style="border-color: #EFAC57">
+                <div class="card-block">
+                    <h2 class="text-warning">Operations </h2>
+                    <hr>
+                    <h5 class="text-warning">Filter data </h5>
+                    <hr>
+
+                    <hr>
+                    <button class="btn btn-outline-primary btn-sm bottom-margin">Export to csv</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+{% endblock %}

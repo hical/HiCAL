@@ -65,7 +65,8 @@ LOCAL_APPS = [
     'treccoreweb.judgment',
     'treccoreweb.search',
     'treccoreweb.stats',
-    'treccoreweb.iterative'
+    'treccoreweb.iterative',
+    'treccoreweb.archive'
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -332,8 +333,8 @@ MAX_ACTIVE_TIME = 60 * 60
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = 'localhost'
 CAL_SERVER_PORT = '9001'
-SEARCH_SERVER_IP = 'localhost'
-SEARCH_SERVER_PORT = '9003'
+SEARCH_SERVER_IP = '129.97.25.37'
+SEARCH_SERVER_PORT = '80'
 DOCUMENTS_URL = 'http://localhost/doc'
 PARA_URL = 'http://localhost/para'
 
