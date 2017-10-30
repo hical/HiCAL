@@ -45,17 +45,6 @@ namespace sofia_ml {
   //   c             capacity parameter (ignored by some LearnerTypes)
   //   num_iters     number of stochastic steps to take.
 
-  // We currently support the following learners.
-  enum LearnerType {
-    LOGREG_PEGASOS,  // Logistic Regression using Pegasos projection, and lambda as regularization parameter.
-  };
-
-  // Learning rate Eta may be set in different ways.
-  enum EtaType {
-    BASIC_ETA,  // On step i, eta = 1000 / (1000 + i)
-    PEGASOS_ETA,  // On step i, eta = 1.0 / (lambda * i) 
-    CONSTANT  // Use constant eta = 0.02 for all steps.
-  };
 
 
   // Trains a model w over training_set, using learner_type and eta_type learner with
@@ -65,54 +54,18 @@ namespace sofia_ml {
   // of these two vectors.  This optimizes area under the ROC curve.
   void StochasticRocLoop(const std::vector<const SfSparseVector*> &positives,
                          const std::vector<const SfSparseVector*> &negatives,
-			 LearnerType learner_type,
-			 EtaType eta_type,
 			 float lambda,
 			 float c,
 			 int num_iters,
 			 SfWeightVector* w);
 
-  // Takes one rank (a-b) step using the LearnerType defined by method, and returns true
-  // iff the method took a gradient step (mod.
-  bool OneLearnerRankStep(LearnerType method,
-			  const SfSparseVector& a,
-			  const SfSparseVector& b,
-			  float eta,
-			  float c,
-			  float lambda,
-			  SfWeightVector* w,
-                          float y_a=INF,
-                          float y_b=INF);
-
-  //------------------------------------------------------------------------------//
+	//------------------------------------------------------------------------------//
   //                         LearnerType Methods                                  //
   //------------------------------------------------------------------------------//
 
-  // Takes a single logistic regression step on vector (a-b), using pegasos
-  // projection for regularization.
-  bool SinglePegasosLogRegRankStep(const SfSparseVector& a,
-                                   const SfSparseVector& b,
-                                   float eta,
-                                   float lambda,
-                                   SfWeightVector* w,
-                                   float y_a=INF,
-                                   float y_b=INF);
-
-  //-------------------------------------------------------------------
+	//-------------------------------------------------------------------
   //                    Non-Member Utility Functions
   //-------------------------------------------------------------------
-
-  // Performs the PEGASOS projection step, projecting w back so that it
-  // in the feasible set of solutions.
-  void PegasosProjection(float lambda,
-			 SfWeightVector* w);
-
-  // Perform L2 regularization step, penalizing squared norm of
-  // weight vector w.  Note that this regularization step is accomplished
-  // by using w <- (1 - (eta * lambda)) * w, but we use MIN_SCALING_FACTOR
-  // if (1 - (eta * lambda)) < MIN_SCALING_FACTOR to prevent numerical
-  // problems.
-  void L2Regularize(float eta, float lambda, SfWeightVector* w);
 
 }  // namespace sofia_ml
 

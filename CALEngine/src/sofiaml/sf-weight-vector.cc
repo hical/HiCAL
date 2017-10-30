@@ -105,16 +105,12 @@ void SfWeightVector::AddVector(const SfSparseVector& x, float x_scale) {
     inner_product += weights_[this_x_feature] * this_x_value;
     weights_[this_x_feature] += this_x_value / scale_;
   }
-  squared_norm_ += x.GetSquaredNorm() * x_scale * x_scale +
-    (2.0 * scale_ * inner_product); 
 }
 
 void SfWeightVector::ScaleBy(double scaling_factor) {
   // Take care of any numerical difficulties.
   if (scale_ < 0.00000000001) ScaleToOne();
 
-  // Do the scaling.
-  squared_norm_ *= (scaling_factor * scaling_factor);
   if (scaling_factor > 0.0) {
     scale_ *= scaling_factor;
   } else {

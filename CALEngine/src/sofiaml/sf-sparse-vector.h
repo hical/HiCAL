@@ -78,9 +78,6 @@ class SfSparseVector {
   inline int FeatureAt(int i) const { return features_[i].id_; }
   inline float ValueAt(int i) const { return features_[i].value_; }
 
-  // Getters and setters.
-  float GetSquaredNorm() const { return squared_norm_; }
-
   // Adds a new (id, value) FeatureValuePair to the end of the vector, and
   // updates the internal squared_norm_ member.
   void PushPair (uint32_t id, float value);
@@ -101,10 +98,6 @@ class SfSparseVector {
   void DieFormat(const string& reason);
 
   // Members.
-
-  // squared_norm_ = x1*x1 + ... + xN*xN
-  float squared_norm_;
-
 };
 
 #endif // SF_SPARSE_VECTOR_H__

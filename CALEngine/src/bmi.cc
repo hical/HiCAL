@@ -98,8 +98,6 @@ SfWeightVector BMI::train(){
     
     sofia_ml::StochasticRocLoop(positives,
             negatives,
-            sofia_ml::LOGREG_PEGASOS,
-            sofia_ml::PEGASOS_ETA,
             0.0001,
             10000000.0,
             200000,

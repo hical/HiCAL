@@ -29,7 +29,6 @@
 //----------------------------------------------------------------//
 
 SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
-  : squared_norm_(0.0)
 {
     SetBias();
     for(auto feature_value_pair: feature_vector)
@@ -37,8 +36,7 @@ SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &feature_vector)
 }
 
 SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector)
-  : squared_norm_(0.0),
-    doc_id(doc_id)
+  : doc_id(doc_id)
 {
     SetBias();
     for(auto feature_value_pair: feature_vector)
@@ -48,7 +46,7 @@ SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &fe
 SfSparseVector::SfSparseVector(const SfSparseVector& a,
 				 const SfSparseVector& b,
 				 float y) 
-  : squared_norm_(0.0) {
+{
   int a_i = 0;
   int b_i = 0;
   while (a_i < a.NumFeatures() || b_i < b.NumFeatures()) {
@@ -101,7 +99,6 @@ void SfSparseVector::PushPair(uint32_t id, float value) {
   feature_value_pair.id_ = id;
   feature_value_pair.value_ = value;
   features_.push_back(feature_value_pair);
-  squared_norm_ += value * value;
 }
 
 //----------------------------------------------------------------//
