@@ -12,7 +12,6 @@ services:
       dockerfile: ./compose/production/django/Dockerfile
     depends_on:
       - postgres
-      - redis
     env_file: .env
     command: /gunicorn.sh
 
@@ -37,7 +36,3 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
-
-  redis:
-    image: redis:3.0
-
