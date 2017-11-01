@@ -1,18 +1,19 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
 RUN apt-get update -y && apt-get install -y \
-    libfcgi-dev spawn-fcgi gcc libarchive-dev make git
+    libfcgi-dev spawn-fcgi g++ libarchive-dev make git
 
-VOLUME ["/data"]
-COPY . /data/CALEngine
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-WORKDIR "/data/CALEngine"
+COPY . /usr/src/app
+
 RUN tar xvzf data.tar.gz && rm data.tar.gz
 RUN make bmi_fcgi
 
-CMD ["/usr/bin/spawn-fcgi", "-p", "8002", "-n", "--", "/data/CALEngine/bmi_fcgi", \
-    "--doc-features", "/data/CALEngine/athome1.bin", \
-    "--df", "/data/CALEngine/athome1.df", "--async-mode", "--threads", "8"]
+CMD ["/usr/bin/spawn-fcgi", "-p", "8002", "-n", "--", "/usr/src/app/bmi_fcgi", \
+    "--doc-features", "/usr/src/app/athome1.bin", \
+    "--df", "/usr/src/app/athome1.df", "--async-mode", "--threads", "8"]
 
 # ENV FCGI_VERSION 2.10-26
 

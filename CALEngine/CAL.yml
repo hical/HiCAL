@@ -1,12 +1,9 @@
 version: '2'
 
-volumes:
-  cal_data: {}
-
 services:
   cal:
     build:
       context: .
       dockerfile: ./Dockerfile
     volumes:
-      - cal_data:/data
+      - .:/app
