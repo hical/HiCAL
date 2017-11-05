@@ -110,6 +110,7 @@ int main(int argc, char **argv){
     AddFlag("--max-effort", "Set max effort", int(-1));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
+    AddFlag("--jobs", "Number of concurrent jobs", int(1));
     AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
     AddFlag("--help", "Show Help", bool(false));
@@ -171,7 +172,7 @@ int main(int argc, char **argv){
     vector<thread> jobs;
     for(pair<string, SfSparseVector> seed_query: seed_queries){
         jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
-        if(jobs.size() == 8){
+        if(jobs.size() == CMD_LINE_INTS["--jobs"]){
             for(auto &t: jobs)
                 t.join();
             jobs.clear();
