@@ -1,9 +1,0 @@
-version: '2'
-
-services:
-  cal:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    volumes:
-      - .:/app
