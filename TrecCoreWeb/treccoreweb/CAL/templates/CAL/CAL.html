@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{# TODO: Change page title to something user-study friendly #}
-{% block pagetitle %}CAL{% endblock %}
+{% block pagetitle %}Learning{% endblock %}
 
 
 {% block sidebar %}
@@ -15,6 +14,7 @@
         <a class="nav-link active bold" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span
                 class="sr-only">(current)</span></a>
     </li>
+    <hr>
     <li class="nav-item">
         <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive"
                                                                aria-hidden="true"></i></a>
