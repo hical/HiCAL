@@ -4,21 +4,11 @@ volumes:
   postgres_data_local: {}
   postgres_backup_local: {}
 
-services:  
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "9001:9001"
-    volumes:
-      - ./config/nginx:/etc/nginx
-    links:
-      - cal
-
+services:
   cal:
     build: ./CALEngine/
     container_name: cal
-    command: bash -c "cd /src; make clean bmi_fcgi && /usr/bin/spawn-fcgi -p 8002 -n -- ./bmi_fcgi --doc-features /data/athome1.bin --df /data/athome1.df --async-mode --threads 8"
+    command: bash -c "cd /src; make clean; make bmi_fcgi && /usr/bin/spawn-fcgi -p 8002 -n -- ./bmi_fcgi --doc-features /data/athome1.bin --df /data/athome1.df --async-mode --threads 8"
     volumes:
       - ./CALEngine:/src
       - ./data:/data
@@ -36,8 +26,8 @@ services:
     environment:
       - POSTGRES_USER=treccoreweb
       - USE_DOCKER=yes
-    ports:
-      - "8000:8000"
+    expose:
+      - "8001"
     command: /start.sh
 
   postgres:
@@ -49,3 +39,18 @@ services:
       - postgres_backup_local:/backups
     environment:
       - POSTGRES_USER=treccoreweb
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "9000:9000"
+    expose:
+      - "9001"
+      - "9000"
+    volumes:
+      - ./config/nginx:/etc/nginx
+      - ./TrecCoreWeb:/app
+    depends_on:
+      - django
+      - cal

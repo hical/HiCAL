@@ -45,7 +45,7 @@ class Task(models.Model):
         if not self.pk:
             try:
                 CALFunctions.add_session(str(self.uuid), self.topic.seed_query)
-            except (CALError, ConnectionRefusedError) as e:
+            except (CALError, ConnectionRefusedError, Exception) as e:
                 # TODO: log error
                 pass
         super(Task, self).save(*args, **kwargs)
