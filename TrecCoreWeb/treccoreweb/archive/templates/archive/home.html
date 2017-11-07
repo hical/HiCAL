@@ -239,6 +239,14 @@
 
         function load_doc(docid) {
             if (!(docid in loaded_docs)) {
+
+                // Show loading message and content
+                $("#modal-title").html("<span class='text-danger'>Fetching...</span>");
+                $('.document_content_text').html("<span class='text-danger'>Please wait. Fetching document.</span>");
+                $('.document_content_date').html("");
+                $('.document_content_id').html("");
+
+
                 $.ajax({
                     url: '{% url 'search:get_doc' %}?docid=' + docid,
                     method: 'GET',
