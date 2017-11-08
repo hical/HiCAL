@@ -6,6 +6,8 @@
 #include <set>
 #include <unordered_map>
 #include <memory>
+#include <queue>
+#include <mutex>
 #include "sofiaml/sf-sparse-vector.h"
 #include "dataset.h"
 
@@ -14,7 +16,7 @@ namespace Scorer {
     // 1. Compute inner product of `weights` with each document from
     //    `doc_features[st] to doc_features[end]`
     // 2. Select top `num_top_docs` and place the respective {score, doc_id} in `top_docs`
-    void score_docs(const Dataset &dataset,
+    void score_docs_insertion_sort(const Dataset &dataset,
             const std::vector<float> &weights,
             int st,
             int end, 
@@ -22,17 +24,25 @@ namespace Scorer {
             int num_top_docs,
             const std::set<int> &judgments);
 
-    // Rescore all documents given the weights, and return the top documents
+    void score_docs_priority_queue(const Dataset &dataset,
+                                   const std::vector<float> &weights,
+                                   int st,
+                                   int end,
+                                   std::priority_queue<std::pair<float, int>> &top_docs,
+                                   std::mutex &top_docs_mutex,
+                                   int num_top_docs,
+                                   const std::set<int> &judgments);
+
+    // Rescore all documents given the weights, and return the K top documents
     void rescore_documents(const Dataset &dataset,
             const std::vector<float> &weights,
             int num_threads,
-            int top_docs_per_thread,
+            int K,
             const std::set<int> &judgments,
             std::vector<int> &top_docs_results);
 
     std::vector<std::pair<int, float>> rescore_all_documents(const Dataset &, const std::vector<float> &weights, int num_threads);
 
-    std::vector<std::pair<int, float>> get_top_terms(const std::vector<float> &weights, const SfSparseVector &, int num_top_terms);
 };
 
 #endif // SCORER_H

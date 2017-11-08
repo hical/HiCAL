@@ -2,12 +2,11 @@
 #include <vector>
 #include <thread>
 #include <algorithm>
-#include <unordered_map>
 #include "scorer.h"
 
 using namespace std;
 
-void Scorer::score_docs(
+void Scorer::score_docs_insertion_sort(
         const Dataset &dataset,
         const vector<float> &weights,
         int st,
@@ -35,31 +34,58 @@ void Scorer::score_docs(
     }
 }
 
+void Scorer::score_docs_priority_queue(const Dataset &dataset, const std::vector<float> &weights, int st, int end,
+                                       std::priority_queue<std::pair<float, int>> &top_docs, std::mutex &top_docs_mutex,
+                                       int num_top_docs, const std::set<int> &judgments) {
+    auto iterator = judgments.lower_bound(st);
+    pair<float, int> buffer[1000];
+    int buffer_idx = 0;
+    for(int i = st;i<end; i++){
+        while(iterator != judgments.end() && *iterator < i)
+            iterator++;
+        if(iterator != judgments.end() && *iterator == i)
+            continue;
+
+        float score = dataset.inner_product(i, weights);
+        buffer[buffer_idx++] = {dataset.inner_product(i, weights), i};
+        if(buffer_idx == 1000 || i == end - 1){
+            lock_guard<mutex> lock(top_docs_mutex);
+            for(int j = 0;j < buffer_idx; j++){
+                if(top_docs.size() < num_top_docs)
+                    top_docs.push(buffer[j]);
+                else if(buffer[j].first > top_docs.top().first){
+                    top_docs.pop();
+                    top_docs.push(buffer[j]);
+                }
+            }
+            buffer_idx = 0;
+        }
+    }
+}
 // Only use for small values of top_docs_per_thread
 void Scorer::rescore_documents(const Dataset &dataset,
         const vector<float> &weights,
-        int num_threads, 
-        int top_docs_per_thread,
+        int num_threads,
+        int K,
         const set<int> &judgments,
         vector<int> &top_docs_results)
 {
     vector<thread> t;
+    mutex top_docs_mutex;
+    auto *top_docs = new priority_queue<pair<float, int>>;
 
-    pair<float, int> top_docs[top_docs_per_thread * num_threads];
-    for(int i = 0;i<top_docs_per_thread * num_threads; i++)
-        top_docs[i] = {-1e9, -1};
-    
     // Fix the last segment to contain everything remaining
     for(int i = 0; i< num_threads;i++){
         t.push_back(
             thread(
-                &Scorer::score_docs,
+                &Scorer::score_docs_priority_queue,
                 cref(dataset),
                 cref(weights),
                 i * dataset.size()/num_threads,
                 (i == num_threads - 1)?dataset.size():(i+1) * dataset.size()/num_threads,
-                top_docs + top_docs_per_thread * i,
-                top_docs_per_thread,
+                ref(*top_docs),
+                ref(top_docs_mutex),
+                K,
                 ref(judgments)
             )
         );
@@ -67,10 +93,11 @@ void Scorer::rescore_documents(const Dataset &dataset,
     for(thread &x: t)
         x.join();
 
-    sort(top_docs, top_docs + top_docs_per_thread * num_threads, greater<pair<float, int>>());
-    for(int i = 0;i<top_docs_per_thread; i++){
-        top_docs_results.push_back(top_docs[i].second);
+    while(!top_docs->empty()){
+        top_docs_results.push_back(top_docs->top().second);
+        top_docs->pop();
     }
+    delete top_docs;
 }
 
 // Todo: Do something about this!
@@ -89,12 +116,3 @@ vector<pair<int, float>> Scorer::rescore_all_documents(
     return top_docs_results;
 }
 
-vector<pair<int, float>> Scorer::get_top_terms(const vector<float> &weights, const SfSparseVector &document, int num_top_terms){
-    vector<pair<int, float>> feature_weights;
-    for(auto feature: document.features_){
-        feature_weights.push_back({feature.id_, weights[feature.id_]});
-    }
-    sort(feature_weights.begin(), feature_weights.end(),
-            [](const pair<int, float> &a, const pair<int, float> &b)->bool{return a.second > b.second;});
-    return vector<pair<int, float>>(feature_weights.begin(),feature_weights.begin() + min(num_top_terms, (int)feature_weights.size()));
-}
