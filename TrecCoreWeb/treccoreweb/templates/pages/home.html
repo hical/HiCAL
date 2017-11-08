@@ -5,19 +5,6 @@
 
 
 {% block sidebar %}
-    {% if request.user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'search:main' %}">S</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'CAL:main' %}">J</a>
-    </li>
-    {% comment %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
-    </li>
-    {% endcomment %}
-    {% endif %}
 {% endblock %}
 
 {% block nav-header %}

@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block pagetitle %}Archive{% endblock %}
+
+
+{% block sidebar %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive"
+                                                               aria-hidden="true"></i></a>
+    </li>
+{% endblock %}
+
+{% block nav-header-title %}{% endblock %}
+
+
+{% block main %}
+    <div class="row top-bottom-margin">
+        <div class="col-md-9">
+            <div class="card bottom-margin">
+                <div class="card-block">
+                    <h2 class="text-primary"> Judged documents </h2>
+                    <div class="row extra-top-margin">
+                        <div class="col-md-12">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>DocID</th>
+                                    <th>Document Title</th>
+                                    <th>Judgment</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in judgments %}
+                                    <tr data-toggle="modal" data-target=".doc-modal" style="cursor: pointer;" onclick="return load_doc({{ row.doc_id }});">
+                                        <th scope="row"><code><span
+                                                class="text-primary">{{ row.doc_id }}</span></code>
+                                        </th>
+                                        <td>{{ row.doc_title }} </td>
+                                        <td>
+                                            {% if row.highlyRelevant %}
+                                                <span class="text-success">Highly relevant</span>
+                                            {% elif row.relevant %}
+                                                <span class="text-warning">Relevant</span>
+                                            {% else %}
+                                                <span class="text-danger">Non-relevant</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div class="card" style="border-color: #EFAC57">
+                <div class="card-block">
+                    <h2 class="text-warning">Operations </h2>
+                    <hr>
+                    <a id="tocsv" href="#" class="btn btn-outline-primary btn-sm bottom-margin">Export to
+                        csv
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade doc-modal" id="doc-modal" tabindex="-1"
+             role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xlg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="modal-title">
+                            <span class="text-danger">Please wait...</span>
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"
+                         style="overflow: auto; min-height: 450px; max-height: inherit;">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="document-modal-content"
+                                     id="document-modal-content"
+                                     data-doc-id="">
+                                    <div class="document_content" id="document_content">
+                                        <div class="row bottom-margin small">
+                                            <div class="col-md-6 ">
+                                                <small class="document_content_date"></small>
+                                            </div>
+                                            <div class="col-md-6 align-right small">
+                                                <code class="document_content_id"></code>
+                                            </div>
+                                        </div>
+                                        <div class="document_content_text"
+                                             id="document_raw_content">
+                                            <p><span class="text-danger">Fetching document. Please wait...</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2" id="sideBar">
+                                <nav class="sidebar-nav-fixed bg-faded font-open-sans">
+                                    <ul class="nav nav-pills flex-column little-padding">
+                                        <div class="cal-search">
+                                            <li class=" top-margin">
+                                                <span class="gray-text align-left">Search content:</span>
+                                                <form id="searchContentForm_doc"
+                                                      class="top-margin">
+                                                    <div class="input-group">
+                                                        <input id="search_content_doc"
+                                                               type="search"
+                                                               class="form-control"
+                                                               placeholder="Search">
+                                                  <span class="input-group-btn">
+                                                    <button class="btn btn-sm btn-secondary"
+                                                            data-search="next"
+                                                            id="searchNextDoc"
+                                                            type="button">&darr;</button>
+                                                  </span>
+                                                  <span class="input-group-btn">
+                                                    <button class="btn btn-sm btn-secondary"
+                                                            data-search="prev"
+                                                            type="button">&uarr;</button>
+                                                  </span>
+                                                  <span class="input-group-btn">
+                                                    <button class="btn btn-sm btn-secondary"
+                                                            data-search="clear"
+                                                            type="button">✖
+                                                    </button>
+                                                  </span>
+                                                    </div>
+                                                </form>
+                                            </li>
+                                        </div>
+
+                                        {% comment judge %}
+                                        <li class="nav-item extra-top-margin">
+                                            <div class="gray-text align-left">Judge document:
+                                            </div>
+                                            <div class="btn-group top-margin" role="group"
+                                                 aria-label="Basic example">
+                                                <a href="#"
+                                                   onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);"
+                                                   class="btn btn-sm btn-danger">Not
+                                                    relevant</a>
+                                                <a href="#"
+                                                   onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);"
+                                                   class="btn btn-sm btn-warning">Relevant</a>
+                                                <a href="#"
+                                                   onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);"
+                                                   class="btn btn-sm btn-success">Highly
+                                                    relevant</a>
+                                            </div>
+                                        </li>
+                                        <div class="extra-top-margin align-left">
+                                            <div class="gray-text">Keyboard shortcuts:
+                                            </div>
+                                            <li class="nav-item top-margin">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <span class="badge badge-danger">s</span>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <small class="left-margin gray-text">
+                                                            Mark as non-relevant
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <span class="badge badge-warning">r</span>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <small class="left-margin gray-text">
+                                                            Mark as relevant
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <span class="badge badge-success">h</span>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <small class="left-margin gray-text">
+                                                            Mark as highly relevant
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                        {% endcomment %}
+
+                                    </ul>
+
+                                </nav>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block extra_scripts %}
+    <script>
+        var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
+
+        function load_doc(docid) {
+            if (!(docid in loaded_docs)) {
+                $.ajax({
+                    url: '{% url 'search:get_doc' %}?docid=' + docid,
+                    method: 'GET',
+                    success: function (result) {
+                        var title = result[0]['title'];
+                        var content = result[0]['content'];
+                        var date = result[0]['date'];
+                        $("#modal-title").html(title);
+                        $('.document_content_text').html(content);
+                        $('.document_content_date').html(date);
+                        $('.document_content_id').html(docid);
+                        loaded_docs[docid] = {
+                            "title": title,
+                            "content": content,
+                            "date": date
+                        };
+                    },
+                    error: function (result) {
+                        var error_msg = "[" + result['status'] + "] " + "Failed to get document. Error message: " + result["statusText"] + ".";
+                        modal.find('.document_content').html(error_msg).addClass("text-danger");
+                        console.error(error_msg);
+                    },
+                    statusCode: {
+                        502: function (xhr) {
+                            var error_msg = "[502] Failed to get document. Error message: " + xhr.responseText;
+                            modal.find('.document_content').html(error_msg).addClass("text-danger");
+                            console.error(error_msg);
+                        }
+                    }
+                });
+            }else{
+                var title = loaded_docs[docid]["title"];
+                var content = loaded_docs[docid]["content"];
+                var date = loaded_docs[docid]["date"];
+                $("#modal-title").html(title);
+                $('.document_content_text').html(content);
+                $('.document_content_date').html(date);
+                $('.document_content_id').html(docid);
+            }
+        }
+
+
+        $(function() {
+
+          // the input field
+          var $input = $("#search_content_doc"),
+            // clear button
+            $clearBtn = $("button[data-search='clear']"),
+            // prev button
+            $prevBtn = $("button[data-search='prev']"),
+            // next button
+            $nextBtn = $("button[data-search='next']"),
+            // the context where to search
+            $content = $("#doc-modal"),
+            // list of selectors to ignore during the search
+            $exclude = [".document_content_date", ".document_content_id", ".sidebar-nav-fixed", ".btn", ".gray-text", ".badge"],
+            // jQuery object to save <mark> elements
+            $results = "",
+            // the class that will be appended to the current
+            // focused element
+            currentClass = "current",
+            // top offset for the jump (the search bar)
+            offsetTop = 50,
+            // the current index of the focused element
+            currentIndex = 0;
+
+            var search_form = document.getElementById("search_content_doc");
+
+
+          /**
+           * Jumps to the element matching the currentIndex
+           */
+          function jumpTo() {
+            if ($results.length) {
+              $input.addClass("greenBorder").css("border-color","#449D44");
+              var position,
+                $current = $results.eq(currentIndex);
+              $results.removeClass(currentClass);
+              if ($current.length) {
+                $current.addClass(currentClass);
+                position = $current[0].offsetTop - offsetTop;
+                $("#doc-modal").scrollTop(position);
+              }
+            }else{
+              if(!$input.val()){
+                  $input.removeAttr( 'style' );
+              }else if ($input.is(':focus')){
+                $input.addClass("redBorder").css("border-color","#C9302C");
+              }
+              $("#doc-modal").scrollTop(0);
+            }
+          }
+
+          /**
+           * Searches for the entered keyword in the
+           * specified context on input
+           */
+          $input.on("input", function() {
+            var searchVal = this.value;
+            $content.unmark({
+              done: function() {
+                $content.mark(searchVal, {
+                  separateWordSearch: true,
+                  exclude: $exclude,
+                  done: function() {
+                    updateMatchesLists();
+                    $results = $content.find("mark");
+                    currentIndex = 0;
+                    jumpTo();
+                  }
+                });
+              }
+            });
+          });
+
+          $content.on( "updated", function() {
+              var searchVal = $input.val();
+               if(searchVal != undefined){
+                   $content.unmark({
+                      done: function () {
+                          $content.mark(searchVal, {
+                              separateWordSearch: true,
+                              exclude: $exclude,
+                              done: function () {
+                                  updateMatchesLists();
+                                  $results = $content.find("mark");
+                                  currentIndex = 0;
+                              }
+                          });
+                      }
+                  });
+               }
+            });
+
+          /**
+           * Clears the search
+           */
+          $clearBtn.on("click", function() {
+            resetMatchesDict();
+            $content.unmark();
+            $input.val("").focus();
+          });
+
+          /**
+           * Next and previous search jump to
+           */
+          $nextBtn.add($prevBtn).on("click", function() {
+            if ($results.length) {
+              currentIndex += $(this).is($prevBtn) ? -1 : 1;
+              if (currentIndex < 0) {
+                currentIndex = $results.length - 1;
+              }
+              if (currentIndex > $results.length - 1) {
+                currentIndex = 0;
+              }
+              jumpTo();
+            }
+          });
+        });
+
+
+        // EXPORT TO CSV
+        const rows = [["DOCID", "JUDGMENT"]];
+        {% for row in judgments %}
+            rows.push(["{{ row.doc_id }}", "{% if row.highlyRelevant %}HighlyRelevant{% elif row.relevant %}Relevant{% else %}NonRelevant{% endif %}"])
+        {% endfor %}
+        let csvContent = "data:text/csv;charset=utf-8,";
+        rows.forEach(function(rowArray){
+           let row = rowArray.join(",");
+           csvContent += row + "\n";
+        });
+        var encodedUri = encodeURI(csvContent);
+        $('#tocsv').attr('href', encodedUri);
+
+    </script>
+{% endblock %}

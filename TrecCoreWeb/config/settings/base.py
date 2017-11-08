@@ -65,7 +65,8 @@ LOCAL_APPS = [
     'treccoreweb.judgment',
     'treccoreweb.search',
     'treccoreweb.stats',
-    'treccoreweb.iterative'
+    'treccoreweb.iterative',
+    'treccoreweb.archive'
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -83,7 +84,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Custom middleware
     'treccoreweb.middleware.pagefile.PageHTMLMiddleware',
-    'treccoreweb.middleware.timer.timer_middleware',
 ]
 
 # MIGRATIONS CONFIGURATION
@@ -329,14 +329,16 @@ INACTIVE_TRIGGER_TIME = 60
 # Maximum active time for a user per task (in seconds)
 MAX_ACTIVE_TIME = 60 * 60
 
+
 # CORE TREC COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
-CAL_SERVER_IP = 'localhost'
+CAL_SERVER_IP = 'nginx'
 CAL_SERVER_PORT = '9001'
-SEARCH_SERVER_IP = 'localhost'
-SEARCH_SERVER_PORT = '9003'
-DOCUMENTS_URL = 'http://localhost/doc'
-PARA_URL = 'http://localhost/para'
+SEARCH_SERVER_IP = '129.97.25.37'
+SEARCH_SERVER_PORT = '80'
+DOCUMENTS_URL = 'http://nginx:9000/doc'
+PARA_URL = 'http://nginx:9000/para'
+
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------

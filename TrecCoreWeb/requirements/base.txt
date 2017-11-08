@@ -50,3 +50,5 @@ httplib2
 xmltodict
 lxml
 raven
+
+uwsgi

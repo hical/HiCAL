@@ -24,7 +24,11 @@ DEP_FLAGS = -MMD -MP
 all_targets: $(BIN_TARGETS)
 
 $(BIN_TARGETS): % : $(OBJ_DIR)/$(SRC_DIRS)/%.cc.o $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(SRC_DIRS)/$@.cc.o -o $@
+	$(CXX)  $(OBJS) $(OBJ_DIR)/$(SRC_DIRS)/$@.cc.o -o $@ $(CXXFLAGS)
+
+$(TEST_TARGETS): % : $(OBJ_DIR)/$(TEST_DIRS)/%.cc.o $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(TEST_DIRS)/$@.cc.o -o $(TEST_DIRS)/$@
+	cd $(TEST_DIRS) && (./$@; cd ..)
 
 $(TEST_TARGETS): % : $(OBJ_DIR)/$(TEST_DIRS)/%.cc.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(TEST_DIRS)/$@.cc.o -o $(TEST_DIRS)/$@

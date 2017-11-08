@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^search/', include('treccoreweb.search.urls', namespace='search')),
     url(r'^topic/', include('treccoreweb.topic.urls', namespace='topic')),
     url(r'^judgment/', include('treccoreweb.judgment.urls', namespace='judgment')),
+    url(r'^archive/', include('treccoreweb.archive.urls', namespace='archive')),
     url(r'^stats/', include('treccoreweb.stats.urls', namespace='stats')),
 
 
