@@ -21,14 +21,13 @@ OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 DEP_FLAGS = -MMD -MP
 
-all_targets: $(BIN_TARGETS)
+all: $(BIN_TARGETS)
+
+debug: CXXFLAGS += -g
+debug: all
 
 $(BIN_TARGETS): % : $(OBJ_DIR)/$(SRC_DIRS)/%.cc.o $(OBJS)
 	$(CXX)  $(OBJS) $(OBJ_DIR)/$(SRC_DIRS)/$@.cc.o -o $@ $(CXXFLAGS)
-
-$(TEST_TARGETS): % : $(OBJ_DIR)/$(TEST_DIRS)/%.cc.o $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(TEST_DIRS)/$@.cc.o -o $(TEST_DIRS)/$@
-	cd $(TEST_DIRS) && (./$@; cd ..)
 
 $(TEST_TARGETS): % : $(OBJ_DIR)/$(TEST_DIRS)/%.cc.o $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) $(OBJ_DIR)/$(TEST_DIRS)/$@.cc.o -o $(TEST_DIRS)/$@
@@ -39,8 +38,6 @@ $(OBJ_DIR)/%.cc.o: %.cc
 	$(CXX) $(DEP_FLAGS) $(CXXFLAGS) -c $< -o $@
 
 test: $(TEST_TARGETS)
-
-all: $(BIN_TARGETS) test 
 
 clean:
 	rm -f $(BIN_TARGETS)
