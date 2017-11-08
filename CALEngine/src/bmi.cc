@@ -36,7 +36,7 @@ void BMI::finish_session(){
 
 bool BMI::try_finish_session() {
     lock_guard<mutex> lock(training_cache_mutex);
-    if((max_iterations != -1 && state.cur_iteration >= max_iterations) || (finished_judgments.size() + training_cache.size()) == get_dataset()->size()){
+    if((max_iterations != -1 && state.cur_iteration >= max_iterations) || (judgments.size() + training_cache.size()) == get_dataset()->size()){
         finish_session();
         return true;
     }
@@ -74,6 +74,7 @@ SfWeightVector BMI::train(){
     SfWeightVector w(documents->get_dimensionality());
     vector<const SfSparseVector*> positives, negatives;
     positives.push_back(&seed);
+
     // Sampling random non_rel documents
     uniform_int_distribution<size_t> distribution(0, documents->size()-1);
     for(int i = 1;i<=100;i++){
@@ -105,13 +106,12 @@ vector<string> BMI::get_doc_to_judge(uint32_t count=1){
     while(true){
         {
             lock_guard<mutex> lock(judgment_list_mutex);
-            lock_guard<mutex> lock2(training_cache_mutex);
-            if(!judgment_list.empty()){
+            if(!judgment_queue_by_rank.empty()){
                 vector<string> ret;
-                for(int id: judgment_list){
-                    if(id == -1 || ret.size() >= count)
+                for(pair<int, int> rank_id: judgment_queue_by_rank){
+                    if(rank_id.second == -1 || ret.size() >= count)
                         break;
-                    ret.push_back(documents->get_sf_sparse_vector(id).doc_id);
+                    ret.push_back(get_ranking_dataset()->get_sf_sparse_vector(rank_id.second).doc_id);
                 }
                 return ret;
             }
@@ -122,19 +122,9 @@ vector<string> BMI::get_doc_to_judge(uint32_t count=1){
 
 void BMI::add_to_judgment_list(const vector<int> &ids){
     lock_guard<mutex> lock(judgment_list_mutex);
-    judgment_list = ids;
-}
-
-void BMI::wait_for_judgments(){
-    while(1){
-        {
-            // NOTE: avoid deadlock by making sure whichever thread locks these two mutexes,
-            // they always do in the same order
-            lock_guard<mutex> lock(judgment_list_mutex);
-            if(judgment_list.empty())
-                return;
-        }
-        this_thread::sleep_for(chrono::milliseconds(100));
+    for(int i = 0; i < ids.size(); i++){
+        judgment_queue_by_id[ids[i]] = i;
+        judgment_queue_by_rank[i] = ids[i];
     }
 }
 
@@ -145,7 +135,11 @@ void BMI::add_to_training_cache(int id, int judgment){
 
 void BMI::remove_from_judgment_list(int id){
     lock_guard<mutex> lock(judgment_list_mutex);
-    judgment_list.erase(std::remove(judgment_list.begin(), judgment_list.end(), id));
+    auto it = judgment_queue_by_id.find(id);
+    if(it == judgment_queue_by_id.end())
+        return;
+    judgment_queue_by_rank.erase(it->second);
+    judgment_queue_by_id.erase(it);
 }
 
 void BMI::record_judgment_batch(vector<pair<string, int>> _judgments){
@@ -156,7 +150,7 @@ void BMI::record_judgment_batch(vector<pair<string, int>> _judgments){
     }
 
     if(!async_mode){
-        if(finished_judgments.size() + training_cache.size() >= state.next_iteration_target)
+        if(judgments.size() + training_cache.size() >= state.next_iteration_target)
             perform_iteration();
     }else{
         auto t = thread(&BMI::perform_iteration_async, this);
@@ -175,7 +169,6 @@ vector<int> BMI::perform_training_iteration(){
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
             judgments[training.first] = training.second;
-            finished_judgments.insert(training.first);
         }
         training_cache.clear();
     }
@@ -194,7 +187,7 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    Scorer::rescore_documents(*documents, weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), finished_judgments, results);
+    Scorer::rescore_documents(*documents, weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), judgments, results);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<documents->size()<<" documents in "<<duration.count()<<"ms"<<endl;

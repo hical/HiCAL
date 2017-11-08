@@ -2,6 +2,7 @@
 #include <vector>
 #include <thread>
 #include <algorithm>
+#include <map>
 #include "scorer.h"
 
 using namespace std;
@@ -13,12 +14,12 @@ void Scorer::score_docs_insertion_sort(
         int end,
         pair<float, int> *top_docs,
         int num_top_docs,
-        const set<int> &judgments) {
+        const map<int, int> &judgments) {
     auto iterator = judgments.lower_bound(st);
     for(int i = st;i<end; i++){
-        while(iterator != judgments.end() && *iterator < i)
+        while(iterator != judgments.end() && iterator->first < i)
             iterator++;
-        if(iterator != judgments.end() && *iterator == i)
+        if(iterator != judgments.end() && iterator->first == i)
             continue;
 
         float score = dataset.inner_product(i, weights);
@@ -36,14 +37,14 @@ void Scorer::score_docs_insertion_sort(
 
 void Scorer::score_docs_priority_queue(const Dataset &dataset, const std::vector<float> &weights, int st, int end,
                                        std::priority_queue<std::pair<float, int>> &top_docs, std::mutex &top_docs_mutex,
-                                       int num_top_docs, const std::set<int> &judgments) {
+                                       int num_top_docs, const map<int, int> &judgments) {
     auto iterator = judgments.lower_bound(st);
     pair<float, int> buffer[1000];
     int buffer_idx = 0;
     for(int i = st;i<end; i++){
-        while(iterator != judgments.end() && *iterator < i)
+        while(iterator != judgments.end() && iterator->first < i)
             iterator++;
-        if(iterator != judgments.end() && *iterator == i)
+        if(iterator != judgments.end() && iterator->first == i)
             continue;
 
         float score = dataset.inner_product(i, weights);
@@ -64,11 +65,11 @@ void Scorer::score_docs_priority_queue(const Dataset &dataset, const std::vector
 }
 // Only use for small values of top_docs_per_thread
 void Scorer::rescore_documents(const Dataset &dataset,
-        const vector<float> &weights,
-        int num_threads,
-        int K,
-        const set<int> &judgments,
-        vector<int> &top_docs_results)
+                               const vector<float> &weights,
+                               int num_threads,
+                               int K,
+                               const map<int, int> &judgments,
+                               vector<int> &top_docs_results)
 {
     vector<thread> t;
     mutex top_docs_mutex;

@@ -21,43 +21,21 @@ BMI_para::BMI_para(const SfSparseVector &_seed,
     perform_iteration();
 }
 
-vector<string> BMI_para::get_doc_to_judge(uint32_t count=1){
-    while(true){
-        {
-            lock_guard<mutex> lock(judgment_list_mutex);
-            lock_guard<mutex> lock2(training_cache_mutex);
-            if(judgment_list.size() > 0){
-                vector<string> ret;
-                for(int id: judgment_list){
-                    if(id == -1 || ret.size() >= count)
-                        break;
-                    ret.push_back(paragraphs->get_sf_sparse_vector(id).doc_id);
-                }
-                return ret;
-            }
-            /* for(int id: judgment_list){ */
-            /*     // poison value */
-            /*     if(id == -1){ */
-            /*         return {}; */
-            /*     } */
-            /*     if(finished_judgments.find(id) == finished_judgments.end() \ */
-            /*             && training_cache.find(id) == training_cache.end()) */
-            /*         return doc_features[id].doc_id; */
-            /* } */
-        }
-        this_thread::sleep_for(chrono::milliseconds(100));
-    }
-}
-
+// Inefficient as of now
 void BMI_para::remove_from_judgment_list(int doc_idx){
     lock_guard<mutex> lock(judgment_list_mutex);
-    judgment_list.erase(std::remove_if(judgment_list.begin(), judgment_list.end(),
-            [doc_idx, this](int id) -> bool {
-                string para_id = paragraphs->get_sf_sparse_vector(id).doc_id;
-                string doc_id = documents->get_sf_sparse_vector(doc_idx).doc_id;
-                return para_id.find(doc_id) == 0;
-            }
-    ), judgment_list.end());
+    vector<int> keys_to_remove;
+    for(pair<int, int> id_rank: judgment_queue_by_id){
+        string para_id = paragraphs->get_sf_sparse_vector(id_rank.first).doc_id;
+        string doc_id = documents->get_sf_sparse_vector(doc_idx).doc_id;
+        if(para_id.find(doc_id) == 0){
+            keys_to_remove.push_back(id_rank.first);
+            judgment_queue_by_rank.erase(id_rank.second);
+        }
+    }
+
+    for(auto id: keys_to_remove)
+        judgment_queue_by_id.erase(id);
 }
 
 void BMI_para::record_judgment(string doc_id, int judgment){
@@ -71,7 +49,6 @@ vector<int> BMI_para::perform_training_iteration(){
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
             judgments[training.first] = training.second;
-            finished_judgments.insert(training.first);
             string doc_id = documents->get_sf_sparse_vector(training.first).doc_id;
             int missing = 0;
             for(int i = 0; missing<1000; i++){
@@ -80,7 +57,7 @@ vector<int> BMI_para::perform_training_iteration(){
                 if(paragraphs->get_index(para_id) == paragraphs->NPOS)
                     missing++;
                 else
-                    finished_judgments_para.insert(paragraphs->get_index(para_id)), missing = 0;
+                    finished_judgments_para[paragraphs->get_index(para_id)] = 1, missing = 0;
             }
         }
         training_cache.clear();

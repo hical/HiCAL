@@ -4,6 +4,7 @@
 #include <random>
 #include <mutex>
 #include <set>
+#include <map>
 #include "dataset.h"
 #include "sofiaml/sofia-ml-methods.h"
 
@@ -40,17 +41,15 @@ class BMI{
     }state;
 
     // Stores an ordered list of documents to judge based on the classifier scores
-    std::vector<int> judgment_list;
-
-    // A set of document ids which have already been judged
-    std::set<int> finished_judgments;
+    std::map<int, int> judgment_queue_by_id;
+    std::map<int, int> judgment_queue_by_rank;
 
     // rand() shouldn't be used because it is not thread safe
     std::mt19937 rand_generator;
 
     // Current of dataset being used to train the classifier
     SfSparseVector seed;
-    std::unordered_map<int, int> judgments;
+    std::map<int, int> judgments;
 
     // Whenever judgements are received, they are put into training_cache,
     // to prevent any race condition in case training_data is being used by the
@@ -79,9 +78,6 @@ class BMI{
 
     // Remove document from judgment_list
     virtual void remove_from_judgment_list(int id);
-
-    // blocks the thread until all the judgments are done
-    void wait_for_judgments();
 
     // Handler for performing an iteration
     void perform_iteration();
