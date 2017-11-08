@@ -89,8 +89,7 @@ vector<int> BMI_para::perform_training_iteration(){
     // Training
     auto start = std::chrono::steady_clock::now();
 
-    SfWeightVector w(documents->get_dimensionality());
-    train(w);
+    SfWeightVector w = train();
 
     auto weights = w.AsFloatVector();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
@@ -106,15 +105,13 @@ vector<int> BMI_para::perform_training_iteration(){
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<paragraphs->size()<<" documents in "<<duration.count()<<"ms"<<endl;
 
-    state.weights = weights;
-
     return results;
 }
 
 std::vector<std::pair<string, float>> BMI_para::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
     unordered_set<string> doc_id_seen;
-    auto results = Scorer::rescore_all_documents(*get_ranking_dataset(), state.weights, num_threads);
+    auto results = Scorer::rescore_all_documents(*get_ranking_dataset(), train().AsFloatVector(), num_threads);
 
     for(auto result: results){
         string para_id = get_ranking_dataset()->get_sf_sparse_vector(result.first).doc_id;

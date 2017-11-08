@@ -34,20 +34,27 @@ void BMI::finish_session(){
     state.finished = true;
 }
 
-void BMI::perform_iteration(){
-    if(max_iterations != -1 && state.cur_iteration >= max_iterations){
+bool BMI::try_finish_session() {
+    lock_guard<mutex> lock(training_cache_mutex);
+    if((max_iterations != -1 && state.cur_iteration >= max_iterations) || (finished_judgments.size() + training_cache.size()) == get_dataset()->size()){
         finish_session();
+        return true;
     }
+    return state.finished;
+}
 
-    if(!state.finished){
+void BMI::perform_iteration(){
+    if(!try_finish_session()){
         lock_guard<mutex> lock(state_mutex);
         cerr<<"Beginning Iteration "<<state.cur_iteration<<endl;
         auto results = perform_training_iteration();
         cerr<<"Fetched "<<results.size()<<" documents"<<endl;
         add_to_judgment_list(results);
-        state.next_iteration_target += judgments_per_iteration;
-        if(is_bmi)
-            judgments_per_iteration += (judgments_per_iteration + 9)/10;
+        if(!async_mode){
+            state.next_iteration_target = min(state.next_iteration_target + judgments_per_iteration, (uint32_t)get_dataset()->size());
+            if(is_bmi)
+                judgments_per_iteration += (judgments_per_iteration + 9)/10;
+        }
         state.cur_iteration++;
     }
 }
@@ -55,25 +62,16 @@ void BMI::perform_iteration(){
 void BMI::perform_iteration_async(){
     if(async_training_mutex.try_lock()){
         while(!training_cache.empty()){
-            if(max_iterations != -1 && state.cur_iteration >= max_iterations){
-                finish_session();
+            if(try_finish_session())
                 return;
-            }
-
-            if(!state.finished){
-                lock_guard<mutex> lock(state_mutex);
-                cerr<<"Beginning Iteration "<<state.cur_iteration<<endl;
-                auto results = perform_training_iteration();
-                cerr<<"Fetched "<<results.size()<<" documents"<<endl;
-                add_to_judgment_list(results);
-                state.cur_iteration++;
-            }
+            perform_iteration();
         }
         async_training_mutex.unlock();
     }
 }
 
-void BMI::train(SfWeightVector &w){
+SfWeightVector BMI::train(){
+    SfWeightVector w(documents->get_dimensionality());
     vector<const SfSparseVector*> positives, negatives;
     positives.push_back(&seed);
     // Sampling random non_rel documents
@@ -100,6 +98,7 @@ void BMI::train(SfWeightVector &w){
             10000000.0,
             200000,
             &w);
+    return w;
 }
 
 vector<string> BMI::get_doc_to_judge(uint32_t count=1){
@@ -184,8 +183,7 @@ vector<int> BMI::perform_training_iteration(){
     // Training
     auto start = std::chrono::steady_clock::now();
 
-    SfWeightVector w(documents->get_dimensionality());
-    train(w);
+    auto w = train();
 
     auto weights = w.AsFloatVector();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
@@ -201,14 +199,12 @@ vector<int> BMI::perform_training_iteration(){
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<documents->size()<<" documents in "<<duration.count()<<"ms"<<endl;
 
-    state.weights = weights;
-
     return results;
 }
 
 std::vector<std::pair<string, float>> BMI::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
-    auto results = Scorer::rescore_all_documents(*get_ranking_dataset(), state.weights, num_threads);
+    auto results = Scorer::rescore_all_documents(*get_ranking_dataset(), train().AsFloatVector(), num_threads);
     for(auto result: results){
         ret_results.push_back({get_ranking_dataset()->get_sf_sparse_vector(result.first).doc_id, result.second});
     }

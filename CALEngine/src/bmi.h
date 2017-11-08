@@ -37,7 +37,6 @@ class BMI{
         uint32_t cur_iteration = 0;
         uint32_t next_iteration_target = 0;
         bool finished = false;
-        vector<float> weights;
     }state;
 
     // Stores an ordered list of documents to judge based on the classifier scores
@@ -65,16 +64,12 @@ class BMI{
     std::mutex training_cache_mutex;
     std::mutex state_mutex;
 
-    // samples 100 documents from the corpus to be used as non relevant examples
-    // for training. NOTE: current method is hacky and assumes indices 1-100 in
-    // the training_data.features_ to be the random non-rel docs
-    void randomize_non_rel_docs();
-
     // Tasks to perform in order to finish the session
     void finish_session();
+    bool try_finish_session();
 
     // train using the current training set and assign the weights to `w`
-    void train(SfWeightVector &w);
+    SfWeightVector train();
 
     // Add the ids to the judgment list
     void add_to_judgment_list(const std::vector<int> &ids);
@@ -113,9 +108,6 @@ class BMI{
 
     // Record batch judgments
     void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
-
-    // Get latest classifier weights, make it thread safe someday
-    vector<float> get_weights(){ return state.weights; }
 
     // Get ranklist for current classifier state
     virtual vector<std::pair<string, float>> get_ranklist();
