@@ -7,7 +7,7 @@
 #include "scorer.h"
 
 using namespace std;
-BMI_para::BMI_para(const SfSparseVector &_seed,
+BMI_para::BMI_para(const Seed &_seed,
         Dataset *_documents,
         Dataset *_paragraphs,
         int _num_threads,

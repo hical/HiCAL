@@ -6,21 +6,21 @@
 #include "scorer.h"
 
 using namespace std;
-BMI::BMI(const SfSparseVector &_seed,
-        Dataset *_documents,
-        int _num_threads,
-        int _judgments_per_iteration,
-        int _max_effort,
-        int _max_iterations,
-        bool _async_mode,
-        bool initialize)
+BMI::BMI(const Seed &_seed,
+         Dataset *_documents,
+         int _num_threads,
+         int _judgments_per_iteration,
+         int _max_effort,
+         int _max_iterations,
+         bool _async_mode,
+         bool initialize)
     :documents(_documents),
     num_threads(_num_threads),
     judgments_per_iteration(_judgments_per_iteration),
     max_effort(_max_effort),
     max_iterations(_max_iterations),
     async_mode(_async_mode),
-    seed(_seed)
+    seed(&_seed)
 {
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
@@ -73,7 +73,12 @@ void BMI::perform_iteration_async(){
 SfWeightVector BMI::train(){
     SfWeightVector w(documents->get_dimensionality());
     vector<const SfSparseVector*> positives, negatives;
-    positives.push_back(&seed);
+    for(auto &judgment: *seed){
+        if(judgment.second > 0)
+            positives.push_back(&judgment.first);
+        else
+            negatives.push_back(&judgment.first);
+    }
 
     // Sampling random non_rel documents
     uniform_int_distribution<size_t> distribution(0, documents->size()-1);

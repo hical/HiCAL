@@ -15,7 +15,7 @@ class BMI_para:public BMI {
     virtual void remove_from_judgment_list(int id);
 
     public:
-    BMI_para(const SfSparseVector &seed,
+    BMI_para(const Seed &seed,
         Dataset *documents,
         Dataset *paragraphs,
         int num_threads,

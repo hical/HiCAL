@@ -50,24 +50,25 @@ int get_judgment_qrel(string topic_id, string doc_id){
     return qrel.get_judgment(topic_id, doc_id);
 }
 
-vector<pair<string, SfSparseVector>> generate_seed_queries(string fname, int num_docs){
-    vector<pair<string, SfSparseVector>> seed_queries;
+unordered_map<string, Seed> generate_seed_queries(string fname, int num_docs){
+    unordered_map<string, Seed> seeds;
     ifstream fin(fname);
     string topic_id, query;
-    while(getline(fin, topic_id)){
+    int rel;
+    while(fin>>topic_id>>rel){
         getline(fin, query);
-        seed_queries.push_back({topic_id, features::get_features(query, num_docs)});
+        seeds[topic_id].push_back({features::get_features(query, num_docs), rel});
     }
 
-    return seed_queries;
+    return seeds;
 }
 
-void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs){
+void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs){
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
-    if(paragraphs != NULL){
-        bmi = make_unique<BMI_para>(seed_query.second,
+    if(paragraphs != nullptr){
+        bmi = make_unique<BMI_para>(cref(seed_query.second),
             documents.get(),
             paragraphs.get(),
             CMD_LINE_INTS["--threads"],
@@ -76,7 +77,7 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"]);
     }else{
-        bmi = make_unique<BMI>(seed_query.second,
+        bmi = make_unique<BMI>(cref(seed_query.second),
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
@@ -91,7 +92,7 @@ void begin_bmi_helper(pair<string, SfSparseVector> seed_query, const unique_ptr<
     }
 
     vector<string> doc_ids;
-    while((doc_ids = bmi->get_doc_to_judge(1)).size() > 0){
+    while(!(doc_ids = bmi->get_doc_to_judge(1)).empty()){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi->record_judgment(doc_ids[0], judgment);
         logfile << doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
@@ -166,12 +167,10 @@ int main(int argc, char **argv){
 
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
-    vector<pair<string, SfSparseVector>> seed_queries = 
-        generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
-
+    unordered_map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
     vector<thread> jobs;
-    for(pair<string, SfSparseVector> seed_query: seed_queries){
-        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
+    for(const pair<string, Seed> &seed_query: seeds){
+        jobs.push_back(thread(begin_bmi_helper, cref(seed_query), cref(documents), cref(paragraphs)));
         if(jobs.size() == CMD_LINE_INTS["--jobs"]){
             for(auto &t: jobs)
                 t.join();

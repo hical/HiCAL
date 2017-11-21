@@ -8,6 +8,7 @@
 #include "dataset.h"
 #include "sofiaml/sofia-ml-methods.h"
 
+typedef std::vector<std::pair<SfSparseVector, int>> Seed;
 class BMI{
     protected:
 
@@ -48,7 +49,7 @@ class BMI{
     std::mt19937 rand_generator;
 
     // Current of dataset being used to train the classifier
-    SfSparseVector seed;
+    const Seed *seed;
     std::map<int, int> judgments;
 
     // Whenever judgements are received, they are put into training_cache,
@@ -87,14 +88,14 @@ class BMI{
     virtual std::vector<int> perform_training_iteration();
 
     public:
-    BMI(const SfSparseVector &seed,
+    BMI(const Seed &seed,
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,
         int max_effort,
         int max_iterations,
         bool async_mode,
-        bool initialize=true);
+        bool initialize = true);
 
     // Get upto `count` number of documents from `judgment_list`
     virtual std::vector<std::string> get_doc_to_judge(uint32_t count);
