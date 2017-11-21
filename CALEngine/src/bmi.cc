@@ -122,6 +122,8 @@ vector<string> BMI::get_doc_to_judge(uint32_t count=1){
 
 void BMI::add_to_judgment_list(const vector<int> &ids){
     lock_guard<mutex> lock(judgment_list_mutex);
+    judgment_queue_by_id.clear();
+    judgment_queue_by_rank.clear();
     for(int i = 0; i < ids.size(); i++){
         judgment_queue_by_id[ids[i]] = i;
         judgment_queue_by_rank[i] = ids[i];
@@ -183,11 +185,11 @@ vector<int> BMI::perform_training_iteration(){
         (std::chrono::steady_clock::now() - start);
     cerr<<"Training finished in "<<duration.count()<<"ms"<<endl;
 
-    vector<int> results;
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    Scorer::rescore_documents(*documents, weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:0), judgments, results);
+    auto results = Scorer::rescore_documents(*documents, weights, num_threads,
+                              judgments_per_iteration + (async_mode ? extra_judgment_docs : 0), judgments);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<documents->size()<<" documents in "<<duration.count()<<"ms"<<endl;

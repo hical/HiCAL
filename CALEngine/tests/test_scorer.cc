@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
             wt = (float)rand()/(float)(RAND_MAX);
 
         start = std::chrono::steady_clock::now();
-        Scorer::rescore_documents(*dataset, weights, threads, 100, judgments, results);
+        Scorer::rescore_documents(*dataset, weights, threads, 100, judgments);
         duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
         cerr<<"Rescored "<<dataset->size()<<" documents in "<<duration.count()<<"ms"<<endl;

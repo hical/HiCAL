@@ -34,12 +34,8 @@ namespace Scorer {
                                    const std::map<int, int> &judgments);
 
     // Rescore all documents given the weights, and return the K top documents
-    void rescore_documents(const Dataset &dataset,
-                           const std::vector<float> &weights,
-                           int num_threads,
-                           int K,
-                           const std::map<int, int> &judgments,
-                           std::vector<int> &top_docs_results);
+    vector<int> rescore_documents(const Dataset &dataset, const vector<float> &weights, int num_threads, int K,
+                                  const std::map<int, int> &judgments);
 
     std::vector<std::pair<int, float>> rescore_all_documents(const Dataset &, const std::vector<float> &weights, int num_threads);
 

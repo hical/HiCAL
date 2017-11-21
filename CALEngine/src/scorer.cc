@@ -44,17 +44,17 @@ void Scorer::score_docs_priority_queue(const Dataset &dataset, const std::vector
     for(int i = st;i<end; i++){
         while(iterator != judgments.end() && iterator->first < i)
             iterator++;
-        if(iterator != judgments.end() && iterator->first == i)
-            continue;
+        if(!(iterator != judgments.end() && iterator->first == i)){
+            float score = dataset.inner_product(i, weights);
+            buffer[buffer_idx++] = {-score, i};
+        }
 
-        float score = dataset.inner_product(i, weights);
-        buffer[buffer_idx++] = {dataset.inner_product(i, weights), i};
         if(buffer_idx == 1000 || i == end - 1){
             lock_guard<mutex> lock(top_docs_mutex);
             for(int j = 0;j < buffer_idx; j++){
                 if(top_docs.size() < num_top_docs)
                     top_docs.push(buffer[j]);
-                else if(buffer[j].first > top_docs.top().first){
+                else if(-buffer[j].first > -top_docs.top().first){
                     top_docs.pop();
                     top_docs.push(buffer[j]);
                 }
@@ -64,12 +64,8 @@ void Scorer::score_docs_priority_queue(const Dataset &dataset, const std::vector
     }
 }
 // Only use for small values of top_docs_per_thread
-void Scorer::rescore_documents(const Dataset &dataset,
-                               const vector<float> &weights,
-                               int num_threads,
-                               int K,
-                               const map<int, int> &judgments,
-                               vector<int> &top_docs_results)
+vector<int> Scorer::rescore_documents(const Dataset &dataset, const vector<float> &weights, int num_threads, int K,
+                                      const map<int, int> &judgments)
 {
     vector<thread> t;
     mutex top_docs_mutex;
@@ -94,11 +90,13 @@ void Scorer::rescore_documents(const Dataset &dataset,
     for(thread &x: t)
         x.join();
 
+    vector<int> top_docs_list(top_docs->size());
     while(!top_docs->empty()){
-        top_docs_results.push_back(top_docs->top().second);
+        top_docs_list[top_docs->size()-1] = (top_docs->top().second);
         top_docs->pop();
     }
     delete top_docs;
+    return top_docs_list;
 }
 
 // Todo: Do something about this!

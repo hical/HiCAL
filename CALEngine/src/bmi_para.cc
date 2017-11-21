@@ -73,11 +73,11 @@ vector<int> BMI_para::perform_training_iteration(){
         (std::chrono::steady_clock::now() - start);
     cerr<<"Training finished in "<<duration.count()<<"ms"<<endl;
 
-    vector<int> results;
-
     // Scoring
     start = std::chrono::steady_clock::now();
-    Scorer::rescore_documents(*paragraphs, weights, num_threads, judgments_per_iteration+(async_mode?extra_judgment_docs:100), finished_judgments_para, results);
+    auto results = Scorer::rescore_documents(*paragraphs, weights, num_threads,
+                              judgments_per_iteration + (async_mode ? extra_judgment_docs : 100),
+                              finished_judgments_para);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Rescored "<<paragraphs->size()<<" documents in "<<duration.count()<<"ms"<<endl;
