@@ -6,7 +6,15 @@
 
 {% block sidebar %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive"
+        <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i><span
+                class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></a>
+    </li>
+    <hr>
+    <li class="nav-item">
+        <a class="nav-link active bold" href="{% url 'archive:main' %}"><i class="fa fa-archive"
                                                                aria-hidden="true"></i></a>
     </li>
 {% endblock %}
@@ -231,6 +239,14 @@
 
         function load_doc(docid) {
             if (!(docid in loaded_docs)) {
+
+                // Show loading message and content
+                $("#modal-title").html("<span class='text-danger'>Fetching...</span>");
+                $('.document_content_text').html("<span class='text-danger'>Please wait. Fetching document.</span>");
+                $('.document_content_date').html("");
+                $('.document_content_id').html("");
+
+
                 $.ajax({
                     url: '{% url 'search:get_doc' %}?docid=' + docid,
                     method: 'GET',
