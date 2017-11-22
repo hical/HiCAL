@@ -8,7 +8,7 @@
     <meta name="description" content="TrecCore">
     <meta name="author" content="University of Waterloo IR lab.">
 
-    <title>TrecCore - {% block pagetitle %}home{% endblock %}</title>
+    <title>Core - {% block pagetitle %}home{% endblock %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -84,10 +84,11 @@
                     <a class="nav-link" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></a>
                 </li>
                 {% endif %}
-                {% comment %}
+                <hr>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive" aria-hidden="true"></i></a>
                 </li>
+                {% comment %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'judgment:get_all' %}">A</a>
                 </li>
