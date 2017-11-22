@@ -87,7 +87,7 @@ SfWeightVector BMI::train(){
         negatives.push_back(&documents->get_sf_sparse_vector(idx));
     }
 
-    for(pair<int, int> judgment: judgments){
+    for(const pair<int, int> &judgment: judgments){
         if(judgment.second > 0)
             positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
         else
