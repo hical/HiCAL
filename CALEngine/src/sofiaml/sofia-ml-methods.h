@@ -31,22 +31,6 @@
 namespace sofia_ml {
   const float INF = -1e18;
 
-  //--------------------------------------------------------------------------
-  //                     Main API methods for Model Training
-  //--------------------------------------------------------------------------
-  // This section contains the Main API methods to call for training a model on
-  // a given data set.
-  //  For each method, the parameters are described as follows:
-  //   training_set  an SfDataSet filled with labeled training data.
-  //   learner_type  a LearnerType enum value (defined above) 
-  //                   showing which learner to use.
-  //   eta_type      an EtaType enum showing how to update the learning rate.
-  //   lambda        regularization parameter (ignored by some LearnerTypes)
-  //   c             capacity parameter (ignored by some LearnerTypes)
-  //   num_iters     number of stochastic steps to take.
-
-
-
   // Trains a model w over training_set, using learner_type and eta_type learner with
   // given parameters.  For each iteration, samples one positive example uniformly at
   // random from the set of all positives, and samples one negative example uniformly
@@ -58,14 +42,6 @@ namespace sofia_ml {
 			 float c,
 			 int num_iters,
 			 SfWeightVector* w);
-
-	//------------------------------------------------------------------------------//
-  //                         LearnerType Methods                                  //
-  //------------------------------------------------------------------------------//
-
-	//-------------------------------------------------------------------
-  //                    Non-Member Utility Functions
-  //-------------------------------------------------------------------
 
 }  // namespace sofia_ml
 

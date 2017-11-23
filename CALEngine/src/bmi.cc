@@ -102,6 +102,7 @@ SfWeightVector BMI::train(){
             10000000.0,
             200000,
             &w);
+
     return w;
 }
 

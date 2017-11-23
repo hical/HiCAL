@@ -30,6 +30,7 @@
 #include <map>
 #include <vector>
 #include <random>
+#include <chrono>
 
 // The MIN_SCALING_FACTOR is used to protect against combinations of
 // lambda * eta > 1.0, which will cause numerical problems for regularization
@@ -54,13 +55,14 @@ namespace sofia_ml {
         // For each step, randomly sample one positive and one negative and
         // take a pairwise gradient step.
         for (int i = 1; i <= num_iters; ++i) {
+
             float eta = 1.0 / (lambda * i);
             const SfSparseVector& a =
                     *positives[RandInt(positives.size())];
             const SfSparseVector& b =
                     *negatives[RandInt(negatives.size())];
 
-            float y = 1.0:
+            float y = 1.0;
             float loss = y / (1 + exp(y * w->InnerProductOnDifference(a, b)));
 
             // L2Regularize
