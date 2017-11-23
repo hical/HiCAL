@@ -170,7 +170,7 @@ int main(int argc, char **argv){
     unordered_map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
-        jobs.push_back(thread(begin_bmi_helper, cref(seed_query), cref(documents), cref(paragraphs)));
+        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
         if(jobs.size() == CMD_LINE_INTS["--jobs"]){
             for(auto &t: jobs)
                 t.join();
