@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <unordered_set>
 #include "bmi_para.h"
-#include "scorer.h"
 
 using namespace std;
 BMI_para::BMI_para(const Seed &_seed,
@@ -75,7 +74,7 @@ vector<int> BMI_para::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    auto results = Scorer::rescore_documents(*paragraphs, weights, num_threads,
+    auto results = paragraphs->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 100),
                               finished_judgments_para);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
@@ -88,13 +87,14 @@ vector<int> BMI_para::perform_training_iteration(){
 std::vector<std::pair<string, float>> BMI_para::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
     unordered_set<string> doc_id_seen;
-    auto results = Scorer::rescore_all_documents(*get_ranking_dataset(), train().AsFloatVector(), num_threads);
+    auto results = get_ranking_dataset()->rescore(train().AsFloatVector(), num_threads,
+                              get_ranking_dataset()->size(), map<int, int>());
 
     for(auto result: results){
-        string para_id = get_ranking_dataset()->get_sf_sparse_vector(result.first).doc_id;
+        string para_id = get_ranking_dataset()->get_sf_sparse_vector(result).doc_id;
         string doc_id = para_id.substr(0, para_id.find('.'));
         if(doc_id_seen.find(doc_id) == doc_id_seen.end()){
-            ret_results.push_back({doc_id, result.second});
+            ret_results.push_back({doc_id, 0});
             doc_id_seen.insert(doc_id);
         }
     }

@@ -3,7 +3,6 @@
 #include <thread>
 #include <algorithm>
 #include "bmi.h"
-#include "scorer.h"
 
 using namespace std;
 BMI::BMI(const Seed &_seed,
@@ -192,7 +191,7 @@ vector<int> BMI::perform_training_iteration(){
 
     // Scoring
     start = std::chrono::steady_clock::now();
-    auto results = Scorer::rescore_documents(*documents, weights, num_threads,
+    auto results = documents->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 0), judgments);
     duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
@@ -203,9 +202,12 @@ vector<int> BMI::perform_training_iteration(){
 
 std::vector<std::pair<string, float>> BMI::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
-    auto results = Scorer::rescore_all_documents(*get_ranking_dataset(), train().AsFloatVector(), num_threads);
+    auto results = get_ranking_dataset()->rescore(train().AsFloatVector(), num_threads,
+                              get_ranking_dataset()->size(), map<int, int>());
+
+    // to fix
     for(auto result: results){
-        ret_results.push_back({get_ranking_dataset()->get_sf_sparse_vector(result.first).doc_id, result.second});
+        ret_results.push_back({get_ranking_dataset()->get_sf_sparse_vector(result).doc_id, 0});
     }
     return ret_results;
 }

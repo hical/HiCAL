@@ -3,10 +3,16 @@
 #include <thread>
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
+#include "bmi_reduced_ranking.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
 using namespace std;
+enum BMI_TYPE {
+    BMI_DOC,
+    BMI_PARA,
+    BMI_REDUCED_RANKING
+};
 
 int get_judgment_stdin(string topic_id, string doc_id){
     cout<<"Judge "<<doc_id<<" (y/n)"<<": ";
@@ -50,8 +56,8 @@ int get_judgment_qrel(string topic_id, string doc_id){
     return qrel.get_judgment(topic_id, doc_id);
 }
 
-unordered_map<string, Seed> generate_seed_queries(string fname, int num_docs){
-    unordered_map<string, Seed> seeds;
+map<string, Seed> generate_seed_queries(string fname, int num_docs){
+    map<string, Seed> seeds;
     ifstream fin(fname);
     string topic_id, query;
     int rel;
@@ -63,11 +69,22 @@ unordered_map<string, Seed> generate_seed_queries(string fname, int num_docs){
     return seeds;
 }
 
-void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs){
+void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs, BMI_TYPE bmi_type){
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
-    if(paragraphs != nullptr){
+    switch(bmi_type){
+        case BMI_DOC:
+        bmi = make_unique<BMI>(cref(seed_query.second),
+            documents.get(),
+            CMD_LINE_INTS["--threads"],
+            CMD_LINE_INTS["--judgments-per-iteration"],
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"]);
+        break;
+
+        case BMI_PARA:
         bmi = make_unique<BMI_para>(cref(seed_query.second),
             documents.get(),
             paragraphs.get(),
@@ -76,14 +93,18 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"]);
-    }else{
-        bmi = make_unique<BMI>(cref(seed_query.second),
+        break;
+
+        case BMI_REDUCED_RANKING:
+        bmi = make_unique<BMI_reduced_ranking>(cref(seed_query.second),
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
-            CMD_LINE_INTS["--async-mode"]);
+            CMD_LINE_INTS["--async-mode"],
+            1000, 10);
+        break;
     }
 
     auto get_judgment = get_judgment_stdin;
@@ -109,6 +130,8 @@ int main(int argc, char **argv){
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
     AddFlag("--num-iterations", "Set max number of training iterations", int(-1));
     AddFlag("--max-effort", "Set max effort", int(-1));
+    AddFlag("--reduced-ranking-subset-size", "Set subset size for reduced ranking", int(0));
+    AddFlag("--reduced-ranking-refresh-period", "Set refresh period for reduced ranking", int(0));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs", int(1));
@@ -142,6 +165,12 @@ int main(int argc, char **argv){
         qrel = Qrel(CMD_LINE_STRINGS["--qrel"]);
     }
 
+    BMI_TYPE bmi_type = BMI_DOC;
+    if(CMD_LINE_STRINGS["--para-features"].length() > 0)
+        bmi_type = BMI_PARA;
+    else if(CMD_LINE_INTS["--reduced-ranking-subset-size"] > 0)
+        bmi_type = BMI_REDUCED_RANKING;
+
     // Load docs
     unique_ptr<Dataset> documents = nullptr;
     unique_ptr<Dataset> paragraphs = nullptr;
@@ -167,10 +196,10 @@ int main(int argc, char **argv){
 
     // Load queries
     features::init(CMD_LINE_STRINGS["--df"]);
-    unordered_map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
+    map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
-        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
+        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs), bmi_type));
         if(jobs.size() == CMD_LINE_INTS["--jobs"]){
             for(auto &t: jobs)
                 t.join();
