@@ -2,6 +2,7 @@
 #include <mutex>
 #include <thread>
 #include <algorithm>
+#include <climits>
 #include "bmi.h"
 
 using namespace std;
@@ -24,6 +25,8 @@ BMI::BMI(const Seed &_seed,
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
         judgments_per_iteration = 1;
+    if(max_effort < 0)
+        max_effort = INT_MAX;
     if(initialize)
         perform_iteration();
 }
@@ -35,7 +38,8 @@ void BMI::finish_session(){
 
 bool BMI::try_finish_session() {
     lock_guard<mutex> lock(training_cache_mutex);
-    if((max_iterations != -1 && state.cur_iteration >= max_iterations) || (judgments.size() + training_cache.size()) == get_dataset()->size()){
+    if((max_iterations != -1 && state.cur_iteration >= max_iterations) \
+        || (judgments.size() + training_cache.size()) >= min((int)get_dataset()->size(), max_effort)){
         finish_session();
         return true;
     }
