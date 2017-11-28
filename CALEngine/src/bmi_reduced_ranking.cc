@@ -40,10 +40,7 @@ vector<int> BMI_reduced_ranking::perform_training_iteration(){
     cerr<<"Training finished in "<<duration.count()<<"ms"<<endl;
 
     // Scoring
-    if(state.cur_iteration % refresh_period == 0){
-        /* int prev = foo; */
-//        foo += (foo + 9) / 10;
-        /* foo += 10; */
+    if(is_it_refresh_time()){
         start = std::chrono::steady_clock::now();
         auto results = documents->rescore(weights, num_threads, subset_size, judgments);
         duration = std::chrono::duration_cast<std::chrono::milliseconds>
