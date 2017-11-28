@@ -4,6 +4,7 @@
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
 #include "bmi_reduced_ranking.h"
+#include "bmi_online_learning.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
@@ -11,7 +12,8 @@ using namespace std;
 enum BMI_TYPE {
     BMI_DOC,
     BMI_PARA,
-    BMI_REDUCED_RANKING
+    BMI_REDUCED_RANKING,
+    BMI_ONLINE_LEARNING
 };
 
 int get_judgment_stdin(string topic_id, string doc_id){
@@ -103,7 +105,19 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
-            1000, 10);
+            1000, CMD_LINE_INTS["--reduced-ranking-refresh-period"]);
+        break;
+
+        case BMI_ONLINE_LEARNING:
+        bmi = make_unique<BMI_online_learning>(cref(seed_query.second),
+            documents.get(),
+            CMD_LINE_INTS["--threads"],
+            CMD_LINE_INTS["--judgments-per-iteration"],
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"],
+            CMD_LINE_INTS["--online-learning-refresh-period"],
+            CMD_LINE_FLOATS["--online-learning-delta"]);
         break;
     }
 
@@ -132,6 +146,8 @@ int main(int argc, char **argv){
     AddFlag("--max-effort", "Set max effort", int(-1));
     AddFlag("--reduced-ranking-subset-size", "Set subset size for reduced ranking", int(0));
     AddFlag("--reduced-ranking-refresh-period", "Set refresh period for reduced ranking", int(0));
+    AddFlag("--online-learning-refresh-period", "Set refresh period for online learning", int(0));
+    AddFlag("--online-learning-delta", "Set delta for online learning", float(0.002));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs", int(1));
@@ -170,6 +186,8 @@ int main(int argc, char **argv){
         bmi_type = BMI_PARA;
     else if(CMD_LINE_INTS["--reduced-ranking-subset-size"] > 0)
         bmi_type = BMI_REDUCED_RANKING;
+    else if(CMD_LINE_INTS["--online-learning-refresh-period"] > 0)
+        bmi_type = BMI_ONLINE_LEARNING;
 
     // Load docs
     unique_ptr<Dataset> documents = nullptr;
