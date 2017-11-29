@@ -13,7 +13,7 @@ class BMI_online_learning:public BMI {
 
     protected:
     virtual bool is_it_refresh_time() {
-        return (state.cur_iteration % refresh_period == 0) && weight.size() > 0;
+        return (state.cur_iteration % refresh_period == 0) || weight.size() == 0;
     }
 
     public:

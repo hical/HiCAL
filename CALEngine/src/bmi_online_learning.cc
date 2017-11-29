@@ -22,7 +22,7 @@ vector<int> BMI_online_learning::perform_training_iteration(){
     {
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
-            if(is_it_refresh_time()){
+            if(!is_it_refresh_time()){
                 float p = 1 / (1 + exp(-documents->inner_product(training.first, this->weight)));
                 int is_rel = (training.second > 0);
                 for(FeatureValuePair feature: documents->get_sf_sparse_vector(training.first).features_){
@@ -36,7 +36,7 @@ vector<int> BMI_online_learning::perform_training_iteration(){
 
     // Training
 
-    if(!is_it_refresh_time()){
+    if(is_it_refresh_time()){
         auto start = std::chrono::steady_clock::now();
         auto w = train();
         auto weights = w.AsFloatVector();
