@@ -13,7 +13,7 @@ BIN_TARGETS := $(notdir $(basename $(BIN_SRCS)))
 TEST_SRCS := $(shell find $(TEST_DIRS) -name *.cc)
 TEST_TARGETS := $(notdir $(basename $(TEST_SRCS)))
 
-SRCS := $(shell find $(SRC_DIRS) -name *.cc)
+SRCS := $(shell find $(SRC_DIRS) -name '*.cc')
 SRCS := $(filter-out $(BIN_SRCS),$(SRCS))
 OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 
@@ -43,7 +43,8 @@ clean:
 	rm -f $(BIN_TARGETS)
 	rm -r $(OBJ_DIR)
 
-# print-%  : ; @echo $* = $($*)
+print-%  : ; @echo $* = $($*)
+
 -include $(DEPS)
 
 MKDIR_P ?= mkdir -p
