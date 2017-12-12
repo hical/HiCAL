@@ -43,52 +43,6 @@ SfSparseVector::SfSparseVector(string doc_id, const vector<FeatureValuePair> &fe
         PushPair(feature_value_pair.id_, feature_value_pair.value_);
 }
 
-SfSparseVector::SfSparseVector(const SfSparseVector& a,
-				 const SfSparseVector& b,
-				 float y) 
-{
-  int a_i = 0;
-  int b_i = 0;
-  while (a_i < a.NumFeatures() || b_i < b.NumFeatures()) {
-    // a has no features remaining.
-    if (!(a_i < a.NumFeatures())) {
-      PushPair(b.FeatureAt(b_i), 0.0 - b.ValueAt(b_i));
-      ++b_i;
-      continue;
-    }
-    // b has no features remaining.
-    if (!(b_i < b.NumFeatures())) {
-      PushPair(a.FeatureAt(a_i), a.ValueAt(a_i));
-      ++a_i;
-      continue;
-    }
-    // a's current feature is less than b's current feature.
-    if (b.FeatureAt(b_i) < a.FeatureAt(a_i)) {
-      PushPair(b.FeatureAt(b_i), 0.0 - b.ValueAt(b_i));
-      ++b_i;
-      continue;
-    }
-    // b's current feature is less than a's current feature.
-    if (a.FeatureAt(a_i) < b.FeatureAt(b_i)) {
-      PushPair(a.FeatureAt(a_i), a.ValueAt(a_i));
-      ++a_i;
-      continue;
-    }
-    // a_i and b_i are pointing to the same feature.
-    PushPair(a.FeatureAt(a_i), a.ValueAt(a_i) - b.ValueAt(b_i));
-    ++a_i;
-    ++b_i;
-  }
-}
-
-string SfSparseVector::AsString() const {
-  std::stringstream out_stream;
-  for (int i = 0; i < NumFeatures(); ++i) {
-    out_stream << FeatureAt(i) << ":" << ValueAt(i) << " ";
-  }
-  return out_stream.str();
-}
-
 void SfSparseVector::PushPair(uint32_t id, float value) {
   if (id > 0 && NumFeatures() > 0 && id <= FeatureAt(NumFeatures() - 1) ) {
     std::cerr << id << " vs. " << FeatureAt(NumFeatures() - 1) << std::endl;
@@ -99,6 +53,7 @@ void SfSparseVector::PushPair(uint32_t id, float value) {
   feature_value_pair.id_ = id;
   feature_value_pair.value_ = value;
   features_.push_back(feature_value_pair);
+  squared_norm_ += value * value;
 }
 
 //----------------------------------------------------------------//

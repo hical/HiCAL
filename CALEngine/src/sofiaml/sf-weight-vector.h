@@ -49,13 +49,11 @@ class SfWeightVector {
     vector<float> AsFloatVector();
 
   // Computes inner product of <x_scale * x, w>
-  virtual float InnerProduct(const SfSparseVector& x,
-			     float x_scale = 1.0) const;
+  virtual float InnerProduct(const SfSparseVector& x) const;
 
   // Computes inner product of <x_scale * (a - b), w>
   float InnerProductOnDifference(const SfSparseVector& a,
-				 const SfSparseVector& b,
-				 float x_scale = 1.0) const;
+				 const SfSparseVector& b) const;
 
   // w += x_scale * x
   virtual void AddVector(const SfSparseVector& x, float x_scale);
