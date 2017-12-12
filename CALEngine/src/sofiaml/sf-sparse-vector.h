@@ -66,12 +66,7 @@ class SfSparseVector {
   SfSparseVector(const vector<FeatureValuePair> &feature_vector);
   SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector);
 
-  // Construct a new vector that is the difference of two vectors, (a - b).
-  // This is useful for ranking problems, etc.
-  SfSparseVector(const SfSparseVector& a, const SfSparseVector& b, float y);
-
-  // Returns a string-format representation of the vector, in svm-light format.
-  string AsString() const;
+  float GetSquaredNorm() const { return squared_norm_; }
 
   // Methods for interacting with features
   inline int NumFeatures() const { return features_.size(); }
@@ -98,6 +93,7 @@ class SfSparseVector {
   void DieFormat(const string& reason);
 
   // Members.
+  float squared_norm_ = 0.0;
 };
 
 #endif // SF_SPARSE_VECTOR_H__
