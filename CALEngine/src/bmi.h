@@ -104,7 +104,7 @@ class BMI{
     virtual void record_judgment(std::string doc_id, int judgment);
 
     // Record batch judgments
-    void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
+    virtual void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
 
     // Get ranklist for current classifier state
     virtual vector<std::pair<string, float>> get_ranklist();

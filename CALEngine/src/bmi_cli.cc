@@ -5,6 +5,7 @@
 #include "bmi_para.h"
 #include "bmi_reduced_ranking.h"
 #include "bmi_online_learning.h"
+#include "bmi_precision_delay.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
@@ -13,7 +14,8 @@ enum BMI_TYPE {
     BMI_DOC,
     BMI_PARA,
     BMI_REDUCED_RANKING,
-    BMI_ONLINE_LEARNING
+    BMI_ONLINE_LEARNING,
+    BMI_PRECISION_DELAY
 };
 
 int get_judgment_stdin(string topic_id, string doc_id){
@@ -119,6 +121,17 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--online-learning-refresh-period"],
             CMD_LINE_FLOATS["--online-learning-delta"]);
         break;
+
+        case BMI_PRECISION_DELAY:
+        bmi = make_unique<BMI_precision_delay>(cref(seed_query.second),
+            documents.get(),
+            CMD_LINE_INTS["--threads"],
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"],
+            CMD_LINE_FLOATS["--precision-delay-delta"],
+            CMD_LINE_FLOATS["--precision-delay-noise-factor"]);
+        break;
     }
 
     auto get_judgment = get_judgment_stdin;
@@ -148,6 +161,8 @@ int main(int argc, char **argv){
     AddFlag("--reduced-ranking-refresh-period", "Set refresh period for reduced ranking", int(0));
     AddFlag("--online-learning-refresh-period", "Set refresh period for online learning", int(0));
     AddFlag("--online-learning-delta", "Set delta for online learning", float(0.002));
+    AddFlag("--precision-delay-delta", "Set delta for precision delay", float(0));
+    AddFlag("--precision-delay-noise-factor", "Set noise factor for precision delay", float(10));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs", int(1));
@@ -188,6 +203,8 @@ int main(int argc, char **argv){
         bmi_type = BMI_REDUCED_RANKING;
     else if(CMD_LINE_INTS["--online-learning-refresh-period"] > 0)
         bmi_type = BMI_ONLINE_LEARNING;
+    else if(CMD_LINE_FLOATS["--precision-delay-delta"] > 0)
+        bmi_type = BMI_PRECISION_DELAY;
 
     // Load docs
     unique_ptr<Dataset> documents = nullptr;
