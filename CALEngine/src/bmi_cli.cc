@@ -6,6 +6,7 @@
 #include "bmi_reduced_ranking.h"
 #include "bmi_online_learning.h"
 #include "bmi_precision_delay.h"
+#include "bmi_recency_weighting.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
@@ -15,7 +16,8 @@ enum BMI_TYPE {
     BMI_PARA,
     BMI_REDUCED_RANKING,
     BMI_ONLINE_LEARNING,
-    BMI_PRECISION_DELAY
+    BMI_PRECISION_DELAY,
+    BMI_RECENCY_WEIGHTING
 };
 
 int get_judgment_stdin(string topic_id, string doc_id){
@@ -132,6 +134,17 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_FLOATS["--precision-delay-delta"],
             CMD_LINE_FLOATS["--precision-delay-noise-factor"]);
         break;
+
+        case BMI_RECENCY_WEIGHTING:
+        bmi = make_unique<BMI_recency_weighting>(cref(seed_query.second),
+            documents.get(),
+            CMD_LINE_INTS["--threads"],
+            CMD_LINE_INTS["--judgments-per-iteration"],
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"],
+            CMD_LINE_FLOATS["--recency-weighting-param"]);
+        break;
     }
 
     auto get_judgment = get_judgment_stdin;
@@ -163,6 +176,7 @@ int main(int argc, char **argv){
     AddFlag("--online-learning-delta", "Set delta for online learning", float(0.002));
     AddFlag("--precision-delay-delta", "Set delta for precision delay", float(0));
     AddFlag("--precision-delay-noise-factor", "Set noise factor for precision delay", float(10));
+    AddFlag("--recency-weighting-param", "Set parameter for recency weighting", float(-1));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs", int(1));
@@ -205,6 +219,9 @@ int main(int argc, char **argv){
         bmi_type = BMI_ONLINE_LEARNING;
     else if(CMD_LINE_FLOATS["--precision-delay-delta"] > 0)
         bmi_type = BMI_PRECISION_DELAY;
+    else if(CMD_LINE_FLOATS["--recency-weighting-param"] > 0)
+        bmi_type = BMI_RECENCY_WEIGHTING;
+
 
     // Load docs
     unique_ptr<Dataset> documents = nullptr;

@@ -45,6 +45,15 @@ namespace sofia_ml {
         return distribution(rand_generator);
     }
 
+    int RandIntLinear(int num_vals, int c) {
+        double m = (c-1)/double(num_vals);
+        double new_max = (m*(num_vals+1)*(num_vals+1) - m*(num_vals+1) + 2*(num_vals+1))/2;
+        std::uniform_real_distribution<double> distribution(0, new_max);
+        double r = distribution(rand_generator);
+        double r_2 = (m-2 + (sqrt(2-m)*(2-m)+8*r*m))/(2*m);
+        return int(r_2);
+    }
+
     void StochasticRocLoop(const std::vector<const SfSparseVector*> &positives,
                            const std::vector<const SfSparseVector*> &negatives,
                            float lambda,

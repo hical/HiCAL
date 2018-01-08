@@ -6,7 +6,7 @@
 #include <set>
 #include <map>
 #include "dataset.h"
-#include "sofiaml/sofia-ml-methods.h"
+#include "sofiaml/sf-weight-vector.h"
 
 typedef std::vector<std::pair<SfSparseVector, int>> Seed;
 class BMI{
@@ -69,7 +69,7 @@ class BMI{
     bool try_finish_session();
 
     // train using the current training set and assign the weights to `w`
-    SfWeightVector train();
+    virtual SfWeightVector train();
 
     // Add the ids to the judgment list
     void add_to_judgment_list(const std::vector<int> &ids);
