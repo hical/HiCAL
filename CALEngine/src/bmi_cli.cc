@@ -21,13 +21,10 @@ enum BMI_TYPE {
 };
 
 int get_judgment_stdin(string topic_id, string doc_id){
-    cout<<"Judge "<<doc_id<<" (y/n)"<<": ";
-    string command = "cp ~/para/para/" + doc_id.substr(0, 4) + "/" + doc_id + " ./preview.html";
-    system(command.c_str());
-    system("killall lynx");
-    char ch;
-    cin>>ch;
-    return (ch == 'y'?1:-1);
+    int rel;
+    cout<<"Judge "<<doc_id<<": ";
+    cin>>rel;
+    return rel;
 }
 
 struct str_pair_hash {
