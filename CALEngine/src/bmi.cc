@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <climits>
 #include "bmi.h"
+#include "classifier.h"
 
 using namespace std;
 BMI::BMI(const Seed &_seed,
@@ -99,13 +100,7 @@ SfWeightVector BMI::train(){
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
-    sofia_ml::StochasticRocLoop(positives,
-            negatives,
-            0.0001,
-            10000000.0,
-            200000,
-            &w);
-
+    LRPegasosClassifier().train(positives, negatives, &w);
     return w;
 }
 
