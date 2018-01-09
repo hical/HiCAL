@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include "utils/utils.h"
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
 #include "bmi_reduced_ranking.h"
@@ -73,7 +74,6 @@ map<string, Seed> generate_seed_queries(string fname, int num_docs){
 }
 
 void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs, BMI_TYPE bmi_type){
-    ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
     switch(bmi_type){
@@ -142,6 +142,10 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_FLOATS["--recency-weighting-param"]);
         break;
+
+        default:
+            cerr<<"Invalid bmi_type"<<endl;
+            return;
     }
 
     auto get_judgment = get_judgment_stdin;
@@ -150,12 +154,36 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     }
 
     vector<string> doc_ids;
+    ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
     while(!(doc_ids = bmi->get_doc_to_judge(1)).empty()){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi->record_judgment(doc_ids[0], judgment);
         logfile << doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
     }
     logfile.close();
+}
+
+void SanityCheck(){
+    if(CMD_LINE_BOOLS["--help"]){
+        ShowHelp();
+        exit(0);
+    }
+
+    if(CMD_LINE_STRINGS["--doc-features"].length() == 0){
+        cerr<<"Required argument --doc-features missing"<<endl;
+        exit(1);
+    }
+
+    if(CMD_LINE_STRINGS["--df"].length() == 0){
+        cerr<<"Required argument --df missing"<<endl;
+        exit(1);
+    }
+
+    if(CMD_LINE_STRINGS["--query"].length() == 0){
+        cerr<<"Required argument --query missing"<<endl;
+        exit(1);
+    }
+
 }
 
 int main(int argc, char **argv){
@@ -182,31 +210,14 @@ int main(int argc, char **argv){
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
+    SanityCheck();
 
-    if(CMD_LINE_BOOLS["--help"]){
-        ShowHelp();
-        return 0;
-    }
-
-    if(CMD_LINE_STRINGS["--doc-features"].length() == 0){
-        cerr<<"Required argument --doc-features missing"<<endl;
-        return -1;
-    }
-
-    if(CMD_LINE_STRINGS["--df"].length() == 0){
-        cerr<<"Required argument --df missing"<<endl;
-        return -1;
-    }
-
-    if(CMD_LINE_STRINGS["--query"].length() == 0){
-        cerr<<"Required argument --query missing"<<endl;
-        return -1;
-    }
-
+    // Load qrels
     if(CMD_LINE_STRINGS["--qrel"].length() > 0){
         qrel = Qrel(CMD_LINE_STRINGS["--qrel"]);
     }
 
+    // Determine bmi type
     BMI_TYPE bmi_type = BMI_DOC;
     if(CMD_LINE_STRINGS["--para-features"].length() > 0)
         bmi_type = BMI_PARA;
@@ -224,28 +235,29 @@ int main(int argc, char **argv){
     unique_ptr<Dataset> documents = nullptr;
     unique_ptr<Dataset> paragraphs = nullptr;
 
-    auto start = std::chrono::steady_clock::now();
+    TIMER_BEGIN;
     cerr<<"Loading document features on memory"<<endl;
-    string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
-    documents = CAL::utils::BinFeatureParser(doc_features_path).get_all();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<documents->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    documents = CAL::utils::BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
+    cerr<<"Read "<<documents->size()<<" docs"<<endl;
+    TIMER_END("documents loader");
 
     // Load para
     string para_features_path = CMD_LINE_STRINGS["--para-features"];
     if(para_features_path.length() > 0){
-        start = std::chrono::steady_clock::now();
+        TIMER_BEGIN;
         cerr<<"Loading paragraph features on memory"<<endl;
         paragraphs = CAL::utils::BinFeatureParser(para_features_path).get_all();
-        duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-            (std::chrono::steady_clock::now() - start);
-        cerr<<"Read "<<paragraphs->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+        cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+        TIMER_END("paragraph loader");
     }
 
-    // Load queries
+    // Load document frequencies
     features::init(CMD_LINE_STRINGS["--df"]);
+    // Load seed queries
     map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
+
+    // Start jobs
+    // Todo: Better job management
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
         jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs), bmi_type));
