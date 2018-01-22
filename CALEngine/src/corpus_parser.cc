@@ -4,9 +4,9 @@
 
 #include <archive.h>
 #include <archive_entry.h>
-#include "utils/helpers.h"
 #include "utils/feature_writer.h"
 #include "utils/text_utils.h"
+#include "utils/utils.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 #include "utils/simple-cmd-line-helper.h"
