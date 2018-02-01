@@ -237,7 +237,7 @@ int main(int argc, char **argv){
 
     TIMER_BEGIN;
     cerr<<"Loading document features on memory"<<endl;
-    documents = CAL::utils::BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
+    documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
     cerr<<"Read "<<documents->size()<<" docs"<<endl;
     TIMER_END("documents loader");
 
@@ -246,7 +246,7 @@ int main(int argc, char **argv){
     if(para_features_path.length() > 0){
         TIMER_BEGIN;
         cerr<<"Loading paragraph features on memory"<<endl;
-        paragraphs = CAL::utils::BinFeatureParser(para_features_path).get_all();
+        paragraphs = BinFeatureParser(para_features_path).get_all();
         cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
         TIMER_END("paragraph loader");
     }

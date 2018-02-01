@@ -2,18 +2,18 @@
 
 #include <cstring>
 
-CAL::utils::BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
+BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
     fread(&num_records, sizeof(num_records), 1, fp);
 }
 
-CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name): FeatureParser(file_name){
+SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name): FeatureParser(file_name){
     buffer_size = 1<<10;
     buffer = (char*)malloc(buffer_size);
 }
 
 // Bad things will happen if the file is corrupted
 // Todo: move things to heap
-std::unique_ptr<SfSparseVector> CAL::utils::BinFeatureParser::next(){
+std::unique_ptr<SfSparseVector> BinFeatureParser::next(){
     string doc_id;
     char c = fgetc(fp);
     if(c == EOF)
@@ -36,7 +36,7 @@ std::unique_ptr<SfSparseVector> CAL::utils::BinFeatureParser::next(){
     return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-bool CAL::utils::SVMlightFeatureParser::read_line(){
+bool SVMlightFeatureParser::read_line(){
     if(feof(fp))
         return false;
     char *cur_pos = buffer;
@@ -60,7 +60,7 @@ bool CAL::utils::SVMlightFeatureParser::read_line(){
 
 // Move to c file buffers
 // Bad things will happen if file is not proper!
-std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
+std::unique_ptr<SfSparseVector> SVMlightFeatureParser::next(){
     if(!read_line())
         return nullptr;
 
@@ -86,7 +86,7 @@ std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
     return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-std::unique_ptr<Dataset> CAL::utils::FeatureParser::get_all(){
+std::unique_ptr<Dataset> FeatureParser::get_all(){
     auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
     std::unique_ptr<SfSparseVector> spv;
     while((spv = next()) != nullptr)

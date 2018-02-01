@@ -71,11 +71,11 @@ int main(int argc, char **argv){
     BMITokenizer tokenizer = BMITokenizer();
     // Pass 1: get corpus stat and compute term frequencies
     {
-        unique_ptr<CAL::utils::FeatureWriter> fw_1;
+        unique_ptr<FeatureWriter> fw_1;
         if(bin_out)
-            fw_1 = make_unique<CAL::utils::BinFeatureWriter>(pass1_filename);
+            fw_1 = make_unique<BinFeatureWriter>(pass1_filename);
         else
-            fw_1 = make_unique<CAL::utils::SVMlightFeatureWriter>(pass1_filename);
+            fw_1 = make_unique<SVMlightFeatureWriter>(pass1_filename);
 
         while (true) {
             r = archive_read_next_header(a, &entry);
@@ -141,15 +141,15 @@ int main(int argc, char **argv){
 
     cerr<<"Beginning Pass 2"<<endl;
     // Pass 2
-    unique_ptr<CAL::utils::FeatureParser> fp_1;
-    unique_ptr<CAL::utils::FeatureWriter> fw_2;
+    unique_ptr<FeatureParser> fp_1;
+    unique_ptr<FeatureWriter> fw_2;
     if(bin_out){
-        fp_1 = make_unique<CAL::utils::BinFeatureParser>(pass1_filename);
-        fw_2 = make_unique<CAL::utils::BinFeatureWriter>(out_filename);
+        fp_1 = make_unique<BinFeatureParser>(pass1_filename);
+        fw_2 = make_unique<BinFeatureWriter>(out_filename);
     }
     else{
-        fp_1 = make_unique<CAL::utils::SVMlightFeatureParser>(pass1_filename);
-        fw_2 = make_unique<CAL::utils::SVMlightFeatureWriter>(out_filename);
+        fp_1 = make_unique<SVMlightFeatureParser>(pass1_filename);
+        fw_2 = make_unique<SVMlightFeatureWriter>(out_filename);
     }
 
     unique_ptr<SfSparseVector> spv;
