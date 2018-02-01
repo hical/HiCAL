@@ -113,6 +113,16 @@ int main(int argc, char **argv){
         }
     }
     cerr<<endl<<"Computing idf"<<endl;
+    vector<pair<string, int>>  tmp;
+    vector<uint32_t> new_ids(token_ids.size() + 1);
+    for(const pair<string, int> &tok_id: token_ids){
+        if(df[tok_id.second] > 1)
+        tmp.push_back(tok_id);
+    }
+    sort(tmp.begin(), tmp.end());
+    for(int i = 0; i < tmp.size(); i++){
+        new_ids[tmp[i].second] = i + 1;
+    }
 
     // Compute idf
     {
@@ -149,10 +159,12 @@ int main(int argc, char **argv){
         double sum = 0;
         for(auto &f: spv->features_){
             if(df[f.id_] > 1){
-                features.push_back({f.id_, (float) ((1 + log(f.value_)) * idf[f.id_])});
+                features.push_back({new_ids[f.id_], (float) ((1 + log(f.value_)) * idf[f.id_])});
                 sum += features.back().value_ * features.back().value_;
             }
         }
+        sort(features.begin(), features.end(),
+             [](const FeatureValuePair &a, const FeatureValuePair &b) -> bool { return a.id_ < b.id_; });
 
         sum = sqrt(sum);
 
