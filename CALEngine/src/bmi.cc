@@ -5,6 +5,7 @@
 #include <climits>
 #include "bmi.h"
 #include "classifier.h"
+#include "utils/utils.h"
 
 using namespace std;
 BMI::BMI(const Seed &_seed,
@@ -178,23 +179,20 @@ vector<int> BMI::perform_training_iteration(){
     }
 
     // Training
-    auto start = std::chrono::steady_clock::now();
-
+    vector<float> weights;
+    TIMER_BEGIN;
     auto w = train();
-
-    auto weights = w.AsFloatVector();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Training finished in "<<duration.count()<<"ms"<<endl;
+    weights = w.AsFloatVector();
+    TIMER_END("training");
 
 
     // Scoring
-    start = std::chrono::steady_clock::now();
-    auto results = documents->rescore(weights, num_threads,
+    vector<int> results;
+    TIMER_BEGIN;
+    results = documents->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 0), judgments);
-    duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Rescored "<<documents->size()<<" documents in "<<duration.count()<<"ms"<<endl;
+    cerr<<"Rescored "<<documents->size()<<" documents"<<endl;
+    TIMER_END("rescoring");
 
     return results;
 }
