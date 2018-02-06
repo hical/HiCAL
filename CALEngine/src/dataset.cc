@@ -22,10 +22,12 @@ uint32_t compute_dimensionality(const SparseVectors &sparse_vectors) {
     return 1 + dimensionality;
 }
 
-Dataset::Dataset(SparseVectors sparse_vectors):
+Dataset::Dataset(SparseVectors sparse_vectors, std::unordered_map<std::string, TermInfo> _dictionary):
+dictionary(_dictionary),
 dimensionality(compute_dimensionality(sparse_vectors)),
-NPOS(sparse_vectors->size()),
-doc_ids_inv_map(generate_inverted_index(sparse_vectors)) {
+doc_ids_inv_map(generate_inverted_index(sparse_vectors)),
+NPOS(sparse_vectors->size())
+{
     doc_features = move(sparse_vectors);
 }
 

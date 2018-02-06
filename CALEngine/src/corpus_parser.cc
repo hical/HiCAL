@@ -63,8 +63,8 @@ int main(int argc, char **argv){
 
     archive_entry *entry;
     unordered_map<string, uint32_t> token_ids;
-    vector<uint32_t> df(1);
     vector<double> idf(1);
+    vector<pair<string, uint32_t>> dictionary;
     size_t num_docs = 0;
 
     cerr<<"Beginning Pass 1"<<endl;
@@ -73,9 +73,9 @@ int main(int argc, char **argv){
     {
         unique_ptr<FeatureWriter> fw_1;
         if(bin_out)
-            fw_1 = make_unique<BinFeatureWriter>(pass1_filename);
+            fw_1 = make_unique<BinFeatureWriter>(pass1_filename, vector<pair<string, uint32_t>>());
         else
-            fw_1 = make_unique<SVMlightFeatureWriter>(pass1_filename);
+            fw_1 = make_unique<SVMlightFeatureWriter>(pass1_filename, "", vector<pair<string, uint32_t>>());
 
         while (true) {
             r = archive_read_next_header(a, &entry);
@@ -98,10 +98,10 @@ int main(int argc, char **argv){
             vector<FeatureValuePair> features;
             for (pair<string, int> token: features::get_tf(tokens)) {
                 if (token_ids.count(token.first) == 0) {
-                    token_ids[token.first] = df.size();
-                    df.push_back(0);
+                    dictionary.push_back({token.first, 0});
+                    token_ids[token.first] = dictionary.size();
                 }
-                df[token_ids[token.first]] += 1.0;
+                dictionary[token_ids[token.first]-1].second += 1.0;
                 features.push_back({token_ids[token.first], (float) token.second});
             }
 
@@ -110,33 +110,37 @@ int main(int argc, char **argv){
 
             fw_1->write(SfSparseVector(doc_name, features));
             cerr<<num_docs<<" documents processed\r";
+            /* if(num_docs == 1000) */
+            /*     break; */
         }
+        fw_1->finish();
     }
     cerr<<endl<<"Computing idf"<<endl;
-    vector<pair<string, int>>  tmp;
-    vector<uint32_t> new_ids(token_ids.size() + 1);
-    for(const pair<string, int> &tok_id: token_ids){
-        if(df[tok_id.second] > 1)
-        tmp.push_back(tok_id);
-    }
-    sort(tmp.begin(), tmp.end());
-    for(int i = 0; i < tmp.size(); i++){
-        new_ids[tmp[i].second] = i + 1;
-    }
 
+    vector<int> new_ids(dictionary.size());
+    for(int i = 0; i < dictionary.size(); i++){
+        new_ids[i] = i;
+    }
     // Compute idf
     {
-        ofstream df_out(CMD_LINE_STRINGS["--out-df"]);
-        for(int i = 1; i < df.size(); i++){
-            idf.push_back(df[i] < 2?-1:log(num_docs / (float)df[i]));
-        }
-        for(auto &token_pair: token_ids){
-            if(df[token_pair.second] > 1){
-                if(df[token_pair.second] > 1){
-                    df_out<<df[token_pair.second]<<" "<<token_pair.first<<endl;
+        int end = dictionary.size() - 1;
+        for(int i = 0; i <= end; i++){
+            if(dictionary[i].second < 2){
+                while(end > i){
+                    if(dictionary[end].second > 1){
+                        swap(dictionary[i], dictionary[end]);
+                        new_ids[i] = end;
+                        new_ids[end] = i;
+                        break;
+                    }
+                    end--;
                 }
             }
+            idf.push_back(dictionary[i].second < 2?-1:log(num_docs / (float)dictionary[i].second));
         }
+        while(dictionary[end].second < 2)
+            end--;
+        dictionary = vector<pair<string, uint32_t>>(dictionary.begin(), dictionary.begin() + end + 1);
     }
 
     cerr<<"Beginning Pass 2"<<endl;
@@ -145,11 +149,11 @@ int main(int argc, char **argv){
     unique_ptr<FeatureWriter> fw_2;
     if(bin_out){
         fp_1 = make_unique<BinFeatureParser>(pass1_filename);
-        fw_2 = make_unique<BinFeatureWriter>(out_filename);
+        fw_2 = make_unique<BinFeatureWriter>(out_filename, dictionary);
     }
     else{
-        fp_1 = make_unique<SVMlightFeatureParser>(pass1_filename);
-        fw_2 = make_unique<SVMlightFeatureWriter>(out_filename);
+        fp_1 = make_unique<SVMlightFeatureParser>(pass1_filename, "");
+        fw_2 = make_unique<SVMlightFeatureWriter>(out_filename, CMD_LINE_STRINGS["--out-df"], dictionary);
     }
 
     unique_ptr<SfSparseVector> spv;
@@ -158,24 +162,30 @@ int main(int argc, char **argv){
         vector<FeatureValuePair> features;
         double sum = 0;
         for(auto &f: spv->features_){
-            if(df[f.id_] > 1){
-                features.push_back({new_ids[f.id_], (float) ((1 + log(f.value_)) * idf[f.id_])});
-                sum += features.back().value_ * features.back().value_;
+            if(f.id_ != 0){
+                f.id_ = new_ids[f.id_-1] + 1;
+                if(f.id_ - 1 < dictionary.size() && dictionary[f.id_-1].second > 1){
+                    features.push_back({f.id_, (float) ((1 + log(f.value_)) * idf[f.id_])});
+                    sum += features.back().value_ * features.back().value_;
+                }
             }
         }
-        sort(features.begin(), features.end(),
-             [](const FeatureValuePair &a, const FeatureValuePair &b) -> bool { return a.id_ < b.id_; });
 
         sum = sqrt(sum);
 
         for(auto &f: features){
             f.value_ /= sum;
         }
+
+        sort(features.begin(), features.end(),
+             [](const FeatureValuePair &a, const FeatureValuePair &b) -> bool { return a.id_ < b.id_; });
+
         fw_2->write(SfSparseVector(spv->doc_id, features));
         num_docs++;
         cerr<<num_docs<<" documents processed\r";
     }
     cerr<<endl;
+    fw_2->finish();
 
     archive_read_close(a);
     archive_read_free(a);

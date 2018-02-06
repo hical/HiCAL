@@ -3,26 +3,11 @@
 #include <unordered_map>
 #include <cmath>
 #include <algorithm>
+#include <iostream>
 
 #include "features.h"
 #include "utils/text_utils.h"
 using namespace std;
-
-unordered_map<string, features::TermInfo> features::dictionary;
-
-void features::init(const string &fname){
-    int df;
-    string term;
-    int idx = 0;
-
-    ifstream fin(fname);
-    while(fin>>df>>term){
-        idx++;
-        if(df < 2)
-            continue;
-        dictionary[term] = {idx, df};
-    }
-}
 
 unordered_map<string, int> features::get_tf(const vector<string> &words){
     unordered_map<string, int> tf_map;
@@ -34,17 +19,20 @@ unordered_map<string, int> features::get_tf(const vector<string> &words){
     return tf_map;
 }
 
-SfSparseVector features::get_features(const string &text, int N){
+SfSparseVector features::get_features(const string &text, const Dataset &dataset){
     vector<FeatureValuePair> features;
     vector<pair<uint32_t, double>> tmp_features;
 
     double sum = 0;
+    const Dictionary *dictionary = dataset.get_dictionary();
     for(pair<string, int> term: get_tf(BMITokenizer().tokenize(text))){
-        if(dictionary.find(term.first) != dictionary.end()){
-            int id = dictionary[term.first].id;
-            int df = dictionary[term.first].df;
+        auto it = dictionary->find(term.first);
+        if(it != dictionary->end()){
+            int id = it->second.id;
+            int df = it->second.df;
             int tf = term.second;
-            tmp_features.push_back({id, ((1+log(tf)) * log(N/(float)df))});
+            cout<<term.first<<" "<<id<<endl;
+            tmp_features.push_back({id, ((1+log(tf)) * log(dataset.size()/(float)df))});
             sum += tmp_features.back().second * tmp_features.back().second;
         }
     }
