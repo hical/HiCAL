@@ -9,10 +9,13 @@
 #include <queue>
 #include <mutex>
 #include "sofiaml/sf-sparse-vector.h"
+#include "utils/features.h"
 
+typedef std::unordered_map<std::string, TermInfo> Dictionary;
 class Dataset {
     // List of all document features
     std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>> doc_features;
+    Dictionary dictionary;
 
     // Number of features
     const uint32_t dimensionality;
@@ -35,7 +38,7 @@ class Dataset {
 
     public:
     uint32_t NPOS;
-    Dataset(std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>>);
+    Dataset(std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>>, Dictionary);
     Dataset():doc_features(nullptr), dimensionality(0), NPOS(0){};
 
     // Returns the inner product of `weights` with the sparse vector at `index`
@@ -54,6 +57,10 @@ class Dataset {
 
     size_t get_dimensionality(){
         return dimensionality;
+    }
+
+    const Dictionary* get_dictionary() const {
+        return &dictionary;
     }
 
     virtual int get_real_index(int id) const {return id;}

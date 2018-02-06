@@ -60,14 +60,14 @@ int get_judgment_qrel(string topic_id, string doc_id){
     return qrel.get_judgment(topic_id, doc_id);
 }
 
-map<string, Seed> generate_seed_queries(string fname, int num_docs){
+map<string, Seed> generate_seed_queries(string fname, const Dataset &dataset){
     map<string, Seed> seeds;
     ifstream fin(fname);
     string topic_id, query;
     int rel;
     while(fin>>topic_id>>rel){
         getline(fin, query);
-        seeds[topic_id].push_back({features::get_features(query, num_docs), rel});
+        seeds[topic_id].push_back({features::get_features(query, dataset), rel});
     }
 
     return seeds;
@@ -174,11 +174,6 @@ void SanityCheck(){
         exit(1);
     }
 
-    if(CMD_LINE_STRINGS["--df"].length() == 0){
-        cerr<<"Required argument --df missing"<<endl;
-        exit(1);
-    }
-
     if(CMD_LINE_STRINGS["--query"].length() == 0){
         cerr<<"Required argument --query missing"<<endl;
         exit(1);
@@ -189,7 +184,6 @@ void SanityCheck(){
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
     AddFlag("--para-features", "Path of the file with list of paragraph features", string(""));
-    AddFlag("--df", "Path of the file with document frequency of each term", string(""));
     AddFlag("--query", string("Path of the file with queries (odd lines containing topic-id and even lines containing")+\
             string("respective query string)"), string(""));
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
@@ -237,7 +231,7 @@ int main(int argc, char **argv){
 
     TIMER_BEGIN;
     cerr<<"Loading document features on memory"<<endl;
-    documents = CAL::utils::BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
+    documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
     cerr<<"Read "<<documents->size()<<" docs"<<endl;
     TIMER_END("documents loader");
 
@@ -246,15 +240,13 @@ int main(int argc, char **argv){
     if(para_features_path.length() > 0){
         TIMER_BEGIN;
         cerr<<"Loading paragraph features on memory"<<endl;
-        paragraphs = CAL::utils::BinFeatureParser(para_features_path).get_all();
+        paragraphs = BinFeatureParser(para_features_path).get_all();
         cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
         TIMER_END("paragraph loader");
     }
 
-    // Load document frequencies
-    features::init(CMD_LINE_STRINGS["--df"]);
     // Load seed queries
-    map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], documents->size());
+    map<string, Seed> seeds = generate_seed_queries(CMD_LINE_STRINGS["--query"], *documents);
 
     // Start jobs
     // Todo: Better job management

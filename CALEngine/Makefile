@@ -1,5 +1,10 @@
 CXX = g++
-CXXFLAGS = -O3 -Wall -pthread --std=c++14 -lfcgi -lfcgi++ -larchive
+CXXFLAGS = -Wall -pthread --std=c++14 -lfcgi -lfcgi++ -larchive
+ifeq ($(DEBUG), 1)
+    CXXFLAGS += -g3
+else
+    CXXFLAGS += -O3
+endif
 
 OBJ_DIR ?= obj
 SRC_DIRS ?= src
@@ -17,14 +22,11 @@ SRCS := $(shell find $(SRC_DIRS) -name '*.cc')
 SRCS := $(filter-out $(BIN_SRCS),$(SRCS))
 OBJS := $(SRCS:%=$(OBJ_DIR)/%.o)
 
-
 DEPS := $(OBJS:.o=.d)
 DEP_FLAGS = -MMD -MP
 
-all: $(BIN_TARGETS)
 
-debug: CXXFLAGS += -g
-debug: all
+all: $(BIN_TARGETS)
 
 $(BIN_TARGETS): % : $(OBJ_DIR)/$(SRC_DIRS)/%.cc.o $(OBJS)
 	$(CXX)  $(OBJS) $(OBJ_DIR)/$(SRC_DIRS)/$@.cc.o -o $@ $(CXXFLAGS)

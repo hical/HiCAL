@@ -2,18 +2,42 @@
 
 #include <cstring>
 
-CAL::utils::BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
+BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
+    uint32_t dict_end_offset;
+    fread(&dict_end_offset, sizeof(uint32_t), 1, fp);
+    char buffer[MAX_TERM_LEN];
+    uint32_t df;
+    int idx = 0;
+    while(ftello(fp) != dict_end_offset){
+        char ch; int buf_idx = 0;
+        do{
+            ch = fgetc(fp);
+            buffer[buf_idx++] = ch;
+        } while(ch);
+
+        fread(&df, sizeof(uint32_t), 1, fp);
+        dictionary[buffer] = { ++idx, (int)df};
+    }
     fread(&num_records, sizeof(num_records), 1, fp);
 }
 
-CAL::utils::SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name): FeatureParser(file_name){
+SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name, const string &df_file_name): FeatureParser(file_name){
     buffer_size = 1<<10;
     buffer = (char*)malloc(buffer_size);
+
+    if(df_file_name.size() > 0){
+        FILE *df_fp = fopen(df_file_name.c_str(), "rb");
+        int df, idx = 0;
+        while(fscanf(df_fp, "%d %s\n", &df, buffer) != EOF){
+            dictionary[buffer] = { ++idx, df};
+        }
+        fclose(df_fp);
+    }
 }
 
 // Bad things will happen if the file is corrupted
 // Todo: move things to heap
-std::unique_ptr<SfSparseVector> CAL::utils::BinFeatureParser::next(){
+std::unique_ptr<SfSparseVector> BinFeatureParser::next(){
     string doc_id;
     char c = fgetc(fp);
     if(c == EOF)
@@ -36,7 +60,7 @@ std::unique_ptr<SfSparseVector> CAL::utils::BinFeatureParser::next(){
     return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-bool CAL::utils::SVMlightFeatureParser::read_line(){
+bool SVMlightFeatureParser::read_line(){
     if(feof(fp))
         return false;
     char *cur_pos = buffer;
@@ -60,7 +84,7 @@ bool CAL::utils::SVMlightFeatureParser::read_line(){
 
 // Move to c file buffers
 // Bad things will happen if file is not proper!
-std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
+std::unique_ptr<SfSparseVector> SVMlightFeatureParser::next(){
     if(!read_line())
         return nullptr;
 
@@ -86,10 +110,10 @@ std::unique_ptr<SfSparseVector> CAL::utils::SVMlightFeatureParser::next(){
     return std::make_unique<SfSparseVector>(doc_id, features);
 }
 
-std::unique_ptr<Dataset> CAL::utils::FeatureParser::get_all(){
+std::unique_ptr<Dataset> FeatureParser::get_all(){
     auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
     std::unique_ptr<SfSparseVector> spv;
     while((spv = next()) != nullptr)
         sparse_feature_vectors->push_back(std::move(spv));
-    return std::make_unique<Dataset>(move(sparse_feature_vectors));
+    return std::make_unique<Dataset>(move(sparse_feature_vectors), dictionary);
 }

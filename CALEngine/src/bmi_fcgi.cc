@@ -375,7 +375,7 @@ int main(int argc, char **argv){
     auto start = std::chrono::steady_clock::now();
     cerr<<"Loading document features on memory"<<endl;
     string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
-    documents = CAL::utils::BinFeatureParser(doc_features_path).get_all();
+    documents = BinFeatureParser(doc_features_path).get_all();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);
     cerr<<"Read "<<documents->size()<<" docs in "<<duration.count()<<"ms"<<endl;
@@ -385,7 +385,7 @@ int main(int argc, char **argv){
     if(para_features_path.length() > 0){
         start = std::chrono::steady_clock::now();
         cerr<<"Loading paragraph features on memory"<<endl;
-        paragraphs = CAL::utils::BinFeatureParser(para_features_path).get_all();
+        paragraphs = BinFeatureParser(para_features_path).get_all();
         duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
         cerr<<"Read "<<paragraphs->size()<<" docs in "<<duration.count()<<"ms"<<endl;
