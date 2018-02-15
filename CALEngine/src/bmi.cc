@@ -191,8 +191,7 @@ vector<int> BMI::perform_training_iteration(){
     TIMER_BEGIN;
     results = documents->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 0), judgments);
-    cerr<<"Rescored "<<documents->size()<<" documents"<<endl;
-    TIMER_END("rescoring");
+    TIMER_END("rescoring " + to_string(documents->size()) + " documents");
 
     return results;
 }
