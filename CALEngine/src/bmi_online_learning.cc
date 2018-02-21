@@ -2,7 +2,7 @@
 #include "bmi_online_learning.h"
 using namespace std;
 
-BMI_online_learning::BMI_online_learning(const Seed &_seed,
+BMI_online_learning::BMI_online_learning(Seed _seed,
         Dataset *_documents,
         int _num_threads,
         int _judgments_per_iteration,

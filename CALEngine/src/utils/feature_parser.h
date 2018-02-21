@@ -26,6 +26,7 @@ class BinFeatureParser:public FeatureParser {
     uint32_t num_records;
     public:
         BinFeatureParser(const string &file_name);
+        BinFeatureParser(const string &file_name, const string &df_file_name);
         std::unique_ptr<SfSparseVector> next() override;
 };
 

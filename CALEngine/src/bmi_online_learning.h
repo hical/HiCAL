@@ -17,7 +17,7 @@ class BMI_online_learning:public BMI {
     }
 
     public:
-    BMI_online_learning(const Seed &seed,
+    BMI_online_learning(Seed seed,
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,

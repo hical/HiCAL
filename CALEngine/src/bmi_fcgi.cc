@@ -5,6 +5,7 @@
 #include "bmi_para.h"
 #include "features.h"
 #include "utils/feature_parser.h"
+#include "utils/utils.h"
 
 using namespace std;
 unordered_map<string, unique_ptr<BMI>> SESSIONS;
@@ -111,6 +112,8 @@ bool parse_seed_judgments(const string &str, vector<pair<string, int>> &seed_jud
 void begin_session_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, query, mode = "doc";
     vector<pair<string, int>> seed_judgments;
+    int judgments_per_iteration = -1;
+    bool async_mode = false;
 
     for(auto kv: params){
         if(kv.first == "session_id"){
@@ -123,6 +126,19 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
             if(!parse_seed_judgments(kv.second, seed_judgments)){
                 write_response(request, 400, "application/json", "{\"error\": \"Invalid format for seed_judgments\"}");
                 return;
+            }
+        }else if(kv.first == "judgments_per_iteration"){
+            try {
+                judgments_per_iteration = stoi(kv.second);
+            } catch (const invalid_argument& ia) {
+                write_response(request, 400, "application/json", "{\"error\": \"Invalid judgments_per_iteration\"}");
+                return;
+            }
+        }else if(kv.first == "async"){
+            if(kv.second == "true"){
+                async_mode = true;
+            }else if(kv.second == "false"){
+                async_mode = false;
             }
         }
     }
@@ -142,43 +158,33 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
         return;
     }
 
+    Seed seed_query = {{features::get_features(query, *documents.get()), 1}};
+
     if(mode == "doc"){
-        SESSIONS[session_id] = make_unique<BMI>(features::get_features(query, documents->size()),
+        SESSIONS[session_id] = make_unique<BMI>(
+                seed_query,
                 documents.get(),
                 CMD_LINE_INTS["--threads"],
-                CMD_LINE_INTS["--judgments-per-iteration"],
-                CMD_LINE_INTS["--max-effort"],
-                CMD_LINE_INTS["--num-iterations"],
-                CMD_LINE_BOOLS["--async-mode"]);
+                judgments_per_iteration,
+                -1,
+                -1,
+                async_mode);
     }else if(mode == "para"){
-        SESSIONS[session_id] = make_unique<BMI_para>(features::get_features(query, documents->size()),
+        SESSIONS[session_id] = make_unique<BMI_para>(
+                seed_query,
                 documents.get(),
                 paragraphs.get(),
                 CMD_LINE_INTS["--threads"],
-                CMD_LINE_INTS["--judgments-per-iteration"],
-                CMD_LINE_INTS["--max-effort"],
-                CMD_LINE_INTS["--num-iterations"],
-                CMD_LINE_BOOLS["--async-mode"]);
+                judgments_per_iteration,
+                -1,
+                -1,
+                async_mode);
     }
 
     SESSIONS[session_id]->record_judgment_batch(seed_judgments);
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
-}
-
-string get_top_terms_json(string doc_id, const unique_ptr<BMI> &bmi, int num_top_terms){
-    /* vector<pair<int, float>> top_terms */ 
-    /*     = bmi->get_ranking_scorer()->get_top_terms(bmi->get_weights(), doc_id, num_top_terms); */
-
-    string top_terms_json = "{";
-    /* for(auto top_term: top_terms){ */
-    /*     if(top_terms_json.length() > 1) */
-    /*         top_terms_json.push_back(','); */
-    /*     top_terms_json += "\"" + to_string(top_term.first) + "\"" + ":" + to_string(top_term.second); */
-    /* } */
-    top_terms_json.push_back('}');
-    return top_terms_json;
 }
 
 // Fetch doc-ids in JSON
@@ -194,13 +200,10 @@ string get_docs(string session_id, int max_count, int num_top_terms = 10){
         if(top_terms_json.length() > 1)
             top_terms_json.push_back(',');
         doc_json += "\"" + doc_id + "\"";
-        top_terms_json += "\"" + doc_id + "\": " + get_top_terms_json(doc_id, bmi, num_top_terms);
     }
     doc_json.push_back(']');
-    top_terms_json.push_back('}');
 
-    return "{\"session-id\": \"" + session_id + "\", \"docs\": " + doc_json
-        + ",\"top-terms\": " + top_terms_json + "}";
+    return "{\"session-id\": \"" + session_id + "\", \"docs\": " + doc_json + "}";
 }
 
 // Handler for /get_docs
@@ -335,17 +338,20 @@ void process_request(const FCGX_Request & request) {
     }
 }
 
+void fcgi_listener(){
+    FCGX_Request request;
+    FCGX_InitRequest(&request, 0, 0);
+
+    while (FCGX_Accept_r(&request) == 0) {
+        process_request(request);
+    }
+}
+
 int main(int argc, char **argv){
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
     AddFlag("--para-features", "Path of the file with list of paragraph features", string(""));
-    AddFlag("--df", "Path of the file with document frequency of each term", string(""));
-    AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
-    AddFlag("--num-iterations", "Set max number of training iterations", int(-1));
-    AddFlag("--max-effort", "Set max effort", int(-1));
+    AddFlag("--df", "Path of the file with list of terms and their document frequencies", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
-    AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
-    AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
-    AddFlag("--restore-script", "Restore script to run after documents are loaded", string(""));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
@@ -360,45 +366,38 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    if(CMD_LINE_STRINGS["--df"].length() == 0){
-        cerr<<"Required argument --df missing"<<endl;
-        return -1;
-    }
-
-    string command = (string("nohup ") + string(CMD_LINE_STRINGS["--restore-script"]) + string(" &"));
-    if(CMD_LINE_STRINGS["--restore-script"].length() > 0){
-        cout<<system(command.c_str())<<endl;;
-    }
-
-
     // Load docs
-    auto start = std::chrono::steady_clock::now();
+    TIMER_BEGIN;
     cerr<<"Loading document features on memory"<<endl;
-    string doc_features_path = CMD_LINE_STRINGS["--doc-features"];
-    documents = BinFeatureParser(doc_features_path).get_all();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Read "<<documents->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+    if(CMD_LINE_STRINGS["--df"].size() > 0)
+        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]).get_all();
+    else
+        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
+    cerr<<"Read "<<documents->size()<<" docs"<<endl;
+    TIMER_END("documents loader");
 
     // Load para
     string para_features_path = CMD_LINE_STRINGS["--para-features"];
     if(para_features_path.length() > 0){
-        start = std::chrono::steady_clock::now();
+        TIMER_BEGIN;
         cerr<<"Loading paragraph features on memory"<<endl;
-        paragraphs = BinFeatureParser(para_features_path).get_all();
-        duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-            (std::chrono::steady_clock::now() - start);
-        cerr<<"Read "<<paragraphs->size()<<" docs in "<<duration.count()<<"ms"<<endl;
+        if(CMD_LINE_STRINGS["--df"].size() > 0)
+            paragraphs = BinFeatureParser(para_features_path, "").get_all();
+        else
+            paragraphs = BinFeatureParser(para_features_path).get_all();
+        cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+        TIMER_END("paragraph loader");
     }
 
-    // Load queries
-    features::init(CMD_LINE_STRINGS["--df"]);
-
-    FCGX_Request request;
     FCGX_Init();
-    FCGX_InitRequest(&request, 0, 0);
-    while (FCGX_Accept_r(&request) == 0) {
-        process_request(request);
+
+    vector<thread> fastcgi_threads;
+    for(int i = 0;i < 50; i++){
+        fastcgi_threads.push_back(thread(fcgi_listener));
+    }
+
+    for(auto &t: fastcgi_threads){
+        t.join();
     }
 
     return 0;

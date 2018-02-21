@@ -3,7 +3,7 @@
 #include "bmi_reduced_ranking.h"
 using namespace std;
 
-BMI_reduced_ranking::BMI_reduced_ranking(const Seed &_seed,
+BMI_reduced_ranking::BMI_reduced_ranking(Seed _seed,
         Dataset *_documents,
         int _num_threads,
         int _judgments_per_iteration,

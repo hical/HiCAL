@@ -11,7 +11,7 @@ class BMI_precision_delay:public BMI {
     void record_judgment_batch(std::vector<std::pair<std::string, int>> _judgments);
 
     public:
-    BMI_precision_delay(const Seed &seed,
+    BMI_precision_delay(Seed seed,
         Dataset *documents,
         int num_threads,
         int max_effort,
