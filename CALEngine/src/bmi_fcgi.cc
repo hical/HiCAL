@@ -221,6 +221,7 @@ void get_docs_view(const FCGX_Request & request, const vector<pair<string, strin
 
     if(session_id.size() == 0){
         write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id required\"}");
+        return;
     }
 
     if(SESSIONS.find(session_id) == SESSIONS.end()){
