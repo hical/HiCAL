@@ -57,7 +57,7 @@ Server: `129.97.84.14/CAL`
 
 * **Data Params**
 
-    `session_id=[string]`, `seed_query=[string]`
+    `session_id=[string]`, `seed_query=[string]`, `async=[bool]`, `mode=[para,doc]`, `seed_judgments=doc1:rel1,doc2:rel2`
     
 * **Success Response**
 
@@ -130,3 +130,21 @@ Server: `129.97.84.14/CAL`
     
     **Code:** 400 <br />
     **Content:** `{'error': 'invalid judgment'}`
+
+#### Get Full Ranklist
+
+* **URL**
+
+    /get_ranklist
+
+* **Method**
+   
+   `GET`
+
+* **URL Params**
+   
+    `session_id=[string]`
+
+* **Data Params**
+
+    None
