@@ -21,6 +21,20 @@ BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_
     fread(&num_records, sizeof(num_records), 1, fp);
 }
 
+BinFeatureParser::BinFeatureParser(const string &file_name, const string &df_file_name): FeatureParser(file_name){
+    char buffer[1<<10];
+    if(df_file_name.size() > 0){
+        FILE *df_fp = fopen(df_file_name.c_str(), "rb");
+        int df, idx = 0;
+        while(fscanf(df_fp, "%d %s\n", &df, buffer) != EOF){
+            dictionary[buffer] = { ++idx, df};
+        }
+        fclose(df_fp);
+    }
+
+    fread(&num_records, sizeof(num_records), 1, fp);
+}
+
 SVMlightFeatureParser::SVMlightFeatureParser(const string &file_name, const string &df_file_name): FeatureParser(file_name){
     buffer_size = 1<<10;
     buffer = (char*)malloc(buffer_size);

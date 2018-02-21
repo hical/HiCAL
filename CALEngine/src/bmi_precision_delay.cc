@@ -2,7 +2,7 @@
 #include <mutex>
 #include <thread>
 #include "bmi_precision_delay.h"
-BMI_precision_delay::BMI_precision_delay(const Seed &_seed,
+BMI_precision_delay::BMI_precision_delay(Seed _seed,
         Dataset *_documents,
         int _num_threads,
         int _max_effort,

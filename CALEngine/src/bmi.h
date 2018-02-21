@@ -88,7 +88,7 @@ class BMI{
     virtual std::vector<int> perform_training_iteration();
 
     public:
-    BMI(const Seed &seed,
+    BMI(Seed seed,
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,

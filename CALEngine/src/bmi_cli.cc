@@ -78,7 +78,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     unique_ptr<BMI> bmi;
     switch(bmi_type){
         case BMI_DOC:
-        bmi = make_unique<BMI>(cref(seed_query.second),
+        bmi = make_unique<BMI>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
@@ -88,7 +88,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         break;
 
         case BMI_PARA:
-        bmi = make_unique<BMI_para>(cref(seed_query.second),
+        bmi = make_unique<BMI_para>(seed_query.second,
             documents.get(),
             paragraphs.get(),
             CMD_LINE_INTS["--threads"],
@@ -99,7 +99,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         break;
 
         case BMI_REDUCED_RANKING:
-        bmi = make_unique<BMI_reduced_ranking>(cref(seed_query.second),
+        bmi = make_unique<BMI_reduced_ranking>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
@@ -110,7 +110,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         break;
 
         case BMI_ONLINE_LEARNING:
-        bmi = make_unique<BMI_online_learning>(cref(seed_query.second),
+        bmi = make_unique<BMI_online_learning>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
@@ -122,7 +122,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         break;
 
         case BMI_PRECISION_DELAY:
-        bmi = make_unique<BMI_precision_delay>(cref(seed_query.second),
+        bmi = make_unique<BMI_precision_delay>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--max-effort"],
@@ -133,7 +133,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         break;
 
         case BMI_RECENCY_WEIGHTING:
-        bmi = make_unique<BMI_recency_weighting>(cref(seed_query.second),
+        bmi = make_unique<BMI_recency_weighting>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
@@ -201,6 +201,7 @@ int main(int argc, char **argv){
     AddFlag("--jobs", "Number of concurrent jobs", int(1));
     AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
+    AddFlag("--df", "Path of the file with list of terms and their document frequencies", string(""));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
@@ -231,7 +232,10 @@ int main(int argc, char **argv){
 
     TIMER_BEGIN;
     cerr<<"Loading document features on memory"<<endl;
-    documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
+    if(CMD_LINE_STRINGS["--df"].size() > 0)
+        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]).get_all();
+    else
+        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
     cerr<<"Read "<<documents->size()<<" docs"<<endl;
     TIMER_END("documents loader");
 
@@ -240,7 +244,10 @@ int main(int argc, char **argv){
     if(para_features_path.length() > 0){
         TIMER_BEGIN;
         cerr<<"Loading paragraph features on memory"<<endl;
-        paragraphs = BinFeatureParser(para_features_path).get_all();
+        if(CMD_LINE_STRINGS["--df"].size() > 0)
+            paragraphs = BinFeatureParser(para_features_path, "").get_all();
+        else
+            paragraphs = BinFeatureParser(para_features_path).get_all();
         cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
         TIMER_END("paragraph loader");
     }

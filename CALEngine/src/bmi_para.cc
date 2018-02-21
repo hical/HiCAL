@@ -6,7 +6,7 @@
 #include "bmi_para.h"
 
 using namespace std;
-BMI_para::BMI_para(const Seed &_seed,
+BMI_para::BMI_para(Seed _seed,
         Dataset *_documents,
         Dataset *_paragraphs,
         int _num_threads,

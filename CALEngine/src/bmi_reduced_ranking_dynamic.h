@@ -6,14 +6,14 @@
 
 class BMI_reduced_ranking_dynamic:public BMI_reduced_ranking {
     int next_refresh = 1;
-    int cur_subset_size = ;
+    int cur_subset_size = 1;
     protected:
     bool is_it_refresh_time() {
         return (state.cur_iteration % refresh_period == 0);
     }
 
     public:
-    BMI_reduced_ranking_dynamic(const Seed &seed,
+    BMI_reduced_ranking_dynamic(Seed seed,
                                 Dataset *documents,
                                 int num_threads,
                                 int judgments_per_iteration,

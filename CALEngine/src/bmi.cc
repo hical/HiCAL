@@ -8,7 +8,7 @@
 #include "utils/utils.h"
 
 using namespace std;
-BMI::BMI(const Seed &_seed,
+BMI::BMI(Seed _seed,
          Dataset *_documents,
          int _num_threads,
          int _judgments_per_iteration,

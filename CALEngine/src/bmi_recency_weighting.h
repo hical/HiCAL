@@ -13,7 +13,7 @@ class BMI_recency_weighting:public BMI {
     protected:
     virtual SfWeightVector train();
     public:
-    BMI_recency_weighting(const Seed &_seed,
+    BMI_recency_weighting(Seed _seed,
         Dataset *_documents,
         int _num_threads,
         int _judgments_per_iteration,

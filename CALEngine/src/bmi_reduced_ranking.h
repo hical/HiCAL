@@ -18,7 +18,7 @@ class BMI_reduced_ranking:public BMI {
     }
 
     public:
-    BMI_reduced_ranking(const Seed &seed,
+    BMI_reduced_ranking(Seed seed,
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,
