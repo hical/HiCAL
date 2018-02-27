@@ -57,7 +57,7 @@ Server: `129.97.84.14/CAL`
 
 * **Data Params**
 
-    `session_id=[string]`, `seed_query=[string]`, `async=[bool]`, `mode=[para,doc]`, `seed_judgments=doc1:rel1,doc2:rel2`
+    `session_id=[string]`, `seed_query=[string]`, `async=[bool]`, `mode=[para,doc]`, `seed_judgments=doc1:rel1,doc2:rel2`, `judgments_per_iteration=[-1 or positive integer]`
     
 * **Success Response**
 
