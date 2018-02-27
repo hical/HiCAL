@@ -49,7 +49,7 @@ class BMI{
     std::mt19937 rand_generator;
 
     // Current of dataset being used to train the classifier
-    const Seed *seed;
+    const Seed seed;
     std::map<int, int> judgments;
 
     // Whenever judgements are received, they are put into training_cache,

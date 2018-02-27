@@ -22,7 +22,7 @@ BMI::BMI(Seed _seed,
     max_effort(_max_effort),
     max_iterations(_max_iterations),
     async_mode(_async_mode),
-    seed(&_seed)
+    seed(_seed)
 {
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
@@ -78,7 +78,7 @@ void BMI::perform_iteration_async(){
 SfWeightVector BMI::train(){
     SfWeightVector w(documents->get_dimensionality());
     vector<const SfSparseVector*> positives, negatives;
-    for(auto &judgment: *seed){
+    for(auto &judgment: seed){
         if(judgment.second > 0)
             positives.push_back(&judgment.first);
         else

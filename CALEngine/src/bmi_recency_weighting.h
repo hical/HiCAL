@@ -36,7 +36,7 @@ class BMI_recency_weighting:public BMI {
 SfWeightVector BMI_recency_weighting::train(){
     SfWeightVector w(documents->get_dimensionality());
     vector<const SfSparseVector*> positives, negatives;
-    for(auto &judgment: *seed){
+    for(auto &judgment: seed){
         if(judgment.second > 0)
             positives.push_back(&judgment.first);
         else
