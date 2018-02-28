@@ -168,4 +168,4 @@ def delete_session(session_id):
     resp = requests.delete(URL+'/delete_session', data=data).json()
 
     if resp.get('error', '') == 'session not found':
-        raise SessionNotFoundException('Session %s not found' % session_id)
+        print(SessionNotFoundException('Session %s not found' % session_id))
