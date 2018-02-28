@@ -129,6 +129,9 @@ def get_ranklist(session_id):
 
     Returns:
         ranklist ([(str, float), ]): Ranked list of document ids
+
+    Throws:
+        SessionNotFoundException
     """
     data = '&'.join(['session_id=%s' % str(session_id)])
     resp = requests.get(URL+'/get_ranklist?'+data)
@@ -146,3 +149,23 @@ def get_ranklist(session_id):
         doc_id, score = line.split(' ')
         ret.append((doc_id, float(score)))
     return ret
+
+
+def delete_session(session_id):
+    """ Delete a session
+
+    Args:
+        session_id (str): unique session id
+
+    Returns:
+        None
+
+    Throws:
+        SessionNotFoundException
+    """
+
+    data = '&'.join(['session_id=%s' % str(session_id)])
+    resp = requests.delete(URL+'/delete_session', data=data).json()
+
+    if resp.json().get('error', '') == 'session not found':
+        raise SessionNotFoundException('Session %s not found' % session_id)

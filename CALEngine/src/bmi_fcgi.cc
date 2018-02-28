@@ -206,6 +206,26 @@ string get_docs(string session_id, int max_count, int num_top_terms = 10){
     return "{\"session-id\": \"" + session_id + "\", \"docs\": " + doc_json + "}";
 }
 
+// Handler for /delete_session
+void delete_session_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
+    string session_id;
+
+    for(auto kv: params){
+        if(kv.first == "session_id"){
+            session_id = kv.second;
+        }
+    }
+
+    if(SESSIONS.find(session_id) == SESSIONS.end()){
+        write_response(request, 404, "application/json", "{\"error\": \"session not found\"}");
+        return;
+    }
+
+    SESSIONS.erase(session_id);
+
+    write_response(request, 200, "application/json", "{\"session-id\": \"" + session_id + "\"}");
+}
+
 // Handler for /get_docs
 void get_docs_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id;
@@ -315,7 +335,7 @@ void process_request(const FCGX_Request & request) {
 
     if(method == "GET")
         params = parse_query_string(FCGX_GetParam("QUERY_STRING", request.envp));
-    else if(method == "POST")
+    else if(method == "POST" || method == "DELETE")
         params = parse_query_string(read_content(request));
 
     log_request(request, params);
@@ -335,6 +355,10 @@ void process_request(const FCGX_Request & request) {
     }else if(action == "get_ranklist"){
         if(method == "GET"){
             get_ranklist(request, params);
+        }
+    }else if(action == "delete_session"){
+        if(method == "DELETE"){
+            delete_session_view(request, params);
         }
     }
 }
