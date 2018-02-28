@@ -59,7 +59,7 @@ def simulateCALP():
     topics, searchDocsDict = loadRRFRanks('autonofdbk.rrf.list') 
     seedQueryDict = loadSeedQuery('topics.6')
     relDict, nonrelDict, allDict = loadQrels('qrels.nist.core')
-
+    outputF = open('calp.simulate.list','w')
     for topic in topics:
         delete_session(topic)
         # print(seedQueryDict[topic])
@@ -71,12 +71,48 @@ def simulateCALP():
             for doc in docsList:
                 if doc in relDict[topic]:
                     judge(topic, doc, 1)
-                    print(topic+'\t'+doc+'\t'+str(iteration)+'\t1'+'\tCAL-P')
+                    outputF.write(topic+'\t'+doc+'\t'+str(iteration)+'\t1'+'\tCAL-P\n')
                 else:
                     judge(topic, doc, 0)
-                    print(topic+'\t'+doc+'\t'+str(iteration)+'\t0'+'\tCAL-P')
+                    outputF.write(topic+'\t'+doc+'\t'+str(iteration)+'\t0'+'\tCAL-P\n')
+            iteration += 1
+    outputF.close()
+
+def simulateSearchCALP(searchCnt):
+
+    topics, searchDocsDict = loadRRFRanks('autonofdbk.rrf.list') 
+    seedQueryDict = loadSeedQuery('topics.6')
+    relDict, nonrelDict, allDict = loadQrels('qrels.nist.core')
+    outputF = open('search.calp.simulate.'+str(searchCnt)+'.list','w')
+    for topic in topics:
+        session = topic + 'search'
+        delete_session(session)
+        begin_session(session, seedQueryDict[topic])
+        
+        searchDocs = searchDocsDict[topic]
+        iteration = 0
+        while iteration < searchCnt:
+            doc = searchDocs[iteration]
+            if doc in relDict[topic]:
+                judge(session, doc, 1)
+                outputF.write(topic+'\t'+doc+'\t'+str(iteration)+'\t1'+'\tSearch+CAL-P\n')
+            else:
+                judge(session, doc, 0)
+                outputF.write(topic+'\t'+doc+'\t'+str(iteration)+'\t0'+'\tSearch+CAL-P\n')
             iteration += 1
 
+        while iteration < 200:
+            docsList = get_docs(session)
+            for doc in docsList:
+                if doc in relDict[topic]:
+                    judge(session, doc, 1)
+                    outputF.write(topic+'\t'+doc+'\t'+str(iteration)+'\t1'+'\tSearch+CAL-P\n')
+                else:
+                    judge(session, doc, 0)
+                    outputF.write(topic+'\t'+doc+'\t'+str(iteration)+'\t0'+'\tSearch+CAL-P\n')
+            iteration += 1
+    outputF.close()
 
 if __name__=="__main__":
-    simulateCALP()
+    # simulateCALP()
+    simulateSearchCALP(10)
