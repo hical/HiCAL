@@ -85,7 +85,7 @@ def simulateSearchCALP(searchCnt):
     relDict, nonrelDict, allDict = loadQrels('qrels.nist.core')
     outputF = open('search.calp.simulate.'+str(searchCnt)+'.list','w')
     for topic in topics:
-        session = topic + 'search'
+        session = topic + 'search'+str(searchCnt)
         delete_session(session)
         begin_session(session, seedQueryDict[topic])
         
@@ -114,5 +114,11 @@ def simulateSearchCALP(searchCnt):
     outputF.close()
 
 if __name__=="__main__":
-    # simulateCALP()
+    simulateCALP()
+    simulateSearchCALP(5)
     simulateSearchCALP(10)
+    simulateSearchCALP(20)
+    simulateSearchCALP(30)
+    simulateSearchCALP(40)
+    simulateSearchCALP(50)
+    simulateSearchCALP(60)
