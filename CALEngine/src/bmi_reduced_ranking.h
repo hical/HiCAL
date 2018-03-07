@@ -10,7 +10,6 @@ class BMI_reduced_ranking:public BMI {
     vector<int> indices;
     size_t subset_size;
     size_t refresh_period;
-    std::vector<int> perform_training_iteration();
 
     protected:
     virtual bool is_it_refresh_time() {
@@ -27,6 +26,7 @@ class BMI_reduced_ranking:public BMI {
         bool async_mode,
         size_t subset_size,
         size_t refresh_period);
+    std::vector<int> perform_training_iteration();
 };
 
 #endif // BMI_REDUCED_RANKING_H

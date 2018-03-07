@@ -84,9 +84,6 @@ class BMI{
     void perform_iteration();
     void perform_iteration_async();
 
-    // Handler for performing a training iteration
-    virtual std::vector<int> perform_training_iteration();
-
     public:
     BMI(Seed seed,
         Dataset *documents,
@@ -96,6 +93,9 @@ class BMI{
         int max_iterations,
         bool async_mode,
         bool initialize = true);
+
+    // Handler for performing a training iteration
+    virtual std::vector<int> perform_training_iteration();
 
     // Get upto `count` number of documents from `judgment_list`
     virtual std::vector<std::string> get_doc_to_judge(uint32_t count);

@@ -9,7 +9,6 @@ class BMI_online_learning:public BMI {
     size_t refresh_period;
     vector<float> weight;
     float delta;
-    std::vector<int> perform_training_iteration();
 
     protected:
     virtual bool is_it_refresh_time() {
@@ -26,6 +25,7 @@ class BMI_online_learning:public BMI {
         bool async_mode,
         size_t refresh_period,
         float delta);
+    std::vector<int> perform_training_iteration();
 };
 
 #endif // BMI_ONLINE_LEARNING_H

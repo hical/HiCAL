@@ -182,6 +182,7 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
     }
 
     SESSIONS[session_id]->record_judgment_batch(seed_judgments);
+    SESSIONS[session_id]->perform_training_iteration();
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");
