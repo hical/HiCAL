@@ -17,7 +17,7 @@ class Classifier {
 };
 
 class LRPegasosClassifier:public Classifier {
-    const float lambda = 0.0001, c = 10000000.0;
+    const float lambda = 0.0001;
     const int num_iters = 200000;
 
     protected:
