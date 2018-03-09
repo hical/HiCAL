@@ -11,7 +11,7 @@ class BMI_recency_weighting:public BMI {
     const float max_relative_weight;
     int cur_time  = 0;
     protected:
-    virtual SfWeightVector train();
+    virtual vector<float> train();
     public:
     BMI_recency_weighting(Seed _seed,
         Dataset *_documents,
@@ -33,8 +33,7 @@ class BMI_recency_weighting:public BMI {
     }
 };
 
-SfWeightVector BMI_recency_weighting::train(){
-    SfWeightVector w(documents->get_dimensionality());
+vector<float> BMI_recency_weighting::train(){
     vector<const SfSparseVector*> positives, negatives;
     for(auto &judgment: seed){
         if(judgment.second > 0)
@@ -61,8 +60,7 @@ SfWeightVector BMI_recency_weighting::train(){
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
-    LRPegasosWeightedRecencyClassifier(max_relative_weight).train(positives, negatives, &w);
-    return w;
+    return LRPegasosWeightedRecencyClassifier(max_relative_weight).train(positives, negatives, documents->get_dimensionality());
 }
 
 #endif // BMI_RECENCY_WEIGHTING_H

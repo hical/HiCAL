@@ -75,8 +75,7 @@ void BMI::perform_iteration_async(){
     }
 }
 
-SfWeightVector BMI::train(){
-    SfWeightVector w(documents->get_dimensionality());
+vector<float> BMI::train(){
     vector<const SfSparseVector*> positives, negatives;
     for(auto &judgment: seed){
         if(judgment.second > 0)
@@ -179,26 +178,23 @@ vector<int> BMI::perform_training_iteration(){
     }
 
     // Training
-    vector<float> weights;
-    TIMER_BEGIN;
-    auto w = train();
-    weights = w.AsFloatVector();
-    TIMER_END("training");
+    TIMER_BEGIN(training);
+    auto weights = train();
+    TIMER_END(training);
 
 
     // Scoring
-    vector<int> results;
-    TIMER_BEGIN;
-    results = documents->rescore(weights, num_threads,
+    TIMER_BEGIN(rescoring);
+    auto results = documents->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 0), judgments);
-    TIMER_END("rescoring " + to_string(documents->size()) + " documents");
+    TIMER_END(rescoring);
 
     return results;
 }
 
 std::vector<std::pair<string, float>> BMI::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
-    auto results = get_ranking_dataset()->rescore(train().AsFloatVector(), num_threads,
+    auto results = get_ranking_dataset()->rescore(train(), num_threads,
                               get_ranking_dataset()->size(), map<int, int>());
 
     // to fix

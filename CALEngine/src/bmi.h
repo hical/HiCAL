@@ -69,7 +69,7 @@ class BMI{
     bool try_finish_session();
 
     // train using the current training set and assign the weights to `w`
-    virtual SfWeightVector train();
+    virtual vector<float> train();
 
     // Add the ids to the judgment list
     void add_to_judgment_list(const std::vector<int> &ids);

@@ -11,9 +11,8 @@ static thread_local std::mt19937 rand_generator;
 
 class Classifier {
     public:
-    virtual void train(const std::vector<const SfSparseVector*> &positives,
-               const std::vector<const SfSparseVector*> &negatives,
-               SfWeightVector* w) = 0;
+    virtual vector<float> train(const std::vector<const SfSparseVector*> &positives,
+               const std::vector<const SfSparseVector*> &negatives, int dimensionality) = 0;
 };
 
 class LRPegasosClassifier:public Classifier {
@@ -27,9 +26,8 @@ class LRPegasosClassifier:public Classifier {
     }
 
     public:
-    virtual void train(const std::vector<const SfSparseVector*> &positives,
-               const std::vector<const SfSparseVector*> &negatives,
-               SfWeightVector* w);
+    virtual vector<float> train(const std::vector<const SfSparseVector*> &positives,
+               const std::vector<const SfSparseVector*> &negatives, int dimensionality);
 };
 
 class LRPegasosWeightedRecencyClassifier:public LRPegasosClassifier {

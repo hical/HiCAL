@@ -32,8 +32,7 @@ vector<int> BMI_reduced_ranking::perform_training_iteration(){
     // Training
     auto start = std::chrono::steady_clock::now();
 
-    auto w = train();
-    auto weights = w.AsFloatVector();
+    auto weights = train();
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
         (std::chrono::steady_clock::now() - start);

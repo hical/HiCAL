@@ -38,9 +38,7 @@ vector<int> BMI_online_learning::perform_training_iteration(){
 
     if(is_it_refresh_time()){
         auto start = std::chrono::steady_clock::now();
-        auto w = train();
-        auto weights = w.AsFloatVector();
-        this->weight = weights;
+        this->weight = train();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
         cerr<<"Training finished in "<<duration.count()<<"ms"<<endl;

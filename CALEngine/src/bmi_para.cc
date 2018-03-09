@@ -87,7 +87,7 @@ vector<int> BMI_para::perform_training_iteration(){
 std::vector<std::pair<string, float>> BMI_para::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
     unordered_set<string> doc_id_seen;
-    auto results = get_ranking_dataset()->rescore(train().AsFloatVector(), num_threads,
+    auto results = get_ranking_dataset()->rescore(train(), num_threads,
                               get_ranking_dataset()->size(), map<int, int>());
 
     for(auto result: results){
