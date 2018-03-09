@@ -100,20 +100,21 @@ vector<float> BMI::train(){
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
-    LRPegasosClassifier().train(positives, negatives, &w);
-    return w;
+    return LRPegasosClassifier().train(positives, negatives, documents->get_dimensionality());
 }
 
 vector<string> BMI::get_doc_to_judge(uint32_t count=1){
     while(true){
         {
-            lock_guard<mutex> lock(judgment_list_mutex);
-            if(!judgment_queue_by_rank.empty()){
+            lock_guard<mutex> lock_judgment_list(judgment_list_mutex);
+            lock_guard<mutex> lock_judgments(training_cache_mutex);
+
+            if(!judgment_queue.empty()){
                 vector<string> ret;
-                for(pair<int, int> rank_id: judgment_queue_by_rank){
-                    if(rank_id.second == -1 || ret.size() >= count)
-                        break;
-                    ret.push_back(get_ranking_dataset()->get_sf_sparse_vector(rank_id.second).doc_id);
+                for(int i = judgment_queue.size()-1; i>=0 && judgment_queue[i] != -1 && ret.size() < count; i--){
+                    if(!is_judged(judgment_queue[i]))
+                        ret.push_back(get_ranking_dataset()->get_sf_sparse_vector(judgment_queue[i]).doc_id);
+                    judgment_queue.pop_back();
                 }
                 return ret;
             }
@@ -124,12 +125,7 @@ vector<string> BMI::get_doc_to_judge(uint32_t count=1){
 
 void BMI::add_to_judgment_list(const vector<int> &ids){
     lock_guard<mutex> lock(judgment_list_mutex);
-    judgment_queue_by_id.clear();
-    judgment_queue_by_rank.clear();
-    for(int i = 0; i < ids.size(); i++){
-        judgment_queue_by_id[ids[i]] = i;
-        judgment_queue_by_rank[i] = ids[i];
-    }
+    judgment_queue = ids;
 }
 
 void BMI::add_to_training_cache(int id, int judgment){
@@ -137,20 +133,10 @@ void BMI::add_to_training_cache(int id, int judgment){
     training_cache[id] = judgment;
 }
 
-void BMI::remove_from_judgment_list(int id){
-    lock_guard<mutex> lock(judgment_list_mutex);
-    auto it = judgment_queue_by_id.find(id);
-    if(it == judgment_queue_by_id.end())
-        return;
-    judgment_queue_by_rank.erase(it->second);
-    judgment_queue_by_id.erase(it);
-}
-
 void BMI::record_judgment_batch(vector<pair<string, int>> _judgments){
     for(const auto &judgment: _judgments){
         size_t id = documents->get_index(judgment.first);
         add_to_training_cache(id, judgment.second);
-        remove_from_judgment_list(id);
     }
 
     if(!async_mode){

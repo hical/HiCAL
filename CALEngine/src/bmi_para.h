@@ -11,7 +11,6 @@ class BMI_para:public BMI {
     private:
     Dataset *paragraphs;
     std::map<int, int> finished_judgments_para;
-    virtual void remove_from_judgment_list(int id);
 
     public:
     BMI_para(Seed seed,
@@ -27,6 +26,12 @@ class BMI_para:public BMI {
     Dataset *get_ranking_dataset() {return paragraphs;};
     vector<std::pair<string, float>> get_ranklist();
     std::vector<int> perform_training_iteration();
+
+    bool is_judged(int id) {
+        std::string para = (paragraphs->get_sf_sparse_vector(id)).doc_id;
+        id = documents->get_index(para.substr(0, para.find(".")));
+        return judgments.find(id) != judgments.end() || training_cache.find(id) != training_cache.end();
+    }
 };
 
 #endif // BMI_PARA_H

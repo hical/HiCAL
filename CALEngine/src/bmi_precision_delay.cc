@@ -23,7 +23,6 @@ void BMI_precision_delay::record_judgment_batch(std::vector<std::pair<std::strin
     for(const auto &judgment: _judgments){
         size_t id = documents->get_index(judgment.first);
         add_to_training_cache(id, judgment.second);
-        remove_from_judgment_list(id);
         tot+=1;
         if(judgment.second > 0)
             rel += 1;

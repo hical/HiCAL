@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <unordered_set>
 #include "bmi_para.h"
+#include "utils/utils.h"
 
 using namespace std;
 BMI_para::BMI_para(Seed _seed,
@@ -18,23 +19,6 @@ BMI_para::BMI_para(Seed _seed,
     paragraphs(_paragraphs)
 {
     perform_iteration();
-}
-
-// Inefficient as of now
-void BMI_para::remove_from_judgment_list(int doc_idx){
-    lock_guard<mutex> lock(judgment_list_mutex);
-    vector<int> keys_to_remove;
-    for(pair<int, int> id_rank: judgment_queue_by_id){
-        string para_id = paragraphs->get_sf_sparse_vector(id_rank.first).doc_id;
-        string doc_id = documents->get_sf_sparse_vector(doc_idx).doc_id;
-        if(para_id.find(doc_id) == 0){
-            keys_to_remove.push_back(id_rank.first);
-            judgment_queue_by_rank.erase(id_rank.second);
-        }
-    }
-
-    for(auto id: keys_to_remove)
-        judgment_queue_by_id.erase(id);
 }
 
 void BMI_para::record_judgment(string doc_id, int judgment){

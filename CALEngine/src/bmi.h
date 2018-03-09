@@ -42,8 +42,7 @@ class BMI{
     }state;
 
     // Stores an ordered list of documents to judge based on the classifier scores
-    std::map<int, int> judgment_queue_by_id;
-    std::map<int, int> judgment_queue_by_rank;
+    std::vector<int> judgment_queue;
 
     // rand() shouldn't be used because it is not thread safe
     std::mt19937 rand_generator;
@@ -77,9 +76,6 @@ class BMI{
     // Add to training_cache
     void add_to_training_cache(int id, int judgment);
 
-    // Remove document from judgment_list
-    virtual void remove_from_judgment_list(int id);
-
     // Handler for performing an iteration
     void perform_iteration();
     void perform_iteration_async();
@@ -96,6 +92,11 @@ class BMI{
 
     // Handler for performing a training iteration
     virtual std::vector<int> perform_training_iteration();
+
+    // Check if a given document is judged, lock training_cache_mutex before using this (not done here for efficiency purpose)
+    virtual bool is_judged(int id) {
+        return judgments.find(id) != judgments.end() || training_cache.find(id) != training_cache.end();
+    }
 
     // Get upto `count` number of documents from `judgment_list`
     virtual std::vector<std::string> get_doc_to_judge(uint32_t count);
