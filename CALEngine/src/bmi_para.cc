@@ -47,23 +47,16 @@ vector<int> BMI_para::perform_training_iteration(){
     }
 
     // Training
-    auto start = std::chrono::steady_clock::now();
-
-    SfWeightVector w = train();
-
-    auto weights = w.AsFloatVector();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Training finished in "<<duration.count()<<"ms"<<endl;
+    TIMER_BEGIN(training);
+    auto weights = train();
+    TIMER_END(training);
 
     // Scoring
-    start = std::chrono::steady_clock::now();
+    TIMER_BEGIN(rescoring);
     auto results = paragraphs->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 100),
                               finished_judgments_para);
-    duration = std::chrono::duration_cast<std::chrono::milliseconds> 
-        (std::chrono::steady_clock::now() - start);
-    cerr<<"Rescored "<<paragraphs->size()<<" documents in "<<duration.count()<<"ms"<<endl;
+    TIMER_END(rescoring);
 
     return results;
 }

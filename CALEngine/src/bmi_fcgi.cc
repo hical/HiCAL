@@ -393,26 +393,26 @@ int main(int argc, char **argv){
     }
 
     // Load docs
-    TIMER_BEGIN;
+    TIMER_BEGIN(documents_loader);
     cerr<<"Loading document features on memory"<<endl;
     if(CMD_LINE_STRINGS["--df"].size() > 0)
         documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]).get_all();
     else
         documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
     cerr<<"Read "<<documents->size()<<" docs"<<endl;
-    TIMER_END("documents loader");
+    TIMER_END(documents_loader);
 
     // Load para
     string para_features_path = CMD_LINE_STRINGS["--para-features"];
     if(para_features_path.length() > 0){
-        TIMER_BEGIN;
+        TIMER_BEGIN(paragraph_loader);
         cerr<<"Loading paragraph features on memory"<<endl;
         if(CMD_LINE_STRINGS["--df"].size() > 0)
             paragraphs = BinFeatureParser(para_features_path, "").get_all();
         else
             paragraphs = BinFeatureParser(para_features_path).get_all();
         cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
-        TIMER_END("paragraph loader");
+        TIMER_END(paragraph_loader);
     }
 
     FCGX_Init();
