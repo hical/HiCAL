@@ -4,7 +4,6 @@
 #include <random>
 #include <mutex>
 #include <set>
-#include "sofiaml/sofia-ml-methods.h"
 #include "bmi.h"
 
 class BMI_para:public BMI {

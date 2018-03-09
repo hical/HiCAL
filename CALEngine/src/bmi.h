@@ -6,7 +6,6 @@
 #include <set>
 #include <map>
 #include "dataset.h"
-#include "sofiaml/sf-weight-vector.h"
 
 typedef std::vector<std::pair<SfSparseVector, int>> Seed;
 class BMI{

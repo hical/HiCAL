@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include "sofiaml/sf-sparse-vector.h"
-#include "sofiaml/sf-weight-vector.h"
 
 static thread_local std::mt19937 rand_generator;
 
