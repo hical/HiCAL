@@ -54,7 +54,7 @@ def begin_session(session_id, seed_query, async=False, mode="doc", seed_document
         'judgments_per_iteration': str(judgments_per_iteration)
     }
     if len(seed_documents) > 0:
-        data['seed_documents'] = ','.join(['%s:%d' % (doc_id, rel) for doc_id, rel in seed_documents])
+        data['seed_judgments'] = ','.join(['%s:%d' % (doc_id, rel) for doc_id, rel in seed_documents])
 
     data = '&'.join(['%s=%s' % (k,v) for k,v in data.items()])
     r = requests.post(URL+'/begin', data=data)

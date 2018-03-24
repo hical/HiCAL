@@ -154,7 +154,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     }
 
     vector<string> doc_ids;
-    ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "." + seed_query.first);
+    ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first);
     while(!(doc_ids = bmi->get_doc_to_judge(1)).empty()){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi->record_judgment(doc_ids[0], judgment);
