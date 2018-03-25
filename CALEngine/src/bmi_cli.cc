@@ -220,7 +220,7 @@ int main(int argc, char **argv){
         bmi_type = BMI_REDUCED_RANKING;
     else if(CMD_LINE_INTS["--online-learning-refresh-period"] > 0)
         bmi_type = BMI_ONLINE_LEARNING;
-    else if(CMD_LINE_FLOATS["--precision-delay-delta"] > 0)
+    else if(CMD_LINE_FLOATS["--precision-delay-threshold"] > 0)
         bmi_type = BMI_PRECISION_DELAY;
     else if(CMD_LINE_FLOATS["--recency-weighting-param"] > 0)
         bmi_type = BMI_RECENCY_WEIGHTING;
