@@ -5,9 +5,11 @@
 
 class BMI_precision_delay:public BMI {
     protected:
-    float delta, noise_factor;
-    float cur_p;
-    float tot, rel;
+    float threshold;
+    int window;
+    std::queue<int> q;
+    int rel = 0;
+    int tot = 0;
     void record_judgment_batch(std::vector<std::pair<std::string, int>> _judgments);
 
     public:
@@ -17,8 +19,8 @@ class BMI_precision_delay:public BMI {
         int max_effort,
         int max_iterations,
         bool async_mode,
-        float delta,
-        float noise_factor);
+        float threshold,
+        int window);
 };
 
 #endif // BMI_PRECISION_DELAY_H
