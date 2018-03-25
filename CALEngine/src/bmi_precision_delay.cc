@@ -34,6 +34,7 @@ void BMI_precision_delay::record_judgment_batch(std::vector<std::pair<std::strin
 
     if(!async_mode){
         if(rel / (float)q.size() < threshold){
+            std::cerr<<"Refreshing P"<<std::endl;
             perform_iteration();
         }
     }else{
