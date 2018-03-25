@@ -129,8 +129,9 @@ vector<int> Dataset::rescore(const vector<float> &weights, int num_threads, int 
         x.join();
 
     vector<int> top_docs_list(top_docs->size());
+    int idx = 0;
     while(!top_docs->empty()){
-        top_docs_list[top_docs->size()-1] = (top_docs->top().second);
+        top_docs_list[idx++] = (top_docs->top().second);
         top_docs->pop();
     }
     delete top_docs;
