@@ -106,7 +106,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
-            1000, CMD_LINE_INTS["--reduced-ranking-refresh-period"]);
+            CMD_LINE_INTS["--reduced-ranking-subset-size"], CMD_LINE_INTS["--reduced-ranking-refresh-period"]);
         break;
 
         case BMI_ONLINE_LEARNING:
