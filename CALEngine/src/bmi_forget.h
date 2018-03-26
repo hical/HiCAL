@@ -1,28 +1,31 @@
-#ifndef BMI_RECENCY_WEIGHTING_H
-#define BMI_RECENCY_WEIGHTING_H
+#ifndef BMI_FORGET_H
+#define BMI_FORGET_H
 #include <random>
 #include <iostream>
 #include <algorithm>
 #include "bmi.h"
 #include "classifier.h"
 
-class BMI_recency_weighting:public BMI {
+class BMI_forget:public BMI {
     std::unordered_map<const SfSparseVector*, int> judgment_order;
-    const float max_relative_weight;
+    const int num_remember;
     int cur_time  = 0;
+    int full_train_period = -1;
+
     protected:
     virtual vector<float> train();
     public:
-    BMI_recency_weighting(Seed _seed,
+    BMI_forget(Seed _seed,
         Dataset *_documents,
         int _num_threads,
         int _judgments_per_iteration,
         int _max_effort,
         int _max_iterations,
         bool _async_mode,
-        float _max_relative_weight)
+        int _num_remember,
+        int _full_train_period)
     :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, false),
-    max_relative_weight(_max_relative_weight) {
+    num_remember(_num_remember), full_train_period(_full_train_period) {
         perform_iteration();
     }
 
@@ -33,7 +36,7 @@ class BMI_recency_weighting:public BMI {
     }
 };
 
-vector<float> BMI_recency_weighting::train(){
+vector<float> BMI_forget::train(){
     vector<const SfSparseVector*> positives, negatives;
     for(auto &judgment: seed){
         if(judgment.second > 0)
@@ -50,18 +53,19 @@ vector<float> BMI_recency_weighting::train(){
     }
 
     for(const std::pair<int, int> &judgment: judgments){
-        if(judgment.second > 0)
-            positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
-        else
-            negatives.push_back(&documents->get_sf_sparse_vector(judgment.first));
-    }
+        if((full_train_period != -1 && (cur_time-1) % full_train_period == 0)
+           || judgment_order[&documents->get_sf_sparse_vector(judgment.first)] > cur_time - num_remember) {
+                if(judgment.second > 0)
+                    positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
+                else
+                    negatives.push_back(&documents->get_sf_sparse_vector(judgment.first));
+        }
 
-    std::sort(positives.begin(), positives.end(), [this](const SfSparseVector *a, const SfSparseVector *b) -> bool {return this->judgment_order[a] < this->judgment_order[b];});
-    std::sort(negatives.begin()+100, negatives.end(), [this](const SfSparseVector *a, const SfSparseVector *b) -> bool {return this->judgment_order[a] < this->judgment_order[b];});
+    }
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
-    return LRPegasosWeightedRecencyClassifier(max_relative_weight).train(positives, negatives, documents->get_dimensionality());
+    return LRPegasosClassifier().train(positives, negatives, documents->get_dimensionality());
 }
 
-#endif // BMI_RECENCY_WEIGHTING_H
+#endif // BMI_FORGET_H

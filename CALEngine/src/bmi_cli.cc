@@ -8,6 +8,7 @@
 #include "bmi_online_learning.h"
 #include "bmi_precision_delay.h"
 #include "bmi_recency_weighting.h"
+#include "bmi_forget.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 
@@ -18,7 +19,8 @@ enum BMI_TYPE {
     BMI_REDUCED_RANKING,
     BMI_ONLINE_LEARNING,
     BMI_PRECISION_DELAY,
-    BMI_RECENCY_WEIGHTING
+    BMI_RECENCY_WEIGHTING,
+    BMI_FORGET
 };
 
 int get_judgment_stdin(string topic_id, string doc_id){
@@ -143,6 +145,18 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_FLOATS["--recency-weighting-param"]);
         break;
 
+        case BMI_FORGET:
+        bmi = make_unique<BMI_forget>(seed_query.second,
+            documents.get(),
+            CMD_LINE_INTS["--threads"],
+            CMD_LINE_INTS["--judgments-per-iteration"],
+            CMD_LINE_INTS["--max-effort"],
+            CMD_LINE_INTS["--num-iterations"],
+            CMD_LINE_INTS["--async-mode"],
+            CMD_LINE_INTS["--forget-remember-count"],
+            CMD_LINE_INTS["--forget-refresh-period"]);
+        break;
+
         default:
             cerr<<"Invalid bmi_type"<<endl;
             return;
@@ -196,6 +210,8 @@ int main(int argc, char **argv){
     AddFlag("--precision-delay-threshold", "Set threshold for precision delay", float(0));
     AddFlag("--precision-delay-window", "Set window size for precision delay", int(10));
     AddFlag("--recency-weighting-param", "Set parameter for recency weighting", float(-1));
+    AddFlag("--forget-remember-count", "Number of documents to remember", int(-1));
+    AddFlag("--forget-refresh-period", "Period for full training", int(-1));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs", int(1));
@@ -224,6 +240,9 @@ int main(int argc, char **argv){
         bmi_type = BMI_PRECISION_DELAY;
     else if(CMD_LINE_FLOATS["--recency-weighting-param"] > 0)
         bmi_type = BMI_RECENCY_WEIGHTING;
+    else if(CMD_LINE_INTS["--forget-remember-count"] > 0){
+        bmi_type = BMI_FORGET;
+    }
 
 
     // Load docs
