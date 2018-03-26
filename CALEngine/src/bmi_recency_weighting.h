@@ -57,6 +57,7 @@ vector<float> BMI_recency_weighting::train(){
     }
 
     std::sort(positives.begin(), positives.end(), [this](const SfSparseVector *a, const SfSparseVector *b) -> bool {return this->judgment_order[a] < this->judgment_order[b];});
+    std::sort(negatives.begin()+100, negatives.end(), [this](const SfSparseVector *a, const SfSparseVector *b) -> bool {return this->judgment_order[a] < this->judgment_order[b];});
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
