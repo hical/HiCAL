@@ -13,14 +13,15 @@
 #include "utils/feature_parser.h"
 
 using namespace std;
-enum BMI_TYPE {
-    BMI_DOC,
-    BMI_PARA,
-    BMI_REDUCED_RANKING,
-    BMI_ONLINE_LEARNING,
-    BMI_PRECISION_DELAY,
-    BMI_RECENCY_WEIGHTING,
-    BMI_FORGET
+
+vector<string> BMI_TYPES = {
+    "BMI_DOC",
+    "BMI_PARA",
+    "BMI_PARTIAL_RANKING",
+    "BMI_ONLINE_LEARNING",
+    "BMI_PRECISION_DELAY",
+    "BMI_RECENCY_WEIGHTING",
+    "BMI_FORGET"
 };
 
 int get_judgment_stdin(string topic_id, string doc_id){
@@ -75,11 +76,11 @@ map<string, Seed> generate_seed_queries(string fname, const Dataset &dataset){
     return seeds;
 }
 
-void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs, BMI_TYPE bmi_type){
+void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs){
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
-    switch(bmi_type){
-        case BMI_DOC:
+    const string &mode = CMD_LINE_STRINGS["--mode"];
+    if(mode == "BMI_DOC"){
         bmi = make_unique<BMI>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
@@ -87,9 +88,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"]);
-        break;
-
-        case BMI_PARA:
+    } else if(mode == "BMI_PARA"){
         bmi = make_unique<BMI_para>(seed_query.second,
             documents.get(),
             paragraphs.get(),
@@ -98,9 +97,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"]);
-        break;
-
-        case BMI_REDUCED_RANKING:
+    } else if(mode == "BMI_PARTIAL_RANKING"){
         bmi = make_unique<BMI_reduced_ranking>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
@@ -108,10 +105,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
-            CMD_LINE_INTS["--reduced-ranking-subset-size"], CMD_LINE_INTS["--reduced-ranking-refresh-period"]);
-        break;
-
-        case BMI_ONLINE_LEARNING:
+            CMD_LINE_INTS["--partial-ranking-subset-size"], CMD_LINE_INTS["--partial-ranking-refresh-period"]);
+    } else if(mode == "BMI_ONLINE_LEARNING"){
         bmi = make_unique<BMI_online_learning>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
@@ -121,9 +116,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--online-learning-refresh-period"],
             CMD_LINE_FLOATS["--online-learning-delta"]);
-        break;
-
-        case BMI_PRECISION_DELAY:
+    } else if(mode == "BMI_PRECISION_DELAY"){
         bmi = make_unique<BMI_precision_delay>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
@@ -132,9 +125,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_FLOATS["--precision-delay-threshold"],
             CMD_LINE_INTS["--precision-delay-window"]);
-        break;
-
-        case BMI_RECENCY_WEIGHTING:
+    } else if(mode == "BMI_RECENCY_WEIGHTING"){
         bmi = make_unique<BMI_recency_weighting>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
@@ -143,9 +134,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_FLOATS["--recency-weighting-param"]);
-        break;
-
-        case BMI_FORGET:
+    } else if(mode == "BMI_FORGET"){
         bmi = make_unique<BMI_forget>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
@@ -155,11 +144,9 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--forget-remember-count"],
             CMD_LINE_INTS["--forget-refresh-period"]);
-        break;
-
-        default:
-            cerr<<"Invalid bmi_type"<<endl;
-            return;
+    } else {
+        cerr<<"Invalid bmi_type"<<endl;
+        return;
     }
 
     auto get_judgment = get_judgment_stdin;
@@ -183,41 +170,95 @@ void SanityCheck(){
         exit(0);
     }
 
+    const string &mode = CMD_LINE_STRINGS["--mode"];
+    if(find(BMI_TYPES.begin(), BMI_TYPES.end(), mode) == BMI_TYPES.end()){
+        cerr<<"Invalid --mode "+mode<<endl;
+        exit(1);
+    }
+
     if(CMD_LINE_STRINGS["--doc-features"].length() == 0){
-        cerr<<"Required argument --doc-features missing"<<endl;
+        cerr<<"--doc-features missing"<<endl;
         exit(1);
     }
 
     if(CMD_LINE_STRINGS["--query"].length() == 0){
-        cerr<<"Required argument --query missing"<<endl;
+        cerr<<"--query missing"<<endl;
         exit(1);
+    }
+
+    if(mode == "BMI_FORGET"){
+        if(CMD_LINE_INTS["--forget-remember-count"] < 0){
+            cerr<<"non-negative --forget-remember-count required"<<endl;
+            exit(1);
+        }
+    } else if (mode == "BMI_PARA") {
+        if(CMD_LINE_STRINGS["--para-features"] == ""){
+            cerr<<"--para-features required"<<endl;
+            exit(1);
+        }
+    } else if (mode == "BMI_PRECISION_DELAY") {
+        if(CMD_LINE_INTS["--precision-delay-window"] < 1){
+            cerr<<"positive --precision-delay-window required"<<endl;
+            exit(1);
+        }
+    } else if (mode == "BMI_RECENCY_WEIGHTING") {
+        if(CMD_LINE_FLOATS["--recency-weighting-param"] < 1){
+            cerr<<"--recency-weighting-param >= 1 required"<<endl;
+            exit(1);
+        }
+    } else if (mode == "BMI_PARTIAL_RANKING") {
+        if(CMD_LINE_INTS["--partial-ranking-subset-size"] <= 0){
+            cerr<<"positive --partial-ranking-subset-size required"<<endl;
+            exit(1);
+        }
+        if(CMD_LINE_INTS["--partial-ranking-refresh-period"] <= 0){
+            cerr<<"positive --partial-ranking-refresh-period required"<<endl;
+            exit(1);
+        }
+        if(CMD_LINE_INTS["--partial-ranking-subset-size"] < CMD_LINE_INTS["--partial-ranking-refresh-period"]){
+            cerr<<"--partial-ranking-subset-size should be greater or equal to --partial-ranking-refresh-period"<<endl;
+            exit(1);
+        }
+    } else if (mode == "BMI_ONLINE_LEARNING") {
+        if(CMD_LINE_INTS["--online-learning-refresh-period"] < 0) {
+            cerr<<"non-negative --online-learning-refresh-period required"<<endl;
+            exit(1);
+        }
     }
 
 }
 
+string get_help_mode_string(){
+    string ret = "Set strategy: (default) ";
+    for(string &mode: BMI_TYPES){
+        ret += mode + ", ";
+    }
+    return ret.substr(0, ret.size() - 2);
+}
+
 int main(int argc, char **argv){
+    AddFlag("--mode", get_help_mode_string().c_str(), string("BMI_DOC"));
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
-    AddFlag("--para-features", "Path of the file with list of paragraph features", string(""));
-    AddFlag("--query", string("Path of the file with queries (odd lines containing topic-id and even lines containing")+\
-            string("respective query string)"), string(""));
+    AddFlag("--para-features", "Path of the file with list of paragraph features (BMI_PARA)", string(""));
+    AddFlag("--query", string("Path of the file with queries (one seed per line; each line is <topic_id> <rel> <string>; can have multiple seeds per topic)"), string(""));
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
-    AddFlag("--num-iterations", "Set max number of training iterations", int(-1));
-    AddFlag("--max-effort", "Set max effort", int(-1));
-    AddFlag("--reduced-ranking-subset-size", "Set subset size for reduced ranking", int(0));
-    AddFlag("--reduced-ranking-refresh-period", "Set refresh period for reduced ranking", int(0));
-    AddFlag("--online-learning-refresh-period", "Set refresh period for online learning", int(0));
-    AddFlag("--online-learning-delta", "Set delta for online learning", float(0.002));
-    AddFlag("--precision-delay-threshold", "Set threshold for precision delay", float(0));
-    AddFlag("--precision-delay-window", "Set window size for precision delay", int(10));
-    AddFlag("--recency-weighting-param", "Set parameter for recency weighting", float(-1));
-    AddFlag("--forget-remember-count", "Number of documents to remember", int(-1));
-    AddFlag("--forget-refresh-period", "Period for full training", int(-1));
+    AddFlag("--num-iterations", "Set max number of refresh iterations", int(-1));
+    AddFlag("--max-effort", "Set max effort (number of judgments)", int(-1));
+    AddFlag("--partial-ranking-subset-size", "Set subset size for partial ranking (BMI_PARTIAL_RANKING)", int(0));
+    AddFlag("--partial-ranking-refresh-period", "Set refresh period for partial ranking (BMI_PARTIAL_RANKING)", int(0));
+    AddFlag("--online-learning-refresh-period", "Set refresh period for online learning (BMI_ONLINE_LEARNING)", int(0));
+    AddFlag("--online-learning-delta", "Set delta for online learning (BMI_ONLINE_LEARNING)", float(0.002));
+    AddFlag("--precision-delay-threshold", "Set threshold for precision delay (BMI_PRECISION_DELAY)", float(0));
+    AddFlag("--precision-delay-window", "Set window size for precision delay (BMI_PRECISION_DELAY)", int(10));
+    AddFlag("--recency-weighting-param", "Set parameter for recency weighting (BMI_RECENCY_WEIGHTING)", float(-1));
+    AddFlag("--forget-remember-count", "Number of documents to remember (BMI_FORGET)", int(-1));
+    AddFlag("--forget-refresh-period", "Period for full training (BMI_FORGET)", int(-1));
     AddFlag("--qrel", "Use the qrel file for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
-    AddFlag("--jobs", "Number of concurrent jobs", int(1));
+    AddFlag("--jobs", "Number of concurrent jobs (topics)", int(1));
     AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
-    AddFlag("--judgment-logpath", "Path to log judgments", string("./judgments.list"));
-    AddFlag("--df", "Path of the file with list of terms and their document frequencies", string(""));
+    AddFlag("--judgment-logpath", "Path to log judgments. Specify a directory within which topic-specific logs will be generated.", string("./judgments.list"));
+    AddFlag("--df", "Path of the file with list of terms and their document frequencies. The file contains space-separated word and df on every line. Specify only when df information is not encoded in the document features file.", string(""));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
@@ -227,23 +268,6 @@ int main(int argc, char **argv){
     if(CMD_LINE_STRINGS["--qrel"].length() > 0){
         qrel = Qrel(CMD_LINE_STRINGS["--qrel"]);
     }
-
-    // Determine bmi type
-    BMI_TYPE bmi_type = BMI_DOC;
-    if(CMD_LINE_STRINGS["--para-features"].length() > 0)
-        bmi_type = BMI_PARA;
-    else if(CMD_LINE_INTS["--reduced-ranking-subset-size"] > 0)
-        bmi_type = BMI_REDUCED_RANKING;
-    else if(CMD_LINE_INTS["--online-learning-refresh-period"] > 0)
-        bmi_type = BMI_ONLINE_LEARNING;
-    else if(CMD_LINE_FLOATS["--precision-delay-threshold"] > 0)
-        bmi_type = BMI_PRECISION_DELAY;
-    else if(CMD_LINE_FLOATS["--recency-weighting-param"] > 0)
-        bmi_type = BMI_RECENCY_WEIGHTING;
-    else if(CMD_LINE_INTS["--forget-remember-count"] > 0){
-        bmi_type = BMI_FORGET;
-    }
-
 
     // Load docs
     unique_ptr<Dataset> documents = nullptr;
@@ -278,7 +302,7 @@ int main(int argc, char **argv){
     // Todo: Better job management
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
-        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs), bmi_type));
+        jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
         if(jobs.size() == CMD_LINE_INTS["--jobs"]){
             for(auto &t: jobs)
                 t.join();
