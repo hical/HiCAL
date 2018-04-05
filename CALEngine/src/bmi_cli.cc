@@ -186,6 +186,11 @@ void SanityCheck(){
         exit(1);
     }
 
+    if(CMD_LINE_INTS["--training-iterations"] < 0){
+        cerr<<"non-negative --training-iterations required"<<endl;
+        exit(1);
+    }
+
     if(mode == "BMI_FORGET"){
         if(CMD_LINE_INTS["--forget-remember-count"] < 0){
             cerr<<"non-negative --forget-remember-count required"<<endl;
@@ -244,6 +249,7 @@ int main(int argc, char **argv){
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
     AddFlag("--num-iterations", "Set max number of refresh iterations", int(-1));
     AddFlag("--max-effort", "Set max effort (number of judgments)", int(-1));
+    AddFlag("--training-iterations", "Set number of training iterations", int(200000));
     AddFlag("--partial-ranking-subset-size", "Set subset size for partial ranking (BMI_PARTIAL_RANKING)", int(0));
     AddFlag("--partial-ranking-refresh-period", "Set refresh period for partial ranking (BMI_PARTIAL_RANKING)", int(0));
     AddFlag("--online-learning-refresh-period", "Set refresh period for online learning (BMI_ONLINE_LEARNING)", int(0));
