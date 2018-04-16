@@ -41,7 +41,7 @@ EOF
 # BMI_PARTIAL_RANKING
 while read k s; do
     echo "Starting BMI_PARTIAL_RANKING (k=$k,s=$s)..."
-    SUBRESULT_DIR=$RESULT_DIR/static_batch/k=$k,s=$s
+    SUBRESULT_DIR=$RESULT_DIR/partial_batch/k=$k,s=$s
     mkdir -p "$SUBRESULT_DIR"
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
