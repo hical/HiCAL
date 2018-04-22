@@ -12,8 +12,8 @@ import environ
 import raven
 from django.contrib.messages import constants as messages
 
-ROOT_DIR = environ.Path(__file__) - 3  # (treccoreweb/config/settings/base.py - 3 = treccoreweb/)
-APPS_DIR = ROOT_DIR.path('treccoreweb')
+ROOT_DIR = environ.Path(__file__) - 3  # (treccoreweb/config/settings/base.py - 3 = treccoreweb/) TODO: Change to new project name
+APPS_DIR = ROOT_DIR.path('treccoreweb') # TODO: Change to new project name
 
 # Load operating system environment variables and then prepare to use them
 env = environ.Env()
@@ -58,7 +58,7 @@ THIRD_PARTY_APPS = [
 # Apps specific for this project go here.
 LOCAL_APPS = [
     # custom users app
-    'treccoreweb.users.apps.UsersConfig',
+    'treccoreweb.users.apps.UsersConfig',       # TODO: Change to new project name
     'treccoreweb.progress',
     'treccoreweb.CAL',
     'treccoreweb.topic',
@@ -122,7 +122,7 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///treccoreweb'),
+    'default': env.db('DATABASE_URL', default='postgres:///treccoreweb'),  #  TODO: Change to new project name
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -239,18 +239,18 @@ PASSWORD_HASHERS = [
 # ------------------------------------------------------------------------------
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # AUTHENTICATION CONFIGURATION
@@ -323,6 +323,7 @@ MESSAGE_TAGS = {
 }
 
 
+# TODO: Remove
 # Timer settings
 # Inactivity trigger time (in seconds)
 INACTIVE_TRIGGER_TIME = 60
@@ -343,7 +344,8 @@ PARA_URL = 'http://nginx:9000/para'
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 
-
+# If you would like to use sentry, uncomment the following and make sure your
+# secret key is in the '.env' file.
 # # RAVEN
 # # ------------------------------------------------------------------------------
 # RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')
