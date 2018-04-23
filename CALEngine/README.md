@@ -52,6 +52,45 @@ Command line flag options:
       --recency-weighting-param  Set parameter for recency weighting (BMI_RECENCY_WEIGHTING)
 ```
 
+- The document frequency data is encoded within the document features bin file.
+`--df` shouldn't be used unless you are using the old document feature format.
+
+### Corpus Parser
+
+This tool generates document features of a given corpus.
+
+The tool takes as input an archived corpus `tar.gz`. Each file in the corpus is treated
+as a separate document with the name of the file (excluding the directories) as its ID.
+The files are processed as plaintext document. This gives users freedom to clean and
+form corpuses in different ways. In order to use the `BMI_PARA` mode in the main tool,
+the user needs to split each document such that each new document is a single paragraph.
+The name of these paragraph files should be "<doc-id>.<para-id>" (this is used by the tool
+to get the parent document for a given paragraph). For this reason, avoid using "." in
+the "<doc-id>".
+
+`--type` as `svmlight` is not used by the main tool and should be used for debugging purposes.
+`--out-df` only works when `--type` is `svmlight`.
+
+The bin output format begins with the document frequency data followed by the document feature
+data. The document frequency data begins with a `uint32_t` specifying the number of `dfreq` records which follow.
+Each `dfreq` record begins with a null terminated string (word) followed by a `uint32_t` document frequency.
+The document feature data begins with a `uint32_t` specifying the number of `dfeat` records which follow.
+Each `dfeat` record begins with a null terminated string (document ID) followed by a `feature_list`. `feature_list`
+begins with a `uint32_t` specifying the number of `feature_pair` which follow. Each `feature_pair`
+is a `uint32_t` feature ID followed by a `float` feature weight.
+
+
+```
+$ make corpus_parser
+$ ./corpus_parser --help
+Command line flag options: 
+      --help                Show Help
+      --in                  Input corpus archive
+      --out                 Output feature file
+      --out-df              Output document frequency file
+      --type                Output file format:  bin (default) or svmlight
+```
+
 ### FastCGI based web server
 ```
 $ make bmi_fcgi
