@@ -1,5 +1,12 @@
 # C++ Implementation of [Auto-TAR BMI](http://plg.uwaterloo.ca/~gvcormac/total-recall/)
 
+### Requirements
+
+* libfcgi
+* libarchive
+* g++
+* make
+
 ### Command Line Tool
 
 ```
