@@ -1,8 +1,8 @@
 <projectname>
 ===========
 
-<projectname> is high-recall retrieval platform that supports different retrieval methods.
-This repo contains the the platform server, which is responsible for displaying the document assessment interfaces to the user,
+<projectname> is a high-recall retrieval platform the supports different retrieval methods.
+This repository contains the platform server which is responsible for displaying the document assessment interfaces to the user,
 configuring the system, and communicating requests and responses to and from each retrieval component.
 
 
@@ -54,10 +54,10 @@ For convenience, you can keep your normal user logged in on Chrome and your supe
 A superuser can access the platform's admin page by going to ``/admin`` or whatever is set in the settings_.
 
 
-Deployment
+License
 ----------
 
-The following details how to deploy this application.
+|gpl|_
 
-
-
+.. |gpl| image:: http://www.gnu.org/graphics/gplv3-127x51.png
+.. _gpl: http://www.gnu.org/licenses/gpl.html

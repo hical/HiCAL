@@ -1,7 +1,4 @@
-from config.latinSquare.treatments import all_treatments
-
 from django import forms
-from django.contrib.postgres.forms import JSONField
 
 
 class SignupForm(forms.Form):
