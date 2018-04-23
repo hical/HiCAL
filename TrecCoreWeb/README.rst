@@ -51,7 +51,7 @@ Setting Up Your Users
     $ python manage.py createsuperuser
 
 For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
-A superuser can access the platform's admin page by going to ``/admin'' or whatever is set in the settings_.
+A superuser can access the platform's admin page by going to ``/admin`` or whatever is set in the settings_.
 
 
 Deployment

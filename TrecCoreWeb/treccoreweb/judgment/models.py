@@ -29,6 +29,7 @@ class Judgement(models.Model):
     task = models.ForeignKey(Task)
     query = models.TextField(null=True,
                              blank=True)
+    # TODO: Change judgment to use a single ChoiceField
     # a judgment can have null fields if its only been viewed but not judged
     highlyRelevant = models.NullBooleanField()
     nonrelevant = models.NullBooleanField()

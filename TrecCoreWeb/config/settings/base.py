@@ -64,7 +64,6 @@ LOCAL_APPS = [
     'treccoreweb.topic',
     'treccoreweb.judgment',
     'treccoreweb.search',
-    'treccoreweb.stats',
     'treccoreweb.iterative',
     'treccoreweb.archive'
 ]
@@ -316,7 +315,7 @@ LOGGING = {
 }
 
 
-# DJANGO MESSIGIN
+# DJANGO MESSIGING
 # ------------------------------------------------------------------------------
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
@@ -346,6 +345,7 @@ PARA_URL = 'http://nginx:9000/para'
 
 # If you would like to use sentry, uncomment the following and make sure your
 # secret key is in the '.env' file.
+
 # # RAVEN
 # # ------------------------------------------------------------------------------
 # RAVEN_SECRET_KEY = env('RAVEN_SECRET_KEY')

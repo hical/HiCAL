@@ -182,8 +182,6 @@
 
 {% block extra_scripts %}
     <script src="{% static 'js/Queue.src.js' %}"></script>
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>#}
-{#    <script src="{% static 'js/jquery.mark.min.js' %}"></script>#}
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/CAL.js' %}"></script>
     <script src="{% static 'js/moment.min.js' %}"></script>
@@ -574,8 +572,6 @@
                 'content': current_doc_content
             }
         }
-
-
 
         var list = latestJudgedDocsQueue.getList();
         var doc = list[doc_index];

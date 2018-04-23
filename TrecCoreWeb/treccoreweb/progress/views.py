@@ -63,6 +63,8 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         return super(Home, self).get(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        success_message = 'Your topic has been initialized. ' \
+                          'Choose a platform from the left sidebar to start judging.'
         if 'submit-task-form' in request.POST:
             form = TaskForm(request.POST)
             if form.is_valid():
@@ -73,9 +75,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 self.request.user.save()
                 messages.add_message(request,
                                      messages.SUCCESS,
-                                     'Your topic has been initialized. '
-                                     'Choose a platform from the left sidebar '
-                                     'to start judging.')
+                                     success_message)
         elif 'submit-topic-form' in request.POST:
             form = TopicForm(request.POST)
             if form.is_valid():
@@ -87,9 +87,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 )
                 messages.add_message(request,
                                      messages.SUCCESS,
-                                     'Your topic has been initialized. '
-                                     'Choose a platform from the left sidebar '
-                                     'to start judging.')
+                                     success_message)
                 self.request.user.current_task = task
                 self.request.user.save()
         else:
@@ -244,6 +242,7 @@ class PracticeCompleteView(views.LoginRequiredMixin, generic.TemplateView):
         adapter = get_adapter(self.request)
         adapter.logout(self.request)
         return HttpResponseRedirect(reverse_lazy('account_login'))
+
 
 class PracticeView(generic.TemplateView):
 

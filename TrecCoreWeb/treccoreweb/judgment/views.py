@@ -187,7 +187,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         if isFromCAL:
             context[u"next_docs"] = []
-            # mark relevant (used to be "on topic") documents as relevant only to CAL.
+            # mark relevant documents as `relevant` only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 next_patch, top_terms = CALFunctions.send_judgment(

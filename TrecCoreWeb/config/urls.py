@@ -25,8 +25,6 @@ urlpatterns = [
     url(r'^topic/', include('treccoreweb.topic.urls', namespace='topic')),
     url(r'^judgment/', include('treccoreweb.judgment.urls', namespace='judgment')),
     url(r'^archive/', include('treccoreweb.archive.urls', namespace='archive')),
-    url(r'^stats/', include('treccoreweb.stats.urls', namespace='stats')),
-
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
