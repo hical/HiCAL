@@ -26,7 +26,7 @@ Command line flag options:
       --threads             Number of threads to use for scoring
       --doc-features        Path of the file with list of document features
       --para-features       Path of the file with list of paragraph features (BMI_PARA)
-      --qrel                Use the qrel file for judgment
+      --qrel                Qrel file to use for judgment
       --max-effort          Set max effort (number of judgments)
       --num-iterations      Set max number of refresh iterations
       --training-iterations  Set number of training iterations

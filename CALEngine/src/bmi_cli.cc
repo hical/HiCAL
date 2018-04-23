@@ -259,7 +259,7 @@ int main(int argc, char **argv){
     AddFlag("--recency-weighting-param", "Set parameter for recency weighting (BMI_RECENCY_WEIGHTING)", float(-1));
     AddFlag("--forget-remember-count", "Number of documents to remember (BMI_FORGET)", int(-1));
     AddFlag("--forget-refresh-period", "Period for full training (BMI_FORGET)", int(-1));
-    AddFlag("--qrel", "Use the qrel file for judgment", string(""));
+    AddFlag("--qrel", "Qrel file to use for judgment", string(""));
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs (topics)", int(1));
     AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
