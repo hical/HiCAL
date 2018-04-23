@@ -13,31 +13,46 @@ This repo contains the implementation of High-Recall Information Retrieval syste
 
 Our model was evaluated on the standard TREC dataset: TREC Core 2017 Track. 
 
-Getting Started
+For component specific details, check the README in their respective directory.
+
+Requirements
 -----------
 
-``1.`` Checkout our repo:
-```
-git clone https://github.com/HTAustin/CAL-P
+* docker
+* docker-compose
+
+Usage
+-----------
+
+```bash
+# Checkout the repo
+$ git clone https://github.com/HTAustin/CAL-P.git
+$ cd CAL-P
+
+# build and run docker containers
+$ docker-compose -f CoreTrec.yml build
+$ docker-compose -f CoreTrec.yml up -d
+$ docker-compose -f CoreTrec.yml start
+
 ```
 
-``2.`` Deploy the CAL back-end:
-```
-$ cd CALEngine/
-``` 
+Configuration
+-----------
 
-``3.`` Deploy the front-end:
-```
-$ cd TrecCoreWeb/
-``` 
+Most of the configuration can be performed through these two files
 
-Running
---------
-``1.`` There are several command line parameters to specify for running our model:
-```
--dataset, the dataset you want to evaluate 
-```
+#### config/nginx/nginx.conf
 
+This files controls the nginx server. By default, the CAL is accessed through port 9001
+and the web interface is accessed through port 9000. These ports are exposed to 
+the outside world by the docker (specified in `CoreTrec.yml`). In this repo, we
+use the same nginx instance to serve document and paragraphs to the web interface.
+
+#### CoreTrec.yml
+
+- CAL: `./data` is mounted to the volume `/data` which is meant to be used the `bmi_fcgi`. Keep document features
+and related files over there. Modify `command` field if required.
+- nginx: the container uses `config/nginx/nginx.conf` as the config. Make changes to the volumes as required.
 
 License
 --------
