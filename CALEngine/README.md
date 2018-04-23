@@ -6,6 +6,7 @@
 * libarchive
 * g++
 * make
+* spawn-fcgi (to run `bmi_fcgi`)
 
 ### Command Line Tool
 
