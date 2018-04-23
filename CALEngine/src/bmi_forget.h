@@ -9,7 +9,8 @@
 class BMI_forget:public BMI {
     std::unordered_map<const SfSparseVector*, int> judgment_order;
     const int num_remember;
-    int cur_time  = 0;
+    int cur_time_rel  = 0;
+    int cur_time_nonrel  = 0;
     int full_train_period = -1;
 
     protected:
@@ -31,7 +32,10 @@ class BMI_forget:public BMI {
 
     virtual void record_judgment(std::string doc_id, int judgment){
         size_t id = documents->get_index(doc_id);
-        judgment_order[&documents->get_sf_sparse_vector(id)] = ++cur_time;
+        if(judgment > 0)
+            judgment_order[&documents->get_sf_sparse_vector(id)] = ++cur_time_rel;
+        else
+            judgment_order[&documents->get_sf_sparse_vector(id)] = ++cur_time_nonrel;
         record_judgment_batch({{doc_id, judgment}});
     }
 };
@@ -52,13 +56,17 @@ vector<float> BMI_forget::train(){
         negatives.push_back(&documents->get_sf_sparse_vector(idx));
     }
 
+    int cur_time = cur_time_rel + cur_time_nonrel;
+    bool full_train = (full_train_period != -1 && (cur_time-1) % full_train_period == 0);
+
     for(const std::pair<int, int> &judgment: judgments){
-        if((full_train_period != -1 && (cur_time-1) % full_train_period == 0)
-           || judgment_order[&documents->get_sf_sparse_vector(judgment.first)] > cur_time - num_remember) {
-                if(judgment.second > 0)
-                    positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
-                else
-                    negatives.push_back(&documents->get_sf_sparse_vector(judgment.first));
+        if(judgment.second > 0){
+            if(full_train || judgment_order[&documents->get_sf_sparse_vector(judgment.first)] > cur_time_rel - num_remember)
+                positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
+        }
+        else{
+            if(full_train || judgment_order[&documents->get_sf_sparse_vector(judgment.first)] > cur_time_nonrel - num_remember)
+                negatives.push_back(&documents->get_sf_sparse_vector(judgment.first));
         }
 
     }
