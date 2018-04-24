@@ -91,38 +91,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.found_ctrl_f_terms_in_full_doc = found_ctrl_f_terms_in_full_doc
             exists.save()
 
-            log_body = {
-                "user": self.request.user.username,
-                "client_time": client_time,
-                "result": {
-                    "message": Judgement.LOGGING_MESSAGES.get("update", None),
-                    "action": "update",
-                    "doc_judgment": {
-                        "doc_id": doc_id,
-                        "doc_title": doc_title,
-                        "topic_number": self.request.user.current_task.topic.number,
-                        "session": str(self.request.user.current_task.uuid),
-                        "query": query,
-                        "highlyRelevant": highlyRelevant,
-                        "nonrelevant": nonrelevant,
-                        "relevant": relevant,
-                        "isFromCAL": isFromCAL,
-                        "isFromSearch": isFromSearch,
-                        "isFromSearchModal": isFromSearchModal,
-                        "isFromIterative": isFromIterative,
-                        "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard,
-                        "timeVerbose": timeVerbose,
-                        "search_query": search_query,
-                        "ctrl_f_terms_input": ctrl_f_terms_input,
-                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
-                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
-                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
-                    }
-                }
-            }
-
-            logger.info("{}".format(json.dumps(log_body)))
         else:
             Judgement.objects.create(
                 user=self.request.user,
@@ -148,39 +116,6 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 found_ctrl_f_terms_in_summary=found_ctrl_f_terms_in_summary,
                 found_ctrl_f_terms_in_full_doc=found_ctrl_f_terms_in_full_doc
             )
-
-            log_body = {
-                "user": self.request.user.username,
-                "client_time": client_time,
-                "result": {
-                    "message": Judgement.LOGGING_MESSAGES.get("create", None),
-                    "action": "create",
-                    "doc_judgment": {
-                        "doc_id": doc_id,
-                        "doc_title": doc_title,
-                        "topic_number": self.request.user.current_task.topic.number,
-                        "session": str(self.request.user.current_task.uuid),
-                        "query": query,
-                        "highlyRelevant": highlyRelevant,
-                        "nonrelevant": nonrelevant,
-                        "relevant": relevant,
-                        "isFromCAL": isFromCAL,
-                        "isFromSearch": isFromSearch,
-                        "isFromSearchModal": isFromSearchModal,
-                        "isFromIterative": isFromIterative,
-                        "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard,
-                        "timeVerbose": timeVerbose,
-                        "search_query": search_query,
-                        "ctrl_f_terms_input": ctrl_f_terms_input,
-                        "found_ctrl_f_terms_in_title": found_ctrl_f_terms_in_title,
-                        "found_ctrl_f_terms_in_summary": found_ctrl_f_terms_in_summary,
-                        "found_ctrl_f_terms_in_full_doc": found_ctrl_f_terms_in_full_doc
-                    }
-                }
-            }
-
-            logger.info("[{}]".format(json.dumps(log_body)))
 
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
         error_message = None
@@ -305,24 +240,6 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.timeVerbose.append(timeVerbose)
             exists.save()
 
-            log_body = {
-                "user": self.request.user.username,
-                "client_time": client_time,
-                "result": {
-                    "message": Judgement.LOGGING_MESSAGES.get("update", None),
-                    "action": "update - no judgment",
-                    "doc_judgment": {
-                        "doc_id": doc_id,
-                        "doc_title": doc_title,
-                        "topic_number": self.request.user.current_task.topic.number,
-                        "session": str(self.request.user.current_task.uuid),
-                        "query": query,
-                        "timeVerbose": timeVerbose,
-                    }
-                }
-            }
-
-            logger.info("{}".format(json.dumps(log_body)))
         else:
             Judgement.objects.create(
                 user=self.request.user,
@@ -343,25 +260,6 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 fromKeyboard=False,
                 timeVerbose=[timeVerbose],
             )
-
-            log_body = {
-                "user": self.request.user.username,
-                "client_time": client_time,
-                "result": {
-                    "message": Judgement.LOGGING_MESSAGES.get("create", None),
-                    "action": "create",
-                    "doc_judgment": {
-                        "doc_id": doc_id,
-                        "doc_title": doc_title,
-                        "topic_number": self.request.user.current_task.topic.number,
-                        "session": str(self.request.user.current_task.uuid),
-                        "query": query,
-                        "timeVerbose": timeVerbose
-                    }
-                }
-            }
-
-            logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your no judgment on {} has been received!".format(doc_id)}
 

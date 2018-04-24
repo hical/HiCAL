@@ -112,18 +112,6 @@ class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u"pag_file and page_title"}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": "{} page visit".format(page_file),
-                "page_visit": True,
-                "page_file": page_file,
-                "page_title": page_title
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
-
         context = {u"message": u"Your visit has been recorded"}
         return self.render_json_response(context)
 
@@ -144,17 +132,6 @@ class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u"extra_context and search_field_value"}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": "Ctrl+f event",
-                "extra_context": extra_context,
-                "searchfield_input": search_field_value,
-                "page_title": page_title
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your event has been recorded"}
         return self.render_json_response(context)
@@ -179,20 +156,6 @@ class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u" page_title and search bar value."}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": PROGRESS_LOGGING_MESSAGES.get("find_keystroke", None),
-                "character": character,
-                "search_bar_value": search_bar_value,
-                "isSearchbarFocused": isSearchbarFocused,
-                'page_title': page_title,
-                "doc_id": doc_id
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
-
         context = {u"message": u"Your visit has been recorded."}
         return self.render_json_response(context)
 
@@ -216,19 +179,6 @@ class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             error_dict = {u"message": u"your input must include client_time, "
                                       u"message, ... etc"}
             return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "action": action,
-                "message": message,
-                "page_title": page_title,
-                "extra_context": extra_context,
-            }
-        }
-
-        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your log message with action '{}' "
                                u"has been logged.".format(action)}

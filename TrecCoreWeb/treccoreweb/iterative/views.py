@@ -52,20 +52,6 @@ class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u"message, ... etc"}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "action": action,
-                "message": message,
-                "doc_id": doc_id,
-                "page_title": page_title,
-                "extra_context": extra_context,
-            }
-        }
-
-        logger.info("{}".format(json.dumps(log_body)))
-
         context = {u"message": u"Your log message with action '{}' and of "
                                u"document '{}' has been logged.".format(action, doc_id)}
         return self.render_json_response(context)

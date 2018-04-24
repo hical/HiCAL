@@ -43,21 +43,6 @@ class CALMessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u"message, ... etc"}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "action": action,
-                "message": message,
-                "doc_id": doc_id,
-                "doc_CAL_snippet": doc_CAL_snippet,
-                "page_title": page_title,
-                "extra_context": extra_context,
-            }
-        }
-
-        logger.info("{}".format(json.dumps(log_body)))
-
         context = {u"message": u"Your log message with action '{}' and of "
                                u"document '{}' has been logged.".format(action, doc_id)}
         return self.render_json_response(context)
@@ -106,15 +91,6 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             error_dict = {u"message": u"Timeout error. Please check status of servers."}
             return self.render_timeout_request_response(error_dict)
         except CALError as e:
-            log_body = {
-                "user": self.request.user.username,
-                "result": {
-                    "message": str(e),
-                    "source": "interfaces.CAL.functions.get_documents()"
-                }
-            }
-
-            logger.error("[{}]".format(json.dumps(log_body)))
             error_dict = {u"message": u"Error occurred. Please inform study coordinators"}
 
             # TODO: add proper http response for CAL errors

@@ -77,15 +77,6 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
                                  'Your topic has been created but it\'s not active. '
                                  'Activate it to start working under it')
         except CALError as e:
-            log_body = {
-                "user": self.request.user.username,
-                "result": {
-                    "message": str(e),
-                    "source": "interfaces.CAL.functions.add_session()"
-                }
-            }
-
-            logger.error("[{}]".format(json.dumps(log_body)))
             messages.add_message(self.request,
                                  messages.ERROR,
                                  'Failed to create session. CAL backend failed to add  '

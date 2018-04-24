@@ -38,18 +38,6 @@ class SearchInputStatusAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u"search bar value, and isFocused."}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": SEARCH_LOGGING_MESSAGES.get("search_input", None),
-                "isFocused": isFocused,
-                "search_bar_value": search_bar_value,
-                "page_title": page_title
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
-
         context = {u"message": u"Your search input event has been recorded."}
         return self.render_json_response(context)
 
@@ -71,19 +59,6 @@ class SearchKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u" page title, character, isSearchbarFocused,"
                                       u" and search bar value."}
             return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": SEARCH_LOGGING_MESSAGES.get("keystroke", None),
-                "character": character,
-                "search_bar_value": search_bar_value,
-                "isSearchbarFocused": isSearchbarFocused,
-                "page_title": page_title
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your keystroke has been recorded."}
         return self.render_json_response(context)
@@ -141,18 +116,6 @@ class SearchButtonView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u" page title, query, and numdisplay values"}
             return self.render_bad_request_response(error_dict)
 
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": "New search query",
-                "query": query,
-                "SERP_size": numdisplay,
-                "page_title": page_title
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
-
         context = {u"message": u"Your search request has been recorded."}
         return self.render_json_response(context)
 
@@ -174,20 +137,6 @@ class SearchSearchDocOpenedView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             error_dict = {u"message": u"your input must include client_time,"
                                       u" page title, query, and docid values"}
             return self.render_bad_request_response(error_dict)
-
-        log_body = {
-            "user": self.request.user.username,
-            "client_time": client_time,
-            "result": {
-                "message": "SERP document modal is shown to user.",
-                "query": query,
-                "doc_id": doc_id,
-                "doc_title": doc_title,
-                "doc_search_snippet": doc_search_snippet,
-                "page_title": page_title
-            }
-        }
-        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your document click request has been recorded."}
         return self.render_json_response(context)
