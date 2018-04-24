@@ -29,6 +29,7 @@ Contents:
 
    setup
    users
+   logging
    deploy
    docker_ec2
    tests

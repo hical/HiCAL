@@ -306,8 +306,8 @@ LOGGING = {
         },
     },
     'loggers': {
-        'treccoreweb': {  # for web
-            'handlers': ['treccoreweb'],
+        'treccoreweb': {  # for web #TODO: Update <projectname>
+            'handlers': ['treccoreweb'], #TODO: Update <projectname>
             'level': 'INFO',
             'propagate': True,
         },

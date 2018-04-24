@@ -48,7 +48,7 @@ class SearchInputStatusAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your search input event has been recorded."}
         return self.render_json_response(context)
@@ -83,7 +83,7 @@ class SearchKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your keystroke has been recorded."}
         return self.render_json_response(context)
@@ -151,7 +151,7 @@ class SearchButtonView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your search request has been recorded."}
         return self.render_json_response(context)
@@ -187,7 +187,7 @@ class SearchSearchDocOpenedView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your document click request has been recorded."}
         return self.render_json_response(context)

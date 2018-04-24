@@ -122,7 +122,7 @@ class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your visit has been recorded"}
         return self.render_json_response(context)
@@ -154,7 +154,7 @@ class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "page_title": page_title
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your event has been recorded"}
         return self.render_json_response(context)
@@ -191,7 +191,7 @@ class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 "doc_id": doc_id
             }
         }
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your visit has been recorded."}
         return self.render_json_response(context)
@@ -228,7 +228,7 @@ class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             }
         }
 
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your log message with action '{}' "
                                u"has been logged.".format(action)}

@@ -5,11 +5,6 @@
 {% block pagetitle %}Iterative{% endblock %}
 
 
-{% block sidebar %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
-    </li>
-{% endblock %}
 
 {% block nav-header-title %}{% endblock %}
 
@@ -222,7 +217,7 @@
                             "<span class='text-danger'>Server returned empty list.</span>",
                             "",
                             "",
-                            "Something went wrong.. Please contact the study coordinators."
+                            "There is no more documents to judge."
                         );
                 }
             },

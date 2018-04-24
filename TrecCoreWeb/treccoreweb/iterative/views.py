@@ -25,8 +25,8 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
                                               self.request.user,
                                               current_task)
         # if user has judged all the document he has to judge, move to completed
-        if not docs_ids:
-            return HttpResponseRedirect(reverse_lazy('progress:completed'))
+        # if not docs_ids:
+        #     return HttpResponseRedirect(reverse_lazy('progress:completed'))
 
         return super(HomePageView, self).get(self, request, *args, **kwargs)
 
@@ -64,7 +64,7 @@ class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             }
         }
 
-        logger.info("[{}]".format(json.dumps(log_body)))
+        logger.info("{}".format(json.dumps(log_body)))
 
         context = {u"message": u"Your log message with action '{}' and of "
                                u"document '{}' has been logged.".format(action, doc_id)}
