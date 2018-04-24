@@ -5,11 +5,9 @@
 
 
 {% block sidebar %}
-    {% if user.current_task.setting.show_search %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
     </li>
-    {% endif %}
     <li class="nav-item">
         <a class="nav-link active bold" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i><span
                 class="sr-only">(current)</span></a>
@@ -85,15 +83,13 @@
                             <p>Please wait...</p>
                         </div>
                         <hr style="border-top: 5px solid rgba(0,0,0,.1);">
-                        {% if user.current_task.setting.toggle_doc %}
                         <div class="row">
                             <div class="col-md-12">
                                 <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary"  href="#" onclick="return show_full_doc();">Show full document.</a>
                             </div>
                         </div>
-                        {% endif %}
 
-                        <div id="document_content" {% if not user.current_task.setting.toggle_doc %}style="display: none"{% endif %}></div>
+                        <div id="document_content"></div>
 
                     </div>
                 </div>
@@ -216,7 +212,7 @@
         var latestJudgedDocsQueue = new Queue();
 
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        var toggle_full_doc = {{ user.current_task.setting.toggle_doc|yesno:"true,false" }};
+        var toggle_full_doc = true;
         var time_on_paragraph = 0;
         var show_full_doc_button_clicked = false;
         if(toggle_full_doc){

@@ -22,6 +22,4 @@ will be saved in the user model.
 Registration and account management is done using django-allauth_.
 
 
-
 .. django-allauth_:https://django-allauth.readthedocs.io/en/latest/
-

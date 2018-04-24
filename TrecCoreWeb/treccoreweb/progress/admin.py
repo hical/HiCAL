@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from treccoreweb.progress.models import Task
-from treccoreweb.progress.models import TaskSetting
 
 
 class NoAddNoDeleteAdmin(admin.ModelAdmin):
@@ -11,5 +10,4 @@ class NoAddNoDeleteAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-admin.site.register(TaskSetting, NoAddNoDeleteAdmin)
 admin.site.register(Task, NoAddNoDeleteAdmin)

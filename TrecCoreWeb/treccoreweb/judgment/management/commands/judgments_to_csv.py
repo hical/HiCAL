@@ -8,7 +8,7 @@ from treccoreweb.judgment.models import Judgement
 class Command(BaseCommand):
     help = 'Export judgments to csv format'
     filename = 'judgments.csv'
-    header = ('USER', 'TASK', 'TOPIC', 'DOCID', 'METHOD', 'JUDGMENT', 'TIME_AWAY',
+    header = ('USER', 'TOPIC', 'DOCID', 'METHOD', 'JUDGMENT', 'TIME_AWAY',
               'TIME_TO_JUDGE')
 
     def handle(self, *args, **option):
@@ -25,7 +25,6 @@ class Command(BaseCommand):
                     continue
 
                 user = judgment.user
-                task = judgment.task.setting
                 topic = judgment.task.topic.number
                 docid = judgment.doc_id
                 if judgment.isFromSearchModal:
@@ -48,7 +47,7 @@ class Command(BaseCommand):
                     time_away += d.get('timeAway')
                 time_away /= 1000
                 time_to_judge /= 1000
-                writer.writerow((user, task, topic, docid, method,
+                writer.writerow((user, topic, docid, method,
                                  value, time_away, time_to_judge))
 
         self.stdout.write(self.style.SUCCESS(
