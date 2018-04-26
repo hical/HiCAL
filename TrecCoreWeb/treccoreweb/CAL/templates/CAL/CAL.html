@@ -6,6 +6,7 @@
 
 {% block nav-header-title %}{% endblock %}
 
+{% block nav-left-mt %}mt-2{% endblock %}
 {% block nav-right%}
     {% if request.user.is_authenticated %}
     <li class="nav-item">
@@ -52,10 +53,10 @@
 
         <div class="row">
             <div class="col-md-9">
-                <div class="card">
+                <div class="card small-shadow">
                     <div class="card-block document-cal" id="cal-document"
                          data-doc-id="">
-                        <h1 id="document_title" style="font-family: 'Playfair Display', georgia, 'times new roman',times,serif;"><span class="text-danger">Loading</span></h1>
+                        <h1 id="document_title" style="font-family: 'Playfair Display', georgia, 'times new roman',times,serif;"><span class="text-danger">Loading...</span></h1>
                         <div class="row">
                             <div class="col-md-6">
                                 <small id="document_date"></small>
@@ -67,7 +68,7 @@
                         <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
-                        <hr style="border-top: 5px solid rgba(0,0,0,.1);">
+                        <hr style="border-top: 3px solid rgba(0,0,0,.1);">
                         <div class="row">
                             <div class="col-md-12">
                                 <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary"  href="#" onclick="return show_full_doc();">Show full document.</a>
@@ -81,8 +82,8 @@
             </div>
 
             <div class="col-md-3">
-                <nav class="sidebar-nav-fixed bg-faded font-open-sans">
-                    <ul class="nav nav-pills flex-column little-padding">
+                <nav class="sidebar-nav-fixed bg-faded font-open-sans small-shadow">
+                    <ul class="nav nav-pills flex-column little-padding small-border small-radius">
                         <div class="cal-search">
 
                             <li class=" top-margin">
@@ -753,17 +754,17 @@
             var doc_status_div = "";
 
             if (doc["highlyRelevant"]){
-                doc_status_div = '<div class="bg-success" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+                doc_status_div = '<div class="bg-success" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
             }else if(doc["nonrelevant"]){
-                doc_status_div = '<div class="bg-danger" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+                doc_status_div = '<div class="bg-danger" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
             }else if(doc["relevant"]){
-                doc_status_div = '<div class="bg-warning" style="height: 100%;"><i class="fa" aria-hidden="true"></i></div>';
+                doc_status_div = '<div class="bg-warning" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
             }
 
             var doc_div = '' +
             '<a href="#" onclick="show_prev_judged_doc_and_hide_modal(' + i + ')"> \n\
                 <div class="row top-margin"> \n\
-                    <div class="col-md-1" style="min-width: 15px;"> \n\
+                    <div class="col-md-1" style="min-width: 5px;"> \n\
                         ' + doc_status_div + ' \n\
                     </div> \n\
                     <div class="col-md-11 text-truncate" style="font-family: georgia"> \n\

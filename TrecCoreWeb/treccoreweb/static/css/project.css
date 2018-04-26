@@ -154,8 +154,20 @@ h1 {
     text-decoration: none;
 }
 
+.small-shadow {
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+
 .no-border {
     border: none;
+}
+
+.small-border {
+  border: 1px solid rgba(0,0,0,.125);
+}
+
+.small-radius {
+  border-radius: 4px;
 }
 
 .no-padding{
@@ -235,7 +247,7 @@ h1 {
 }
 
 .extra-padding {
-    padding: 4.0rem;
+    padding: 3.0rem;
 }
 
 .extra-padding-left-right {
@@ -665,6 +677,36 @@ a.dropdown-item {
 }
 
 
+
+
+.btn-success, .bg-success, .badge-success {
+    background-color: #13ce66!important;
+    border-color: #13ce66;
+}
+
+.btn-warning, .bg-warning, .badge-warning {
+    background-color: #ffc82c!important;
+    border-color: #ffc82c;
+}
+
+.btn-danger, .bg-danger , .badge-danger {
+  background-color: #ff4949!important;
+  border-color: #ff4949;
+}
+
+
+.text-primary {
+  color: #6190e8!important;
+}
+.text-danger {
+  color: #ff4949!important;
+}
+.text-warning {
+  color: #ffc82c!important;
+}
+.text-success {
+  color: #13ce66!important;
+}
 
 mark {
   padding: 0;

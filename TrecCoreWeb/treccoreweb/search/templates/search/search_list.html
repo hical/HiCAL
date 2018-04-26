@@ -22,18 +22,18 @@
 {% endif %}
 {% for doc_id, document_values in documents.items %}
     <div class="row flex-items-md-middle">
-        <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 15px;">
+        <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 4px;">
             {% if document_values.isJudged %}
                 {% if document_values.relevance_judgment.highlyRelevant %}
-                    <div class="bg-success" style="height: 100%; padding: 5px;" >
+                    <div class="bg-success" style="height: 100%; padding: 2px;" >
                         <i class="fa" aria-hidden="true"></i>
                     </div>
                 {% elif document_values.relevance_judgment.nonrelevant %}
-                    <div class="bg-danger" style="height: 100%; padding: 5px;">
+                    <div class="bg-danger" style="height: 100%; padding: 2px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
                 {% elif document_values.relevance_judgment.relevant %}
-                    <div class="bg-warning" style="height: 100%; padding: 5px;">
+                    <div class="bg-warning" style="height: 100%; padding: 2px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
                 {% endif %}
@@ -52,7 +52,7 @@
                 <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-warning">Relevant</a>
                 <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
             </div>
-            <div class="gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
+            <div class="left-padding gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
         </div>
     </div>
 
@@ -92,8 +92,8 @@
                         </div>
 
                         <div class="col-md-2" id="{{ document_values.docno }}-sideBar">
-                            <nav class="sidebar-nav-fixed bg-faded font-open-sans">
-                                <ul class="nav nav-pills flex-column little-padding">
+                            <nav class="sidebar-nav-fixed bg-faded font-open-sans small-shadow">
+                                <ul class="nav nav-pills flex-column little-padding small-border small-radius">
                                     <div class="cal-search">
                                         <li class=" top-margin">
                                             <span class="gray-text align-left">Search content:</span>
