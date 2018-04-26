@@ -30,6 +30,7 @@ Contents:
    setup
    users
    logging
+   components
    deploy
    docker_ec2
    tests

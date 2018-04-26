@@ -65,6 +65,7 @@ LOCAL_APPS = [
     'treccoreweb.judgment',
     'treccoreweb.search',
     'treccoreweb.iterative',
+
     'treccoreweb.archive'
 ]
 
