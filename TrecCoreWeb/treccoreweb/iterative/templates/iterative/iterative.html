@@ -215,10 +215,10 @@
                 }else{
                     updateDocument(
                             "",
-                            "<span class='text-danger'>There is no more documents to judge.</span>",
+                            "<span class='text-danger'>Nothing to judge.</span>",
                             "",
                             "",
-                            "Server returned empty list."
+                            "Server returned an empty list of documents."
                         );
                 }
             },
@@ -592,7 +592,7 @@
         }
         var doc_content = doc['doc_content'];
         if (doc_content == ""){
-            doc_content = "<div class='container center-text'> <span class='text-danger'> <h4><i class='fas fa-sync fa-spin mr-4'></i></h4> <h5>Fetching doc content. Please wait..</h5> </span> </div>"
+            doc_content = "<div class='container center-text'> <span class='text-danger'> <h4><i class='fas fa-sync fa-spin mr-4'></i></h4> <h5>Fetching document content. Please wait..</h5> </span> </div>"
         }
 
         $('#reviewDocsModal').modal('hide');
