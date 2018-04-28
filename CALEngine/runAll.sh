@@ -1,7 +1,7 @@
 #!/bin/bash
 
 THREADS=4
-JOBS=9
+JOBS=10
 EXEC=./bmi_cli
 RESULT_DIR=results
 DOC_FEATURES=../data/athome1.bin

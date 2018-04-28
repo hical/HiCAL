@@ -11,6 +11,8 @@ class BMI_precision_delay:public BMI {
     int rel = 0;
     int tot = 0;
     void record_judgment_batch(std::vector<std::pair<std::string, int>> _judgments);
+    std::vector<int> fetch_more();
+    vector<float> weights;
 
     public:
     BMI_precision_delay(Seed seed,
