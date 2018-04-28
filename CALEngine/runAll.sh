@@ -77,10 +77,66 @@ EOF
 
 
 # TRAINING
-# TODO
+while read it; do
+    echo "Starting BMI_TRAINING (it=$it)..."
+    SUBRESULT_DIR=$RESULT_DIR/training/it=$it
+    mkdir -p "$SUBRESULT_DIR"
+
+    ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
+        --threads $THREADS --jobs $JOBS \
+        --mode BMI_DOC --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --training-iterations $it &> "$LOG"
+done <<EOF
+200
+2000
+20000
+200000
+EOF
+
 
 # RECENCY_WEIGHTING
-# TODO
+while read k it; do
+    echo "Starting BMI_RECENCY_WEIGHTING (k=$k,it=$it)..."
+    SUBRESULT_DIR=$RESULT_DIR/recency/k=$k,it=$it
+    mkdir -p "$SUBRESULT_DIR"
+
+    ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
+        --threads $THREADS --jobs $JOBS \
+        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --recency-weighting-param $k --training-iterations $it &> "$LOG"
+done <<EOF
+2 2000
+5 2000
+10 2000
+EOF
 
 # BMI_FORGET
-# TODO
+while read n; do
+    echo "Starting BMI_FORGET (n=$n,k=inf)..."
+    SUBRESULT_DIR=$RESULT_DIR/forget/n=$n,k=inf
+    mkdir -p "$SUBRESULT_DIR"
+
+    ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
+        --threads $THREADS --jobs $JOBS \
+        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --forget-remember-count $n &> "$LOG"
+done <<EOF
+25
+100
+500
+EOF
+
+while read n k; do
+    echo "Starting BMI_FORGET (n=$n,k=$k)..."
+    SUBRESULT_DIR=$RESULT_DIR/forget/n=$n,k=$k
+    mkdir -p "$SUBRESULT_DIR"
+
+    ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
+        --threads $THREADS --jobs $JOBS \
+        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --forget-remember-count $n --forget-refresh-period $k &> "$LOG"
+done <<EOF
+100 10
+100 50
+100 100
+EOF
