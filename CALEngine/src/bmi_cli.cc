@@ -87,7 +87,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
-            CMD_LINE_INTS["--async-mode"]);
+            CMD_LINE_INTS["--async-mode"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_PARA"){
         bmi = make_unique<BMI_para>(seed_query.second,
             documents.get(),
@@ -96,7 +97,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
-            CMD_LINE_INTS["--async-mode"]);
+            CMD_LINE_INTS["--async-mode"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_PARTIAL_RANKING"){
         bmi = make_unique<BMI_reduced_ranking>(seed_query.second,
             documents.get(),
@@ -105,7 +107,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
-            CMD_LINE_INTS["--partial-ranking-subset-size"], CMD_LINE_INTS["--partial-ranking-refresh-period"]);
+            CMD_LINE_INTS["--partial-ranking-subset-size"], CMD_LINE_INTS["--partial-ranking-refresh-period"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_ONLINE_LEARNING"){
         bmi = make_unique<BMI_online_learning>(seed_query.second,
             documents.get(),
@@ -115,7 +118,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--online-learning-refresh-period"],
-            CMD_LINE_FLOATS["--online-learning-delta"]);
+            CMD_LINE_FLOATS["--online-learning-delta"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_PRECISION_DELAY"){
         bmi = make_unique<BMI_precision_delay>(seed_query.second,
             documents.get(),
@@ -124,7 +128,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_FLOATS["--precision-delay-threshold"],
-            CMD_LINE_INTS["--precision-delay-window"]);
+            CMD_LINE_INTS["--precision-delay-window"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_RECENCY_WEIGHTING"){
         bmi = make_unique<BMI_recency_weighting>(seed_query.second,
             documents.get(),
@@ -133,7 +138,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--max-effort"],
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
-            CMD_LINE_FLOATS["--recency-weighting-param"]);
+            CMD_LINE_FLOATS["--recency-weighting-param"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_FORGET"){
         bmi = make_unique<BMI_forget>(seed_query.second,
             documents.get(),
@@ -143,7 +149,8 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--forget-remember-count"],
-            CMD_LINE_INTS["--forget-refresh-period"]);
+            CMD_LINE_INTS["--forget-refresh-period"],
+            CMD_LINE_INTS["--training-iterations"]);
     } else {
         cerr<<"Invalid bmi_type"<<endl;
         return;

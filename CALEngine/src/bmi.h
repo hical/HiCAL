@@ -25,6 +25,8 @@ class BMI{
     // Maximum number of training iterations allowed before exiting
     int max_iterations;
 
+    int training_iterations;
+
     int extra_judgment_docs = 50;
 
     // Async Mode
@@ -87,6 +89,7 @@ class BMI{
         int max_effort,
         int max_iterations,
         bool async_mode,
+        int training_iterations,
         bool initialize = true);
 
     // Handler for performing a training iteration

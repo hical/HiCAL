@@ -24,7 +24,8 @@ class BMI_online_learning:public BMI {
         int max_iterations,
         bool async_mode,
         size_t refresh_period,
-        float delta);
+        float delta,
+        int training_iterations);
     std::vector<int> perform_training_iteration();
 };
 

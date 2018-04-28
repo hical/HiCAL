@@ -16,7 +16,7 @@ class Classifier {
 
 class LRPegasosClassifier:public Classifier {
     const float lambda = 0.0001;
-    const int num_iters = 200000;
+    const int num_iters;
 
     protected:
     virtual int RandInt(int num_vals) {
@@ -25,6 +25,8 @@ class LRPegasosClassifier:public Classifier {
     }
 
     public:
+    LRPegasosClassifier(int _num_iters):num_iters(_num_iters) {}
+
     virtual vector<float> train(const std::vector<const SfSparseVector*> &positives,
                const std::vector<const SfSparseVector*> &negatives, int dimensionality);
 };
@@ -46,7 +48,7 @@ class LRPegasosWeightedRecencyClassifier:public LRPegasosClassifier {
     }
 
     public:
-    LRPegasosWeightedRecencyClassifier(int _c):c(_c){}
+    LRPegasosWeightedRecencyClassifier(int _c, int _num_iters):c(_c), LRPegasosClassifier(_num_iters){}
 };
 
 #endif // CLASSIFIER_H

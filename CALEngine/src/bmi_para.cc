@@ -14,8 +14,9 @@ BMI_para::BMI_para(Seed _seed,
         int _judgments_per_iteration,
         int _max_effort,
         int _max_iterations,
-        bool _async_mode)
-    :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, false),
+        bool _async_mode,
+        int _training_iterations)
+    :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, _training_iterations, false),
     paragraphs(_paragraphs)
 {
     perform_iteration();

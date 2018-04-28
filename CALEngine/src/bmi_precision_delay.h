@@ -22,7 +22,8 @@ class BMI_precision_delay:public BMI {
         int max_iterations,
         bool async_mode,
         float threshold,
-        int window);
+        int window,
+        int training_iterations);
 };
 
 #endif // BMI_PRECISION_DELAY_H

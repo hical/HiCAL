@@ -20,8 +20,9 @@ class BMI_recency_weighting:public BMI {
         int _max_effort,
         int _max_iterations,
         bool _async_mode,
-        float _max_relative_weight)
-    :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, false),
+        float _max_relative_weight,
+        int _training_iterations)
+    :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, _training_iterations, false),
     max_relative_weight(_max_relative_weight) {
         perform_iteration();
     }
@@ -61,7 +62,7 @@ vector<float> BMI_recency_weighting::train(){
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
-    return LRPegasosWeightedRecencyClassifier(max_relative_weight).train(positives, negatives, documents->get_dimensionality());
+    return LRPegasosWeightedRecencyClassifier(max_relative_weight, training_iterations).train(positives, negatives, documents->get_dimensionality());
 }
 
 #endif // BMI_RECENCY_WEIGHTING_H

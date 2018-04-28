@@ -11,8 +11,9 @@ BMI_precision_delay::BMI_precision_delay(Seed _seed,
         int _max_iterations,
         bool _async_mode,
         float _threshold,
-        int _window)
-    :BMI(_seed, _documents, _num_threads, 10000, _max_effort, _max_iterations, _async_mode, false),
+        int _window,
+        int _training_iterations)
+    :BMI(_seed, _documents, _num_threads, 10000, _max_effort, _max_iterations, _async_mode, _training_iterations, false),
     threshold(_threshold), window(_window)
 {
     perform_iteration();

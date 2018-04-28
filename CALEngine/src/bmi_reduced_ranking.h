@@ -25,7 +25,8 @@ class BMI_reduced_ranking:public BMI {
         int max_iterations,
         bool async_mode,
         size_t subset_size,
-        size_t refresh_period);
+        size_t refresh_period,
+        int training_iterations);
     std::vector<int> perform_training_iteration();
 };
 

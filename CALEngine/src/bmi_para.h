@@ -19,7 +19,8 @@ class BMI_para:public BMI {
         int judgments_per_iteration,
         int max_effort,
         int max_iterations,
-        bool async_mode);
+        bool async_mode,
+        int training_iterations);
 
     void record_judgment(std::string doc_id, int judgment);
     Dataset *get_ranking_dataset() {return paragraphs;};

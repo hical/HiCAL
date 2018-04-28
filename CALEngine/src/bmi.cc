@@ -15,6 +15,7 @@ BMI::BMI(Seed _seed,
          int _max_effort,
          int _max_iterations,
          bool _async_mode,
+         int _training_iterations,
          bool initialize)
     :documents(_documents),
     num_threads(_num_threads),
@@ -22,7 +23,8 @@ BMI::BMI(Seed _seed,
     max_effort(_max_effort),
     max_iterations(_max_iterations),
     async_mode(_async_mode),
-    seed(_seed)
+    seed(_seed),
+    training_iterations(_training_iterations)
 {
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
@@ -100,7 +102,7 @@ vector<float> BMI::train(){
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
     
-    return LRPegasosClassifier().train(positives, negatives, documents->get_dimensionality());
+    return LRPegasosClassifier(training_iterations).train(positives, negatives, documents->get_dimensionality());
 }
 
 vector<string> BMI::get_doc_to_judge(uint32_t count=1){

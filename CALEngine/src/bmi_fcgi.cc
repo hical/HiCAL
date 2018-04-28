@@ -168,7 +168,8 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 judgments_per_iteration,
                 -1,
                 -1,
-                async_mode);
+                async_mode,
+                200000);
     }else if(mode == "para"){
         SESSIONS[session_id] = make_unique<BMI_para>(
                 seed_query,
@@ -178,7 +179,8 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 judgments_per_iteration,
                 -1,
                 -1,
-                async_mode);
+                async_mode,
+                200000);
     }
 
     SESSIONS[session_id]->record_judgment_batch(seed_judgments);
