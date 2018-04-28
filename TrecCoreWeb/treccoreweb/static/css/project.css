@@ -43,6 +43,19 @@ h1 {
   min-height: 40px;
 }
 
+.nav-link:hover {
+  background-color: #e6e6e6;
+
+}
+
+.sidebar .nav-link:hover {
+  border-left: 3px solid #0275d8;
+  padding-right: 3px;
+
+}
+
+
+
 .nav-link {
     padding: .5em 0em;
 }
