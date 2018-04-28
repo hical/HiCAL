@@ -15,28 +15,29 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     {% include "raven-config.html" %}
+
+    <link href="{% static "css/nprogress.css" %}" rel="stylesheet">
+    <script src="{% static "js/nprogress.js" %}"></script>
 
     {% block extra_head %}{% endblock %}
 </head>
 
 <body>
 
+
 <nav class="navbar nav-bar-padding navbar-toggleable-md bg-faded fixed-top border-bottom font-montserrat">
 
-    <button class="navbar-toggler navbar-toggler-right hidden-lg-up" type="button"
-            data-toggle="collapse" data-target="#navbars"
-            aria-controls="navbars" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand font-montserrat" href="/"><strong>? |</strong></a>
-    <div class="collapse navbar-collapse" id="navbars">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+      <div class="collapse navbar-collapse" id="navbars">
         {% block nav-left%}
-        <ul class="navbar-nav {% block nav-left-mt %}mt-auto{% endblock %}">
+        <ul class="navbar-nav {% block nav-left-mt %}mt-2{% endblock %}">
             <a id="desc_popover" href="#" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 800px;" data-toggle="popover" title="Topic Description" data-placement="bottom" data-trigger="focus" data-content="{% if user.current_task.topic.description %}{{ user.current_task.topic.description }}{% else %}No description provided.{% endif %}">
-             <strong>Topic</strong>: {{ user.current_task.topic.title }}
+             {{ user.current_task.topic.title }}
             </a>
             <span class="small mt-1 text-primary left-margin"> [Click on topic to view full description]</span>
         </ul>
@@ -50,31 +51,55 @@
         <div class="form-inline mt-2 mt-md-0">
             <ul class="navbar-nav mr-auto">
                 {% block nav-right %}
-                    {% if request.user.is_authenticated %}
-{#                    <li class="nav-item">#}
-{#                        <a class="nav-link" href="{% url 'judgment:get_all' %}">All judgments</a>#}
-{#                    </li>#}
-                    <li class="nav-item">
-{#                        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_task.topic.id %}">Topic</a>#}
-                    </li>
-                    {% endif %}
                 {% endblock %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#helpModal">Help</a>
+                </li>
             </ul>
         </div>
     </div>
+
 </nav>
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog"
+     aria-labelledby="helpModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Help</h5>
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Insert help here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="row">
         <nav class="col-sm-2 col-md-0-5 hidden-xs-down sidebar bg-faded font-open-sans">
             <ul class="nav nav-pills flex-column center-text">
+                <li class="nav-item sidebar-brand extra-bottom-margin">
+                    <a class="nav-link sidebar-brand" href="/"><i class="fas fa-question" aria-hidden="true"></i></a>
+                </li>
+
                 {% block sidebar %}
                 {% if user.current_task %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
+                    <a class="nav-link" href="{% url 'CAL:main' %}"><i class="far fa-lightbulb" aria-hidden="true"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'CAL:main' %}"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></a>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
@@ -175,19 +200,19 @@
         });
     }
     window.jquery_ajax = $.ajax;
-    $.ajax = function(param){
+    $.ajax = function (param) {
         var tmp_success_callback = param['success'];
-        param['success'] = function(data, tmp, xhr){
-            if(xhr.getResponseHeader('completed') == "1" && window.location.pathname != "/completed/"){
+        param['success'] = function (data, tmp, xhr) {
+            if (xhr.getResponseHeader('completed') == "1" && window.location.pathname != "/completed/") {
                 window.location.href = "/completed/";
-            }else
+            } else
                 tmp_success_callback(data, tmp, xhr);
         }
         window.jquery_ajax(param);
     };
 
     $('#desc_popover').on('show.bs.popover', function () {
-        var now = + new Date();
+        var now = +new Date();
         var data = {
             'action': 'trig_user_clicked_on_topic_desc',
             'message': 'User clicked on the topic desc.',
@@ -234,6 +259,11 @@
 </script>
 
 {% block extra_scripts %}{% endblock %}
+
+<script>
+    NProgress.start();
+    NProgress.done();
+</script>
 
 </body>
 </html>

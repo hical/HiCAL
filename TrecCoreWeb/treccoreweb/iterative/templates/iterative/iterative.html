@@ -215,10 +215,10 @@
                 }else{
                     updateDocument(
                             "",
-                            "<span class='text-danger'>Server returned empty list.</span>",
+                            "<span class='text-danger'>There is no more documents to judge.</span>",
                             "",
                             "",
-                            "There is no more documents to judge."
+                            "Server returned empty list."
                         );
                 }
             },
@@ -267,6 +267,7 @@
             $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
             $("#document_id").html(id);
             $("#document_title").html(title);
+            $("#document_title").removeClass();
             $("#document_date").html(date);
             $("#document_snippet").html(""); // empty snippet for this interface
             $("#document_content").html(content);
@@ -391,6 +392,7 @@
                 data: JSON.stringify(data),
                 success: function (result) {
                     console.log(result['message'], " - Dequing after sending judgment of document: " + data["doc_id"]);
+                    $("#document_title").removeClass();
 
                     var isempty_view = document_isEmpty();
                     if(isempty_view){
@@ -528,6 +530,7 @@
     function reset_doc_view(){
         $('#cal-document').attr("data-doc-id", "None").data("doc-id", "None");
         $("#document_title").text("");
+        $("#document_title").removeClass();
         $("#document_content").text("");
     }
 
@@ -575,14 +578,21 @@
 
         var doc_id = doc['doc_id'];
         var doc_title = doc['doc_title'];
+        if (doc["highlyRelevant"]){
+            var doc_judgment_class = 'judged_doc_title_highly_relevant';
+        }else if(doc["nonrelevant"]){
+            var doc_judgment_class = 'judged_doc_title_nonrelevant';
+        }else if(doc["relevant"]){
+            var doc_judgment_class = 'judged_doc_title_relevant';
+        }
         var doc_date = doc['doc_date'];
         if (doc_date == ""){
             doFetch = true;
-            doc_date = "Fetching date..."
+            doc_date = "<span class='text-danger'>Fetching date..</span>"
         }
         var doc_content = doc['doc_content'];
         if (doc_content == ""){
-            doc_content = "<span class='text-danger'>Please wait.. fetching doc content.</span>"
+            doc_content = "<div class='container center-text'> <span class='text-danger'> <h4><i class='fas fa-sync fa-spin mr-4'></i></h4> <h5>Fetching doc content. Please wait..</h5> </span> </div>"
         }
 
         $('#reviewDocsModal').modal('hide');
@@ -594,6 +604,10 @@
             "", // empty snippet
             doc_content
         );
+
+        $('#document_title').removeClass();
+        $('#document_title').addClass(doc_judgment_class);
+
 
         // push the prev document to infront of queue
         if(current_doc){
@@ -625,7 +639,6 @@
                         result['message'],
                         "");
                     }
-
                     console.error("Something went wrong. " +
                             "Judgment may have not been recorded.", result['responseText'])
                 },

@@ -14,13 +14,15 @@
           <form class="input-group" id="search_form">
               <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
                    name="search_input">
-              <span class="input-group-btn">
+              <span class="input-group-btn pr-4">
                 <button class="btn btn-outline-primary" type="submit"
                         ic-indicator="#searchSpinner" ic-target="#search_result"
                         ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
                         tabindex="-1" id="search_button">Search
                 </button>
               </span>
+              <h3 class="ml-1 center-text pr-2" style="min-width: 35px"><i id="searchSpinner" style="display: none;"
+                   class="fas fa-sync fa-spin text-primary"></i></h3>
               <span class="input-btn left-margin mt-1">
                 #docs:
                 <select class="select btn btn-lg btn-outline-primary" id="id_numdisplay" name="numdisplay">
@@ -34,13 +36,6 @@
         </div>
     </div>
 
-    <div class="row center-text">
-        <div class="col-md-12" style="position: absolute">
-            <span class="text-muted">
-                <i id="searchSpinner" style="display: none;"
-                   class="fa fa-refresh fa-spin text-primary"></i></span>
-        </div>
-    </div>
     <div class="extra-top-margin">
     <div class="double-extra-padding-left-right">
 

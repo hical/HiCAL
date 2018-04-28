@@ -3,24 +3,41 @@
 {% load i18n crispy_forms_tags %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
-{% block nav-right %}<a href="{% url 'progress:practice' %}" class="btn btn-primary btn-sm">{% trans "Click here to practice" %}</a>{% endblock %}
+{% block nav-right %}
+<li class="nav-item mt-0-4 mr-3">
+    <a href="{% url 'progress:practice' %}" class="btn btn-primary btn-sm">{% trans "Click here to practice" %}</a>
+</li>
+{% endblock %}
 
 {% block main %}
 {% block inner %}
 
-<h1>{% trans "Sign In" %}</h1>
+<div class="row">
 
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+    <div class="col-md-7 align-self-center center-text">
+        <div class="brand font-montserrat mb-3">Project Name</div>
+        <p class="gray-text">A System for Efficient High-Recall Retrieval</p>
+    </div>
+    <div class="col-md-5">
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form|crispy }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
-</form>
+        <h1>{% trans "Sign In" %}</h1>
+
+        <p>{% blocktrans %}If you have not created an account yet, then please
+        <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+
+        <form class="login" method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+        </form>
+
+    </div>
+
+</div>
+
 
 {% endblock %}
 {% endblock %}

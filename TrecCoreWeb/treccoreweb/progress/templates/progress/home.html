@@ -11,7 +11,7 @@
 
 {% block nav-header %}{% endblock %}
 {% block nav-right%}
-<li class="nav-item">
+<li class="nav-item mt-0-4 mr-3">
     {% if request.user.is_authenticated and request.user|has_group:"practice" %}
     <a href="{% url 'progress:practice_complete' %}" class="btn btn-primary btn-sm">{% trans "Complete practice" %}</a>
     {% elif request.user.is_authenticated %}
@@ -24,9 +24,9 @@
 
 
 {% block main %}
-    <div class="row top-bottom-margin">
+    <div class="row">
         <div class="col-md-8">
-            <div class="card bottom-margin">
+            <div class="card small-shadow bottom-margin ">
                 <div class="card-block">
                     <h2 class="text-primary"> Your current topic </h2>
                     <hr>
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card small-shadow">
                 <div class="card-block" id="first">
                     <h4 class="text-primary">How many documents did you judge?</h4>
                     <div class="row extra-top-margin">
@@ -126,7 +126,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card bottom-margin"  style="border-color: #EFAC57">
+            <div class="card small-shadow bottom-margin"  style="border-color: #EFAC57">
                 <div class="card-block">
                     <h2 class="text-warning">TREC topics </h2>
                     <hr>
@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <div class="card"  style="border-color: #EFAC57">
+            <div class="card small-shadow"  style="border-color: #EFAC57">
                 <div class="card-block">
                     <h2 class="text-warning">Create new topic </h2>
                     <hr>
