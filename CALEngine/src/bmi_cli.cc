@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <ctime>
 #include "utils/utils.h"
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
@@ -249,6 +250,7 @@ string get_help_mode_string(){
 }
 
 int main(int argc, char **argv){
+    cerr<<"["<<time(nullptr)<<"] Initializing"<<endl;
     AddFlag("--mode", get_help_mode_string().c_str(), string("BMI_DOC"));
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
     AddFlag("--para-features", "Path of the file with list of paragraph features (BMI_PARA)", string(""));
@@ -313,6 +315,7 @@ int main(int argc, char **argv){
 
     // Start jobs
     // Todo: Better job management
+    cerr<<"["<<time(nullptr)<<"] Starting jobs"<<endl;
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
         jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
@@ -325,4 +328,5 @@ int main(int argc, char **argv){
 
     for(auto &t: jobs)
         t.join();
+    cerr<<"["<<time(nullptr)<<"] Exiting"<<endl;
 }
