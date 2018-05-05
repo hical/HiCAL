@@ -12,16 +12,12 @@ BMI::BMI(Seed _seed,
          Dataset *_documents,
          int _num_threads,
          int _judgments_per_iteration,
-         int _max_effort,
-         int _max_iterations,
          bool _async_mode,
          int _training_iterations,
          bool initialize)
     :documents(_documents),
     num_threads(_num_threads),
     judgments_per_iteration(_judgments_per_iteration),
-    max_effort(_max_effort),
-    max_iterations(_max_iterations),
     async_mode(_async_mode),
     seed(_seed),
     training_iterations(_training_iterations)
@@ -29,48 +25,26 @@ BMI::BMI(Seed _seed,
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
         judgments_per_iteration = 1;
-    if(max_effort < 0)
-        max_effort = INT_MAX;
     if(initialize)
         perform_iteration();
 }
 
-void BMI::finish_session(){
-    add_to_judgment_list({-1});
-    state.finished = true;
-}
-
-bool BMI::try_finish_session() {
-    lock_guard<mutex> lock(training_cache_mutex);
-    if((max_iterations != -1 && state.cur_iteration >= max_iterations) \
-        || (judgments.size() + training_cache.size()) >= min((int)get_dataset()->size(), max_effort)){
-        finish_session();
-        return true;
-    }
-    return state.finished;
-}
-
 void BMI::perform_iteration(){
-    if(!try_finish_session()){
-        lock_guard<mutex> lock(state_mutex);
-        cerr<<"Beginning Iteration "<<state.cur_iteration<<endl;
-        auto results = perform_training_iteration();
-        cerr<<"Fetched "<<results.size()<<" documents"<<endl;
-        add_to_judgment_list(results);
-        if(!async_mode){
-            state.next_iteration_target = min(state.next_iteration_target + judgments_per_iteration, (uint32_t)get_dataset()->size());
-            if(is_bmi)
-                judgments_per_iteration += (judgments_per_iteration + 9)/10;
-        }
-        state.cur_iteration++;
+    lock_guard<mutex> lock(state_mutex);
+    auto results = perform_training_iteration();
+    cerr<<"Fetched "<<results.size()<<" documents"<<endl;
+    add_to_judgment_list(results);
+    if(!async_mode){
+        state.next_iteration_target = min(state.next_iteration_target + judgments_per_iteration, (uint32_t)get_dataset()->size());
+        if(is_bmi)
+            judgments_per_iteration += (judgments_per_iteration + 9)/10;
     }
+    state.cur_iteration++;
 }
 
 void BMI::perform_iteration_async(){
     if(async_training_mutex.try_lock()){
         while(!training_cache.empty()){
-            if(try_finish_session())
-                return;
             perform_iteration();
         }
         async_training_mutex.unlock();
@@ -127,7 +101,10 @@ vector<string> BMI::get_doc_to_judge(uint32_t count=1){
 
 void BMI::add_to_judgment_list(const vector<int> &ids){
     lock_guard<mutex> lock(judgment_list_mutex);
-    judgment_queue = ids;
+    if(ids.size() == 0)
+        judgment_queue = {-1};
+    else
+        judgment_queue = ids;
 }
 
 void BMI::add_to_training_cache(int id, int judgment){

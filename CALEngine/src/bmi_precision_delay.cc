@@ -7,20 +7,19 @@ using namespace std;
 BMI_precision_delay::BMI_precision_delay(Seed _seed,
         Dataset *_documents,
         int _num_threads,
-        int _max_effort,
-        int _max_iterations,
         bool _async_mode,
         float _threshold,
         int _window,
         int _training_iterations)
-    :BMI(_seed, _documents, _num_threads, 10000, _max_effort, _max_iterations, _async_mode, _training_iterations, false),
+    :BMI(_seed, _documents, _num_threads, 1, _async_mode, _training_iterations, false),
     threshold(_threshold), window(_window)
 {
     perform_iteration();
 }
 
-vector<int> BMI_precision_delay::fetch_more(){
+vector<int> BMI_precision_delay::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
+
     {
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
@@ -28,6 +27,14 @@ vector<int> BMI_precision_delay::fetch_more(){
         }
         training_cache.clear();
     }
+
+    // Training
+    if(!skip_training){
+        TIMER_BEGIN(training);
+        weights = train();
+        TIMER_END(training);
+    }
+
 
     // Scoring
     TIMER_BEGIN(rescoring);
@@ -39,6 +46,7 @@ vector<int> BMI_precision_delay::fetch_more(){
 }
 
 void BMI_precision_delay::record_judgment_batch(std::vector<std::pair<std::string, int>> _judgments){
+    state.next_iteration_target += 1;
     int last_rel;
     for(const auto &judgment: _judgments){
         size_t id = documents->get_index(judgment.first);
@@ -58,13 +66,14 @@ void BMI_precision_delay::record_judgment_batch(std::vector<std::pair<std::strin
 
     if(!async_mode){
         if(last_rel <= 0 && rel / (float)q.size() < threshold){
-            std::cerr<<"Refreshing P"<<std::endl;
+            if(judgments_per_iteration > 1)
+                judgments_per_iteration /= 2;
             perform_iteration();
-            weights = train();
         }else if(judgment_queue.size() == 0){
-            std::cerr<<"Fetching more"<<std::endl;
-            auto results = perform_training_iteration();
-            add_to_judgment_list(results);
+            judgments_per_iteration *= 2;
+            skip_training = true;
+            add_to_judgment_list(perform_training_iteration());
+            skip_training = false;
         }
     }else{
         auto t = std::thread(&BMI_precision_delay::perform_iteration_async, this);

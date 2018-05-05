@@ -17,12 +17,10 @@ class BMI_recency_weighting:public BMI {
         Dataset *_documents,
         int _num_threads,
         int _judgments_per_iteration,
-        int _max_effort,
-        int _max_iterations,
         bool _async_mode,
         float _max_relative_weight,
         int _training_iterations)
-    :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _max_effort, _max_iterations, _async_mode, _training_iterations, false),
+    :BMI(_seed, _documents, _num_threads, _judgments_per_iteration, _async_mode, _training_iterations, false),
     max_relative_weight(_max_relative_weight) {
         perform_iteration();
     }

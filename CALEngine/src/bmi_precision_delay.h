@@ -11,15 +11,14 @@ class BMI_precision_delay:public BMI {
     int rel = 0;
     int tot = 0;
     void record_judgment_batch(std::vector<std::pair<std::string, int>> _judgments);
-    std::vector<int> fetch_more();
     vector<float> weights;
+    bool skip_training = false;
+    vector<int> perform_training_iteration();
 
     public:
     BMI_precision_delay(Seed seed,
         Dataset *documents,
         int num_threads,
-        int max_effort,
-        int max_iterations,
         bool async_mode,
         float threshold,
         int window,

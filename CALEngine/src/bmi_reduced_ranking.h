@@ -16,13 +16,17 @@ class BMI_reduced_ranking:public BMI {
         return (state.cur_iteration % refresh_period == 0);
     }
 
+    void score_docs_insertion_sort(const vector<float> &weights,
+                               int st, int end,
+                               std::pair<float, int> *top_docs);
+
+    vector<int> subset_rescore(const vector<float> &weights);
+
     public:
     BMI_reduced_ranking(Seed seed,
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,
-        int max_effort,
-        int max_iterations,
         bool async_mode,
         size_t subset_size,
         size_t refresh_period,

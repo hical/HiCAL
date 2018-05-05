@@ -17,11 +17,9 @@ class BMI_reduced_ranking_dynamic:public BMI_reduced_ranking {
                                 Dataset *documents,
                                 int num_threads,
                                 int judgments_per_iteration,
-                                int max_effort,
-                                int max_iterations,
                                 bool async_mode,
                                 size_t subset_size)
-        :BMI_reduced_ranking(seed, documents, num_threads, judgments_per_iteration, max_effort, max_iterations, async_mode, subset_size, -1)
+        :BMI_reduced_ranking(seed, documents, num_threads, judgments_per_iteration, async_mode, subset_size, -1)
     {
         
     };

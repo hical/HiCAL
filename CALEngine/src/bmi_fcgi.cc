@@ -166,8 +166,6 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 documents.get(),
                 CMD_LINE_INTS["--threads"],
                 judgments_per_iteration,
-                -1,
-                -1,
                 async_mode,
                 200000);
     }else if(mode == "para"){
@@ -177,8 +175,6 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 paragraphs.get(),
                 CMD_LINE_INTS["--threads"],
                 judgments_per_iteration,
-                -1,
-                -1,
                 async_mode,
                 200000);
     }

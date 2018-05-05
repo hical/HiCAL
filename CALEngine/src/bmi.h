@@ -19,12 +19,6 @@ class BMI{
     // Number of judgments to do before training weights
     int judgments_per_iteration;
 
-    // Maximum effort allowed before exiting
-    int max_effort;
-
-    // Maximum number of training iterations allowed before exiting
-    int max_iterations;
-
     int training_iterations;
 
     int extra_judgment_docs = 50;
@@ -36,7 +30,7 @@ class BMI{
     bool is_bmi;
 
     // The current state of CAL
-    struct{
+    struct State{
         uint32_t cur_iteration = 0;
         uint32_t next_iteration_target = 0;
         bool finished = false;
@@ -86,8 +80,6 @@ class BMI{
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,
-        int max_effort,
-        int max_iterations,
         bool async_mode,
         int training_iterations,
         bool initialize = true);
@@ -114,6 +106,10 @@ class BMI{
 
     virtual Dataset *get_ranking_dataset() {return documents;};
     Dataset *get_dataset() {return documents;};
+
+    struct State get_state(){
+        return state;
+    }
 };
 
 #endif // BMI_H

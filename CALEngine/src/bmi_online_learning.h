@@ -20,8 +20,6 @@ class BMI_online_learning:public BMI {
         Dataset *documents,
         int num_threads,
         int judgments_per_iteration,
-        int max_effort,
-        int max_iterations,
         bool async_mode,
         size_t refresh_period,
         float delta,

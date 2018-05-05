@@ -17,8 +17,6 @@ class BMI_para:public BMI {
         Dataset *paragraphs,
         int num_threads,
         int judgments_per_iteration,
-        int max_effort,
-        int max_iterations,
         bool async_mode,
         int training_iterations);
 

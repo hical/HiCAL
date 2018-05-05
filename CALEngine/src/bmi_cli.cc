@@ -2,6 +2,7 @@
 #include <fstream>
 #include <thread>
 #include <ctime>
+#include <climits>
 #include "utils/utils.h"
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
@@ -86,8 +87,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_PARA"){
@@ -96,8 +95,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             paragraphs.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--training-iterations"]);
     } else if(mode == "BMI_PARTIAL_RANKING"){
@@ -105,8 +102,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--partial-ranking-subset-size"], CMD_LINE_INTS["--partial-ranking-refresh-period"],
             CMD_LINE_INTS["--training-iterations"]);
@@ -115,8 +110,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--online-learning-refresh-period"],
             CMD_LINE_FLOATS["--online-learning-delta"],
@@ -125,8 +118,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         bmi = make_unique<BMI_precision_delay>(seed_query.second,
             documents.get(),
             CMD_LINE_INTS["--threads"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_FLOATS["--precision-delay-threshold"],
             CMD_LINE_INTS["--precision-delay-window"],
@@ -136,8 +127,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_FLOATS["--recency-weighting-param"],
             CMD_LINE_INTS["--training-iterations"]);
@@ -146,8 +135,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             documents.get(),
             CMD_LINE_INTS["--threads"],
             CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--max-effort"],
-            CMD_LINE_INTS["--num-iterations"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--forget-remember-count"],
             CMD_LINE_INTS["--forget-refresh-period"],
@@ -163,11 +150,23 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     }
 
     vector<string> doc_ids;
+    int max_effort = CMD_LINE_INTS["--max-effort"];
+    int max_iterations = CMD_LINE_INTS["--num-iterations"];
+
+    if(max_effort < 0)
+        max_effort = INT_MAX;
+    if(max_iterations < 0)
+        max_iterations = INT_MAX;
+
+    int effort = 0;
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first);
     while(!(doc_ids = bmi->get_doc_to_judge(1)).empty()){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi->record_judgment(doc_ids[0], judgment);
         logfile << doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
+        effort++;
+        if(effort >= max_effort || bmi->get_state().cur_iteration >= max_iterations)
+            break;
     }
     logfile.close();
 }
@@ -250,7 +249,7 @@ string get_help_mode_string(){
 }
 
 int main(int argc, char **argv){
-    cerr<<"["<<time(nullptr)<<"] Initializing"<<endl;
+    TIMER_BEGIN(BMI_CLI);
     AddFlag("--mode", get_help_mode_string().c_str(), string("BMI_DOC"));
     AddFlag("--doc-features", "Path of the file with list of document features", string(""));
     AddFlag("--para-features", "Path of the file with list of paragraph features (BMI_PARA)", string(""));
@@ -315,7 +314,6 @@ int main(int argc, char **argv){
 
     // Start jobs
     // Todo: Better job management
-    cerr<<"["<<time(nullptr)<<"] Starting jobs"<<endl;
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
         jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
@@ -328,5 +326,6 @@ int main(int argc, char **argv){
 
     for(auto &t: jobs)
         t.join();
-    cerr<<"["<<time(nullptr)<<"] Exiting"<<endl;
+
+    TIMER_END(BMI_CLI);
 }

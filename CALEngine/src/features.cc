@@ -31,7 +31,6 @@ SfSparseVector features::get_features(const string &text, const Dataset &dataset
             int id = it->second.id;
             int df = it->second.df;
             int tf = term.second;
-            cout<<term.first<<" "<<id<<endl;
             tmp_features.push_back({id, ((1+log(tf)) * log(dataset.size()/(float)df))});
             sum += tmp_features.back().second * tmp_features.back().second;
         }
