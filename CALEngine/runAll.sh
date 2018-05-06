@@ -7,7 +7,9 @@ RESULT_DIR=results
 DOC_FEATURES=../data/athome1.bin
 QREL=../data/athome1.qrels
 QUERIES=../data/athome1.query
-MAXEFFORT=60000
+MAXEFFORT=-1
+MAXEFFORTFACTOR=3.1
+TRAINITERATIONS=200000
 
 # BMI
 echo "Starting BMI..."
@@ -15,8 +17,8 @@ SUBRESULT_DIR=$RESULT_DIR/bmi/
 mkdir -p "$SUBRESULT_DIR"
 
 ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
-    --threads $THREADS --jobs $JOBS \
-    --mode BMI_DOC &> "$SUBRESULT_DIR/log"
+    --threads $THREADS --jobs $JOBS --training-iterations "$TRAINITERATIONS" \
+    --mode BMI_DOC --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" &> "$SUBRESULT_DIR/log"
 
 
 
@@ -29,7 +31,8 @@ while read k; do
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
         --threads $THREADS --jobs $JOBS \
-        --mode BMI_DOC --max-effort "$MAXEFFORT" --judgments-per-iteration $k &> "$SUBRESULT_DIR/log"
+        --mode BMI_DOC --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" \
+        --judgments-per-iteration $k --training-iterations "$TRAINITERATIONS" &> "$SUBRESULT_DIR/log"
 done <<EOF
 1
 100
@@ -45,7 +48,8 @@ while read k s; do
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
         --threads $THREADS --jobs $JOBS \
-        --mode BMI_PARTIAL_RANKING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --mode BMI_PARTIAL_RANKING --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" \
+        --judgments-per-iteration 1 --training-iterations "$TRAINITERATIONS" \
         --partial-ranking-refresh-period $k --partial-ranking-subset-size $s &> "$SUBRESULT_DIR/log"
 done <<EOF
 100 1000
@@ -65,7 +69,8 @@ while read p k; do
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
         --threads $THREADS --jobs $JOBS \
-        --mode BMI_PRECISION_DELAY --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --mode BMI_PRECISION_DELAY --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" \
+        --judgments-per-iteration 1 --training-iterations "$TRAINITERATIONS" \
         --precision-delay-threshold $p --precision-delay-window $k &> "$SUBRESULT_DIR/log"
 done <<EOF
 0.4 25
@@ -83,8 +88,8 @@ while read it; do
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
         --threads $THREADS --jobs $JOBS \
-        --mode BMI_DOC --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
-        --training-iterations $it &> "$SUBRESULT_DIR/log"
+        --mode BMI_DOC --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" \
+        --judgments-per-iteration 1 --training-iterations $it &> "$SUBRESULT_DIR/log"
 done <<EOF
 200
 2000
@@ -101,7 +106,8 @@ while read k it; do
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
         --threads $THREADS --jobs $JOBS \
-        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" \
+        --judgments-per-iteration 1 \
         --recency-weighting-param $k --training-iterations $it &> "$SUBRESULT_DIR/log"
 done <<EOF
 2 2000
@@ -116,9 +122,9 @@ while read n; do
     mkdir -p "$SUBRESULT_DIR"
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
-        --threads $THREADS --jobs $JOBS \
-        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
-        --forget-remember-count $n &> "$SUBRESULT_DIR/log"
+        --threads $THREADS --jobs $JOBS --training-iterations "$TRAINITERATIONS" \
+        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR" \
+        --judgments-per-iteration 1 --forget-remember-count $n &> "$SUBRESULT_DIR/log"
 done <<EOF
 25
 100
@@ -132,7 +138,8 @@ while read n k; do
 
     ./bmi_cli --doc-features "$DOC_FEATURES" --judgment-logpath "$SUBRESULT_DIR" --qrel "$QREL" --query "$QUERIES" \
         --threads $THREADS --jobs $JOBS \
-        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --judgments-per-iteration 1 \
+        --mode BMI_RECENCY_WEIGHTING --max-effort "$MAXEFFORT" --max-effort-factor "$MAXEFFORTFACTOR"\
+        --judgments-per-iteration 1 --training-iterations "$TRAINITERATIONS" \
         --forget-remember-count $n --forget-refresh-period $k &> "$SUBRESULT_DIR/log"
 done <<EOF
 100 10

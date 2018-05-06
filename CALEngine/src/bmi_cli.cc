@@ -57,6 +57,15 @@ struct Qrel{
             return -1;
         return qrel_map[{topic, doc_id}];
     }
+
+    int get_recall(string topic) {
+        int recall = 0;
+        for(auto &key_val: qrel_map){
+            if(key_val.first.first == topic && key_val.second > 0)
+                recall += 1;
+        }
+        return recall;
+    }
 }qrel;
 
 int get_judgment_qrel(string topic_id, string doc_id){
@@ -153,8 +162,13 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     int max_effort = CMD_LINE_INTS["--max-effort"];
     int max_iterations = CMD_LINE_INTS["--num-iterations"];
 
-    if(max_effort < 0)
-        max_effort = INT_MAX;
+    if(max_effort < 0){
+        float max_effort_factor = CMD_LINE_FLOATS["--max-effort-factor"];
+        if(max_effort_factor > 0)
+            max_effort = qrel.get_recall(seed_query.first) * max_effort_factor;
+        else
+            max_effort = INT_MAX;
+    }
     if(max_iterations < 0)
         max_iterations = INT_MAX;
 
@@ -257,6 +271,7 @@ int main(int argc, char **argv){
     AddFlag("--judgments-per-iteration", "Number of docs to judge per iteration (-1 for BMI default)", int(-1));
     AddFlag("--num-iterations", "Set max number of refresh iterations", int(-1));
     AddFlag("--max-effort", "Set max effort (number of judgments)", int(-1));
+    AddFlag("--max-effort-factor", "Set max effort as a factor of recall", float(-1));
     AddFlag("--training-iterations", "Set number of training iterations", int(200000));
     AddFlag("--partial-ranking-subset-size", "Set subset size for partial ranking (BMI_PARTIAL_RANKING)", int(0));
     AddFlag("--partial-ranking-refresh-period", "Set refresh period for partial ranking (BMI_PARTIAL_RANKING)", int(0));

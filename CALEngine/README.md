@@ -29,6 +29,7 @@ Command line flag options:
       --para-features       Path of the file with list of paragraph features (BMI_PARA)
       --qrel                Qrel file to use for judgment
       --max-effort          Set max effort (number of judgments)
+      --max-effort-factor   Set max effort as a factor of recall
       --num-iterations      Set max number of refresh iterations
       --training-iterations  Set number of training iterations
       --judgments-per-iteration  Number of docs to judge per iteration (-1 for BMI default)
