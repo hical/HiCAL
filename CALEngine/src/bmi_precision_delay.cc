@@ -20,13 +20,7 @@ BMI_precision_delay::BMI_precision_delay(Seed _seed,
 vector<int> BMI_precision_delay::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
 
-    {
-        lock_guard<mutex> lock(training_cache_mutex);
-        for(pair<int, int> training: training_cache){
-            judgments[training.first] = training.second;
-        }
-        training_cache.clear();
-    }
+    sync_training_cache();
 
     // Training
     if(!skip_training){
