@@ -10,6 +10,7 @@
 This repository contains the platform server which is responsible for displaying the document assessment interfaces to the user,
 configuring the system, and communicating requests and responses to and from each retrieval component.
 
+
 Architecture
 ^^^^^^^^^^^^
 The figure below shows the high-level architecture of our system.
@@ -21,6 +22,7 @@ The figure below shows the high-level architecture of our system.
    A high-level view of our system architecture.
 
 Our platform supports different retrieval methods.
+The platform is Django based with Python 3.
 
 Contents:
 
@@ -31,9 +33,6 @@ Contents:
    users
    logging
    components
-   deploy
-   docker_ec2
-   tests
 
 
 

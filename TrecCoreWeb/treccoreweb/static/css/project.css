@@ -13,6 +13,7 @@ body {
  */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
 h1 {
   margin-bottom: 20px;
@@ -30,7 +31,6 @@ h1 {
   font-weight: 500;
   line-height: 1.1;
   color: #0275d8;
-
 }
 
 /*
@@ -43,17 +43,24 @@ h1 {
   min-height: 40px;
 }
 
+
 .nav-link:hover {
   background-color: #e6e6e6;
 
 }
 
+.sidebar .nav-link {
+    -webkit-transition: background-color .2s ease-out;
+  -moz-transition: background-color .2s ease-out;
+  -o-transition: background-color .2s ease-out;
+  transition: background-color .2s ease-out;
+}
+
 .sidebar .nav-link:hover {
-  border-left: 3px solid #0275d8;
+  border-left: 3px solid #007cd8;
   padding-right: 3px;
 
 }
-
 
 
 .nav-link {
@@ -61,8 +68,12 @@ h1 {
 }
 
 .sidebar-brand {
-  background-color: #e6e6e6;
+  background-color: #DDE0E2;
   color: #fff;
+}
+
+.sidebar-brand:hover{
+  background-color: #d2d5d7;
 }
 
 a.sidebar-brand{
@@ -79,7 +90,8 @@ a.sidebar-brand{
   padding-top: 0px;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-  border-right: 1px solid #eee;
+  transition: background-color 0.5s ease;
+  /*border-right: 1px solid #eee;*/
 }
 
 /* Sidebar navigation */
@@ -517,6 +529,12 @@ input.date-radio-button[type="radio"]:checked {
     font-family: 'Montserrat', sans-serif;
 }
 
+.font-open-sans {
+    font-family: 'Open Sans', sans-serif;
+
+}
+
+
 .font-sans{
     font-family: sans-serif;
 }
@@ -723,7 +741,9 @@ a.dropdown-item {
 }
 
 
-
+.bg-faded {
+  background-color: #F5F8FA;
+}
 
 .btn-success, .bg-success, .badge-success {
     background-color: #13ce66!important;

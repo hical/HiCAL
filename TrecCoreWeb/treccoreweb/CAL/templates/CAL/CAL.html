@@ -24,7 +24,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="reviewDocsModalTitle">Latest judged
-                        docs.</h5>
+                        documents</h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -86,7 +86,7 @@
                     <ul class="nav nav-pills flex-column little-padding small-border small-radius">
                         <div class="cal-search">
 
-                            <li class=" top-margin">
+                            <li>
                                 <span class="gray-text align-left">Search content:</span>
                                 <form id="searchContentForm" class="top-margin">
                                     <div class="input-group">
@@ -164,7 +164,7 @@
                                         <span class="badge badge-primary">u</span>
                                     </div>
                                     <div class="col-md-9">
-                                        <small class="left-margin">Show latest judged docs
+                                        <small class="left-margin">Show latest judged documents
                                         </small>
                                     </div>
                                 </div>
@@ -295,7 +295,7 @@
                     updateDocument("",
                     "<span class='text-danger'>Failed to retrieve...</span>",
                     "",
-                    result['status'] + " " +result['statusText'],
+                    "<code>" + result['status'] + " " +result['statusText'] + "</code>",
                     "");
                 }
                 console.error("Error occurred: " + JSON.stringify(result));
@@ -306,7 +306,7 @@
                         updateDocument("",
                         "<span class='text-danger'>Failed to retrieve docs..</sapn>",
                         "",
-                        xhr.responseText,
+                        "<code>" + xhr.responseText + "</code>",
                         "");
                     }
                     console.error("Failed to get documents. Error message: "+xhr.responseText);
