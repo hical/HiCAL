@@ -7,7 +7,7 @@ RESULT_DIR=results
 DOC_FEATURES=../data/athome1.bin
 QREL=../data/athome1.qrels
 QUERIES=../data/athome1.query
-MAXEFFORT=-1
+MAXEFFORT=0
 MAXEFFORTFACTOR=3.1
 TRAINITERATIONS=200000
 

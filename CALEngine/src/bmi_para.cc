@@ -25,6 +25,7 @@ void BMI_para::record_judgment(string doc_id, int judgment){
 }
 
 vector<int> BMI_para::perform_training_iteration(){
+    // TODO fix this
     lock_guard<mutex> lock_training(training_mutex);
 
     {

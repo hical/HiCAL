@@ -40,6 +40,7 @@ class BMI_forget:public BMI {
 };
 
 vector<float> BMI_forget::train(){
+    // TODO fix this
     vector<const SfSparseVector*> positives, negatives;
     for(auto &judgment: seed){
         if(judgment.second > 0)

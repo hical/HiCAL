@@ -162,7 +162,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     int max_effort = CMD_LINE_INTS["--max-effort"];
     int max_iterations = CMD_LINE_INTS["--num-iterations"];
 
-    if(max_effort < 0){
+    if(max_effort <= 0){
         float max_effort_factor = CMD_LINE_FLOATS["--max-effort-factor"];
         if(max_effort_factor > 0)
             max_effort = qrel.get_recall(seed_query.first) * max_effort_factor;

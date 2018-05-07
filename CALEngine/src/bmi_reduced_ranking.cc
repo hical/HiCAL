@@ -74,13 +74,7 @@ vector<int> BMI_reduced_ranking::subset_rescore(const vector<float> &weights) {
 vector<int> BMI_reduced_ranking::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
 
-    {
-        lock_guard<mutex> lock(training_cache_mutex);
-        for(pair<int, int> training: training_cache){
-            judgments[training.first] = training.second;
-        }
-        training_cache.clear();
-    }
+    sync_training_cache();
 
     // Training
     TIMER_BEGIN(training);

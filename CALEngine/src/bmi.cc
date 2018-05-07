@@ -25,6 +25,20 @@ BMI::BMI(Seed _seed,
     is_bmi = (judgments_per_iteration == -1);
     if(is_bmi || _async_mode)
         judgments_per_iteration = 1;
+
+    // initialize training data structures
+    for(auto &judgment: seed){
+        if(judgment.second > 0)
+            positives.push_back(&judgment.first);
+        else
+            negatives.push_back(&judgment.first);
+    }
+
+    // make space for random non_rel documents
+    random_negatives_index = negatives.size();
+    for(int i = 0; i < random_negatives_size; i++)
+        negatives.push_back(nullptr);
+
     if(initialize)
         perform_iteration();
 }
@@ -52,26 +66,10 @@ void BMI::perform_iteration_async(){
 }
 
 vector<float> BMI::train(){
-    vector<const SfSparseVector*> positives, negatives;
-    for(auto &judgment: seed){
-        if(judgment.second > 0)
-            positives.push_back(&judgment.first);
-        else
-            negatives.push_back(&judgment.first);
-    }
-
-    // Sampling random non_rel documents
     uniform_int_distribution<size_t> distribution(0, documents->size()-1);
-    for(int i = 1;i<=100;i++){
+    for(int i = 0;i<random_negatives_size;i++){
         size_t idx = distribution(rand_generator);
-        negatives.push_back(&documents->get_sf_sparse_vector(idx));
-    }
-
-    for(const pair<int, int> &judgment: judgments){
-        if(judgment.second > 0)
-            positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
-        else
-            negatives.push_back(&documents->get_sf_sparse_vector(judgment.first));
+        negatives[random_negatives_index + i] = &documents->get_sf_sparse_vector(idx);
     }
 
     std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
@@ -131,16 +129,42 @@ void BMI::record_judgment(string doc_id, int judgment){
     record_judgment_batch({{doc_id, judgment}});
 }
 
+void BMI::sync_training_cache() {
+    lock_guard<mutex> lock(training_cache_mutex);
+    for(pair<int, int> training: training_cache){
+        if(judgments.find(training.first) != judgments.end()){
+            std::cerr<<"Rewriting judgment history"<<std::endl;
+            if(judgments[training.first] > 0){
+                for(int i = (int)positives.size() - 1; i > 0; i--){
+                    if(documents->get_index(positives[i]->doc_id) == training.first){
+                        positives.erase(positives.begin() + i);
+                        break;
+                    }
+                }
+            } else {
+                for(int i = (int)negatives.size() - 1; i >= random_negatives_index + random_negatives_size; i--){
+                    if(documents->get_index(negatives[i]->doc_id) == training.first){
+                        negatives.erase(negatives.begin() + i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        judgments[training.first] = training.second;
+
+        if(training.second > 0)
+            positives.push_back(&documents->get_sf_sparse_vector(training.first));
+        else
+            negatives.push_back(&documents->get_sf_sparse_vector(training.first));
+    }
+    training_cache.clear();
+}
+
 vector<int> BMI::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
 
-    {
-        lock_guard<mutex> lock(training_cache_mutex);
-        for(pair<int, int> training: training_cache){
-            judgments[training.first] = training.second;
-        }
-        training_cache.clear();
-    }
+    sync_training_cache();
 
     // Training
     TIMER_BEGIN(training);

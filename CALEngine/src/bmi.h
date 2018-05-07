@@ -45,6 +45,9 @@ class BMI{
     // Current of dataset being used to train the classifier
     const Seed seed;
     std::map<int, int> judgments;
+    vector<const SfSparseVector*> positives, negatives;
+    int random_negatives_index;
+    int random_negatives_size = 100;
 
     // Whenever judgements are received, they are put into training_cache,
     // to prevent any race condition in case training_data is being used by the
@@ -74,6 +77,7 @@ class BMI{
     // Handler for performing an iteration
     void perform_iteration();
     void perform_iteration_async();
+    void sync_training_cache();
 
     public:
     BMI(Seed seed,

@@ -33,27 +33,14 @@ class BMI_recency_weighting:public BMI {
 };
 
 vector<float> BMI_recency_weighting::train(){
-    vector<const SfSparseVector*> positives, negatives;
-    for(auto &judgment: seed){
-        if(judgment.second > 0)
-            positives.push_back(&judgment.first);
-        else
-            negatives.push_back(&judgment.first);
-    }
-
-    // Sampling random non_rel documents
     std::uniform_int_distribution<size_t> distribution(0, documents->size()-1);
-    for(int i = 1;i<=100;i++){
+    for(int i = 0;i<random_negatives_size;i++){
         size_t idx = distribution(rand_generator);
-        negatives.push_back(&documents->get_sf_sparse_vector(idx));
+        negatives[random_negatives_index + i] = &documents->get_sf_sparse_vector(idx);
     }
 
-    for(const std::pair<int, int> &judgment: judgments){
-        if(judgment.second > 0)
-            positives.push_back(&documents->get_sf_sparse_vector(judgment.first));
-        else
-            negatives.push_back(&documents->get_sf_sparse_vector(judgment.first));
-    }
+    std::cerr<<"Training on "<<positives.size()<<" +ve docs and "<<negatives.size()<<" -ve docs"<<std::endl;
+    
 
     std::sort(positives.begin(), positives.end(), [this](const SfSparseVector *a, const SfSparseVector *b) -> bool {return this->judgment_order[a] < this->judgment_order[b];});
     std::sort(negatives.begin()+100, negatives.end(), [this](const SfSparseVector *a, const SfSparseVector *b) -> bool {return this->judgment_order[a] < this->judgment_order[b];});
