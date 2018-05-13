@@ -251,13 +251,13 @@
                         };
                     },
                     error: function (result) {
-                        var error_msg = "[" + result['status'] + "] " + "Failed to get document. Error message: " + result["statusText"] + ".";
+                        var error_msg = "<code>" + "[" + result['status'] + "] " + "Failed to get document. Error message: " + result["statusText"] + "." + "</code>";
                         modal.find('.document_content').html(error_msg).addClass("text-danger");
                         console.error(error_msg);
                     },
                     statusCode: {
                         502: function (xhr) {
-                            var error_msg = "[502] Failed to get document. Error message: " + xhr.responseText;
+                            var error_msg = "<code>" + "[502] Failed to get document. Error message: " + xhr.responseText + "</code>";
                             modal.find('.document_content').html(error_msg).addClass("text-danger");
                             console.error(error_msg);
                         }

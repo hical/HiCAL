@@ -13,7 +13,7 @@
 {% block nav-right%}
 <li class="nav-item mt-0-4 mr-3">
     {% if request.user.is_authenticated and request.user|has_group:"practice" %}
-    <a href="{% url 'progress:practice_complete' %}" class="btn btn-primary btn-sm">{% trans "Complete practice" %}</a>
+    <a href="{% url 'progress:practice_complete' %}" class="btn btn-primary btn-sm">Exit practice</a>
     {% elif request.user.is_authenticated %}
     <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_logout'  %}">Sign out</a>
     {% else %}
