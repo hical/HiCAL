@@ -3,8 +3,6 @@ import logging
 
 from braces import views
 from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
 from django.views import generic
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 

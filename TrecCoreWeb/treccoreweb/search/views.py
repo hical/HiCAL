@@ -7,7 +7,6 @@ from django.template import loader
 from django.views import generic
 
 from treccoreweb.search import helpers
-from treccoreweb.search.logging_messages import LOGGING_MESSAGES as SEARCH_LOGGING_MESSAGES
 from treccoreweb.interfaces.SearchEngine import functions as SearchEngine
 from treccoreweb.interfaces.DocumentSnippetEngine import functions as DocEngine
 

@@ -1,6 +1,5 @@
 from config.settings.base import PRACTICE_PASSWORD
 from config.settings.base import PRACTICE_USERNAME
-import json
 import logging
 from django.db.models import Count, Case, When
 
@@ -16,8 +15,7 @@ from treccoreweb.progress.models import Task
 
 from treccoreweb.progress.forms import TaskForm
 from treccoreweb.progress.forms import TopicForm
-from treccoreweb.progress.logging_messages import \
-    LOGGING_MESSAGES as PROGRESS_LOGGING_MESSAGES
+
 
 logger = logging.getLogger(__name__)
 
