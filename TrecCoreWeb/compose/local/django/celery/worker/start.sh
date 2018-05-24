@@ -3,6 +3,7 @@
 set -o errexit
 set -o pipefail
 set -o nounset
+set -o xtrace
 
 
-celery -A treccoreweb.taskapp beat -l INFO
+celery -A treccoreweb.taskapp worker -l INFO
