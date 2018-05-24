@@ -43,6 +43,8 @@ def add_session(session, seed_query):
 
     body = {'session_id': str(session),
             'seed_query': seed_query,
+            'judgments_per_iteration': 1,
+            'async': True,
             'mode': 'para'}
     post_body = '&'.join('%s=%s' % (k, v) for k, v in body.items())
 
@@ -66,7 +68,8 @@ def get_documents(session, num_docs, query):
     h = httplib2.Http()
     url = "http://{}:{}/CAL/get_docs?"
 
-    parameters = {'session_id': str(session), 'max_count': 10}
+    parameters = {'session_id': str(session),
+                  'max_count': 10}
     parameters = urllib.parse.urlencode(parameters)
     resp, content = h.request(url.format(CAL_SERVER_IP,
                                          CAL_SERVER_PORT) + parameters,
