@@ -77,6 +77,6 @@ def get_documents(session, num_docs, query):
 
     if resp and resp['status'] == '200':
         content = json.loads(content.decode('utf-8'))
-        return content['docs'], content['top-terms']
+        return content['docs']
     else:
         raise CALServerError(resp['status'])
