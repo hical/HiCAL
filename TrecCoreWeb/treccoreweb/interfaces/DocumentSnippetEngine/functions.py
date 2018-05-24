@@ -72,7 +72,7 @@ def get_documents(doc_ids, query=None):
     return result
 
 
-def get_documents_with_snippet(doc_ids, query, top_terms):
+def get_documents_with_snippet(doc_ids, query):
     h = httplib2.Http()
     url = "{}/{}/{}"
     doc_ids_unique = []

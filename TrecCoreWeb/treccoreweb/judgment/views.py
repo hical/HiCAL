@@ -125,7 +125,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             # mark relevant documents as `relevant` only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
-                next_patch, top_terms = CALFunctions.send_judgment(
+                next_patch = CALFunctions.send_judgment(
                     self.request.user.current_task.uuid,
                     doc_id,
                     rel)
@@ -140,8 +140,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     doc_ids_hack.append(doc)
 
                 documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
-                                                    self.request.user.current_task.topic.seed_query,
-                                                    top_terms)
+                                                    self.request.user.current_task.topic.seed_query)
                 context[u"next_docs"] = documents
 
             except TimeoutError:
