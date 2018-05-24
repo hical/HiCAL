@@ -135,9 +135,9 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 return;
             }
         }else if(kv.first == "async"){
-            if(kv.second == "true"){
+            if(kv.second == "true" || kv.second == "True"){
                 async_mode = true;
-            }else if(kv.second == "false"){
+            }else if(kv.second == "false" || kv.second == "False"){
                 async_mode = false;
             }
         }
