@@ -25,12 +25,30 @@ void BMI_para::record_judgment(string doc_id, int judgment){
 }
 
 vector<int> BMI_para::perform_training_iteration(){
-    // TODO fix this
     lock_guard<mutex> lock_training(training_mutex);
 
     {
         lock_guard<mutex> lock(training_cache_mutex);
         for(pair<int, int> training: training_cache){
+            if(judgments.find(training.first) != judgments.end()){
+                std::cerr<<"Rewriting judgment history"<<std::endl;
+                if(judgments[training.first] > 0){
+                    for(int i = (int)positives.size() - 1; i > 0; i--){
+                        if(documents->get_index(positives[i]->doc_id) == training.first){
+                            positives.erase(positives.begin() + i);
+                            break;
+                        }
+                    }
+                } else {
+                    for(int i = (int)negatives.size() - 1; i >= random_negatives_index + random_negatives_size; i--){
+                        if(documents->get_index(negatives[i]->doc_id) == training.first){
+                            negatives.erase(negatives.begin() + i);
+                            break;
+                        }
+                    }
+                }
+            }
+
             judgments[training.first] = training.second;
             string doc_id = documents->get_sf_sparse_vector(training.first).doc_id;
             int missing = 0;
@@ -42,6 +60,11 @@ vector<int> BMI_para::perform_training_iteration(){
                 else
                     finished_judgments_para[paragraphs->get_index(para_id)] = 1, missing = 0;
             }
+
+            if(training.second > 0)
+                positives.push_back(&documents->get_sf_sparse_vector(training.first));
+            else
+                negatives.push_back(&documents->get_sf_sparse_vector(training.first));
         }
         training_cache.clear();
     }
