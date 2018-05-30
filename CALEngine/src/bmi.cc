@@ -88,7 +88,6 @@ vector<string> BMI::get_doc_to_judge(uint32_t count=1){
                 for(int i = judgment_queue.size()-1; i>=0 && judgment_queue[i] != -1 && ret.size() < count; i--){
                     if(!is_judged(judgment_queue[i]))
                         ret.push_back(get_ranking_dataset()->get_sf_sparse_vector(judgment_queue[i]).doc_id);
-                    judgment_queue.pop_back();
                 }
                 return ret;
             }
