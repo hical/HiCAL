@@ -16,6 +16,21 @@
     {% endif %}
 {% endblock %}
 
+
+{% block help_modal_text %}
+    <p>This is the machine learning retrieval interface (CAL).
+    The model will select and present the most likely relevant set of documents.
+        The model also selects the most-likely relevant paragraph to reduce review time.</p>
+
+    <p>You can highlight keywords by using the highlighting feature.</p>
+
+    <p>To judge a document, you can click on any of the judging buttons or use the keyboard shortcuts.</p>
+    Once judged, the next most-likely relevant document will appear.
+    To change your judgment, click on latest judgments (or press 'u') to select a previously judged document.
+        You can rejudge the document once you select it.</p>
+
+{% endblock %}
+
 {% block main %}
     <!-- Modal -->
     <div class="modal" id="reviewDocsModal" tabindex="-1" role="dialog"
