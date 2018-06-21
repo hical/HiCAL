@@ -66,9 +66,9 @@ as a separate document with the name of the file (excluding the directories) as 
 The files are processed as plaintext document. This gives users freedom to clean and
 form corpuses in different ways. In order to use the `BMI_PARA` mode in the main tool,
 the user needs to split each document such that each new document is a single paragraph.
-The name of these paragraph files should be "<doc-id>.<para-id>" (this is used by the tool
-to get the parent document for a given paragraph). For this reason, avoid using "." in
-the "<doc-id>".
+The name of these paragraph files should be `<doc-id>.<para-id>` (this is used by the tool
+to get the parent document for a given paragraph). For this reason, avoid using the character `.` in
+the `<doc-id>`.
 
 `--type` as `svmlight` is not used by the main tool and should be used for debugging purposes.
 `--out-df` only works when `--type` is `svmlight`.
