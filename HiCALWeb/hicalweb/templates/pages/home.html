@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block pagetitle %}Home{% endblock %}
+
+
+{% block sidebar %}
+{% endblock %}
+
+{% block nav-header %}
+    <li class="nav-item active">
+        <span class="nav-link gray-text">Welcome to HiCAL Web</span>
+    </li>
+{% endblock %}
+
+{% block nav-right%}
+    {% if request.user.is_authenticated %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_task.topic.id %}">Topic</a>
+    </li>
+    {% endif %}
+{% endblock %}
+
+
+{% block main %}
+
+    <div class="card">
+        <div class="card-block">
+            <div class="row flex-items-md-center">
+                <div class="col-md-4 mt-4">
+                    <h2 class="text-primary">HiCAL Web</h2>
+                    <h6>Please choose from the following:</h6>
+
+                </div>
+                <div class="col-md-8 center-text">
+                    <a class="btn btn-outline-primary" href="{% url 'home' %}">Home</a>
+                    <a class="btn btn-outline-primary" href="#">Tutorial</a>
+                    <hr>
+                    {% if request.user.is_authenticated %}
+                    <a class="btn btn-outline-primary" href="{% url 'search:main' %}">Search</a>
+                    <a class="btn btn-outline-primary" href="{% url 'CAL:main' %}">CAL</a>
+{#                    <a class="btn btn-outline-primary" href="{% url 'stats:home' %}">Stat <span class="badge badge-danger">Under construction</span></a>#}
+                    <hr>
+                    <a class="btn btn-outline-primary" href="{% url 'account_logout'  %}">Sign out</a>
+                    {% else %}
+                    <a class="btn btn-outline-primary" href="{% url 'account_signup' %}">Sign Up</a>
+                    <a class="btn btn-outline-primary" href="{% url 'account_login' %}">Sign In</a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
