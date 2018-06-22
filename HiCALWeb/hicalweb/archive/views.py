@@ -1,13 +1,11 @@
 import logging
 
 from braces import views
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
 from django.views import generic
+
 from hicalweb.judgment.models import Judgement
 
 logger = logging.getLogger(__name__)
-from django.shortcuts import render
 
 
 class HomePageView(views.LoginRequiredMixin, generic.TemplateView):

@@ -1,16 +1,16 @@
 import json
+import logging
 
-import httplib2
 from braces import views
 from django.http import HttpResponse
 from django.template import loader
 from django.views import generic
+import httplib2
 
-from hicalweb.search import helpers
-from hicalweb.interfaces.SearchEngine import functions as SearchEngine
 from hicalweb.interfaces.DocumentSnippetEngine import functions as DocEngine
+from hicalweb.interfaces.SearchEngine import functions as SearchEngine
+from hicalweb.search import helpers
 
-import logging
 logger = logging.getLogger(__name__)
 
 

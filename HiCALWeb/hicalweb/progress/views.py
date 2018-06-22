@@ -21,8 +21,6 @@ from hicalweb.progress.models import Task
 
 from django.contrib.auth.models import Group
 
-
-
 logger = logging.getLogger(__name__)
 
 
