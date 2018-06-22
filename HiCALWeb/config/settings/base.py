@@ -276,8 +276,6 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'progress:home'
 LOGIN_URL = 'account_login'
 
-PRACTICE_USERNAME = 'test'
-PRACTICE_PASSWORD = 'test123'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
@@ -322,7 +320,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-# CORE TREC COMPONENTS IPS *REQUIRED*
+# COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = 'nginx'
 CAL_SERVER_PORT = '9001'
