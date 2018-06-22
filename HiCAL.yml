@@ -17,14 +17,14 @@ services:
 
   django:
     build:
-      context: ./TrecCoreWeb
+      context: ./HiCALWeb
       dockerfile: ./compose/local/django/Dockerfile
     depends_on:
       - postgres
     volumes:
-      - ./TrecCoreWeb:/app
+      - ./HiCALWeb:/app
     environment:
-      - POSTGRES_USER=treccoreweb
+      - POSTGRES_USER=hicalweb
       - USE_DOCKER=yes
     expose:
       - "8001"
@@ -32,13 +32,13 @@ services:
 
   postgres:
     build:
-      context: ./TrecCoreWeb
+      context: ./HiCALWeb
       dockerfile: ./compose/production/postgres/Dockerfile
     volumes:
       - postgres_data_local:/var/lib/postgresql/data
       - postgres_backup_local:/backups
     environment:
-      - POSTGRES_USER=treccoreweb
+      - POSTGRES_USER=hicalweb
 
   nginx:
     image: nginx:latest
@@ -51,7 +51,7 @@ services:
       - "9000"
     volumes:
       - ./config/nginx:/etc/nginx
-      - ./TrecCoreWeb:/app
+      - ./HiCALWeb:/app
       - ~/docs:/docs
       - ~/para_ng:/para_ng
     depends_on:
