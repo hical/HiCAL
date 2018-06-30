@@ -19,14 +19,14 @@ bool verify_dataset(const Dataset &d1, const Dataset &d2){
 }
 int main(int argc, char *argv[]){
     system("mkdir data_tmp/");
-    string input_svm_file = "data/oldreut.svm.fil";
-    string output_bin_file = "data_tmp/oldreut.bin";
-    string output_svm_file = "data_tmp/oldreut.svm.fil";
+    string input_svm_file = "/tmp/svm.fil";
+    string output_bin_file = "/tmp/bin";
+    string output_svm_file = "/tmp/svm.fil.tmp";
     unique_ptr<Dataset> dataset_orig;
     {
         cerr<<"Reading "<<input_svm_file<<endl;
         auto start = std::chrono::steady_clock::now();
-        dataset_orig = CAL::utils::SVMlightFeatureParser(input_svm_file).get_all();
+        dataset_orig = SVMlightFeatureParser(input_svm_file, "").get_all();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
         cerr<<"Read "<<dataset_orig->size()<<" docs in "<<duration.count()<<"ms"<<endl;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     {
         cerr<<"Writing "<<output_bin_file<<endl;
         auto start = std::chrono::steady_clock::now();
-        auto writer = CAL::utils::BinFeatureWriter(output_bin_file);
+        auto writer = BinFeatureWriter(output_bin_file, vector<pair<string, uint32_t>>());
         writer.write_dataset(*dataset_orig);
         writer.finish();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
     {
         cerr<<"Reading "<<output_bin_file<<endl;
         auto start = std::chrono::steady_clock::now();
-        auto reader = CAL::utils::BinFeatureParser(output_bin_file);
+        auto reader = BinFeatureParser(output_bin_file, "");
 
         auto dataset_bin = reader.get_all();
 
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
         cerr<<"Writing "<<output_svm_file<<endl;
         auto start = std::chrono::steady_clock::now();
         {
-            auto writer = CAL::utils::SVMlightFeatureWriter(output_svm_file);
+            auto writer = SVMlightFeatureWriter(output_svm_file, "", vector<pair<string, uint>>());
             writer.write_dataset(*dataset_orig);
         }
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]){
     {
         cerr<<"Reading "<<output_svm_file<<endl;
         auto start = std::chrono::steady_clock::now();
-        auto reader = CAL::utils::SVMlightFeatureParser(output_svm_file);
+        auto reader = SVMlightFeatureParser(output_svm_file, "");
 
         auto dataset_bin = reader.get_all();
 
