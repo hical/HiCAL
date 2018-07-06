@@ -18,7 +18,7 @@ namespace features{
     std::unordered_map<std::string, int> get_tf(const vector<std::string> &words);
 
     // Extract features from given text
-    SfSparseVector get_features(const std::string &text, const Dataset &dataset);
+    SfSparseVector get_features(const std::string &text, const Dataset &dataset, double max_norm=1);
 
 }
 #endif // FEATURES_H

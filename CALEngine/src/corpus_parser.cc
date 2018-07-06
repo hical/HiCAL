@@ -36,6 +36,8 @@ int main(int argc, char **argv){
     // Todo: merge df info to bin file
     AddFlag("--out-df", "Output document frequency file", string(""));
     AddFlag("--type", "Output file format:  bin (default) or svmlight", string("bin"));
+    AddFlag("--para-in", "Input corpus paragraph archive", string(""));
+    AddFlag("--para-out", "Output paragraph feature file", string(""));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
@@ -47,8 +49,10 @@ int main(int argc, char **argv){
 
 
     string in_filename = CMD_LINE_STRINGS["--in"];
+    string para_in_filename = CMD_LINE_STRINGS["--para-in"];
     string pass1_filename = get_tempfile();
     string out_filename = CMD_LINE_STRINGS["--out"];
+    string para_out_filename = CMD_LINE_STRINGS["--para-out"];
     bool bin_out = (CMD_LINE_STRINGS["--type"] == "bin");
 
     cerr<<"Opening file "<<in_filename<<endl;
@@ -189,4 +193,57 @@ int main(int argc, char **argv){
 
     archive_read_close(a);
     archive_read_free(a);
+
+    cerr<<"Generating Paragraph features"<<endl;
+
+    {
+        unique_ptr<FeatureWriter> para_fw;
+        if(bin_out){
+            para_fw = make_unique<BinFeatureWriter>(para_out_filename, dictionary);
+        }
+        else{
+            para_fw = make_unique<SVMlightFeatureWriter>(para_out_filename, CMD_LINE_STRINGS["--out-df"], dictionary);
+        }
+
+        r = archive_read_open_filename(a, para_in_filename.c_str(), 10240);
+        if(r){
+            fail(archive_error_string(a), r);
+        }
+
+        while (true) {
+            r = archive_read_next_header(a, &entry);
+            if (r == ARCHIVE_EOF)
+                break;
+            if (r != ARCHIVE_OK) {
+                fail(archive_error_string(a), 1);
+            }
+            if (!(archive_entry_filetype(entry) & AE_IFREG))
+                continue;
+
+            string doc_name = (archive_entry_pathname(entry));
+            if(doc_name.find_last_of('/') != doc_name.npos){
+                doc_name = doc_name.substr(doc_name.find_last_of('/') + 1);
+            }
+            string content = read_content(a);
+            num_docs++;
+            vector<string> tokens = tokenizer.tokenize(content);
+
+            vector<FeatureValuePair> features;
+            for (pair<string, int> token: features::get_tf(tokens)) {
+                if (token_ids.count(token.first) == 0) {
+                    continue;
+                }
+                features.push_back({token_ids[token.first], (float) (token.second * idf[token_ids[token.first]])});
+            }
+
+            sort(features.begin(), features.end(),
+                 [](const FeatureValuePair &a, const FeatureValuePair &b) -> bool { return a.id_ < b.id_; });
+
+            para_fw->write(SfSparseVector(doc_name, features));
+            cerr<<num_docs<<" paragraphs processed\r";
+            /* if(num_docs == 1000) */
+            /*     break; */
+        }
+        para_fw->finish();
+    }
 }
