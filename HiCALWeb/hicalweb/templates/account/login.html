@@ -1,6 +1,6 @@
 {% extends "account/base.html" %}
 
-{% load i18n crispy_forms_tags %}
+{% load i18n static crispy_forms_tags %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 {% block nav-right %}
@@ -19,7 +19,7 @@
 <div class="row">
 
     <div class="col-md-7 align-self-center center-text">
-        <div class="brand font-montserrat mb-3">HiCAL</div>
+        <div class="brand font-montserrat mb-3"><img src="{% static 'images/hical.png' %}" width="20%"></div>
         <p class="gray-text">A System for Efficient High-Recall Retrieval</p>
     </div>
     <div class="col-md-5">
@@ -27,7 +27,9 @@
         <h1>{% trans "Sign In" %}</h1>
 
         <p>{% blocktrans %}If you have not created an account yet, then please
-        <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+        <a href="{{ signup_url }}">sign up</a> first. {% endblocktrans %}</p>
+        <p>If you would like to practice using the system, click on the
+             practice button above.</p>
 
         <form class="login" method="POST" action="{% url 'account_login' %}">
           {% csrf_token %}
