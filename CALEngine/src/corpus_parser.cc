@@ -194,9 +194,12 @@ int main(int argc, char **argv){
     archive_read_close(a);
     archive_read_free(a);
 
-    cerr<<"Generating Paragraph features"<<endl;
+    if(para_in_filename.length() > 0){
+        cerr<<"Generating Paragraph features"<<endl;
+        archive *a = archive_read_new();
+        archive_read_support_format_all(a);
+        archive_read_support_filter_all(a);
 
-    {
         unique_ptr<FeatureWriter> para_fw;
         if(bin_out){
             para_fw = make_unique<BinFeatureWriter>(para_out_filename, dictionary);
@@ -229,11 +232,21 @@ int main(int argc, char **argv){
             vector<string> tokens = tokenizer.tokenize(content);
 
             vector<FeatureValuePair> features;
+            double sum = 0;
             for (pair<string, int> token: features::get_tf(tokens)) {
                 if (token_ids.count(token.first) == 0) {
                     continue;
                 }
-                features.push_back({token_ids[token.first], (float) (token.second * idf[token_ids[token.first]])});
+                uint32_t id = new_ids[token_ids[token.first]-1];
+                if(id - 1 < dictionary.size() && dictionary[id-1].second > 1){
+                    float wt = (float) (token.second * idf[id]);
+                    features.push_back({id, wt});
+                    sum += wt * wt;
+                }
+            }
+            sum = max(20.0, sqrt(sum));
+            for(auto &f: features){
+                f.value_ /= sum;
             }
 
             sort(features.begin(), features.end(),
