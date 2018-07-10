@@ -237,7 +237,7 @@ int main(int argc, char **argv){
                 if (token_ids.count(token.first) == 0) {
                     continue;
                 }
-                uint32_t id = new_ids[token_ids[token.first]-1];
+                uint32_t id = new_ids[token_ids[token.first]-1] + 1;
                 if(id - 1 < dictionary.size() && dictionary[id-1].second > 1){
                     float wt = (float) (token.second * idf[id]);
                     features.push_back({id, wt});
