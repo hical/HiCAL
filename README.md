@@ -1,8 +1,20 @@
-# A System for Efficient High-Recall Retrieval
+![HiCAL](/images/hical.png)
+
+## Want to find all relevant documents?
+HiCAL is a system for efficient high-recall retrieval. The system allows retrieving and assessing relevant documents and provides high data processing performance and a user-friendly document assessment interface.
+
+---
+Our model was evaluated on the standard TREC dataset: TREC Core 2017 Track.
+
+Visit [hical.github.io](https://hical.github.io/) for usage and
+installation instruction.  For component specific details, check the README in
+their respective directory.
+
+----
 
 This repo contains the implementation of High-Recall Information Retrieval system, described in the following papers:
 
-+ Nimesh Ghelani, Gordon Cormack, and Mark Smucker. [Refresh Strategies in Continuous Active Learning](http://ceur-ws.org/Vol-2127/paper6-profs.pdf) *SIGIR 2018 workshop on Professional Search* 
++ Nimesh Ghelani, Gordon Cormack, and Mark Smucker. [Refresh Strategies in Continuous Active Learning](http://ceur-ws.org/Vol-2127/paper6-profs.pdf) *SIGIR 2018 workshop on Professional Search*
 
 + Haotian Zhang, Mustafa Abualsaud, Nimesh Ghelani, Mark Smucker, Gordon Cormack and Maura Grossman. [Effective User Interaction for High-Recall Retrieval: Less is More] *Submitting*
 
@@ -12,11 +24,6 @@ This repo contains the implementation of High-Recall Information Retrieval syste
 
 + Haotian Zhang, Gordon Cormack, Maura Grossman and Mark Smucker. [Evaluating Sentence-Level Relevance Feedback for High-Recall Information Retrieval](https://arxiv.org/abs/1803.08988)
 
-Our model was evaluated on the standard TREC dataset: TREC Core 2017 Track. 
-
-Visit [hical.github.io](https://hical.github.io/) for usage and
-installation instruction.  For component specific details, check the README in
-their respective directory.
 
 License
 --------
