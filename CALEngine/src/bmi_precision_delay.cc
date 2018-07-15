@@ -63,7 +63,7 @@ void BMI_precision_delay::record_judgment_batch(std::vector<std::pair<std::strin
             if(judgments_per_iteration > 1)
                 judgments_per_iteration /= 2;
             perform_iteration();
-        }else if(judgment_queue.size() == 0){
+        }else if(judgment_queue.size() == 0 || get_doc_to_judge(1).size() == 0){
             judgments_per_iteration *= 2;
             skip_training = true;
             add_to_judgment_list(perform_training_iteration());
