@@ -44,6 +44,9 @@ void BMI_precision_delay::record_judgment_batch(std::vector<std::pair<std::strin
     int last_rel;
     for(const auto &judgment: _judgments){
         size_t id = documents->get_index(judgment.first);
+        if(judgment_queue.size() > 0 && id == judgment_queue.back()){
+            judgment_queue.pop_back();
+        }
         add_to_training_cache(id, judgment.second);
         q.push(judgment.second);
         tot++;
