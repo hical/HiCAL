@@ -24,7 +24,7 @@
 
 
 {% block help_modal_text %}
-    <p>Here you can initiate the topic of your search. You can select one of the pre-defined TREC topics or create your own topic.</p>
+    <p>Here you can select one of your previously started sessions.</p>
 {% endblock %}
 
 
@@ -33,12 +33,10 @@
     <div class="row">
         <div class="col-md-12">
 
-                    <h2 class="text-primary"> Your sessions </h2>
-                    <hr>
+                    <h1 class="text-primary"> Your sessions </h1>
 
                     {% if not tasks %}
                     <h2 class="text-danger">Please create or select a topic</h2>
-                    <hr>
                     <p>There are currently no topic sessions..</p>
                     {% endif %}
 
