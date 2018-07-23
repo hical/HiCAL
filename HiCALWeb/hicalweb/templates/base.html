@@ -111,12 +111,15 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>#}
+{#                </li>#}
                 <hr>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive" aria-hidden="true"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'progress:sessions' %}"><i class="fa fa-clipboard-list" aria-hidden="true"></i></a>
                 </li>
                 {% comment %}
                 <li class="nav-item">

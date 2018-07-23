@@ -19,6 +19,10 @@ class Task(models.Model):
     # last activity timestamp
     last_activity = models.FloatField(default=None, null=True, blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def save(self, *args, **kwargs):
         if not self.pk:
             try:

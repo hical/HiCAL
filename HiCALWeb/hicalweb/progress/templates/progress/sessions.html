@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load i18n has_group %}
+
+{% block pagetitle %}Sessions{% endblock %}
+
+{% block extra_head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"
+            type="application/javascript"></script>
+{% endblock %}
+
+
+{% block nav-header %}{% endblock %}
+{% block nav-right%}
+<li class="nav-item mt-0-4 mr-3">
+    {% if request.user.is_authenticated and request.user|has_group:"practice" %}
+    <a href="{% url 'progress:practice_complete' %}" class="btn btn-primary btn-sm">Exit practice</a>
+    {% elif request.user.is_authenticated %}
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_logout'  %}">Sign out</a>
+    {% else %}
+    <a class="btn btn-outline-primary btn-sm small" href="{% url 'account_login' %}">Sign In</a>
+    {% endif %}
+</li>
+{% endblock %}
+
+
+{% block help_modal_text %}
+    <p>Here you can initiate the topic of your search. You can select one of the pre-defined TREC topics or create your own topic.</p>
+{% endblock %}
+
+
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12">
+
+                    <h2 class="text-primary"> Your sessions </h2>
+                    <hr>
+
+                    {% if not tasks %}
+                    <h2 class="text-danger">Please create or select a topic</h2>
+                    <hr>
+                    <p>There are currently no topic sessions..</p>
+                    {% endif %}
+
+                    {% for task in tasks %}
+                        {% if user.current_task == task.task_obj %}
+                        <div class="card bottom-margin small-shadow"  style="border-color: #13ce66">
+                        {% else %}
+                        <div class="card bottom-margin">
+                        {% endif %}
+                            <div class="card-block">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 center-text">
+                                        <h1 class="text-danger mb-3">Topic: {{ task.task_obj.topic.number }}</h1>
+                                        {% if user.current_task == task.task_obj %}
+                                            <button type="button" class="btn btn-sm btn-secondary" disabled>Activated</button>
+                                        {% else %}
+                                            <form action="" method="POST">
+                                                {% csrf_token %}
+                                                <button type="submit" name="sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-success">Activate</button>
+                                            </form>
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="col-md-7">
+                                        <p><strong>Title:</strong> {{ task.task_obj.topic.title }}</p>
+                                        <p><strong>Description:</strong> {{ task.task_obj.topic.description }}</p>
+                                        <p><strong>Created at:</strong> {{ task.created_at }}</p>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                        <p class="mb-0"><strong>Total judged:</strong> {{ task.total_judged }}</p>
+                                        <p class="mb-0"><strong class="text-success">Highly Rel:</strong> {{ task.total_highlyRelevant }}</p>
+                                        <p class="mb-0"><strong class="text-warning">Rel:</strong> {{ task.total_relevant }}</p>
+                                        <p class="mb-0"><strong class="text-danger">NonRel:</strong> {{ task.total_nonrelevant }}</p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    {% endfor %}
+
+
+        </div>
+
+
+    </div>
+{% endblock %}

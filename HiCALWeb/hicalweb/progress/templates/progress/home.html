@@ -140,6 +140,14 @@
         </div>
 
         <div class="col-md-4">
+            <div class="card small-shadow bottom-margin"  style="border-color: #6190e8">
+                <div class="card-block">
+                    <h2 class="text-primary">Old sessions</h2>
+                    <hr>
+                    <a href="{% url 'progress:sessions' %}" class="btn btn-sm btn-primary">Click to view old sessions</a>
+                </div>
+            </div>
+
             <div class="card small-shadow bottom-margin"  style="border-color: #EFAC57">
                 <div class="card-block">
                     <h2 class="text-warning">TREC topics </h2>
@@ -161,6 +169,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
     </div>
 {% endblock %}
