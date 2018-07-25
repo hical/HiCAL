@@ -3,6 +3,7 @@
 #include <cassert>
 #include "../src/utils/feature_parser.h"
 #include "../src/utils/feature_writer.h"
+#include "../src/dataset.h"
 
 using namespace std;
 
@@ -26,7 +27,8 @@ int main(int argc, char *argv[]){
     {
         cerr<<"Reading "<<input_svm_file<<endl;
         auto start = std::chrono::steady_clock::now();
-        dataset_orig = SVMlightFeatureParser(input_svm_file, "").get_all();
+        unique_ptr<FeatureParser> feature_parser = make_unique<SVMlightFeatureParser>(input_svm_file, "");
+        dataset_orig = Dataset::build(feature_parser.get());
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
         cerr<<"Read "<<dataset_orig->size()<<" docs in "<<duration.count()<<"ms"<<endl;
@@ -48,7 +50,7 @@ int main(int argc, char *argv[]){
         auto start = std::chrono::steady_clock::now();
         auto reader = BinFeatureParser(output_bin_file, "");
 
-        auto dataset_bin = reader.get_all();
+        auto dataset_bin = Dataset::build(&reader);
 
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);
@@ -84,7 +86,7 @@ int main(int argc, char *argv[]){
         auto start = std::chrono::steady_clock::now();
         auto reader = SVMlightFeatureParser(output_svm_file, "");
 
-        auto dataset_bin = reader.get_all();
+        auto dataset_bin = Dataset::build(&reader);
 
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds> 
             (std::chrono::steady_clock::now() - start);

@@ -3,18 +3,16 @@
 
 #include <random>
 #include <mutex>
-#include <set>
 #include "bmi.h"
 
 class BMI_para:public BMI {
     private:
-    Dataset *paragraphs;
-    std::map<int, int> finished_judgments_para;
+    ParagraphDataset *paragraphs;
 
     public:
     BMI_para(Seed seed,
         Dataset *documents,
-        Dataset *paragraphs,
+        ParagraphDataset *paragraphs,
         int num_threads,
         int judgments_per_iteration,
         bool async_mode,

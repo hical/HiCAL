@@ -87,7 +87,7 @@ map<string, Seed> generate_seed_queries(string fname, const Dataset &dataset){
     return seeds;
 }
 
-void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<Dataset> &paragraphs){
+void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<ParagraphDataset> &paragraphs){
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
     const string &mode = CMD_LINE_STRINGS["--mode"];
@@ -300,15 +300,19 @@ int main(int argc, char **argv){
 
     // Load docs
     unique_ptr<Dataset> documents = nullptr;
-    unique_ptr<Dataset> paragraphs = nullptr;
+    unique_ptr<ParagraphDataset> paragraphs = nullptr;
 
     TIMER_BEGIN(documents_loader);
     cerr<<"Loading document features on memory"<<endl;
-    if(CMD_LINE_STRINGS["--df"].size() > 0)
-        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]).get_all();
-    else
-        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
-    cerr<<"Read "<<documents->size()<<" docs"<<endl;
+    {
+        unique_ptr<FeatureParser> feature_parser;
+        if(CMD_LINE_STRINGS["--df"].size() > 0)
+            feature_parser = make_unique<BinFeatureParser>(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]);
+        else
+            feature_parser = make_unique<BinFeatureParser>(CMD_LINE_STRINGS["--doc-features"]);
+        documents = Dataset::build(feature_parser.get());
+        cerr<<"Read "<<documents->size()<<" docs"<<endl;
+    }
     TIMER_END(documents_loader);
 
     // Load para
@@ -316,11 +320,15 @@ int main(int argc, char **argv){
     if(para_features_path.length() > 0){
         TIMER_BEGIN(paragraph_loader);
         cerr<<"Loading paragraph features on memory"<<endl;
-        if(CMD_LINE_STRINGS["--df"].size() > 0)
-            paragraphs = BinFeatureParser(para_features_path, "").get_all();
-        else
-            paragraphs = BinFeatureParser(para_features_path).get_all();
-        cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+        {
+            unique_ptr<FeatureParser> feature_parser;
+            if(CMD_LINE_STRINGS["--df"].size() > 0)
+                feature_parser = make_unique<BinFeatureParser>(para_features_path, "");
+            else
+                feature_parser = make_unique<BinFeatureParser>(para_features_path);
+            paragraphs = ParagraphDataset::build(feature_parser.get(), *documents);
+            cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+        }
         TIMER_END(paragraph_loader);
     }
 
