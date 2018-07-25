@@ -5,7 +5,7 @@
 #include "../sofiaml/sf-sparse-vector.h"
 #include <fstream>
 #include <memory>
-#include "../dataset.h"
+#include <unordered_map>
 
 class FeatureParser{
     protected:
@@ -15,8 +15,6 @@ class FeatureParser{
     public:
         FeatureParser(const string &fname){ fp = fopen(fname.c_str(), "rb"); setvbuf(fp, NULL, _IOFBF, 1 << 25); }
         virtual std::unique_ptr<SfSparseVector> next() = 0;
-        std::unique_ptr<Dataset> get_all();
-
         std::unordered_map<std::string, TermInfo> get_dictionary() { return dictionary; }
 
         ~FeatureParser(){fclose(fp);}

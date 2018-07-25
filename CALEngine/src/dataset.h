@@ -1,33 +1,22 @@
 #ifndef DATASET_H
 #define DATASET_H
 
-#include <cstdint>
 #include <memory>
-#include <vector>
 #include <unordered_map>
 #include <map>
 #include <queue>
 #include <mutex>
 #include "sofiaml/sf-sparse-vector.h"
 #include "utils/features.h"
+#include "utils/feature_parser.h"
 
 typedef std::unordered_map<std::string, TermInfo> Dictionary;
 class Dataset {
-    // List of all document features
+    protected:
     std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>> doc_features;
     Dictionary dictionary;
-
-    // Number of features
     const uint32_t dimensionality;
-
-    // Inverted map of all document ids to their indices
-    const std::unordered_map<std::string, size_t> doc_ids_inv_map;
-
-    void score_docs_insertion_sort(const std::vector<float> &weights,
-                                   int st, int end,
-                                   std::pair<float, int> *top_docs,
-                                   int num_top_docs,
-                                   const std::map<int, int> &judgments);
+    const std::unordered_map<std::string, size_t> doc_ids_inv_map; // Inverted map of all document ids to their indices
 
     void score_docs_priority_queue(const std::vector<float> &weights,
                                    int st, int end,
@@ -40,12 +29,21 @@ class Dataset {
     uint32_t NPOS;
     Dataset(std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>>, Dictionary);
     Dataset():doc_features(nullptr), dimensionality(0), NPOS(0){};
-
-    // Returns the inner product of `weights` with the sparse vector at `index`
     virtual float inner_product(size_t index, const std::vector<float> &weights) const;
+    std::vector<int> rescore(const vector<float> &weights,
+                            int num_threads, int num_top_docs,
+                            const std::map<int, int> &judgments);
 
     // Returns the index given the document id. return Dataset::NPOS if not found
-    size_t get_index(const std::string &id) const;
+    size_t get_index(const std::string &id) const {
+        auto result = doc_ids_inv_map.find(id);
+        if ( result == doc_ids_inv_map.end() ) return NPOS;
+        return result->second;
+    }
+
+    const std::string &get_id(size_t idx){
+        return doc_features->at(idx)->doc_id;
+    }
 
     virtual const SfSparseVector& get_sf_sparse_vector(size_t index) const {
         return *(doc_features->at(index));
@@ -55,16 +53,41 @@ class Dataset {
         return doc_features->size();
     }
 
-    size_t get_dimensionality(){
+    size_t get_dimensionality() const {
         return dimensionality;
     }
 
-    const Dictionary* get_dictionary() const {
-        return &dictionary;
+    const Dictionary& get_dictionary() const {
+        return dictionary;
     }
 
-    virtual int get_real_index(int id) const {return id;}
-    std::vector<int> rescore(const vector<float> &weights, int num_threads, int num_top_docs, const std::map<int, int> &judgments);
+    virtual int translate_index(int id) const {return id;}
+
+    static std::unique_ptr<Dataset> build(FeatureParser *feature_parser){
+        auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
+        std::unique_ptr<SfSparseVector> spv;
+        while((spv = feature_parser->next()) != nullptr)
+            sparse_feature_vectors->push_back(std::move(spv));
+        return std::make_unique<Dataset>(move(sparse_feature_vectors), feature_parser->get_dictionary());
+    }
+};
+
+class ParagraphDataset:public Dataset {
+    const Dataset &parent_dataset;
+    vector<int> parent_documents;
+    public:
+    ParagraphDataset(const Dataset &_parent_dataset,
+                    std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>>,
+                    Dictionary);
+    virtual int translate_index(int id) const {return parent_documents[id];}
+
+    static std::unique_ptr<ParagraphDataset> build(FeatureParser *feature_parser, const Dataset &parent_dataset){
+        auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
+        std::unique_ptr<SfSparseVector> spv;
+        while((spv = feature_parser->next()) != nullptr)
+            sparse_feature_vectors->push_back(std::move(spv));
+        return std::make_unique<ParagraphDataset>(parent_dataset, move(sparse_feature_vectors), feature_parser->get_dictionary());
+    }
 };
 
 class Dataset_subset:public Dataset {
@@ -88,7 +111,7 @@ public:
         return indices.size();
     }
 
-    int get_real_index(int id) const override {return indices[id];}
+    int translate_index(int id) const override {return indices[id];}
 };
 
 #endif // DATASET_H

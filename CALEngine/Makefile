@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -Wall -pthread --std=c++14 -lfcgi -lfcgi++ -larchive
 ifeq ($(DEBUG), 1)
-    CXXFLAGS += -g3
+    CXXFLAGS += -g3 -O0
 else
     CXXFLAGS += -O3
 endif

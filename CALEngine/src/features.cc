@@ -24,10 +24,10 @@ SfSparseVector features::get_features(const string &text, const Dataset &dataset
     vector<pair<uint32_t, double>> tmp_features;
 
     double sum = 0;
-    const Dictionary *dictionary = dataset.get_dictionary();
+    auto &dictionary = dataset.get_dictionary();
     for(pair<string, int> term: get_tf(BMITokenizer().tokenize(text))){
-        auto it = dictionary->find(term.first);
-        if(it != dictionary->end()){
+        auto it = dictionary.find(term.first);
+        if(it != dictionary.end()){
             int id = it->second.id;
             int df = it->second.df;
             int tf = term.second;

@@ -1,6 +1,7 @@
 #include "feature_parser.h"
-
 #include <cstring>
+
+using namespace std;
 
 BinFeatureParser::BinFeatureParser(const string &file_name): FeatureParser(file_name){
     uint32_t dict_end_offset;
@@ -122,12 +123,4 @@ std::unique_ptr<SfSparseVector> SVMlightFeatureParser::next(){
             break;
     }
     return std::make_unique<SfSparseVector>(doc_id, features);
-}
-
-std::unique_ptr<Dataset> FeatureParser::get_all(){
-    auto sparse_feature_vectors = std::make_unique<vector<std::unique_ptr<SfSparseVector>>>();
-    std::unique_ptr<SfSparseVector> spv;
-    while((spv = next()) != nullptr)
-        sparse_feature_vectors->push_back(std::move(spv));
-    return std::make_unique<Dataset>(move(sparse_feature_vectors), dictionary);
 }

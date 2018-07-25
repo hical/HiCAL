@@ -10,7 +10,7 @@
 using namespace std;
 unordered_map<string, unique_ptr<BMI>> SESSIONS;
 unique_ptr<Dataset> documents = nullptr;
-unique_ptr<Dataset> paragraphs = nullptr;
+unique_ptr<ParagraphDataset> paragraphs = nullptr;
 
 // Get the uri without following and preceding slashes
 string parse_action_from_uri(string uri){
@@ -393,11 +393,15 @@ int main(int argc, char **argv){
     // Load docs
     TIMER_BEGIN(documents_loader);
     cerr<<"Loading document features on memory"<<endl;
-    if(CMD_LINE_STRINGS["--df"].size() > 0)
-        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]).get_all();
-    else
-        documents = BinFeatureParser(CMD_LINE_STRINGS["--doc-features"]).get_all();
-    cerr<<"Read "<<documents->size()<<" docs"<<endl;
+    {
+        unique_ptr<FeatureParser> feature_parser;
+        if(CMD_LINE_STRINGS["--df"].size() > 0)
+            feature_parser = make_unique<BinFeatureParser>(CMD_LINE_STRINGS["--doc-features"], CMD_LINE_STRINGS["--df"]);
+        else
+            feature_parser = make_unique<BinFeatureParser>(CMD_LINE_STRINGS["--doc-features"]);
+        documents = Dataset::build(feature_parser.get());
+        cerr<<"Read "<<documents->size()<<" docs"<<endl;
+    }
     TIMER_END(documents_loader);
 
     // Load para
@@ -405,11 +409,15 @@ int main(int argc, char **argv){
     if(para_features_path.length() > 0){
         TIMER_BEGIN(paragraph_loader);
         cerr<<"Loading paragraph features on memory"<<endl;
-        if(CMD_LINE_STRINGS["--df"].size() > 0)
-            paragraphs = BinFeatureParser(para_features_path, "").get_all();
-        else
-            paragraphs = BinFeatureParser(para_features_path).get_all();
-        cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+        {
+            unique_ptr<FeatureParser> feature_parser;
+            if(CMD_LINE_STRINGS["--df"].size() > 0)
+                feature_parser = make_unique<BinFeatureParser>(para_features_path, "");
+            else
+                feature_parser = make_unique<BinFeatureParser>(para_features_path);
+            paragraphs = ParagraphDataset::build(feature_parser.get(), *documents);
+            cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+        }
         TIMER_END(paragraph_loader);
     }
 
