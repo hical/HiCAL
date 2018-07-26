@@ -36,7 +36,7 @@ vector<int> BMI_para::perform_training_iteration(){
     // Scoring
     TIMER_BEGIN(rescoring);
     auto results = paragraphs->rescore(weights, num_threads,
-                              judgments_per_iteration + (async_mode ? extra_judgment_docs : 100),
+                              judgments_per_iteration + (async_mode ? extra_judgment_docs : 0),
                               judgments);
     TIMER_END(rescoring);
 
