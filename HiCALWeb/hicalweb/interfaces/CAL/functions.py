@@ -45,7 +45,7 @@ def add_session(session, seed_query):
             'seed_query': seed_query,
             'judgments_per_iteration': 1,
             'async': True,
-            'mode': 'para'}
+            'mode': 'para_scal'}
     post_body = '&'.join('%s=%s' % (k, v) for k, v in body.items())
 
     resp, content = h.request(url.format(CAL_SERVER_IP,

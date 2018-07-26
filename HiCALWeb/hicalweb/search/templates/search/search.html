@@ -282,6 +282,9 @@
                 data: JSON.stringify(data),
                 success: function (result) {
                     console.log(result['message']);
+                    if(result['is_max_judged_reached']){
+                        window.location.href = "{% url 'progress:home' %}";
+                    }
                 },
                 error: function (result) {
                     console.error("Something went wrong. " +
@@ -297,11 +300,11 @@
         function update_doc_status(doc_id, highlyRelevant, non, relevant){
             console.log("Updating document " + doc_id + " status");
             if(highlyRelevant){
-                $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 2px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(non){
-                $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 2px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }else if(relevant){
-                $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 5px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
+                $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 2px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
         }
