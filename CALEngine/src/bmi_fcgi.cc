@@ -3,6 +3,7 @@
 #include <fcgio.h>
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
+#include "bmi_para_scal.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 #include "utils/utils.h"
@@ -177,6 +178,13 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 judgments_per_iteration,
                 async_mode,
                 200000);
+    }else if(mode == "para_scal"){
+        SESSIONS[session_id] = make_unique<BMI_para_scal>(
+                seed_query,
+                documents.get(),
+                paragraphs.get(),
+                CMD_LINE_INTS["--threads"],
+                200000, 5);
     }
 
     SESSIONS[session_id]->record_judgment_batch(seed_judgments);

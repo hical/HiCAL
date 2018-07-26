@@ -6,7 +6,7 @@
 #include "bmi.h"
 
 class BMI_para:public BMI {
-    private:
+    protected:
     ParagraphDataset *paragraphs;
 
     public:
@@ -18,7 +18,7 @@ class BMI_para:public BMI {
         bool async_mode,
         int training_iterations);
 
-    void record_judgment(std::string doc_id, int judgment);
+    virtual void record_judgment(std::string doc_id, int judgment);
     Dataset *get_ranking_dataset() {return paragraphs;};
     vector<std::pair<string, float>> get_ranklist();
     std::vector<int> perform_training_iteration();
