@@ -9,11 +9,22 @@ from hicalweb.topic.models import Topic
 
 
 class Task(models.Model):
+    STRATEGY_CHOICES = (
+        ('para', 'Paragraph (CAL)'),
+        ('para_scal', 'Paragraph (S-CAL)'),
+    )
+
     username = models.ForeignKey(User)
     topic = models.ForeignKey(Topic)
     uuid = models.UUIDField(default=uuid.uuid4,
                             editable=False)
 
+    # max number of judgments you wish for this task. 0 or negative to have no max.
+    max_number_of_judgments = models.IntegerField(null=False, blank=False)
+    strategy = models.CharField(max_length=64,
+                                choices=STRATEGY_CHOICES,
+                                null=False,
+                                blank=False)
     # current task active time (in seconds)
     timespent = models.FloatField(default=0)
     # last activity timestamp
@@ -26,7 +37,9 @@ class Task(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             try:
-                CALFunctions.add_session(str(self.uuid), self.topic.seed_query)
+                CALFunctions.add_session(str(self.uuid),
+                                         self.topic.seed_query,
+                                         self.strategy)
             except (CALError, ConnectionRefusedError, Exception) as e:
                 # TODO: log error
                 pass

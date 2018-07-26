@@ -69,7 +69,9 @@ class TopicCreateView(LoginRequiredMixin, generic.CreateView):
         self.object.username = self.request.user
 
         try:
-            CALFunctions.add_session(str(self.object.uuid), self.object.seed_query)
+            CALFunctions.add_session(str(self.object.uuid),
+                                     self.object.topic.seed_query,
+                                     self.object.strategy)
             self.object.save()
             messages.add_message(self.request,
                                  messages.SUCCESS,

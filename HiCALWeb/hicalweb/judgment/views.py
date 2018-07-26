@@ -215,8 +215,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             # Check if user has judged `max_judged` documents in total.
             judgements = Judgement.objects.filter(user=self.request.user,
                                                   task=self.request.user.current_task)
-            max_judged = 10
-            if len(judgements) >= max_judged:
+            max_judged = self.request.user.current_task.max_number_of_judgments
+            # Exit task only if number of judgments reached max (and maxjudged is enabled)
+            if len(judgements) >= max_judged and max_judged <= 0:
                 self.request.user.current_task = None
                 self.request.user.save()
 

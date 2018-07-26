@@ -32,11 +32,12 @@ def send_judgment(session, doc_id, rel, next_batch_size=5):
         raise CALServerError(resp['status'])
 
 
-def add_session(session, seed_query):
+def add_session(session, seed_query, mode):
     """
     Adds session to CAL backend server
     :param session:
     :param seed_query
+    :param mode
     """
     h = httplib2.Http()
     url = "http://{}:{}/CAL/begin"
@@ -45,7 +46,7 @@ def add_session(session, seed_query):
             'seed_query': seed_query,
             'judgments_per_iteration': 1,
             'async': True,
-            'mode': 'para_scal'}
+            'mode': mode}
     post_body = '&'.join('%s=%s' % (k, v) for k, v in body.items())
 
     resp, content = h.request(url.format(CAL_SERVER_IP,
