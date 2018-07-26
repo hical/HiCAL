@@ -80,8 +80,8 @@ void write_response(const FCGX_Request & request, int status, string content_typ
                     << "Content-type: " << content_type << "\r\n"
                     << "\r\n"
                     << content << "\n";
-    if(content.length() > 50)
-        content = content.substr(0, 50) + "...";
+    /* if(content.length() > 50) */
+    /*     content = content.substr(0, 50) + "..."; */
     cerr<<"Wrote response: "<<content<<endl;
 }
 
