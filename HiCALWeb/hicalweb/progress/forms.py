@@ -17,6 +17,11 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         exclude = ["username", "setting", "timespent", "last_activity"]
+        help_texts = {
+            'max_number_of_judgments': 'Max number of judgments for this task. Enter 0 '
+                                        'or negative number to disable (i.e. no max).',
+            'strategy': 'Choose the strategy of retrieval.',
+        }
 
     def __init__(self, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
@@ -34,6 +39,9 @@ class TopicForm(forms.ModelForm):
 
     """
     submit_name = 'submit-topic-form'
+
+    max_number_of_judgments = forms.IntegerField(required=True)
+    strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES, required=True)
 
     class Meta:
         model = Topic

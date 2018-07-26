@@ -1,25 +1,26 @@
 import logging
 import random
 import string
+import pytz
 
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import perform_login
 from braces import views
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.db.models import Case
 from django.db.models import Count
 from django.db.models import When
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views import generic
 
 from hicalweb.judgment.models import Judgement
 from hicalweb.progress.forms import TaskForm
 from hicalweb.progress.forms import TopicForm
 from hicalweb.progress.models import Task
-
-from django.contrib.auth.models import Group
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         # COUNTERS
         counters = Judgement.objects.filter(user=self.request.user,
                                             isFromCAL=True,
-                                task=self.request.user.current_task).aggregate(
+                                            task=self.request.user.current_task).aggregate(
             total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
             total_relevant=Count(Case(When(relevant=True, then=1)))
@@ -48,7 +49,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
 
         counters = Judgement.objects.filter(user=self.request.user,
                                             isFromSearch=True,
-                                task=self.request.user.current_task).aggregate(
+                                            task=self.request.user.current_task).aggregate(
             total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
             total_relevant=Count(Case(When(relevant=True, then=1)))
@@ -57,7 +58,6 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         context["total_highlyRelevant_search"] = counters["total_highlyRelevant"]
         context["total_nonrelevant_search"] = counters["total_nonrelevant"]
         context["total_relevant_search"] = counters["total_relevant"]
-
 
         return context
 
@@ -81,11 +81,16 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         elif 'submit-topic-form' in request.POST:
             form = TopicForm(request.POST)
             if form.is_valid():
+
                 f = form.save(commit=False)
                 f.save()
+                max_number_of_judgments = form.cleaned_data['max_number_of_judgments']
+                strategy = form.cleaned_data['strategy']
                 task = Task.objects.create(
                     username=self.request.user,
                     topic=form.instance,
+                    max_number_of_judgments=max_number_of_judgments,
+                    strategy=strategy
                 )
                 messages.add_message(request,
                                      messages.SUCCESS,
@@ -99,9 +104,70 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         return HttpResponseRedirect(reverse_lazy('progress:home'))
 
 
+class Sessions(views.LoginRequiredMixin, generic.TemplateView):
+    template_name = 'progress/sessions.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Sessions, self).get_context_data(**kwargs)
+        user_tasks = Task.objects.filter(username=self.request.user).order_by(
+            "created_at")
+
+        tasks = []
+        for t in user_tasks:
+            task_info = {"task_obj": t,
+                         "created_at": timezone.localtime(t.created_at,pytz.timezone(
+                                                             'America/Toronto'))}
+
+            counters = Judgement.objects.filter(user=self.request.user,
+                                                task=t).aggregate(
+                total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
+                total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
+                total_relevant=Count(Case(When(relevant=True, then=1)))
+            )
+
+            task_info["total_highlyRelevant"] = counters["total_highlyRelevant"]
+            task_info["total_nonrelevant"] = counters["total_nonrelevant"]
+            task_info["total_relevant"] = counters["total_relevant"]
+            task_info["total_judged"] = counters["total_highlyRelevant"] + counters["total_nonrelevant"] + counters["total_relevant"]
+
+            tasks.append(task_info)
+
+        context["tasks"] = tasks
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return super(Sessions, self).get(self, request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        session_id = request.POST.get("sessionid")
+        try:
+            task = Task.objects.get(username=self.request.user,
+                                    uuid=session_id)
+        except Task.DoesNotExist:
+            message = 'Ops! your session cant be found.'
+            messages.add_message(request,
+                                 messages.ERROR,
+                                 message)
+
+            return HttpResponseRedirect(reverse_lazy('progress:sessions'))
+
+        self.request.user.current_task = task
+        self.request.user.save()
+
+        message = 'Your session has been activated. ' \
+                  'Choose a platform from the left sidebar to start judging.'
+        messages.add_message(request,
+                             messages.SUCCESS,
+                             message)
+
+        return HttpResponseRedirect(reverse_lazy('progress:sessions'))
+
+
 class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                       views.JsonRequestResponseMixin,
-                       generic.View):
+                    views.JsonRequestResponseMixin,
+                    generic.View):
     require_json = False
 
     def post(self, request, *args, **kwargs):
@@ -119,8 +185,8 @@ class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
 
 class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                       views.JsonRequestResponseMixin,
-                       generic.View):
+                    views.JsonRequestResponseMixin,
+                    generic.View):
     require_json = False
 
     def post(self, request, *args, **kwargs):
@@ -134,14 +200,13 @@ class CtrlFAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                                       u"extra_context and search_field_value"}
             return self.render_bad_request_response(error_dict)
 
-
         context = {u"message": u"Your event has been recorded"}
         return self.render_json_response(context)
 
 
 class FindKeystrokeAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
-                       views.JsonRequestResponseMixin,
-                       generic.View):
+                            views.JsonRequestResponseMixin,
+                            generic.View):
     require_json = False
 
     def post(self, request, *args, **kwargs):
@@ -189,7 +254,6 @@ class MessageAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
 
 class PracticeCompleteView(views.LoginRequiredMixin, generic.TemplateView):
-
     def get(self, request, *args, **kwargs):
         adapter = get_adapter(self.request)
         adapter.logout(self.request)
@@ -197,9 +261,7 @@ class PracticeCompleteView(views.LoginRequiredMixin, generic.TemplateView):
 
 
 class PracticeView(generic.TemplateView):
-
     def get(self, request, *args, **kwargs):
-
         practice_group, created = Group.objects.get_or_create(name='practice')
 
         # Create practice user and save to the database
