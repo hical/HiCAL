@@ -87,12 +87,50 @@ void Dataset::score_docs_priority_queue(const vector<float> &weights,
     }
 }
 
+void ParagraphDataset::score_docs_priority_queue(const vector<float> &weights,
+                                                int st, int end,
+                                                priority_queue<pair<float, int>> &top_docs,
+                                                mutex &top_docs_mutex,
+                                                int num_top_docs,
+                                                const map<int, int> &judgments) {
+    auto iterator = judgments.lower_bound(translate_index(st));
+    pair<float, int> buffer[1000];
+    int buffer_idx = 0;
+    for(int i = st;i<end; i++){
+        while(iterator != judgments.end() && iterator->first < translate_index(i))
+            iterator++;
+        if(!(iterator != judgments.end() && iterator->first == translate_index(i))){
+            float score = this->inner_product(i, weights);
+
+            if(i == st || translate_index(i) != translate_index(i-1))
+                buffer[buffer_idx] = {-score, i};
+            else
+                buffer[buffer_idx] = min(buffer[buffer_idx], {-score, i});
+            
+            if(i == end - 1 || translate_index(i) != translate_index(i+1))
+                buffer_idx++;
+        }
+
+        if(buffer_idx == 1000 || i == end - 1){
+            lock_guard<mutex> lock(top_docs_mutex);
+            for(int j = 0;j < buffer_idx; j++){
+                if(top_docs.size() < num_top_docs)
+                    top_docs.push(buffer[j]);
+                else if(-buffer[j].first > -top_docs.top().first){
+                    top_docs.pop();
+                    top_docs.push(buffer[j]);
+                }
+            }
+            buffer_idx = 0;
+        }
+    }
+}
+
 vector<int> Dataset::rescore(const vector<float> &weights, int num_threads, int num_top_docs, const map<int, int> &judgments) {
     vector<thread> t;
     mutex top_docs_mutex;
     priority_queue<pair<float, int>> top_docs;
 
-    // Fix the last segment to contain everything remaining
     for(int i = 0; i< num_threads;i++){
         t.push_back(
             thread(
@@ -108,8 +146,47 @@ vector<int> Dataset::rescore(const vector<float> &weights, int num_threads, int 
             )
         );
     }
-    for(thread &x: t)
-        x.join();
+
+    for(thread &x: t) x.join();
+
+    vector<int> top_docs_list(top_docs.size());
+    int idx = 0;
+    while(!top_docs.empty()){
+        top_docs_list[idx++] = (top_docs.top().second);
+        top_docs.pop();
+    }
+    return top_docs_list;
+}
+
+vector<int> ParagraphDataset::rescore(const vector<float> &weights, int num_threads, int num_top_docs, const map<int, int> &judgments) {
+    vector<thread> t;
+    mutex top_docs_mutex;
+    priority_queue<pair<float, int>> top_docs;
+
+    uint32_t prev_end;
+    for(int i = 0; i < num_threads;i++){
+        int start = i * this->size()/num_threads;
+        
+        if(i != 0) start = prev_end;
+        prev_end = (i == num_threads - 1)?this->size():(i+1) * this->size()/num_threads;
+        while(prev_end > 0 && prev_end < this->size() && translate_index(prev_end) == translate_index(prev_end - 1))
+            prev_end++;
+
+        t.push_back(
+            thread(
+                &ParagraphDataset::score_docs_priority_queue,
+                this,
+                cref(weights),
+                start, prev_end,
+                ref(top_docs),
+                ref(top_docs_mutex),
+                num_top_docs,
+                ref(judgments)
+            )
+        );
+    }
+
+    for(thread &x: t) x.join();
 
     vector<int> top_docs_list(top_docs.size());
     int idx = 0;
