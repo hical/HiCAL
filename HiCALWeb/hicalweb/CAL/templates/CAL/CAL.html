@@ -531,7 +531,9 @@
 
                         }
                     }
-
+                    if(result['is_max_judged_reached']){
+                        window.location.href = "{% url 'progress:home' %}";
+                    }
                 },
                 error: function (result){
                     if(document_isEmpty()){
