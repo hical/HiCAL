@@ -17,8 +17,9 @@ try:
     while True:
         l = next(it)
         if l == '<top>\n':
-            num = int(next(it).split("<num> Number: ")[1].rstrip())
-            title = next(it).split("<title> ")[1].rstrip()
+            num = int(next(it).split("<num> Number: ")[1].replace("</num>", "").rstrip())
+            next(it)
+            title = next(it).rstrip()
             next(it)
             next(it)
             desc = next(it).rstrip()
@@ -59,8 +60,9 @@ l = []
 pk = 1
 for t in topics:
     display_description = None
-    if t in nistTopicDict:
-        display_description = nistTopicDict[t]
+    # if t in nistTopicDict:
+    #     display_description = nistTopicDict[t]
+    display_description = topics[t]["desc"]
     d = {
         "model": "topic.topic",
         "pk": pk,

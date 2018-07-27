@@ -3,8 +3,10 @@ import logging
 import traceback
 
 from braces import views
+from django.contrib import messages
+from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from interfaces.DocumentSnippetEngine import functions as DocEngine
 
@@ -117,7 +119,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 found_ctrl_f_terms_in_full_doc=found_ctrl_f_terms_in_full_doc
             )
 
+
+
+
         context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
+        context[u"is_max_judged_reached"] = False
         error_message = None
 
         if isFromCAL:
@@ -204,6 +210,23 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             }
 
             logger.error("[{}]".format(json.dumps(log_body)))
+
+        if not exists:
+            # Check if user has judged `max_judged` documents in total.
+            judgements = Judgement.objects.filter(user=self.request.user,
+                                                  task=self.request.user.current_task)
+            max_judged = self.request.user.current_task.max_number_of_judgments
+            # Exit task only if number of judgments reached max (and maxjudged is enabled)
+            if len(judgements) >= max_judged and max_judged <= 0:
+                self.request.user.current_task = None
+                self.request.user.save()
+
+                message = 'You have judged >={} documents. ' \
+                          'Please move to the next topic.'.format(max_judged)
+                messages.add_message(request,
+                                     messages.SUCCESS,
+                                     message)
+                context[u"is_max_judged_reached"] = True
 
         return self.render_json_response(context)
 

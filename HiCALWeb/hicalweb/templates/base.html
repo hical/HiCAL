@@ -17,9 +17,6 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     {% include "raven-config.html" %}
 
-    <link href="{% static "css/nprogress.css" %}" rel="stylesheet">
-    <script src="{% static "js/nprogress.js" %}"></script>
-
     <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 
@@ -111,12 +108,15 @@
                 <li class="nav-item ">
                     <a class="nav-link" href="{% url 'search:main' %}"><i class="fa fa-search" aria-hidden="true"></i></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="{% url 'iterative:main' %}"><i class="fa fa-list-ol" aria-hidden="true"></i></a>#}
+{#                </li>#}
                 <hr>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'archive:main' %}"><i class="fa fa-archive" aria-hidden="true"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'progress:sessions' %}"><i class="fa fa-clipboard-list" aria-hidden="true"></i></a>
                 </li>
                 {% comment %}
                 <li class="nav-item">
@@ -270,10 +270,6 @@
 
 {% block extra_scripts %}{% endblock %}
 
-<script>
-    NProgress.start();
-    NProgress.done();
-</script>
 
 </body>
 </html>
