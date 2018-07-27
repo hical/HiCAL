@@ -154,7 +154,7 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
         return;
     }
 
-    if(mode != "doc" && mode != "para"){
+    if(mode != "doc" && mode != "para" && mode != "para_scal"){
         write_response(request, 400, "application/json", "{\"error\": \"Invalid mode\"}");
         return;
     }
