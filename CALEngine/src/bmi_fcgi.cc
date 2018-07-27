@@ -154,11 +154,6 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
         return;
     }
 
-    if(mode != "doc" && mode != "para" && mode != "para_scal"){
-        write_response(request, 400, "application/json", "{\"error\": \"Invalid mode\"}");
-        return;
-    }
-
     Seed seed_query = {{features::get_features(query, *documents.get()), 1}};
 
     if(mode == "doc"){
@@ -185,6 +180,9 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 paragraphs.get(),
                 CMD_LINE_INTS["--threads"],
                 200000, 5);
+    }else {
+        write_response(request, 400, "application/json", "{\"error\": \"Invalid mode\"}");
+        return;
     }
 
     SESSIONS[session_id]->record_judgment_batch(seed_judgments);
