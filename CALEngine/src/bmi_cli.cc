@@ -24,6 +24,7 @@ float total_effort_75 = 0.0;
 float recall_1 = 0.0;
 float recall_15 = 0.0;
 float recall_2 = 0.0;
+int num_jobs = 0;
 
 mutex global_mutex;
 vector<string> BMI_TYPES = {
@@ -221,6 +222,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     total_training_time += bmi->training_time;
     total_running_time += (std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now() - startrunning_time)).count();
     TIMER_END(running_time);
+    num_jobs--;
 }
 
 void SanityCheck(){
@@ -377,11 +379,11 @@ int main(int argc, char **argv){
     // Todo: Better job management
     vector<thread> jobs;
     for(const pair<string, Seed> &seed_query: seeds){
+        lock_guard<mutex> lock(global_mutex);
+        num_jobs++;
         jobs.push_back(thread(begin_bmi_helper, seed_query, cref(documents), cref(paragraphs)));
-        if(jobs.size() == CMD_LINE_INTS["--jobs"]){
-            for(auto &t: jobs)
-                t.join();
-            jobs.clear();
+        while(num_jobs >= CMD_LINE_INTS["--jobs"]){
+            this_thread::sleep_for(chrono::milliseconds(1000));
         }
     }
 
