@@ -114,6 +114,8 @@ class BMI{
     struct State get_state(){
         return state;
     }
+    float scoring_time = 0.0;
+    float training_time = 0.0;
 };
 
 #endif // BMI_H

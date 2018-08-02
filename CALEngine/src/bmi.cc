@@ -171,6 +171,7 @@ vector<int> BMI::perform_training_iteration(){
     // Training
     TIMER_BEGIN(training);
     auto weights = train();
+    training_time += (std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now() - starttraining)).count();
     TIMER_END(training);
 
 
@@ -178,6 +179,7 @@ vector<int> BMI::perform_training_iteration(){
     TIMER_BEGIN(rescoring);
     auto results = documents->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ? extra_judgment_docs : 0), judgments);
+    scoring_time += (std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now() - startrescoring)).count();
     TIMER_END(rescoring);
 
     return results;

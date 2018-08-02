@@ -16,6 +16,16 @@
 
 using namespace std;
 
+float total_scoring_time = 0.0;
+float total_training_time = 0.0;
+float total_running_time = 0.0;
+float total_time_75 = 0.0;
+float total_effort_75 = 0.0;
+float recall_1 = 0.0;
+float recall_15 = 0.0;
+float recall_2 = 0.0;
+
+mutex global_mutex;
 vector<string> BMI_TYPES = {
     "BMI_DOC",
     "BMI_PARA",
@@ -88,6 +98,7 @@ map<string, Seed> generate_seed_queries(string fname, const Dataset &dataset){
 }
 
 void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dataset> &documents, const unique_ptr<ParagraphDataset> &paragraphs){
+    TIMER_BEGIN(running_time);
     cerr<<"Topic "<<seed_query.first<<endl;
     unique_ptr<BMI> bmi;
     const string &mode = CMD_LINE_STRINGS["--mode"];
@@ -162,10 +173,11 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     int max_effort = CMD_LINE_INTS["--max-effort"];
     int max_iterations = CMD_LINE_INTS["--num-iterations"];
 
+    int total_rels = qrel.get_recall(seed_query.first);
     if(max_effort <= 0){
         float max_effort_factor = CMD_LINE_FLOATS["--max-effort-factor"];
         if(max_effort_factor > 0)
-            max_effort = qrel.get_recall(seed_query.first) * max_effort_factor;
+            max_effort = total_rels * max_effort_factor;
         else
             max_effort = INT_MAX;
     }
@@ -174,15 +186,41 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
 
     int effort = 0;
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first);
+    int num_rels = 0;
+    bool target_75 = false;
     while(!(doc_ids = bmi->get_doc_to_judge(1)).empty()){
         int judgment = get_judgment(seed_query.first, doc_ids[0]);
         bmi->record_judgment(doc_ids[0], judgment);
         logfile << doc_ids[0] <<" "<< (judgment == -1?0:judgment)<<endl;
+	if(judgment > 0) num_rels++;
         effort++;
+	if(!target_75 && num_rels >= 0.75 * total_rels){
+		lock_guard<mutex> lock(global_mutex);
+		target_75 = true;
+		total_effort_75 += effort / float(total_rels);
+		total_time_75 += (std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now() - startrunning_time)).count();
+	}
+	if(effort == total_rels){
+		lock_guard<mutex> lock(global_mutex);
+		recall_1 += num_rels / float(total_rels);
+	}
+	if(effort == int(1.5 * total_rels)){
+		lock_guard<mutex> lock(global_mutex);
+		recall_15 += num_rels / float(total_rels);
+	}
+	if(effort == 2 * total_rels){
+		lock_guard<mutex> lock(global_mutex);
+		recall_2 += num_rels / float(total_rels);
+	}
         if(effort >= max_effort || bmi->get_state().cur_iteration >= max_iterations)
             break;
     }
     logfile.close();
+    lock_guard<mutex> lock(global_mutex);
+    total_scoring_time += bmi->scoring_time;
+    total_training_time += bmi->training_time;
+    total_running_time += (std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::steady_clock::now() - startrunning_time)).count();
+    TIMER_END(running_time);
 }
 
 void SanityCheck(){
