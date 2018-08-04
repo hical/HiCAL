@@ -82,10 +82,10 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_ids_hack.append(doc)
 
             if self.request.user.current_task.strategy == 'doc':
-                documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
+                documents = DocEngine.get_documents(doc_ids_hack,
                                                     self.request.user.current_task.topic.seed_query)
             else:
-                documents = DocEngine.get_documents(doc_ids_hack,
+                documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
                                                     self.request.user.current_task.topic.seed_query)
 
             return self.render_json_response(documents)
