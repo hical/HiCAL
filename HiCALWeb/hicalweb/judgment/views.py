@@ -145,8 +145,12 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         doc['doc_id'], doc['para_id'] = doc_id.split('.')
                     doc_ids_hack.append(doc)
 
-                documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
-                                                    self.request.user.current_task.topic.seed_query)
+                if self.request.user.current_task.strategy == 'doc':
+                    documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
+                                                        self.request.user.current_task.topic.seed_query)
+                else:
+                    documents = DocEngine.get_documents(doc_ids_hack,
+                                                        self.request.user.current_task.topic.seed_query)
                 context[u"next_docs"] = documents
 
             except TimeoutError:

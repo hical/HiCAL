@@ -281,7 +281,7 @@
             url: '{% url 'CAL:get_docs' %}',
             method: 'GET',
             success: function (result) {
-                console.log(JSON.stringify(result));
+                // console.log(JSON.stringify(result));
                 if (result.length) {
                     for (var i = 0; i < result.length; i++) {
                         queue.enqueue(result[i]);
