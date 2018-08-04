@@ -18,9 +18,13 @@ class TaskForm(forms.ModelForm):
         model = Task
         exclude = ["username", "setting", "timespent", "last_activity"]
         help_texts = {
-            'max_number_of_judgments': 'Max number of judgments for this task. Enter 0 '
-                                        'or negative number to disable (i.e. no max).',
+            'max_number_of_judgments': 'Max number of judgments (effort) for this task. '
+                                       'Enter 0 or negative number to '
+                                       'disable (i.e. no max).',
             'strategy': 'Choose the strategy of retrieval.',
+            'show_full_document_content': 'For paragraph strategies, '
+                             'indicate whether you would like ability to view full '
+                             'document content.',
         }
 
     def __init__(self, *args, **kwargs):
@@ -41,7 +45,11 @@ class TopicForm(forms.ModelForm):
     submit_name = 'submit-topic-form'
 
     max_number_of_judgments = forms.IntegerField(required=True)
-    strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES, required=True)
+    strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES,
+                                 required=True,
+                                 help_text=TaskForm.Meta.help_texts.get('strategy'))
+    show_full_document_content = forms.BooleanField(required=True,
+                                                    help_text=TaskForm.Meta.help_texts.get('show_full_document_content'))
 
     class Meta:
         model = Topic

@@ -84,6 +84,7 @@
                         <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
+                        {% if request.user.current_task.show_full_document_content  %}
                         <hr style="border-top: 3px solid rgba(0,0,0,.1);">
                         <div class="row">
                             <div class="col-md-12">
@@ -91,8 +92,8 @@
                             </div>
                         </div>
 
+                        {% endif %}
                         <div id="document_content"></div>
-
                     </div>
                 </div>
             </div>

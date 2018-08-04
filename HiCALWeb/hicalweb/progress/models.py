@@ -10,6 +10,7 @@ from hicalweb.topic.models import Topic
 
 class Task(models.Model):
     STRATEGY_CHOICES = (
+        ('doc', 'Full document (CAL)'),
         ('para', 'Paragraph (CAL)'),
         ('para_scal', 'Paragraph (S-CAL)'),
     )
@@ -25,6 +26,9 @@ class Task(models.Model):
                                 choices=STRATEGY_CHOICES,
                                 null=False,
                                 blank=False)
+    # For paragraphs strategies
+    show_full_document_content = models.BooleanField(null=False,
+                                                     blank=False)
     # current task active time (in seconds)
     timespent = models.FloatField(default=0)
     # last activity timestamp
