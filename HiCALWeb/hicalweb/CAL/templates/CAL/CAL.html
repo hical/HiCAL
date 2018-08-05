@@ -84,7 +84,7 @@
                         <div id="document_snippet">
                             <p>Please wait...</p>
                         </div>
-                        {% if request.user.current_task.show_full_document_content  %}
+                        {% if request.user.current_task.show_full_document_content and request.user.current_task.strategy != 'doc'  %}
                         <hr style="border-top: 3px solid rgba(0,0,0,.1);">
                         <div class="row">
                             <div class="col-md-12">
@@ -216,6 +216,9 @@
 
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
         var toggle_full_doc = true;
+        {% if request.user.current_task.strategy == 'doc' %}
+            toggle_full_doc = false;
+        {% endif %}
         var time_on_paragraph = 0;
         var show_full_doc_button_clicked = false;
         if(toggle_full_doc){
