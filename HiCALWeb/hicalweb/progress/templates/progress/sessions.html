@@ -50,6 +50,10 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-3 center-text">
                                         <h1 class="text-danger mb-3">Topic: {{ task.task_obj.topic.number }}</h1>
+                                        <p class="m-0"><strong>Strategy:</strong> {{ task.task_obj.get_strategy_display }}</p>
+                                        <p class="m-0"><strong>Max Judgments (effort):</strong>  {{ task.task_obj.max_number_of_judgments }} </p>
+                                        <p class="m-0"><strong>Show Full Document:</strong>  {{ task.task_obj.show_full_document_content }} </p>
+                                        <hr>
                                         {% if user.current_task == task.task_obj %}
                                             <button type="button" class="btn btn-sm btn-secondary" disabled>Activated</button>
                                         {% else %}
