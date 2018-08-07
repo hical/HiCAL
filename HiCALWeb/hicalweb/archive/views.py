@@ -2,6 +2,7 @@ import logging
 
 from braces import views
 from django.views import generic
+from django.db.models import Q
 
 from hicalweb.judgment.models import Judgement
 
@@ -14,8 +15,13 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
 
-        judgments = Judgement.objects.filter(user=self.request.user,
-                                             task=self.request.user.current_task)
+        judgments = Judgement.objects.filter(Q(user=self.request.user,
+                                             task=self.request.user.current_task) &
+                                           (
+                                               Q(highlyRelevant=True) |
+                                               Q(relevant=True) |
+                                               Q(nonrelevant=True)
+                                           ))
         context["judgments"] = judgments
 
         return context

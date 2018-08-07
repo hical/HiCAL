@@ -409,7 +409,7 @@
            csvContent += row + "\n";
         });
         var encodedUri = encodeURI(csvContent);
-        $('#tocsv').attr('href', encodedUri);
+        $('#tocsv').attr('href', encodedUri).attr("download", "{{ request.user.current_task.topic.number }}" + ".txt");
 
     </script>
 {% endblock %}
