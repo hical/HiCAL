@@ -11,6 +11,7 @@
 #include "utils/feature_parser.h"
 
 typedef std::unordered_map<std::string, TermInfo> Dictionary;
+typedef std::vector<std::pair<SfSparseVector, int>> Seed;
 class Dataset {
     protected:
     std::unique_ptr<std::vector<std::unique_ptr<SfSparseVector>>> doc_features;

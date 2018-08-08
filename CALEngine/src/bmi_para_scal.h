@@ -13,7 +13,7 @@ class BMI_para_scal:public BMI_para {
         Dataset *documents,
         ParagraphDataset *paragraphs,
         int num_threads,
-        int training_iterations, int N);
+        int training_iterations, int N, std::vector<std::pair<std::string, int>> &seed_judgments);
 
     virtual void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
 };

@@ -7,13 +7,16 @@ BMI_para_scal::BMI_para_scal(Seed _seed,
         Dataset *_documents,
         ParagraphDataset *_paragraphs,
         int _num_threads,
-        int _training_iterations, int _N)
+        int _training_iterations, int _N, vector<pair<string, int>> &seed_judgments)
     :BMI_para(_seed, _documents, _paragraphs, _num_threads, -1, false, _training_iterations)
 {
     N = _N;
     T = N;
     R = 0;
     judgments_per_iteration = B;
+    for(auto &seed_judgment: seed_judgments){
+        add_to_training_cache(documents->get_index(seed_judgment.first), seed_judgment.second);
+    }
     perform_iteration();
     B = B + ceil(B/10.0);
 }
@@ -55,12 +58,4 @@ void BMI_para_scal::record_judgment_batch(vector<pair<string, int>> _judgments){
         }
         B = B + ceil(B/10.0);
     }
-
-    /* if(!async_mode){ */
-    /*     if(judgments.size() + training_cache.size() >= state.next_iteration_target) */
-    /*         perform_iteration(); */
-    /* }else{ */
-    /*     auto t = thread(&BMI::perform_iteration_async, this); */
-    /*     t.detach(); */
-    /* } */
 }

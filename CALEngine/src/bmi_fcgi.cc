@@ -179,14 +179,16 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 documents.get(),
                 paragraphs.get(),
                 CMD_LINE_INTS["--threads"],
-                200000, 5);
+                200000, 25, seed_judgments);
     }else {
         write_response(request, 400, "application/json", "{\"error\": \"Invalid mode\"}");
         return;
     }
 
-    SESSIONS[session_id]->record_judgment_batch(seed_judgments);
-    SESSIONS[session_id]->perform_training_iteration();
+    if(mode != "para_scal"){
+        SESSIONS[session_id]->record_judgment_batch(seed_judgments);
+        SESSIONS[session_id]->perform_training_iteration();
+    }
 
     // need proper json parsing!!
     write_response(request, 200, "application/json", "{\"session-id\": \""+session_id+"\"}");

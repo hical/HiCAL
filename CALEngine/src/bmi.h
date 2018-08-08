@@ -7,7 +7,6 @@
 #include <map>
 #include "dataset.h"
 
-typedef std::vector<std::pair<SfSparseVector, int>> Seed;
 class BMI{
     protected:
 
