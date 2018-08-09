@@ -45,6 +45,9 @@ void BMI_para_scal::record_judgment_batch(vector<pair<string, int>> _judgments){
         cerr<<"Batch Size = "<<B<<endl;
         judgments_per_iteration = B;
         vector<int> batch = perform_training_iteration();
+        stratums.push_back(vector<int>());
+        for(int doc_id: batch)
+            stratums.back().push_back(doc_id);
 
         int n = ceil(B*N/(float)T);
         cerr<<"Sampling "<<n<<" documents"<<endl;

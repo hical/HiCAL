@@ -226,3 +226,19 @@ Error Response:
     Code: 404
     Content: {'error': 'session not found'}
 ```
+
+#### Get logs from a session
+
+```
+DELETE /log
+Data Params:
+    session_id: [string]
+
+Success Response:
+    Code: 200
+    Content: {...}
+
+Error Response:
+    Code: 404
+    Content: {'error': 'session not found'}
+```

@@ -286,6 +286,28 @@ void get_ranklist(const FCGX_Request & request, const vector<pair<string, string
     write_response(request, 200, "text/plain", ranklist_str);
 }
 
+// Handler for /log
+void log_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
+    string session_id;
+
+    for(auto kv: params){
+        if(kv.first == "session_id"){
+            session_id = kv.second;
+        }
+    }
+
+    if(session_id.size() == 0){
+        write_response(request, 400, "application/json", "{\"error\": \"Non empty session_id required\"}");
+    }
+
+    if(SESSIONS.find(session_id) == SESSIONS.end()){
+        write_response(request, 404, "application/json", "{\"error\": \"session not found\"}");
+        return;
+    }
+
+    write_response(request, 200, "text/plain", SESSIONS[session_id]->get_log());
+}
+
 // Handler for /judge
 void judge_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, doc_id;
@@ -366,6 +388,10 @@ void process_request(const FCGX_Request & request) {
     }else if(action == "delete_session"){
         if(method == "DELETE"){
             delete_session_view(request, params);
+        }
+    }else if(action == "log"){
+        if(method == "GET"){
+            log_view(request, params);
         }
     }
 }

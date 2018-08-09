@@ -108,6 +108,7 @@ class BMI{
     virtual vector<std::pair<string, float>> get_ranklist();
 
     virtual Dataset *get_ranking_dataset() {return documents;};
+    virtual string get_log() {return "{}";}
     Dataset *get_dataset() {return documents;};
 
     struct State get_state(){
