@@ -18,6 +18,9 @@ BMI_para_scal::BMI_para_scal(Seed _seed,
         add_to_training_cache(documents->get_index(seed_judgment.first), seed_judgment.second);
     }
     perform_iteration();
+    stratums.push_back(vector<int>());
+    for(int doc_id: judgment_queue)
+        stratums.back().push_back(doc_id);
     B = B + ceil(B/10.0);
 }
 
