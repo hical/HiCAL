@@ -173,17 +173,23 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     vector<string> doc_ids;
     int max_effort = CMD_LINE_INTS["--max-effort"];
     int max_iterations = CMD_LINE_INTS["--num-iterations"];
+    float max_recall = CMD_LINE_FLOATS["--max-recall"];
 
     int total_rels = qrel.get_recall(seed_query.first);
+    int max_rels = min(total_rels, int(max_recall * total_rels) + 1);
+
     if(max_effort <= 0){
         float max_effort_factor = CMD_LINE_FLOATS["--max-effort-factor"];
         if(max_effort_factor > 0)
-            max_effort = total_rels * max_effort_factor;
+            max_effort = 1 + total_rels * max_effort_factor;
         else
             max_effort = INT_MAX;
     }
     if(max_iterations < 0)
         max_iterations = INT_MAX;
+
+    if(max_recall < 0)
+        max_rels = INT_MAX;
 
     int effort = 0;
     ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first);
@@ -213,7 +219,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
 		lock_guard<mutex> lock(global_mutex);
 		recall_2 += num_rels / float(total_rels);
 	}
-        if(effort >= max_effort || bmi->get_state().cur_iteration >= max_iterations)
+        if(effort >= max_effort || bmi->get_state().cur_iteration >= max_iterations || num_rels >= max_rels)
             break;
     }
     logfile.close();
@@ -312,6 +318,7 @@ int main(int argc, char **argv){
     AddFlag("--num-iterations", "Set max number of refresh iterations", int(-1));
     AddFlag("--max-effort", "Set max effort (number of judgments)", int(-1));
     AddFlag("--max-effort-factor", "Set max effort as a factor of recall", float(-1));
+    AddFlag("--max-recall", "Set max recall", float(-1));
     AddFlag("--training-iterations", "Set number of training iterations", int(200000));
     AddFlag("--partial-ranking-subset-size", "Set subset size for partial ranking (BMI_PARTIAL_RANKING)", int(0));
     AddFlag("--partial-ranking-refresh-period", "Set refresh period for partial ranking (BMI_PARTIAL_RANKING)", int(0));
