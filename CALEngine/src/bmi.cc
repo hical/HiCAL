@@ -189,6 +189,6 @@ std::vector<std::pair<string, float>> BMI::get_ranklist(){
     for(uint32_t i = 0; i < documents->size(); i++){
         ret_results.push_back({documents->get_id(i), documents->inner_product(i, w)});
     }
-    sort(ret_results.begin(), ret_results.end(), [] (const pair<string, int> &a, const pair<string, int> &b) -> bool {return a.second > b.second;});
+    sort(ret_results.begin(), ret_results.end(), [] (const pair<string, float> &a, const pair<string, float> &b) -> bool {return a.second > b.second;});
     return ret_results;
 }
