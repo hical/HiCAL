@@ -60,7 +60,7 @@ void BMI_para_scal::record_judgment_batch(vector<pair<string, int>> _judgments){
         shuffle(batch.begin(), batch.end(), rand_generator);
         for(int i = 0; i < batch.size(); i++){
             if(selector[i]) judgment_queue.push_back(batch[i]);
-            else judgments[paragraphs->translate_index(batch[i])] = -2;
+            judgments[paragraphs->translate_index(batch[i])] = -2;
         }
         B = B + ceil(B/10.0);
     }

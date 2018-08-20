@@ -185,12 +185,10 @@ vector<int> BMI::perform_training_iteration(){
 
 std::vector<std::pair<string, float>> BMI::get_ranklist(){
     vector<std::pair<string, float>> ret_results;
-    auto results = get_ranking_dataset()->rescore(train(), num_threads,
-                              get_ranking_dataset()->size(), map<int, int>());
-
-    // to fix
-    for(auto result: results){
-        ret_results.push_back({get_ranking_dataset()->get_sf_sparse_vector(result).doc_id, 0});
+    auto w = train();
+    for(uint32_t i = 0; i < documents->size(); i++){
+        ret_results.push_back({documents->get_id(i), documents->inner_product(i, w)});
     }
+    sort(ret_results.begin(), ret_results.end(), [] (const pair<string, int> &a, const pair<string, int> &b) -> bool {return a.second > b.second;});
     return ret_results;
 }

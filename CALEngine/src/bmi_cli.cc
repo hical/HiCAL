@@ -158,6 +158,22 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
         get_judgment = get_judgment_qrel;
     }
 
+    if(CMD_LINE_BOOLS["--generate-ranklists"]){
+        ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first);
+        vector<pair<string, int>> seed_judgments;
+        for(auto &entry: qrel.qrel_map) {
+            if(entry.first.first == seed_query.first){
+                seed_judgments.push_back({entry.first.second, entry.second});
+            }
+        }
+        bmi->record_judgment_batch(seed_judgments);
+        for(auto &entry: bmi->get_ranklist()){
+            logfile << entry.first << " " << entry.second << "\n";
+        }
+        logfile.close();
+        return;
+    }
+
     vector<string> doc_ids;
     int max_effort = CMD_LINE_INTS["--max-effort"];
     int max_iterations = CMD_LINE_INTS["--num-iterations"];
@@ -286,6 +302,7 @@ int main(int argc, char **argv){
     AddFlag("--threads", "Number of threads to use for scoring", int(8));
     AddFlag("--jobs", "Number of concurrent jobs (topics)", int(1));
     AddFlag("--async-mode", "Enable greedy async mode for classifier and rescorer, overrides --judgment-per-iteration and --num-iterations", bool(false));
+    AddFlag("--generate-ranklists", "Generate ranklists instead of simulating", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments. Specify a directory within which topic-specific logs will be generated.", string("./judgments.list"));
     AddFlag("--df", "Path of the file with list of terms and their document frequencies. The file contains space-separated word and df on every line. Specify only when df information is not encoded in the document features file.", string(""));
     AddFlag("--help", "Show Help", bool(false));
