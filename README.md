@@ -16,7 +16,7 @@ This repo contains the implementation of High-Recall Information Retrieval syste
 
 + Nimesh Ghelani, Gordon Cormack, and Mark Smucker. [Refresh Strategies in Continuous Active Learning](http://ceur-ws.org/Vol-2127/paper6-profs.pdf) *SIGIR 2018 workshop on Professional Search*
 
-+ Haotian Zhang, Mustafa Abualsaud, Nimesh Ghelani, Mark Smucker, Gordon Cormack and Maura Grossman. [Effective User Interaction for High-Recall Retrieval: Less is More] *Submitting*
++ Haotian Zhang, Mustafa Abualsaud, Nimesh Ghelani, Mark Smucker, Gordon Cormack and Maura Grossman. [Effective User Interaction for High-Recall Retrieval: Less is More] *CIKM 2018*
 
 + Mustafa Abualsaud, Nimesh Ghelani, Haotian Zhang, Mark Smucker, Gordon Cormack and Maura Grossman. [A System for Efficient High-Recall Retrieval](https://dl.acm.org/citation.cfm?id=3209978.3210176) *Proceedings of the 41st International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2018)*
 
