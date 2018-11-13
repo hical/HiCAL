@@ -15,7 +15,7 @@ their respective directory.
 
 This repo contains the implementation of High-Recall Information Retrieval system, described in the following papers:
 
-+ [WaterlooMDS at the TREC 2018 Common Core Track](https://cs.uwaterloo.ca/~h435zhan/TREC2018) *TREC 2018*
++ [UWaterlooMDS at the TREC 2018 Common Core Track](https://cs.uwaterloo.ca/~h435zhan/TREC2018) *TREC 2018*
 
 + Haotian Zhang, Mustafa Abualsaud, Nimesh Ghelani, Mark Smucker, Gordon Cormack and Maura Grossman. [Effective User Interaction for High-Recall Retrieval: Less is More](https://cs.uwaterloo.ca/~h435zhan/CIKM2018) *CIKM 2018*
 
