@@ -30,7 +30,7 @@
                                 </thead>
                                 <tbody>
                                 {% for row in judgments %}
-                                    <tr data-toggle="modal" data-target=".doc-modal" style="cursor: pointer;" onclick="return load_doc({{ row.doc_id }});">
+                                    <tr data-toggle="modal" data-target=".doc-modal" style="cursor: pointer;" onclick="return load_doc('{{ row.doc_id }}');">
                                         <th scope="row"><code><span
                                                 class="text-primary">{{ row.doc_id }}</span></code>
                                         </th>
