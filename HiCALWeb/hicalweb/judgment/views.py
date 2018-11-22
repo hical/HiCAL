@@ -136,7 +136,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     doc_id,
                     rel)
                 if not next_patch:
-                    return self.render_json_response([])
+                    return self.render_json_response(context)
 
                 doc_ids_hack = []
                 for doc_id in next_patch:
@@ -146,13 +146,12 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     doc_ids_hack.append(doc)
 
                 if self.request.user.current_task.strategy == 'doc':
-                    documents = DocEngine.get_documents(doc_ids_hack,
+                    documents = DocEngine.get_documents(next_patch,
                                                         self.request.user.current_task.topic.seed_query)
                 else:
                     documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
                                                         self.request.user.current_task.topic.seed_query)
                 context[u"next_docs"] = documents
-
             except TimeoutError:
                 error_dict = {u"message": u"Timeout error. "
                                           u"Please check status of servers."}
