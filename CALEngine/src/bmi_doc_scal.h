@@ -10,7 +10,7 @@ class BMI_doc_scal:public BMI{
     int B = 1;
     int T, N;
     int R;
-    vector<vector<int>> stratums;
+    std::map<int, int> docs_in_strata;
     public:
     BMI_doc_scal(Seed seed,
         Dataset *documents,
@@ -18,32 +18,12 @@ class BMI_doc_scal:public BMI{
         int judgments_per_iteration,
         bool async_mode,
         int training_iterations,
-        int _N);
+        int scal_n);
 
     virtual void record_judgment_batch(std::vector<std::pair<std::string, int>> judgments);
 
-    string strata_to_json(const vector<int> strata){
-        string ret = "";
-        for(int doc_id: strata){
-            if(ret.size() != 0)
-                ret += ",";
-            ret += "\"" + to_string(doc_id) + "\"";
-        }
-        return "[" + ret + "]";
-    }
-
-    virtual string get_log() {
-        string ret = "";
-        for(auto &strata: stratums){
-            if(ret.size() != 0){
-                ret += ",";
-            }
-            ret += strata_to_json(strata);
-        }
-        ret = "[" + ret + "]";
-        ret = "{ \"stratums\": " + ret + "}";
-        return ret;
-    }
+    virtual void perform_iteration();
+    virtual vector<int> perform_training_iteration();
 };
 
 #endif // BMI_DOC_SCAL_H
