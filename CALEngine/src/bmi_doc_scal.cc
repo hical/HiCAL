@@ -3,7 +3,6 @@
 #include <algorithm>
 #include "bmi_doc_scal.h"
 using namespace std;
-
 BMI_doc_scal::BMI_doc_scal(Seed _seed,
         Dataset *_documents,
         int _num_threads,
@@ -28,17 +27,15 @@ void BMI_doc_scal::record_judgment_batch(vector<pair<string, int>> _judgments){
         if(judgment.second > 0) R++;
     }
     
-    if(judgments.size() + training_cache.size() >= state.next_iteration_target){
+    if(judgments.size() + training_cache.size() >= state.next_iteration_target)
         perform_iteration();
-    }
     
 }
-
 void BMI_doc_scal::perform_iteration(){
     lock_guard<mutex> lock(state_mutex);
     auto results = perform_training_iteration();
-
     cerr<<"Fetched "<<results.size()<<" documents"<<endl;
+
     cerr<<"R = "<<R<<" B = "<<B<<" T = "<<T<<endl;
     if(R >= T) {
         T <<= 1;
@@ -52,7 +49,6 @@ void BMI_doc_scal::perform_iteration(){
     for(int i = 0; i < results.size(); i++){
         if(selector[i]) samples.push_back(results[i]);
     }
-
     cerr<<"Sampling "<<samples.size()<<" documents"<<endl;
     add_to_judgment_list(samples);
     if(!async_mode){
@@ -61,27 +57,20 @@ void BMI_doc_scal::perform_iteration(){
         judgments_per_iteration += (judgments_per_iteration + 9)/10;
         B = judgments_per_iteration;
     }
-    for(int id : results)
-        docs_in_strata[id] = -2;
+    for(int id : results){
+        docs_in_strata[id] = docs_in_strata.size();
+    }
     state.cur_iteration++;
 }
 
 vector<int> BMI_doc_scal::perform_training_iteration(){
     lock_guard<mutex> lock_training(training_mutex);
-
     sync_training_cache();
-
-    // Training
+     // Training
     auto weights = train();
-
-    // Scoring
+     // Scoring
     auto results = documents->rescore(weights, num_threads,
                               judgments_per_iteration + (async_mode ?
                                 extra_judgment_docs : 0), docs_in_strata);
-
     return results;
 }
-
-
-    
-
