@@ -48,8 +48,7 @@ class TopicForm(forms.ModelForm):
     strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES,
                                  required=True,
                                  help_text=TaskForm.Meta.help_texts.get('strategy'))
-    show_full_document_content = forms.BooleanField(required=True,
-                                                    help_text=TaskForm.Meta.help_texts.get('show_full_document_content'))
+    show_full_document_content = forms.BooleanField(required=False,help_text=TaskForm.Meta.help_texts.get('show_full_document_content'))
 
     class Meta:
         model = Topic
