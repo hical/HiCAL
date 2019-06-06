@@ -115,6 +115,10 @@ void BMI::add_to_training_cache(int id, int judgment){
 void BMI::record_judgment_batch(vector<pair<string, int>> _judgments){
     for(const auto &judgment: _judgments){
         size_t id = documents->get_index(judgment.first);
+        if (id == documents->NPOS) {
+            std::cerr << "Document " << judgment.first << " not found (aborting...)" << std::endl;
+            exit(1);
+        }
         add_to_training_cache(id, judgment.second);
     }
 
