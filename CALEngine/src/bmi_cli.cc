@@ -159,11 +159,17 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
     }
 
     if(CMD_LINE_BOOLS["--generate-ranklists"]){
-        ofstream logfile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first);
+        string ranklist_path = CMD_LINE_STRINGS["--judgment-logpath"] + "/" + seed_query.first;
+        ofstream logfile(ranklist_path);
         vector<pair<string, int>> seed_judgments;
         for(auto &entry: qrel.qrel_map) {
             if(entry.first.first == seed_query.first){
-                seed_judgments.push_back({entry.first.second, entry.second});
+                auto &doc_id = entry.first.second;
+                if(bmi->get_dataset()->get_index(doc_id) == bmi->get_dataset()->NPOS) {
+                    std::cerr << "Document " << doc_id << " not found in corpus (aborting...)" << std::endl;
+                    exit(1);
+                }
+                seed_judgments.push_back({doc_id, entry.second});
             }
         }
         bmi->record_judgment_batch(seed_judgments);
@@ -171,6 +177,7 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             logfile << entry.first << " " << entry.second << "\n";
         }
         logfile.close();
+        cerr << "Generated ranklist at: " << ranklist_path << endl;;
         return;
     }
 
