@@ -17,7 +17,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 from hicalweb.progress.forms import TaskForm
 from hicalweb.progress.forms import TopicForm
 from hicalweb.progress.models import Task
@@ -35,24 +35,24 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         context['form_topic'] = TopicForm()
 
         # COUNTERS
-        counters = Judgement.objects.filter(user=self.request.user,
-                                            isFromCAL=True,
-                                            task=self.request.user.current_task).aggregate(
-            total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
-            total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-            total_relevant=Count(Case(When(relevant=True, then=1)))
+        counters = Judgment.objects.filter(user=self.request.user,
+                                           source="CAL",
+                                           task=self.request.user.current_task).aggregate(
+            total_highlyRelevant=Count(Case(When(rel=2, then=1))),
+            total_relevant=Count(Case(When(rel=1, then=1))),
+            total_nonrelevant=Count(Case(When(rel=0, then=1)))
         )
 
         context["total_highlyRelevant_CAL"] = counters["total_highlyRelevant"]
         context["total_nonrelevant_CAL"] = counters["total_nonrelevant"]
         context["total_relevant_CAL"] = counters["total_relevant"]
 
-        counters = Judgement.objects.filter(user=self.request.user,
-                                            isFromSearch=True,
-                                            task=self.request.user.current_task).aggregate(
-            total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
-            total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-            total_relevant=Count(Case(When(relevant=True, then=1)))
+        counters = Judgment.objects.filter(user=self.request.user,
+                                           source="search",
+                                           task=self.request.user.current_task).aggregate(
+            total_highlyRelevant=Count(Case(When(rel=2, then=1))),
+            total_relevant=Count(Case(When(rel=1, then=1))),
+            total_nonrelevant = Count(Case(When(rel=0, then=1)))
         )
 
         context["total_highlyRelevant_search"] = counters["total_highlyRelevant"]
@@ -120,11 +120,11 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
                          "created_at": timezone.localtime(t.created_at,pytz.timezone(
                                                              'America/Toronto'))}
 
-            counters = Judgement.objects.filter(user=self.request.user,
+            counters = Judgment.objects.filter(user=self.request.user,
                                                 task=t).aggregate(
-                total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
-                total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
-                total_relevant=Count(Case(When(relevant=True, then=1)))
+                total_highlyRelevant=Count(Case(When(rel=2, then=1))),
+                total_relevant=Count(Case(When(rel=1, then=1))),
+                total_nonrelevant=Count(Case(When(rel=0, then=1)))
             )
 
             task_info["total_highlyRelevant"] = counters["total_highlyRelevant"]

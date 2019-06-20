@@ -24,16 +24,16 @@
     <div class="row flex-items-md-middle">
         <div class="col-xs " id="doc_{{ document_values.docno }}_status" style="min-width: 4px;">
             {% if document_values.isJudged %}
-                {% if document_values.relevance_judgment.highlyRelevant %}
-                    <div class="bg-success" style="height: 100%; padding: 2px;" >
+                {% if document_values.rel == 2 %}
+                    <div class="bg-success h-100" style="padding: 2px;" >
                         <i class="fa" aria-hidden="true"></i>
                     </div>
-                {% elif document_values.relevance_judgment.nonrelevant %}
-                    <div class="bg-danger" style="height: 100%; padding: 2px;">
+                {% elif document_values.rel == 1%}
+                    <div class="bg-warning h-100" style="padding: 2px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
-                {% elif document_values.relevance_judgment.relevant %}
-                    <div class="bg-warning" style="height: 100%; padding: 2px;">
+                {% elif document_values.rel == 0 %}
+                    <div class="bg-danger h-100" style="padding: 2px;">
                         <i class="fa" aria-hidden="true"></i>
                     </div>
                 {% endif %}
@@ -48,9 +48,9 @@
         </div>
         <div class="offset-md-1 col-md-3 mt-5 center-text">
             <div class="btn-group top-margin" role="group">
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null, null);" class="btn btn-sm btn-danger">Not relevant</a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-warning">Relevant</a>
-                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 0, 'SERP', null, null);" class="btn btn-sm btn-danger">Not relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 1, 'SERP', null, null);" class="btn btn-sm btn-warning">Relevant</a>
+                <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 2, 'SERP', null, null);" class="btn btn-sm btn-success">Highly Relevant</a>
             </div>
             <div class="left-padding gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none"{% endif %}>Document has been judged.</div>
         </div>
@@ -125,9 +125,9 @@
                                         <div class="gray-text align-left">Judge document:</div>
                                         <div class="btn-group top-margin" role="group"
                                              aria-label="Basic example">
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
-                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 0);" class="btn btn-sm btn-danger">Not relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 1);" class="btn btn-sm btn-warning">Relevant</a>
+                                            <a href="#" onclick="return send_judgment_and_hide_modal('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 2);" class="btn btn-sm btn-success">Highly relevant</a>
                                         </div>
                                     </li>
                                     <div class="extra-top-margin align-left">
@@ -205,24 +205,29 @@
                 console.log("No judgment has been made. Sending no judgment call to backend for document id: " + '{{ document_values.docno }}');
                 var now = + new Date();
                 var ctrlf_terms = $("#search_content_doc_{{ document_values.docno }}").val();
-                var timeVerbose = {
+                var time_verbose = {
                     "timestamp": now,
                     "timeActive": timeActive,
                     "timeAway": timeAway,
-                    "source": "searchModal",
+                    "source": "search",
+                    "method": "searchModal",
                     "judged": false,
-                    'ctrl_f_terms_input': ctrlf_terms,
-                    'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
-                    'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
                 };
                 var data = {
                     'doc_id': '{{ document_values.docno }}',
-                    'doc_title': '{{ document_values.title|escapejs }}',
-                    'doc_search_snippet': '{{ document_values.snippet|escapejs }}',
-                    'client_time': now,
-                    'timeVerbose': timeVerbose,
+                    "source": "search",
+                    'time_verbose': time_verbose,
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    'page_title': document.title
+                    'meta': {
+                      "timestamp": now,
+                      'title': '{{ document_values.title|escapejs }}',
+                      'snippet': '{{ document_values.snippet|escapejs }}',
+                      "source": "search",
+                      "method": "searchModal",
+                      'ctrl_f_terms_input': ctrlf_terms,
+                      'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
+                      'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
+                    }
                 };
 
                 $.ajax({

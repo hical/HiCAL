@@ -6,7 +6,7 @@ set -o nounset
 set -o xtrace
 
 
-python manage.py makemigrations && python manage.py migrate
+python manage.py makemigrations --no-input && python manage.py migrate
 python manage.py loaddata hicalweb/topic/fixtures/init_topics.json
 python manage.py collectstatic --no-input
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@myproject.com', 'password')" | python manage.py shell

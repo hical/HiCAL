@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 
 class NoAddNoDeleteAdmin(admin.ModelAdmin):
@@ -11,4 +11,4 @@ class NoAddNoDeleteAdmin(admin.ModelAdmin):
         return False
 
 
-admin.site.register(Judgement, NoAddNoDeleteAdmin)
+admin.site.register(Judgment, NoAddNoDeleteAdmin)

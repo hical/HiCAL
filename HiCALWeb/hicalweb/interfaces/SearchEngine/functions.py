@@ -49,6 +49,6 @@ def get_documents(query, start=0, numdisplay=20):
             result[docno] = parsed_doc
             doc_ids.append(docno)
 
-        return result, doc_ids,  xmlDict['search-response']['total-time']
+        return result, doc_ids, xmlDict['search-response']['total-time']
 
     return None, None, None

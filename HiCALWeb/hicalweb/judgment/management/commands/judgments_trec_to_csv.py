@@ -2,13 +2,13 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 
 class Command(BaseCommand):
     help = 'Export judgments to csv format'
     filename = 'TRECjudgments.csv'
-    header = ('USER', 'TOPIC', 'DOCID', 'JUDGMENT')
+    header = ('USER', 'TOPIC', 'DOCID', 'REL')
 
     def handle(self, *args, **option):
         self.stdout.write(self.style.SUCCESS("Writing to "
@@ -16,18 +16,17 @@ class Command(BaseCommand):
         with open(self.filename, 'wt') as f:
             writer = csv.writer(f)
             writer.writerow(self.header)
-            judgments = Judgement.objects.order_by('user', 'created_at')
+            judgments = Judgment.objects.order_by('user', 'created_at')
             for judgment in judgments:
-                value = 2 if judgment.highlyRelevant else 1 if judgment.relevant else 0 if judgment.nonrelevant else None
-                # if value is empty, then user looked at document but not has not judged
-                if value is None:
+                # if rel is empty, then user looked at document but not has not judged
+                if judgment.rel is None:
                     continue
 
                 user = judgment.user
                 topic = judgment.task.topic.number
                 docid = judgment.doc_id
 
-                writer.writerow((user, topic, docid, value))
+                writer.writerow((user, topic, docid, rel))
 
         self.stdout.write(self.style.SUCCESS(
             'Successfully exported judgments to {}'.format(self.filename)))

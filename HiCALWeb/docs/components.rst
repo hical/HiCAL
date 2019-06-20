@@ -130,7 +130,7 @@ You can customize the behaviour by modifying the javascript code in `iterative.h
 
 The judgment buttons in the interface will call the ``send_judgment()`` function, which will send a call to the url ``judgment:post_judgment`` in ``judgments/url.py`` and run the view ``JudgmentAJAXView``, which will save the document judgment to the database.
 If you would like to include more information to be saved with each judgment, you can modify the ``send_judgment()`` in ``iterative.html``.
-You will also need to modify the database model, `Judgement`, associated with each judgment instance. The `Judgement` class is located in ``judgment/models.py``.
+You will also need to modify the database model, `Judgment`, associated with each judgment instance. The `Judgment` class is located in ``judgment/models.py``.
 
 
 

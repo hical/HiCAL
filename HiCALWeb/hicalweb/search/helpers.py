@@ -1,5 +1,5 @@
 from django.db.models import Q
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 
 def join_judgments(document_values, document_ids, user, task):
@@ -13,26 +13,22 @@ def join_judgments(document_values, document_ids, user, task):
     :return: document_values with extra information about the document
     """
 
-    judged_docs = Judgement.objects.filter(Q(user=user,
+    judged_docs = Judgment.objects.filter(Q(user=user,
                                              task=task,
                                              doc_id__in=document_ids) &
                                            (
-                                               Q(highlyRelevant=True) |
-                                               Q(relevant=True) |
-                                               Q(nonrelevant=True)
+                                               Q(rel=0) |
+                                               Q(rel=1) |
+                                               Q(rel=2)
                                            )
                                            )
     judged_docs = {j.doc_id: j for j in judged_docs}
-    for key in document_values:
-        isJudged = True if key in judged_docs else False
+    for id in document_ids:
+        isJudged = True if id in judged_docs else False
         if isJudged:
-            judgedment = judged_docs.get(key)
-            document_values[key]['relevance_judgment'] = {
-                "highlyRelevant": judgedment.highlyRelevant,
-                "nonrelevant": judgedment.nonrelevant,
-                "relevant": judgedment.relevant,
-            }
-        document_values[key]['isJudged'] = isJudged
+            rel = judged_docs.get(id)
+            document_values[id]['rel'] = rel
+        document_values[id]['isJudged'] = isJudged
     return document_values
 
 
