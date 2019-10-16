@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.0)
+
+add_library(calengine STATIC
+    ./utils/text-utils.cc
+    ./utils/sf-sparse-vector.cc
+    # ./dataset/dataset-memory.cc
+    ./featurizer/featurizer.h
+    ./featurizer/tfidf.cc
+    )
+
+target_include_directories(calengine
+    PRIVATE
+    ./)
+
+target_include_directories(calengine
+    PUBLIC
+    ${CMAKE_SOURCE_DIR}/include)
+
+add_executable(main main.cc)
+target_link_libraries(main calengine)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/)
