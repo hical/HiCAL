@@ -12,17 +12,16 @@ TFIDFFeaturizer::TFIDFFeaturizer(const std::string &filename) {
   string token;
   uint64_t df;
   uint32_t id;
+  fin >> total_docs_;
   while (fin >> id >> df >> token) {
     dictionary_[token] = {id, df};
     if (fin.fail()) {
       FATAL("Error parsing featurizer file");
     }
   }
-
-  Featurizer::finalize();
 }
 
-void TFIDFFeaturizer::fit(const std::string &text) {
+void TFIDFFeaturizer::fit(const std::string &text, bool finalize) {
   total_docs_++;
   for (auto token : get_tf(tokenizer_.tokenize(text))) {
     if (dictionary_.find(token.first) == dictionary_.end()) {
@@ -31,10 +30,12 @@ void TFIDFFeaturizer::fit(const std::string &text) {
     }
     dictionary_[token.first].df++;
   }
+  (void)finalize;
 }
 
 void TFIDFFeaturizer::write(const std::string &filename) {
   ofstream fout(filename);
+  fout << total_docs_ << "\n";
   for (auto entry : dictionary_) {
     fout << entry.second.id << " " << entry.second.df << " " << entry.first
          << "\n";
@@ -61,5 +62,5 @@ SfSparseVector TFIDFFeaturizer::get_features(const std::string &text) {
   }
   sort(features.begin(), features.end(),
        [](auto &a, auto &b) -> bool { return a.id_ < b.id_; });
-  return SfSparseVector("tfidf", features);
+  return SfSparseVector("", features);
 }

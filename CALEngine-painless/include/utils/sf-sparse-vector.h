@@ -1,17 +1,17 @@
 //================================================================================//
-// Copyright 2009 Google Inc.                                                     //
-//                                                                                // 
-// Licensed under the Apache License, Version 2.0 (the "License");                //
-// you may not use this file except in compliance with the License.               //
-// You may obtain a copy of the License at                                        //
+// Copyright 2009 Google Inc. //
 //                                                                                //
-//      http://www.apache.org/licenses/LICENSE-2.0                                //
+// Licensed under the Apache License, Version 2.0 (the "License"); // you may
+// not use this file except in compliance with the License.               // You
+// may obtain a copy of the License at                                        //
 //                                                                                //
-// Unless required by applicable law or agreed to in writing, software            //
-// distributed under the License is distributed on an "AS IS" BASIS,              //
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.       //
-// See the License for the specific language governing permissions and            //
-// limitations under the License.                                                 //
+//      http://www.apache.org/licenses/LICENSE-2.0 //
+//                                                                                //
+// Unless required by applicable law or agreed to in writing, software //
+// distributed under the License is distributed on an "AS IS" BASIS, // WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.       // See
+// the License for the specific language governing permissions and            //
+// limitations under the License. //
 //================================================================================//
 //
 // sf-sparse-vector.h
@@ -59,12 +59,12 @@ struct FeatureValuePair {
 };
 
 class SfSparseVector {
- public:
+public:
   // Construct a new vector from a string.  Input format is svm-light format:
   // <label> <feature>:<value> ... <feature:value> # comment<\n>
   // No bias term is used.
-  SfSparseVector(const vector<FeatureValuePair> &feature_vector);
-  SfSparseVector(string doc_id, const vector<FeatureValuePair> &feature_vector);
+  SfSparseVector(const string &doc_id);
+  SfSparseVector(const string &doc_id, const vector<FeatureValuePair> &features);
 
   float GetSquaredNorm() const { return squared_norm_; }
 
@@ -75,22 +75,21 @@ class SfSparseVector {
 
   // Adds a new (id, value) FeatureValuePair to the end of the vector, and
   // updates the internal squared_norm_ member.
-  void PushPair (uint32_t id, float value);
+  void PushPair(FeatureValuePair feature_value_pair);
 
   string doc_id;
 
-  // Typically, only non-zero valued features are stored.  This vector is assumed
-  // to hold feature id, feature value pairs in order sorted by feature id.  The
-  // special feature id 0 is always set to 1, encoding bias.
+  // Typically, only non-zero valued features are stored.  This vector is
+  // assumed to hold feature id, feature value pairs in order sorted by feature
+  // id.  The special feature id 0 is always set to 1, encoding bias.
   vector<FeatureValuePair> features_;
 
- private:
+private:
+  // Sets up the bias term, indexed by feature id 0.
+  void SetBias() { PushPair({0, 1}); }
 
-    // Sets up the bias term, indexed by feature id 0.
-  void SetBias() { PushPair(0, 1); }
-
-    // Exits if the input format of the file is incorrect.
-  void DieFormat(const string& reason);
+  // Exits if the input format of the file is incorrect.
+  void DieFormat(const string &reason);
 
   // Members.
   float squared_norm_ = 0.0;
