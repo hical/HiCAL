@@ -85,8 +85,6 @@ public:
   vector<FeatureValuePair> features_;
 
 private:
-  // Sets up the bias term, indexed by feature id 0.
-  void SetBias() { PushPair({0, 1}); }
 
   // Exits if the input format of the file is incorrect.
   void DieFormat(const string &reason);

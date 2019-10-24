@@ -22,11 +22,11 @@ public:
                          const std::string &filename,
                          DatasetFormat dataset_format);
 
-  virtual size_t size();
+  virtual size_t size() const;
 
-  virtual SfSparseVector get_features(const std::string &id);
+  virtual const SfSparseVector* get_features(const std::string &id) const;
 
-  virtual SfSparseVector get_features(int id);
+  virtual const SfSparseVector* get_features(int id) const;
 
   virtual void add_doc(const std::string &id, const std::string &text);
 

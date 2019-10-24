@@ -63,5 +63,5 @@ public:
 };
 
 
-std::unordered_map<std::string, int> get_tf(const std::vector<std::string> &words);
+std::unordered_map<std::string, uint32_t> get_tf(const std::vector<std::string> &words);
 #endif // TEXT_UTILS_H

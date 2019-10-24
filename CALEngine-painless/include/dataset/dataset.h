@@ -17,11 +17,11 @@ public:
 
   virtual void add_doc(const std::string &id, const std::string &text) = 0;
 
-  virtual size_t size() = 0;
+  virtual size_t size() const = 0;
 
-  virtual SfSparseVector get_features(const std::string &id) = 0;
+  virtual const SfSparseVector* get_features(const std::string &id) const = 0;
 
-  virtual SfSparseVector get_features(int id) = 0;
+  virtual const SfSparseVector* get_features(int id) const = 0;
 };
 
 #endif // DATASET_H

@@ -6,8 +6,6 @@
 using namespace std;
 
 bool AlphaFilter::filter(const std::string &token) {
-  if (token.length() < 2)
-    return false;
   for (char c : token) {
     if (!isalpha(c))
       return false;
@@ -55,8 +53,8 @@ std::vector<std::string> BMITokenizer::tokenize(const std::string &text) {
   return tokens;
 }
 
-unordered_map<string, int> get_tf(const vector<string> &words){
-    unordered_map<string, int> tf_map;
+unordered_map<string, uint32_t> get_tf(const vector<string> &words){
+    unordered_map<string, uint32_t> tf_map;
     for(string word: words){
         if(tf_map.find(word) == tf_map.end())
             tf_map[word] = 0;

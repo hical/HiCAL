@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 add_library(calengine STATIC
     ./utils/text-utils.cc
     ./utils/sf-sparse-vector.cc
-    # ./dataset/dataset-memory.cc
+    ./dataset/dataset-memory.cc
     ./featurizer/tfidf.cc
     )
 

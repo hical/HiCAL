@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -60,6 +61,9 @@ SfSparseVector TFIDFFeaturizer::get_features(const std::string &text) {
   for (auto &feature : features) {
     feature.value_ /= float(max(sum, max_norm_));
   }
+
+  // Add bias term
+  features.push_back({0, 1});
   sort(features.begin(), features.end(),
        [](auto &a, auto &b) -> bool { return a.id_ < b.id_; });
   return SfSparseVector("", features);

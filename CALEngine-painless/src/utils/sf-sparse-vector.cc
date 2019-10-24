@@ -30,12 +30,10 @@
 
 SfSparseVector::SfSparseVector(const string &doc_id)
     : doc_id(doc_id) {
-  SetBias();
 }
 
 SfSparseVector::SfSparseVector(const string &doc_id, const vector<FeatureValuePair> &features)
     : doc_id(doc_id) {
-  SetBias();
   for(auto &fvp: features)
       PushPair(fvp);
 }
