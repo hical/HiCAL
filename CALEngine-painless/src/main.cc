@@ -8,7 +8,8 @@ int main() {
     string doc1 = "hello dude, What's up?";
     string doc2 = "hello mate, L.O.L dawg!";
     tfidf->fit(doc1);
-    tfidf->fit(doc2, true);
+    tfidf->fit(doc2);
+    tfidf->finalize();
     DatasetMemory dataset(move(tfidf));
     dataset.add_doc("doc1", doc1);
     dataset.add_doc("doc2", doc2);

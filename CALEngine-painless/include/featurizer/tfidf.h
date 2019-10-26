@@ -21,9 +21,11 @@ public:
 
   TFIDFFeaturizer(const std::string &filename);
 
-  virtual void fit(const std::string &text, bool finalize=false);
+  virtual void fit(const std::string &text);
 
   virtual void write(const std::string &filename);
+  
+  virtual void finalize();
 
   virtual SfSparseVector get_features(const std::string &text);
 };

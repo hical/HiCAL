@@ -5,7 +5,8 @@
 TEST(tfidf, basic) {
   TFIDFFeaturizer tfidf;
   tfidf.fit("hello dude, What's up?");
-  tfidf.fit("hello mate, L.O.L dawg!", true);
+  tfidf.fit("hello mate, L.O.L dawg!");
+  tfidf.finalize();
   auto sf = tfidf.get_features("Ajdskjsd mate, dawg hello?");
   EXPECT_EQ(sf.features_.size(), 4);
 
@@ -23,7 +24,8 @@ TEST(tfidf, basic) {
 TEST(tfidf, io) {
   TFIDFFeaturizer tfidf1;
   tfidf1.fit("hello dude, What's up?");
-  tfidf1.fit("hello mate, L.O.L dawg!", true);
+  tfidf1.fit("hello mate, L.O.L dawg!");
+  tfidf1.finalize();
   tfidf1.write("tfidf.txt");
   TFIDFFeaturizer tfidf2("tfidf.txt");
   auto sf1 = tfidf1.get_features("Ajdskjsd mate, dawg hello?");

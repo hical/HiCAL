@@ -17,4 +17,9 @@ target_include_directories(calengine
 
 add_executable(main main.cc)
 target_link_libraries(main calengine)
+
+add_executable(corpus_parser corpus_parser.cc)
+target_link_libraries(corpus_parser calengine)
+target_link_options(corpus_parser PRIVATE -larchive)
+
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})

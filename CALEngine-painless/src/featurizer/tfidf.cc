@@ -22,7 +22,7 @@ TFIDFFeaturizer::TFIDFFeaturizer(const std::string &filename) {
   }
 }
 
-void TFIDFFeaturizer::fit(const std::string &text, bool finalize) {
+void TFIDFFeaturizer::fit(const std::string &text) {
   total_docs_++;
   for (auto token : get_tf(tokenizer_.tokenize(text))) {
     if (dictionary_.find(token.first) == dictionary_.end()) {
@@ -31,7 +31,16 @@ void TFIDFFeaturizer::fit(const std::string &text, bool finalize) {
     }
     dictionary_[token.first].df++;
   }
-  (void)finalize;
+}
+
+void TFIDFFeaturizer::finalize() {
+  for (auto it = dictionary_.begin(); it != dictionary_.end();) {
+    if (it->second.df < 2) {
+      dictionary_.erase(it++);
+    } else {
+      ++it;
+    }
+  }
 }
 
 void TFIDFFeaturizer::write(const std::string &filename) {

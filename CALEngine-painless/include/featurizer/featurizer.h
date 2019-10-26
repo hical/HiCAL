@@ -7,11 +7,13 @@
 
 class Featurizer {
 public:
-  virtual void fit(const std::string &text, bool finalize=false) = 0;
+  virtual void fit(const std::string &text) = 0;
 
   virtual void write(const std::string &filename) = 0;
 
   virtual SfSparseVector get_features(const std::string &text) = 0;
+
+  virtual void finalize() {};
 
   virtual ~Featurizer() {}
 };
