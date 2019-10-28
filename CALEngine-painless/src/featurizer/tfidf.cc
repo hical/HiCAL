@@ -35,7 +35,7 @@ void TFIDFFeaturizer::fit(const std::string &text) {
 
 void TFIDFFeaturizer::finalize() {
   for (auto it = dictionary_.begin(); it != dictionary_.end();) {
-    if (it->second.df < 2) {
+    if (it->second.df < min_df_) {
       dictionary_.erase(it++);
     } else {
       ++it;

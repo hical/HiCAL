@@ -15,6 +15,7 @@ class TFIDFFeaturizer : public Featurizer {
   BMITokenizer tokenizer_ = BMITokenizer();
   size_t total_docs_ = 0;
   double max_norm_ = 20;
+  uint64_t min_df_ = 0;
 
 public:
   TFIDFFeaturizer();
@@ -28,6 +29,10 @@ public:
   virtual void finalize();
 
   virtual SfSparseVector get_features(const std::string &text);
+
+  virtual void set_min_df(uint64_t min_df) {
+      min_df_ = min_df;
+  }
 };
 
 #endif // TFIDF_H
