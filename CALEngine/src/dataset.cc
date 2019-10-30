@@ -1,4 +1,5 @@
 #include <thread>
+#include <algorithm>
 #include "dataset.h"
 #include "utils/utils.h"
 
@@ -14,12 +15,14 @@ unordered_map<string, size_t> generate_inverted_index(const SparseVectors &spars
     return inverted_index;
 }
 
+string get_doc_id(const string &para_id){
+    return para_id.substr(0, para_id.find("."));
+}
+
 vector<int> generate_parent_documents(const Dataset &parent_dataset, const SparseVectors &sparse_vectors){
     vector<int> parent_documents(sparse_vectors->size());
     for(int i = 0; i < parent_documents.size(); i++){
-        auto &para_id = sparse_vectors->at(i)->doc_id;
-        string doc_id = para_id.substr(0, para_id.find("."));
-        parent_documents[i] = parent_dataset.get_index(doc_id);
+        parent_documents[i] = parent_dataset.get_index(get_doc_id(sparse_vectors->at(i)->doc_id));
         
         if(i > 0 && parent_documents[i] < parent_documents[i-1]){
             fail("Paragraphs must be in increasing order of their parent document ids", -1);
@@ -202,5 +205,12 @@ ParagraphDataset::ParagraphDataset(const Dataset &_parent_dataset,
         std::unordered_map<std::string, TermInfo> _dictionary):
             Dataset(move(sparse_vectors), _dictionary),
             parent_dataset(_parent_dataset){
+    sort(
+        doc_features->begin(),
+        doc_features->end(),
+        [&](const unique_ptr<SfSparseVector> &a, const unique_ptr<SfSparseVector> &b) -> bool {
+            return parent_dataset.get_index(get_doc_id(a->doc_id)) < parent_dataset.get_index(get_doc_id(b->doc_id));
+        }
+    );
     parent_documents = generate_parent_documents(_parent_dataset, doc_features);
 }
