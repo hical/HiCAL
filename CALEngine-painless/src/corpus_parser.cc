@@ -126,6 +126,7 @@ int main(int argc, char **argv) {
       df = DatasetMemory::SVMLIGHT;
   } else {
       FATAL("Invalid dataset format " + string(dataset_format));
+      return 1;
   }
 
   unique_ptr<Featurizer> tfidf = unique_ptr<Featurizer>(new TFIDFFeaturizer());
