@@ -129,7 +129,8 @@ int main(int argc, char **argv) {
       return 1;
   }
 
-  unique_ptr<Featurizer> tfidf = unique_ptr<Featurizer>(new TFIDFFeaturizer());
+  auto tfidf = unique_ptr<TFIDFFeaturizer>(new TFIDFFeaturizer());
+  tfidf->set_min_df(2);
   fit_featurizer(*tfidf, in_filename);
   tfidf->write(out_feat_filename);
   DatasetMemory dataset(move(tfidf));
