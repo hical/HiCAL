@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 project(calengine)
 
 add_compile_options(-W -Wall -Werror --std=c++14)
@@ -18,8 +18,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
-include(cmake/googletest.cmake)
-fetch_googletest()
 
+# Testing
+add_subdirectory(lib/gtest-1.10)
 enable_testing()
 add_subdirectory(test)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})

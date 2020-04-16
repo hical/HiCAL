@@ -2,23 +2,23 @@
 #include "utils/text-utils.h"
 #include "gtest/gtest.h"
 
+
 TEST(tfidf, basic) {
   TFIDFFeaturizer tfidf;
   tfidf.fit("hello dude, What's up?");
-  tfidf.fit("hello mate, L.O.L dawg!");
+  tfidf.fit("hello mate, L.O.L FOO!");
+  tfidf.fit("bar foo, FOO!");
   tfidf.finalize();
-  auto sf = tfidf.get_features("Ajdskjsd mate, dawg hello?");
-  EXPECT_EQ(sf.features_.size(), 4);
+  auto sf = tfidf.get_features("Ajdskjsd mate, FOO hello?");
+  EXPECT_EQ(sf.features_.size(), 3);
 
   EXPECT_EQ(sf.features_[0].id_, 0);
   EXPECT_EQ(sf.features_[1].id_, 3);
   EXPECT_EQ(sf.features_[2].id_, 5);
-  EXPECT_EQ(sf.features_[3].id_, 6);
 
-  EXPECT_NEAR(sf.features_[0].value_, 1, 1e-6);
-  EXPECT_NEAR(sf.features_[1].value_, 0, 1e-6);
-  EXPECT_NEAR(sf.features_[2].value_, 0.0346574, 1e-6);
-  EXPECT_NEAR(sf.features_[3].value_, 0.0346574, 1e-6);
+  EXPECT_DOUBLE_EQ(sf.features_[0].value_, 1);
+  EXPECT_DOUBLE_EQ(sf.features_[1].value_, 0.020273255184292793);
+  EXPECT_DOUBLE_EQ(sf.features_[2].value_, 0.020273255184292793);
 }
 
 TEST(tfidf, io) {

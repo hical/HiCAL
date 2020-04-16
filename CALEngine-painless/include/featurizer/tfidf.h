@@ -11,12 +11,12 @@ struct TermInfo {
 };
 
 class TFIDFFeaturizer : public Featurizer {
-  std::unordered_map<std::string, TermInfo> dictionary_;
   BMITokenizer tokenizer_ = BMITokenizer();
   size_t total_docs_ = 0;
   double max_norm_ = 20;
 
 public:
+  std::unordered_map<std::string, TermInfo> dictionary_;
   TFIDFFeaturizer();
 
   TFIDFFeaturizer(const std::string &filename);
