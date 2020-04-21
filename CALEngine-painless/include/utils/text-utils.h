@@ -3,65 +3,61 @@
 
 #include <cstring>
 #include <string>
-#include <vector>
 #include <unordered_map>
-
-/*
- * Intentionally not optimized for sake of maintenance and flexibility
- * Todo: use char* for internal filters and transforms
- */
+#include <vector>
 
 // Filter declarations start here
 class Filter {
-public:
-  virtual bool filter(const std::string &token) = 0;
+   public:
+    virtual bool filter(const std::string &token) const = 0;
 };
 
 class AlphaFilter : public Filter {
-public:
-  bool filter(const std::string &token) override;
+   public:
+    bool filter(const std::string &token) const override;
 };
 
 class MinLengthFilter : public Filter {
-  size_t min_length;
+    size_t min_length;
 
-public:
-  MinLengthFilter(size_t _min_length) : min_length(_min_length){};
-  bool filter(const std::string &token) override;
+   public:
+    MinLengthFilter(size_t _min_length) : min_length(_min_length){};
+    bool filter(const std::string &token) const override;
 };
 
 // Transformer declarations start here
 class Transform {
-public:
-  virtual std::string transform(const std::string &token) = 0;
+   public:
+    virtual std::string transform(const std::string &token) const = 0;
 };
 
 class PorterTransform : public Transform {
-public:
-  std::string transform(const std::string &token) override;
+   public:
+    std::string transform(const std::string &token) const override;
 };
 
 class LowerTransform : public Transform {
-public:
-  std::string transform(const std::string &token) override;
+   public:
+    std::string transform(const std::string &token) const override;
 };
 
 // Tokenizer declarations start here
 class Tokenizer {
-public:
-  virtual std::vector<std::string> tokenize(const std::string &text) = 0;
+   public:
+    virtual std::vector<std::string> tokenize(
+        const std::string &text) const = 0;
 };
 
 class BMITokenizer : public Tokenizer {
-  AlphaFilter alpha_filter = AlphaFilter();
-  MinLengthFilter min_length_filter = MinLengthFilter(2);
-  PorterTransform porter_transform = PorterTransform();
-  LowerTransform lower_transform = LowerTransform();
+    AlphaFilter alpha_filter = AlphaFilter();
+    MinLengthFilter min_length_filter = MinLengthFilter(2);
+    PorterTransform porter_transform = PorterTransform();
+    LowerTransform lower_transform = LowerTransform();
 
-public:
-  std::vector<std::string> tokenize(const std::string &text) override;
+   public:
+    std::vector<std::string> tokenize(const std::string &text) const override;
 };
 
-
-std::unordered_map<std::string, uint32_t> get_tf(const std::vector<std::string> &words);
-#endif // TEXT_UTILS_H
+std::unordered_map<std::string, uint32_t> get_tf(
+    const std::vector<std::string> &words);
+#endif  // TEXT_UTILS_H
