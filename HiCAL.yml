@@ -56,3 +56,17 @@ services:
     depends_on:
       - django
       - cal
+
+  solr:
+    image: solr:8
+    container_name: solr
+    ports:
+      - "8983:8983"
+    expose:
+      - "8983"
+    volumes:
+      - ./data/solrdata:/var/solr
+      - ./data:/data
+    command:
+      - solr-precreate
+      - hical

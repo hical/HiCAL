@@ -1,702 +1,422 @@
 [
-  {
-    "pk": 1,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that discuss how vulnerable cars are to being hacked, or describe tools, standards and/or policies to deter such hacking.",
-      "title": "car hacking",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents discuss ways in which cars with digital systems can be hacked.  Documents that report on efforts by automakers, technology developers, legislative bodies and others to proactively prevent and detect car hacking are also relevant.",
-      "seed_query": "car hacking Find documents that discuss how vulnerable cars are to being hacked, or describe tools, standards and/or policies to deter such hacking.",
-      "number": 811,
-      "display_description": "Find documents that discuss how vulnerable cars are to being hacked, or describe tools, standards and/or policies to deter such hacking.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
+    {
+        "pk": 1,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what is the origin of COVID-19",
+            "title": "coronavirus origin",
+            "narrative": "seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
+            "seed_query": "coronavirus originwhat is the origin of COVID-19seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
+            "display_description": "seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
+            "number": "1",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "topic.topic",
+        "fields": {
+            "description": "how does the coronavirus respond to changes in the weather",
+            "title": "coronavirus response to weather changes",
+            "narrative": "seeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
+            "seed_query": "coronavirus response to weather changeshow does the coronavirus respond to changes in the weatherseeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
+            "display_description": "seeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
+            "number": "2",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "topic.topic",
+        "fields": {
+            "description": "will SARS-CoV2 infected people develop immunity? Is cross protection possible?",
+            "title": "coronavirus immunity",
+            "narrative": "seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
+            "seed_query": "coronavirus immunitywill SARS-CoV2 infected people develop immunity? Is cross protection possible?seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
+            "display_description": "seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
+            "number": "3",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what causes death from Covid-19?",
+            "title": "how do people die from the coronavirus",
+            "narrative": "Studies looking at mechanisms of death from Covid-19.",
+            "seed_query": "how do people die from the coronaviruswhat causes death from Covid-19?Studies looking at mechanisms of death from Covid-19.",
+            "display_description": "Studies looking at mechanisms of death from Covid-19.",
+            "number": "4",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?",
+            "title": "animal models of COVID-19",
+            "narrative": "Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
+            "seed_query": "animal models of COVID-19what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
+            "display_description": "Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
+            "number": "5",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what types of rapid testing for Covid-19 have been developed?",
+            "title": "coronavirus test rapid testing",
+            "narrative": "Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
+            "seed_query": "coronavirus test rapid testingwhat types of rapid testing for Covid-19 have been developed?Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
+            "display_description": "Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
+            "number": "6",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "topic.topic",
+        "fields": {
+            "description": "are there serological tests that detect antibodies to coronavirus?",
+            "title": "serological tests for coronavirus",
+            "narrative": "Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
+            "seed_query": "serological tests for coronavirusare there serological tests that detect antibodies to coronavirus?Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
+            "display_description": "Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
+            "number": "7",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "topic.topic",
+        "fields": {
+            "description": "how has lack of testing availability led to underreporting of true incidence of Covid-19?",
+            "title": "coronavirus under reporting",
+            "narrative": "Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
+            "seed_query": "coronavirus under reportinghow has lack of testing availability led to underreporting of true incidence of Covid-19?Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
+            "display_description": "Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
+            "number": "8",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "topic.topic",
+        "fields": {
+            "description": "how has COVID-19 affected Canada",
+            "title": "coronavirus in Canada",
+            "narrative": "seeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
+            "seed_query": "coronavirus in Canadahow has COVID-19 affected Canadaseeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
+            "display_description": "seeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
+            "number": "9",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "topic.topic",
+        "fields": {
+            "description": "has social distancing had an impact on slowing the spread of COVID-19?",
+            "title": "coronavirus social distancing impact",
+            "narrative": "seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
+            "seed_query": "coronavirus social distancing impacthas social distancing had an impact on slowing the spread of COVID-19?seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
+            "display_description": "seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
+            "number": "10",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 11,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what are the guidelines for triaging patients infected with coronavirus?",
+            "title": "coronavirus hospital rationing",
+            "narrative": "Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
+            "seed_query": "coronavirus hospital rationingwhat are the guidelines for triaging patients infected with coronavirus?Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
+            "display_description": "Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
+            "number": "11",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what are best practices in hospitals and at home in maintaining quarantine?",
+            "title": "coronavirus quarantine",
+            "narrative": "Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
+            "seed_query": "coronavirus quarantinewhat are best practices in hospitals and at home in maintaining quarantine?Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
+            "display_description": "Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
+            "number": "12",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 13,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what are the transmission routes of coronavirus?",
+            "title": "how does coronavirus spread",
+            "narrative": "Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
+            "seed_query": "how does coronavirus spreadwhat are the transmission routes of coronavirus?Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
+            "display_description": "Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
+            "number": "13",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 14,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what evidence is there related to COVID-19 super spreaders",
+            "title": "coronavirus super spreaders",
+            "narrative": "seeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
+            "seed_query": "coronavirus super spreaderswhat evidence is there related to COVID-19 super spreadersseeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
+            "display_description": "seeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
+            "number": "14",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 15,
+        "model": "topic.topic",
+        "fields": {
+            "description": "how long can the coronavirus live outside the body",
+            "title": "coronavirus outside body",
+            "narrative": "seeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
+            "seed_query": "coronavirus outside bodyhow long can the coronavirus live outside the bodyseeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
+            "display_description": "seeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
+            "number": "15",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 16,
+        "model": "topic.topic",
+        "fields": {
+            "description": "how long does coronavirus remain stable  on surfaces?",
+            "title": "how long does coronavirus survive on surfaces",
+            "narrative": "Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
+            "seed_query": "how long does coronavirus survive on surfaceshow long does coronavirus remain stable  on surfaces?Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
+            "display_description": "Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
+            "number": "16",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 17,
+        "model": "topic.topic",
+        "fields": {
+            "description": "are there any clinical trials available for the coronavirus",
+            "title": "coronavirus clinical trials",
+            "narrative": "seeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
+            "seed_query": "coronavirus clinical trialsare there any clinical trials available for the coronavirusseeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
+            "display_description": "seeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
+            "number": "17",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 18,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what are the best masks for preventing infection by Covid-19?",
+            "title": "masks prevent coronavirus",
+            "narrative": "What types of masks should or should not be used to prevent infection by Covid-19?",
+            "seed_query": "masks prevent coronaviruswhat are the best masks for preventing infection by Covid-19?What types of masks should or should not be used to prevent infection by Covid-19?",
+            "display_description": "What types of masks should or should not be used to prevent infection by Covid-19?",
+            "number": "18",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 19,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what type of hand sanitizer is needed to destroy Covid-19?",
+            "title": "what alcohol sanitizer kills coronavirus",
+            "narrative": "Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
+            "seed_query": "what alcohol sanitizer kills coronaviruswhat type of hand sanitizer is needed to destroy Covid-19?Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
+            "display_description": "Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
+            "number": "19",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 20,
+        "model": "topic.topic",
+        "fields": {
+            "description": "are patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?",
+            "title": "coronavirus and ACE inhibitors",
+            "narrative": "Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
+            "seed_query": "coronavirus and ACE inhibitorsare patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
+            "display_description": "Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
+            "number": "20",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 21,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what are the mortality rates overall and in specific populations",
+            "title": "coronavirus mortality",
+            "narrative": "Seeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
+            "seed_query": "coronavirus mortalitywhat are the mortality rates overall and in specific populationsSeeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
+            "display_description": "Seeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
+            "number": "21",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 22,
+        "model": "topic.topic",
+        "fields": {
+            "description": "are cardiac complications likely in patients with COVID-19?",
+            "title": "coronavirus heart impacts",
+            "narrative": "Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
+            "seed_query": "coronavirus heart impactsare cardiac complications likely in patients with COVID-19?Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
+            "display_description": "Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
+            "number": "22",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 23,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what kinds of complications related to COVID-19 are associated with hypertension?",
+            "title": "coronavirus hypertension",
+            "narrative": "seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
+            "seed_query": "coronavirus hypertensionwhat kinds of complications related to COVID-19 are associated with hypertension?seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
+            "display_description": "seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
+            "number": "23",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 24,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what kinds of complications related to COVID-19 are associated with diabetes",
+            "title": "coronavirus diabetes",
+            "narrative": "seeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
+            "seed_query": "coronavirus diabeteswhat kinds of complications related to COVID-19 are associated with diabetesseeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
+            "display_description": "seeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
+            "number": "24",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 25,
+        "model": "topic.topic",
+        "fields": {
+            "description": "which biomarkers predict the severe clinical course of 2019-nCOV infection?",
+            "title": "coronavirus biomarkers",
+            "narrative": "Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
+            "seed_query": "coronavirus biomarkerswhich biomarkers predict the severe clinical course of 2019-nCOV infection?Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
+            "display_description": "Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
+            "number": "25",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 26,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what are the initial symptoms of Covid-19?",
+            "title": "coronavirus early symptoms",
+            "narrative": "Studies of patients and the first clinical manifestations they develop upon active infection?",
+            "seed_query": "coronavirus early symptomswhat are the initial symptoms of Covid-19?Studies of patients and the first clinical manifestations they develop upon active infection?",
+            "display_description": "Studies of patients and the first clinical manifestations they develop upon active infection?",
+            "number": "26",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 27,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what is known about those infected with Covid-19 but are asymptomatic?",
+            "title": "coronavirus asymptomatic",
+            "narrative": "Studies of people who are known to be infected with Covid-19 but show no symptoms?",
+            "seed_query": "coronavirus asymptomaticwhat is known about those infected with Covid-19 but are asymptomatic?Studies of people who are known to be infected with Covid-19 but show no symptoms?",
+            "display_description": "Studies of people who are known to be infected with Covid-19 but show no symptoms?",
+            "number": "27",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 28,
+        "model": "topic.topic",
+        "fields": {
+            "description": "what evidence is there for the value of hydroxychloroquine in treating Covid-19?",
+            "title": "coronavirus hydroxychloroquine",
+            "narrative": "Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
+            "seed_query": "coronavirus hydroxychloroquinewhat evidence is there for the value of hydroxychloroquine in treating Covid-19?Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
+            "display_description": "Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
+            "number": "28",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 29,
+        "model": "topic.topic",
+        "fields": {
+            "description": "which SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?",
+            "title": "coronavirus drug repurposing",
+            "narrative": "Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
+            "seed_query": "coronavirus drug repurposingwhich SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
+            "display_description": "Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
+            "number": "29",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
+    },
+    {
+        "pk": 30,
+        "model": "topic.topic",
+        "fields": {
+            "description": "is remdesivir an effective treatment for COVID-19",
+            "title": "coronavirus remdesivir",
+            "narrative": "seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
+            "seed_query": "coronavirus remdesiviris remdesivir an effective treatment for COVID-19seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
+            "display_description": "seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
+            "number": "30",
+            "created_at": "2020-01-01T00:00:00.0000",
+            "updated_at": "2020-01-01T00:00:00.0000"
+        }
     }
-  },
-  {
-    "pk": 2,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that discuss an increase in the number of people receiving food stamp benefits.",
-      "title": "food stamps increase",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Documents that discuss changes in the law allowing more eligible food stamp recipients are relevant. Documents that imply that a certain group of people, such as immigrants, will be eligible for food stamps are also relevant.",
-      "seed_query": "food stamps increase Find documents that discuss an increase in the number of people receiving food stamp benefits.",
-      "number": 646,
-      "display_description": "Find documents that discuss an increase in the number of people receiving food stamp benefits.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 3,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify documents that discuss mercy killings.",
-      "title": "mercy killing",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "All individual cases of mercy killing are relevant, except that \"letters to the editor\" mentioning cases are not relevant. The removal of life support systems is relevant. A general mention or description of a case without specifics, such as victim's name are not relevant. Cases determined to be a murder-suicide are not relevant.",
-      "seed_query": "mercy killing Identify documents that discuss mercy killings.",
-      "number": 393,
-      "display_description": "Identify documents that discuss mercy killings.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 4,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify documents that discuss the reasons for automobile recalls.",
-      "title": "automobile recalls",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will specify major or minor reasons for automobile recalls by car manufacturers. Documents that discuss truck recalls are not relevant.",
-      "seed_query": "automobile recalls Identify documents that discuss the reasons for automobile recalls.",
-      "number": 397,
-      "display_description": "Identify documents that discuss the reasons for automobile recalls.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 5,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What measures are being taken by local South American authorities to preserve the Amazon tropical rain forest?",
-      "title": "Amazon rain forest",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents may identify: the official organizations, institutions, and individuals of the countries included in the Amazon rain forest; the measures being taken by them to preserve the rain forest; and indications of degrees of success in these endeavors.",
-      "seed_query": "Amazon rain forest What measures are being taken by local South American authorities to preserve the Amazon tropical rain forest?",
-      "number": 400,
-      "display_description": "What measures are being taken by local South American authorities to preserve the Amazon tropical rain forest?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 6,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What tropical storms (hurricanes and typhoons) have caused significant property damage and loss of life?",
-      "title": "tropical storms",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "The date of the storm, the area affected, and the extent of damage/casualties are all of interest. Documents that describe the damage caused by a tropical storm as \"slight\", \"limited\", or \"small\" are not relevant.",
-      "seed_query": "tropical storms What tropical storms (hurricanes and typhoons) have caused significant property damage and loss of life?",
-      "number": 408,
-      "display_description": "What tropical storms (hurricanes and typhoons) have caused significant property damage and loss of life?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 7,
-    "model": "topic.topic",
-    "fields": {
-      "description": "How much sugar does Cuba export and which countries import it?",
-      "title": "Cuba, sugar, exports",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will provide information regarding Cuba's sugar trade. Sugar production statistics are not relevant unless exports are mentioned explicitly.",
-      "seed_query": "Cuba, sugar, exports How much sugar does Cuba export and which countries import it?",
-      "number": 414,
-      "display_description": "How much sugar does Cuba export and which countries import it?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 8,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that describe religious objections to polio vaccination programs in Africa.",
-      "title": "Africa polio vaccination",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Religious beliefs have caused some groups in Africa to hinder or stop polio vaccination programs there.  Relevant documents discuss the religious principles that cause objections to polio vaccination programs in the area or describe the impact the objections have had on polio vaccinations.",
-      "seed_query": "Africa polio vaccination Find documents that describe religious objections to polio vaccination programs in Africa.",
-      "number": 801,
-      "display_description": "Find documents that describe religious objections to polio vaccination programs in Africa.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 9,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that include expressions of support for changing the law to allow women in Saudi Arabia to drive.",
-      "title": "women driving in Saudi Arabia",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents describe protests against the current ban on women driving in Saudi Arabia or include statements in support of lifting the ban from women, leaders and spokespeople, either domestically or internationally. Articles that note the existence of the ban while giving only historical, political or religious reasons for keeping it are not relevant.",
-      "seed_query": "women driving in Saudi Arabia Find documents that include expressions of support for changing the law to allow women in Saudi Arabia to drive.",
-      "number": 802,
-      "display_description": "Find documents that include expressions of support for changing the law to allow women in Saudi Arabia to drive.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 10,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify the reasons for the decline of the middle class in the U.S.",
-      "title": "declining middle class in U.S.",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents must identify one or more specific reasons for the decline of the middle class in the U.S., which include any economic or political decisions that have a direct negative effect on middle class employment.",
-      "seed_query": "declining middle class in U.S. Identify the reasons for the decline of the middle class in the U.S.",
-      "number": 803,
-      "display_description": "Identify the reasons for the decline of the middle class in the U.S.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 11,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find descriptions of the \"Women on 20s\" campaign to select a female to replace Andrew Jackson on the U.S. $20 bill.",
-      "title": "\"Women on 20s\"",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents describe the \"Women on 20s\" campaign and reactions pro and con to the idea of Harriet Tubman appearing on the U.S. $20 bill. Discussion of the irony of Harriet Tubman replacing Andrew Jackson are also relevant.",
-      "seed_query": "\"Women on 20s\" Find descriptions of the \"Women on 20s\" campaign to select a female to replace Andrew Jackson on the U.S. $20 bill.",
-      "number": 804,
-      "display_description": "Find descriptions of the \"Women on 20s\" campaign to select a female to replace Andrew Jackson on the U.S. $20 bill.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 12,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Would eating invasive species be a viable method of controlling/eradicating them?",
-      "title": "eating invasive species",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents identify invasive species in the U.S. that can be eaten by human beings and discuss the likelihood of controlling the species through consumption.  Comments on the color, taste, texture, or other culinary qualities of particular invasive species are also relevant.",
-      "seed_query": "eating invasive species Would eating invasive species be a viable method of controlling/eradicating them?",
-      "number": 805,
-      "display_description": "Would eating invasive species be a viable method of controlling/eradicating them?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 13,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What incidents have there been of stolen or forged art?",
-      "title": "art, stolen, forged",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Instances of stolen or forged art in any media are relevant. Stolen mass-produced things, even though they might be decorative, are not relevant (unless they are mass-produced art reproductions). Pirated software, music, movies, etc. are not relevant.",
-      "seed_query": "art, stolen, forged What incidents have there been of stolen or forged art?",
-      "number": 422,
-      "display_description": "What incidents have there been of stolen or forged art?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 14,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that describe the medical treatment that Venezuelan President Chavez received in Cuba.",
-      "title": "Chavez medical treatment in Cuba",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents contain information about what malady prompted Venezuelan President Chavez to seek medical treatment in Cuba or descriptions of the treatment itself.  Documents published after his death that describe the treatment he received are also relevant.",
-      "seed_query": "Chavez medical treatment in Cuba Find documents that describe the medical treatment that Venezuelan President Chavez received in Cuba.",
-      "number": 807,
-      "display_description": "Find documents that describe the medical treatment that Venezuelan President Chavez received in Cuba.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 15,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that contain the verdict reached in the trial of the Boston marathon bombing suspects.",
-      "title": "Boston marathon bombing verdict",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "To be relevant, a document must explicitly mention the verdict reached in the trial of the Boston marathon bombing suspects or describe the sentences the suspects received.",
-      "seed_query": "Boston marathon bombing verdict Find documents that contain the verdict reached in the trial of the Boston marathon bombing suspects.",
-      "number": 808,
-      "display_description": "Find documents that contain the verdict reached in the trial of the Boston marathon bombing suspects.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 16,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What efforts are underway to protect Earth from asteroid strikes?",
-      "title": "protect Earth from asteroids",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents will describe real-life efforts to protect earth from an asteroid strike. Information on detecting and tracking asteroids is not relevant unless there is some mention of plans for defense.",
-      "seed_query": "protect Earth from asteroids What efforts are underway to protect Earth from asteroid strikes?",
-      "number": 809,
-      "display_description": "What efforts are underway to protect Earth from asteroid strikes?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 17,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Provide information on the use of dogs worldwide for law enforcement purposes.",
-      "title": "law enforcement, dogs",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant items include specific information on the use of dogs during an operation. Training of dogs and their handlers are also relevant.",
-      "seed_query": "law enforcement, dogs Provide information on the use of dogs worldwide for law enforcement purposes.",
-      "number": 426,
-      "display_description": "Provide information on the use of dogs worldwide for law enforcement purposes.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 18,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that discuss the damage ultraviolet (UV) light from the sun can do to eyes.",
-      "title": "UV damage, eyes",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will discuss diseases that result from exposure of the eyes to UV light, treatments for the damage, and/or education programs that help prevent damage. Documents discussing treatment methods for cataracts and ocular melanoma are relevant even when a specific cause is not mentioned. However, documents that discuss radiation damage from nuclear sources or lasers are not relevant.",
-      "seed_query": "UV damage, eyes Find documents that discuss the damage ultraviolet (UV) light from the sun can do to eyes.",
-      "number": 427,
-      "display_description": "Find documents that discuss the damage ultraviolet (UV) light from the sun can do to eyes.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 19,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents detailing the use of social media to bully a teenager that ultimately led to the teen's suicide.",
-      "title": "social media and teen suicide",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document must give a full account of a case in which a teen committed suicide as a result of being the target of bullying on any form of social media.  A full account includes the source of the bullying and any consequences to be faced by the bully.",
-      "seed_query": "social media and teen suicide Find documents detailing the use of social media to bully a teenager that ultimately led to the teen's suicide.",
-      "number": 812,
-      "display_description": "Find documents detailing the use of social media to bully a teenager that ultimately led to the teen's suicide.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 20,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that describe differences in marijuana potency now compared to a generation ago.",
-      "title": "marijuana potency",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document compares or highlights the difference in THC, the psychoactive chemical ingredient in marijuana that is responsible for its potency, in marijuana generally available now as compared to 20 or 30 years ago.",
-      "seed_query": "marijuana potency Find documents that describe differences in marijuana potency now compared to a generation ago.",
-      "number": 813,
-      "display_description": "Find documents that describe differences in marijuana potency now compared to a generation ago.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 21,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What has been the long-term impact of China's one-child policy?",
-      "title": "China one-child impact",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents will contain discussion of the impact China's one-child policy has had on its economy and/or social structure.",
-      "seed_query": "China one-child impact What has been the long-term impact of China's one-child policy?",
-      "number": 814,
-      "display_description": "What has been the long-term impact of China's one-child policy?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 22,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that discuss Washington Post journalist Jason Rezaian release from Iranian prison.",
-      "title": "Jason Rezaian released from Iran",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents include those that mention that Washington Post journalist Jason Rezaian had served in an Iranian prison and was released, as well as those that describe efforts from the Washington Post and others to have him released.",
-      "seed_query": "Jason Rezaian released from Iran Find documents that discuss Washington Post journalist Jason Rezaian release from Iranian prison.",
-      "number": 815,
-      "display_description": "Find documents that discuss Washington Post journalist Jason Rezaian release from Iranian prison.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 23,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find descriptions of the actions and reactions of either the President or Congress to increase the U.S. federal minimum wage.",
-      "title": "federal minimum wage increase",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents include descriptions of advocacy or actions (or lack thereof) taken by the President or Congress to increase the U.S. federal minimum wage, including increases for government contract workers. Analyses and discussions of pros and cons of an increase by talking heads is not relevant.",
-      "seed_query": "federal minimum wage increase Find descriptions of the actions and reactions of either the President or Congress to increase the U.S. federal minimum wage.",
-      "number": 816,
-      "display_description": "Find descriptions of the actions and reactions of either the President or Congress to increase the U.S. federal minimum wage.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 24,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Is there contemporary interest in the Greek philosophy of stoicism?",
-      "title": "Greek, philosophy, stoicism",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Actual references to the philosophy or philosophers, productions of Greek stoic plays, and new \"stoic\" artistic productions are all relevant.",
-      "seed_query": "Greek, philosophy, stoicism Is there contemporary interest in the Greek philosophy of stoicism?",
-      "number": 433,
-      "display_description": "Is there contemporary interest in the Greek philosophy of stoicism?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 25,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents which describe an advantage in hiring potential or increased income for graduates of U.S. colleges.",
-      "title": "college education advantage",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents cite some advantage of a college education for job opportunities. Documents citing better opportunities for non-college vocational-training is not relevant.",
-      "seed_query": "college education advantage Find documents which describe an advantage in hiring potential or increased income for graduates of U.S. colleges.",
-      "number": 690,
-      "display_description": "Find documents which describe an advantage in hiring potential or increased income for graduates of U.S. colleges.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 26,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find reports of age demographics in the U.S.: the percentage of population per age group for either total population or workforce.",
-      "title": "U.S. age demographics",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document contains specific age demographic data for the U.S., giving what percentage each age group comprises of either the overall population or the workforce.",
-      "seed_query": "U.S. age demographics Find reports of age demographics in the U.S.: the percentage of population per age group for either total population or workforce.",
-      "number": 819,
-      "display_description": "Find reports of age demographics in the U.S.: the percentage of population per age group for either total population or workforce.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 27,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify documents that specify the mortality rate of some specific bacterial infection.",
-      "title": "bacterial infection mortality rate",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will identify the mortality rates for specific bacteria that cause serious infections in humans.  All bacterial infections that cause human health problems are relevant, but viral infections are not relevant.",
-      "seed_query": "bacterial infection mortality rate Identify documents that specify the mortality rate of some specific bacterial infection.",
-      "number": 820,
-      "display_description": "Identify documents that specify the mortality rate of some specific bacterial infection.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 28,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find reports of email scams that have defrauded people of money or other assets.",
-      "title": "email scams",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will describe an instance where someone has suffered an actual loss as the result of an email scam, where sufficient details are provided to identify the particular scam used.",
-      "seed_query": "email scams Find reports of email scams that have defrauded people of money or other assets.",
-      "number": 821,
-      "display_description": "Find reports of email scams that have defrauded people of money or other assets.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 29,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that identify the specific group responsible for the cyberattack on Sony Pictures.",
-      "title": "Sony cyberattack",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents must identify the specific group responsible for the cyberattack on Sony Pictures. Generic references to countries assumed to be behind the hack are not relevant.",
-      "seed_query": "Sony cyberattack Find documents that identify the specific group responsible for the cyberattack on Sony Pictures.",
-      "number": 822,
-      "display_description": "Find documents that identify the specific group responsible for the cyberattack on Sony Pictures.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 30,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What new inventions or scientific discoveries have been made?",
-      "title": "inventions, scientific discoveries",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "The word \"new\" in the description is defined as occurring in the 1990s. Documents that indicate a \"recent\" invention or scientific discovery are considered relevant. Discoveries made in astronomy or any scientific discoveries that are not patentable are not relevant.",
-      "seed_query": "inventions, scientific discoveries What new inventions or scientific discoveries have been made?",
-      "number": 439,
-      "display_description": "What new inventions or scientific discoveries have been made?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 31,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents describing reactions to the purchase of the Washington Post by Jeff Bezos or news about Bezos' plans for the paper.",
-      "title": "Bezos purchases Washington Post",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents will include news about and reactions to the purchase of the Washington Post by Jeff Bezos. Statements from Bezos about his plans or from the Graham family about the sale are both relevant.",
-      "seed_query": "Bezos purchases Washington Post Find documents describing reactions to the purchase of the Washington Post by Jeff Bezos or news about Bezos' plans for the paper.",
-      "number": 824,
-      "display_description": "Find documents describing reactions to the purchase of the Washington Post by Jeff Bezos or news about Bezos' plans for the paper.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 32,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Does diversion of U.S. corn crops into ethanol for fuel increase food prices?",
-      "title": "ethanol and food prices",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Identify documents that discuss the impact of growing corn with the intention of using it for ethanol fuel on food prices in the U.S.",
-      "seed_query": "ethanol and food prices Does diversion of U.S. corn crops into ethanol for fuel increase food prices?",
-      "number": 825,
-      "display_description": "Does diversion of U.S. corn crops into ethanol for fuel increase food prices?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 33,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find accounts of selfless heroic acts by individuals or small groups for the benefit of others or a cause.",
-      "title": "heroic acts",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents will contain a description of specific acts. General statements concerning heroic acts are not relevant.",
-      "seed_query": "heroic acts Find accounts of selfless heroic acts by individuals or small groups for the benefit of others or a cause.",
-      "number": 442,
-      "display_description": "Find accounts of selfless heroic acts by individuals or small groups for the benefit of others or a cause.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 34,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What other countries besides the United States are considering or have approved women as clergy persons?",
-      "title": "women clergy",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "To be relevant, a document must indicate either a country where a woman has been installed as clergy or a country that is considering such an installation. The clergy position must be as church pastor rather than some other church capacity (e.g., nun or choir member).",
-      "seed_query": "women clergy What other countries besides the United States are considering or have approved women as clergy persons?",
-      "number": 445,
-      "display_description": "What other countries besides the United States are considering or have approved women as clergy persons?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 35,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Pertinent documents will reflect the fact that women continue to be poorly represented in parliaments across the world, and the gap in political power between the sexes is very wide, particularly in the Third World.",
-      "title": "Women in Parliaments",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Pertinent documents relating to this issue will discuss the lack of representation by women, the countries that mandate the inclusion of a certain percentage of women in their legislatures, decreases if any in female representation in legislatures, and those countries in which there is no representation of women.",
-      "seed_query": "Women in Parliaments Pertinent documents will reflect the fact that women continue to be poorly represented in parliaments across the world, and the gap in political power between the sexes is very wide, particularly in the Third World.",
-      "number": 321,
-      "display_description": "Pertinent documents will reflect the fact that women continue to be poorly represented in parliaments across the world, and the gap in political power between the sexes is very wide, particularly in the Third World.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 36,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify documents that describe means of controlling the spread of methicillin-resistant Staph Aureus (MRSA) bacteria.",
-      "title": "control of MRSA",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will specify a physical or chemical means of controlling the spread of methicillin-resistant Staph Aureus (MRSA) bacteria in humans. Documents describing either precautionary measures or treatment of existing infections are both relevant.",
-      "seed_query": "control of MRSA Identify documents that describe means of controlling the spread of methicillin-resistant Staph Aureus (MRSA) bacteria.",
-      "number": 823,
-      "display_description": "Identify documents that describe means of controlling the spread of methicillin-resistant Staph Aureus (MRSA) bacteria.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 37,
-    "model": "topic.topic",
-    "fields": {
-      "description": "A relevant document would discuss the frequency of vicious black bear attacks worldwide and the possible causes for this savage behavior.",
-      "title": "Black Bear Attacks",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "It has been reported that food or cosmetics sometimes attract hungry black bears, causing them to viciously attack humans. Relevant documents would include the aforementioned causes as well as speculation preferably from the scientific community as to other possible causes of vicious attacks by black bears. A relevant document would also detail steps taken or new methods devised by wildlife officials to control and/or modify the savageness of the black bear.",
-      "seed_query": "Black Bear Attacks A relevant document would discuss the frequency of vicious black bear attacks worldwide and the possible causes for this savage behavior.",
-      "number": 336,
-      "display_description": "A relevant document would discuss the frequency of vicious black bear attacks worldwide and the possible causes for this savage behavior.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 38,
-    "model": "topic.topic",
-    "fields": {
-      "description": "A relevant document would discuss the effectiveness of efforts to better scrutinize passengers and luggage on all flights, but particularly international flights.",
-      "title": "Airport Security",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document would contain reports on what steps airports worldwide have taken to better scrutinize passengers and their luggage on domestic and international flights and to step up screening of all carry-on baggage. With increased concerns about terrorism, articles on airport security relating in particular to additional steps taken by airports to increase flight safety would be relevant. The mere mention of enhanced security does not constitute relevance. Additional steps refer to something beyond just passenger and carry-on screening using the normal methods. Examples of new steps would be additional personnel, automated screening processes, sophisticated monitoring and screening devices, whole body imaging techniques, and extraordinary measures to screen luggage in the baggage compartment.",
-      "seed_query": "Airport Security A relevant document would discuss the effectiveness of efforts to better scrutinize passengers and luggage on all flights, but particularly international flights.",
-      "number": 341,
-      "display_description": "A relevant document would discuss the effectiveness of efforts to better scrutinize passengers and luggage on all flights, but particularly international flights.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 39,
-    "model": "topic.topic",
-    "fields": {
-      "description": "The spotted owl episode in America highlighted U.S. efforts to prevent the extinction of wildlife species. What is not well known is the effort of other countries to prevent the demise of species native to their countries. What other countries have begun efforts to prevent such declines?",
-      "title": "Wildlife Extinction",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant item will specify the country, the involved species, and steps taken to save the species.",
-      "seed_query": "Wildlife Extinction The spotted owl episode in America highlighted U.S. efforts to prevent the extinction of wildlife species. What is not well known is the effort of other countries to prevent the demise of species native to their countries. What other countries have begun efforts to prevent such declines?",
-      "number": 347,
-      "display_description": "The spotted owl episode in America highlighted U.S. efforts to prevent the extinction of wildlife species. What is not well known is the effort of other countries to prevent the demise of species native to their countries. What other countries have begun efforts to prevent such declines?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 40,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find details of the prisoner exchange between Cuba and the U.S. that released USAID contractor Alan Gross from Cuban prison.",
-      "title": "Alan Gross released by Cuba",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Alan Gross, a USAID contractor imprisoned in Cuba for five years, was released in a prisoner exchange between the U.S. and Cuba.  Relevant documents must contain discussion of his actual release, not simply discussion of efforts to have him released or observations about his imprisonment.",
-      "seed_query": "Alan Gross released by Cuba Find details of the prisoner exchange between Cuba and the U.S. that released USAID contractor Alan Gross from Cuban prison.",
-      "number": 817,
-      "display_description": "Find details of the prisoner exchange between Cuba and the U.S. that released USAID contractor Alan Gross from Cuban prison.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 41,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Is it hazardous to the health of individuals to work with computer terminals on a daily basis?",
-      "title": "Health and Computer Terminals",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents would contain any information that expands on any physical disorder/problems that may be associated with the daily working with computer terminals. Such things as carpel tunnel, cataracts, and fatigue have been said to be associated, but how widespread are these or other problems and what is being done to alleviate any health problems.",
-      "seed_query": "Health and Computer Terminals Is it hazardous to the health of individuals to work with computer terminals on a daily basis?",
-      "number": 350,
-      "display_description": "Is it hazardous to the health of individuals to work with computer terminals on a daily basis?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 42,
-    "model": "topic.topic",
-    "fields": {
-      "description": "How can computer technology improve the life of paralyzed people?",
-      "title": "computers and paralyzed people",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Relevant documents describe ways in which computer technology can improve the lives of people who are paralyzed, where the technology is either currently in use or is under development. Use of exoskeletons to help paralyzed people move is relevant, though other uses of exoskeletons are not relevant. Tests and studies on animals are not relevant if they don't show a direct link to human use.  Use of technology for persons with disabilities in general is also not relevant.",
-      "seed_query": "computers and paralyzed people How can computer technology improve the life of paralyzed people?",
-      "number": 806,
-      "display_description": "How can computer technology improve the life of paralyzed people?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 43,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify incidents of human smuggling.",
-      "title": "human smuggling",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document shows an incident of humans (at least ten) being smuggled. The smugglers would have to realize a monetary gain for their actions, while the people being smuggled may or may not be willing participants.",
-      "seed_query": "human smuggling Identify incidents of human smuggling.",
-      "number": 362,
-      "display_description": "Identify incidents of human smuggling.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 44,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What disasters have occurred in tunnels used for transportation?",
-      "title": "transportation tunnel disasters",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document identifies a disaster in a tunnel used for trains, motor vehicles, or people. Wind tunnels and tunnels used for wiring, sewage, water, oil, etc. are not relevant. The cause of the problem may be fire, earthquake, flood, or explosion and can be accidental or planned. Documents that discuss tunnel disasters occurring during construction of a tunnel are relevant if lives were threatened.",
-      "seed_query": "transportation tunnel disasters What disasters have occurred in tunnels used for transportation?",
-      "number": 363,
-      "display_description": "What disasters have occurred in tunnels used for transportation?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 45,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What modern instances have there been of old fashioned piracy, the boarding or taking control of boats?",
-      "title": "piracy",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Documents discussing piracy on any body of water are relevant. Documents discussing the legal taking of ships or their contents by a national authority are non-relevant. Clashes between fishing vessels over fishing are not relevant, unless one vessel is boarded.",
-      "seed_query": "piracy What modern instances have there been of old fashioned piracy, the boarding or taking control of boats?",
-      "number": 367,
-      "display_description": "What modern instances have there been of old fashioned piracy, the boarding or taking control of boats?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 46,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find reports of human stampedes that have resulted in 20 or more deaths.",
-      "title": "human stampede",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Documents that mention people being killed by animal stampedes are not relevant. Relevant documents could mention human stampedes in any public place such as a sporting event, bar, restaurant or entertainment event.",
-      "seed_query": "human stampede Find reports of human stampedes that have resulted in 20 or more deaths.",
-      "number": 626,
-      "display_description": "Find reports of human stampedes that have resulted in 20 or more deaths.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 47,
-    "model": "topic.topic",
-    "fields": {
-      "description": "What is the status of research on hydrogen as a feasible energy source?",
-      "title": "hydrogen energy",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document will describe progress in research on controlled hydrogen fusion or the use of hydrogen as fuel to power engines.",
-      "seed_query": "hydrogen energy What is the status of research on hydrogen as a feasible energy source?",
-      "number": 375,
-      "display_description": "What is the status of research on hydrogen as a feasible energy source?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 48,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Identify documents that discuss opposition to the use of the euro, the European currency.",
-      "title": "euro opposition",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document should include the countries or individuals who oppose the use of the euro and the reason(s) for their opposition to its use.",
-      "seed_query": "euro opposition Identify documents that discuss opposition to the use of the euro, the European currency.",
-      "number": 378,
-      "display_description": "Identify documents that discuss opposition to the use of the euro, the European currency.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 49,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Find documents that support using eggs in a healthy diet.",
-      "title": "eggs in a healthy diet",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "A relevant document contains statements that eggs are healthy and are okay to include in one's diet, or that recommends eating eggs for their nutritional value.",
-      "seed_query": "eggs in a healthy diet Find documents that support using eggs in a healthy diet.",
-      "number": 818,
-      "display_description": "Find documents that support using eggs in a healthy diet.",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  },
-  {
-    "pk": 50,
-    "model": "topic.topic",
-    "fields": {
-      "description": "Is there a link between toxic chemical exposure and diabetes?",
-      "title": "diabetes and toxic chemicals",
-      "created_at": "2017-06-22T20:18:35.279Z",
-      "narrative": "Identify documents that discuss a link between exposure to toxic chemical and diabetes, or that explicitly deny any such a link.",
-      "seed_query": "diabetes and toxic chemicals Is there a link between toxic chemical exposure and diabetes?",
-      "number": 810,
-      "display_description": "Is there a link between toxic chemical exposure and diabetes?",
-      "updated_at": "2017-06-22T20:18:35.279Z"
-    }
-  }
 ]

@@ -1,10 +1,5 @@
 from collections import OrderedDict
-from config.settings.base import SEARCH_SERVER_IP
-from config.settings.base import SEARCH_SERVER_PORT
-import urllib.parse
-
-import httplib2
-import xmltodict
+import requests
 
 
 def get_documents(query, start=0, numdisplay=20):
@@ -15,40 +10,25 @@ def get_documents(query, start=0, numdisplay=20):
     :param numdisplay:
     :return:
     """
-    h = httplib2.Http()
-    url = "http://{}:{}/treccore/websearchapi/search.php?{}"
+    url = "http://solr:8983/solr/hical/select?defType=edismax&highlightMultiTerm=true&hl.fl=content&hl.simple.post=%3C%2Fb%3E%3C%2Fi%3E&hl.simple.pre=%3Cb%3E%3Ci%3E&hl=on&q=" + query + "&qf=content%20title&stopwords=true&usePhraseHighLighter=true&rows="+str(numdisplay)
 
-    parameters = {'start': start, 'numdisplay': numdisplay, 'query': query}
-    parameters = urllib.parse.urlencode(parameters)
-    resp, content = h.request(url.format(SEARCH_SERVER_IP,
-                                         SEARCH_SERVER_PORT,
-                                         parameters),
-                              method="GET")
+    response = requests.get(url)
 
-    if resp and resp.get("status") == "200":
-        xmlDict = xmltodict.parse(content)
-        try:
-            xmlResult = xmlDict['search-response']['results']['result']
-        except TypeError:
-            return None, None, None
-
+    if response.status_code == 200:
         doc_ids = []
         result = OrderedDict()
-
-        if not isinstance(xmlResult, list):
-            xmlResult = [xmlResult]
-
-        for doc in xmlResult:
-            docno = doc["docno"].zfill(7)
+        json = response.json()
+        for idx, doc in enumerate(json["response"]["docs"]):
+            docno = doc["id"]
             parsed_doc = {
-                "rank": doc["rank"],
+                "rank": idx,
                 "docno": docno,
                 "title": doc["title"],
-                "snippet": doc["snippet"]
+                "snippet": json["highlighting"][docno]["content"][0]
             }
             result[docno] = parsed_doc
             doc_ids.append(docno)
 
-        return result, doc_ids,  xmlDict['search-response']['total-time']
+        return result, doc_ids, 1
 
     return None, None, None

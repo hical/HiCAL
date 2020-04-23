@@ -3,6 +3,7 @@ from config.settings.base import PARA_URL
 from datetime import date
 import traceback
 import re
+import requests
 
 import httplib2
 from lxml import etree
@@ -48,10 +49,10 @@ def get_documents(doc_ids, query=None):
     """
     result = []
     for doc_id in doc_ids:
-        url = '{}/{}/{}.xml'.format(DOCUMENTS_URL, doc_id[:4], doc_id)
-        tree = etree.parse(url)
-        title = exec_xpath(tree, '/nitf/body[1]/body.head/hedline/hl1').strip()
-        content = LEAD_PARA_REGEX.sub('', exec_xpath(tree, '/nitf/body/body.content/block[@class="full_text"]')).strip()
+        url = '{}/{}'.format(DOCUMENTS_URL, doc_id)
+        content = requests.get(url).text
+        title = content.split('\n\n')[0][:256]
+        content = content.replace('\n', '<br />')
         if len(content) == 0:
             if len(title) == 0:
                 title = '<i class="text-warning">The document title is empty</i>'
@@ -60,12 +61,11 @@ def get_documents(doc_ids, query=None):
             if len(title) == 0:
                 title = content[:32]
 
-        date = get_date(tree, '/nitf/head/pubdata/@date.publication')
         document = {
             'doc_id': doc_id,
             'title': title,
             'content': content,
-            'date': date
+            'date': 'N/A'
         }
         result.append(document)
 
@@ -74,7 +74,7 @@ def get_documents(doc_ids, query=None):
 
 def get_documents_with_snippet(doc_ids, query):
     h = httplib2.Http()
-    url = "{}/{}/{}"
+    url = "{}/{}"
     doc_ids_unique = []
     doc_ids_set = set()
     for doc_id in doc_ids:
@@ -91,7 +91,7 @@ def get_documents_with_snippet(doc_ids, query):
             continue
         try:
             para_id = doc_para_id['doc_id'] + '.' + doc_para_id['para_id']
-            resp, content = h.request(url.format(PARA_URL, para_id[:4], para_id),
+            resp, content = h.request(url.format(PARA_URL, para_id),
                                       method="GET")
             doc['snippet'] = content.decode('utf-8')
         except:
