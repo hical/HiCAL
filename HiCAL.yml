@@ -39,6 +39,7 @@ services:
       - postgres_backup_local:/backups
     environment:
       - POSTGRES_USER=hicalweb
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   nginx:
     image: nginx:latest
