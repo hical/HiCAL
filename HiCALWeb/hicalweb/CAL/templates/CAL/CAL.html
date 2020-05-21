@@ -1,207 +1,164 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block pagetitle %}CAL{% endblock %}
 
 
-{% block nav-header-title %}{% endblock %}
+{% block navbar-form %}
+<form id="searchContentForm" class="form-inline my-2 my-lg-0">
+	<div class="input-group">
+		<input id="search_content" type="search" class="form-control" placeholder="Highlight">
 
-{% block nav-left-mt %}mt-2{% endblock %}
-{% block nav-right%}
-    {% if request.user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#reviewDocsModal" href="#"
-            id="reviewDocs">Latest judgments</a>
-    </li>
-    {% endif %}
+		<div class="input-group-append">
+			<button class="btn btn-sm btn-secondary" data-search="next" id="searchNext"
+		       type="button">&darr;</button>
+			<button class="btn btn-sm btn-secondary" data-search="prev" type="button">&uarr;</button>
+			<button class="btn btn-sm btn-secondary" data-search="clear" type="button">&times;</button>
+		</div>
+	</div>
+</form>
 {% endblock %}
 
 
-{% block help_modal_text %}
-    <p>This is the machine learning retrieval interface (CAL).
-    The model will select and present the most likely relevant set of documents.
-        The model also selects the most-likely relevant paragraph to reduce review time.</p>
-
-    <p>You can highlight keywords by using the highlighting feature.</p>
-
-    <p>To judge a document, you can click on any of the judging buttons or use the keyboard shortcuts.</p>
-    Once judged, the next most-likely relevant document will appear.
-    To change your judgment, click on latest judgments (or press 'u') to select a previously judged document.
-        You can rejudge the document once you select it.</p>
-
+{% block navbar-noncollapse %}
+<div class="d-lg-none nav navbar-nav mx-auto justify-content-center center-text pl-2 pr-2">
+  <form class="form-inline">
+    <div class="btn-group" role="group">
+        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not Rel</a>
+        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Rel</a>
+        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly Rel</a>
+     </div>
+  </form>
+</div>
 {% endblock %}
+
 
 {% block main %}
-    <!-- Modal -->
-    <div class="modal" id="reviewDocsModal" tabindex="-1" role="dialog"
-         aria-labelledby="reviewDocsModalTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reviewDocsModalTitle">Latest judged
-                        documents</h5>
-                    <button type="button" class="close" data-dismiss="modal"
-                            aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="reviewCAL">
-                        <div class="row">
-                            <div class="col-md-12 center-text">
-                                <i id="reviewSpinner" style="display: none;"
-                                class="fa fa-refresh fa-spin text-primary"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                        Close
-                    </button>
-                </div>
+<!-- Modal -->
+<div class="modal" id="reviewDocsModal" tabindex="-1" role="dialog"
+     aria-labelledby="reviewDocsModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewDocsModalTitle">Latest judged
+          documents</h5>
+        <button type="button" class="close" data-dismiss="modal"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="reviewCAL">
+          <div class="row">
+            <div class="col-md-12 center-text">
+              <i id="reviewSpinner" style="display: none;"
+                 class="fa fa-refresh fa-spin text-primary"></i>
             </div>
+          </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="extra-bottom-margin">
+
+  <div class="row">
+    <div class="col-md-9">
+      <div class="card border-0">
+        <div class="card-block document-cal" id="cal-document"
+             data-doc-id="">
+          <h3 id="document_title" style="font-family: 'Playfair Display', georgia, 'times new roman',times,serif;"><span class="text-danger">Loading...</span></h3>
+          <div class="row">
+            <div class=" col-md-11 text-truncate">
+              <code id="document_date" class="text-muted small"></code>
+            </div>
+          </div>
+          <hr>
+          <div id="document_snippet">
+          </div>
+          {% if request.user.current_task.show_full_document_content and request.user.current_task.strategy != 'doc' %}
+          <hr style="border-top: 3px solid rgba(0,0,0,.1);">
+          <div class="row">
+            <div class="col-md-12">
+              <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary" href="#" onclick="return show_full_doc();">Show full document.</a>
+            </div>
+          </div>
+
+          {% endif %}
+          <div id="document_content"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="extra-bottom-margin">
+    <div class="col-md-2">
+      <div class="position-fixed bg-faded shadow-sm font-open-sans card mr-2 d-none d-sm-block">
+        <div class="card-body">
+          <h5 class="card-title text-secondary">Judge document</h5>
+          <div class="small"><code id="docno_text"></code><code id="document_id"></code></div>
 
-        <div class="row">
-            <div class="col-md-9">
-                <div class="card small-shadow">
-                    <div class="card-block document-cal" id="cal-document"
-                         data-doc-id="">
-                        <h1 id="document_title" style="font-family: 'Playfair Display', georgia, 'times new roman',times,serif;"><span class="text-danger">Loading...</span></h1>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <small id="document_date"></small>
-                            </div>
-                            <div class="col-md-6 small align-right">
-                                <code id="docno_text">docno: </code><code id="document_id"></code>
-                            </div>
-                        </div>
-                        <div id="document_snippet">
-                            <p>Please wait...</p>
-                        </div>
-                        {% if request.user.current_task.show_full_document_content and request.user.current_task.strategy != 'doc'  %}
-                        <hr style="border-top: 3px solid rgba(0,0,0,.1);">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary"  href="#" onclick="return show_full_doc();">Show full document.</a>
-                            </div>
-                        </div>
+          <div class="btn-group mt-3" role="group">
+            <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);"
+               class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not relevant</a>
+            <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);"
+               class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
+            <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);"
+               class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly relevant</a>
+          </div>
+          <h5 class="card-title text-secondary mt-4">Keyboard shortcuts</h5>
 
-                        {% endif %}
-                        <div id="document_content"></div>
-                    </div>
-                </div>
+          <div class="row">
+            <div class="col-md-1">
+              <span class="badge badge-danger">s</span>
             </div>
-
-            <div class="col-md-3">
-                <nav class="sidebar-nav-fixed bg-faded font-open-sans small-shadow">
-                    <ul class="nav nav-pills flex-column little-padding small-border small-radius">
-                        <div class="cal-search">
-
-                            <li>
-                                <span class="gray-text align-left">Highlight content:</span>
-                                <form id="searchContentForm" class="top-margin">
-                                    <div class="input-group">
-                                        <input id="search_content" type="search"
-                                               class="form-control" placeholder="Search">
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-secondary"
-                                            data-search="next" id="searchNext"
-                                            type="button">&darr;</button>
-                                  </span>
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-secondary"
-                                            data-search="prev"
-                                            type="button">&uarr;</button>
-                                  </span>
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-sm btn-secondary"
-                                            data-search="clear" type="button">✖
-                                    </button>
-                                  </span>
-                                    </div>
-                                </form>
-                            </li>
-                        </div>
-
-                        <li class="nav-item extra-top-margin">
-                            <div class="gray-text align-left">Judge document:</div>
-
-                            <div class="btn-group top-margin" role="group">
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-danger">Not relevant</a>
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-warning">Relevant</a>
-                                <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-success">Highly relevant</a>
-                            </div>
-                        </li>
-
-                        <div class="extra-top-margin align-left">
-                            <span class="gray-text">Keyboard shortcuts:</span>
-                            <li class="nav-item top-margin">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <span class="badge badge-danger">s</span>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <small class="left-margin">Mark as non-relevant
-                                        </small>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <span class="badge badge-warning">r</span>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <small class="left-margin">Mark as relevant
-                                        </small>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <span class="badge badge-success">h</span>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <small class="left-margin">Mark as highly relevant
-                                        </small>
-                                    </div>
-                                </div>
-                            </li>
-                            <hr>
-                            <li class="nav-item ">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <span class="badge badge-primary">u</span>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <small class="left-margin">Show latest judged documents
-                                        </small>
-                                    </div>
-                                </div>
-                            </li>
-                        </div>
-
-                    </ul>
-
-                </nav>
-
+            <div class="col-md-10">
+              <small class="left-margin">Mark as non-relevant
+              </small>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-md-1">
+              <span class="badge badge-warning">r</span>
+            </div>
+            <div class="col-md-10">
+              <small class="left-margin">Mark as relevant
+              </small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-1">
+              <span class="badge badge-success">h</span>
+            </div>
+            <div class="col-md-10">
+              <small class="left-margin">Mark as highly relevant
+              </small>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-1">
+              <span class="badge badge-primary">u</span>
+            </div>
+            <div class="col-md-10">
+              <small class="left-margin">Show latest judged documents
+              </small>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+</div>
 {% endblock %}
 
 
 
 {% block extra_scripts %}
     <script src="{% static 'js/Queue.src.js' %}"></script>
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>#}
-{#    <script src="{% static 'js/jquery.mark.min.js' %}"></script>#}
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
     <script src="{% static 'js/CAL.js' %}"></script>
     <script src="{% static 'js/moment.min.js' %}"></script>
@@ -352,7 +309,7 @@
         function updateDocument(id, title, date, snippet, content){
             console.log("Updating document view for document id: " + id);
             $('#cal-document').attr("data-doc-id", id).data("doc-id", id);
-            $("#document_id").html(id);
+            $("#document_id").text(id);
             $("#document_title").html(title);
             $("#document_title").removeClass();
             $("#document_date").html(date);
