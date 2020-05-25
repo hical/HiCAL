@@ -5,12 +5,13 @@
 
 {% block main %}
 <div class="row top-bottom-margin">
-  <div class="col-md-9">
-    <div class="card small-shadow bottom-margin">
+  <div class="col-md-9 order-2 order-md-1">
+    <div class="card mb-2 border-0">
       <div class="card-block">
         <h2 class="text-secondary">Judged documents</h2>
+        <hr>
         <div class="row extra-top-margin">
-          <div class="col-md-12">
+          <div class="col-md-12 table-responsive">
             <table class="table table-borderless table-hover">
               <thead>
               <tr>
@@ -46,8 +47,8 @@
 
   </div>
 
-  <div class="col-md-3">
-    <div class="card">
+  <div class="col-md-3 order-1 order-md-2 mb-3">
+    <div class="card border-0 sticky-top" style="top: 73px; z-index: 0;">
       <div class="card-block">
         <h2 class="text-secondary">Operations</h2>
         <hr>
@@ -91,7 +92,7 @@
               </div>
             </div>
 
-            <div class="col-md-2" id="sideBar">
+            <div class="col-md-2 d-none d-md-block" id="sideBar">
               <nav class="sidebar-nav-fixed bg-faded font-open-sans">
                 <ul class="nav nav-pills flex-column little-padding">
                   <div class="cal-search">

@@ -65,7 +65,7 @@
   </div>
 </div>
 
-<div class="extra-bottom-margin">
+<div class="mb-4">
 
   <div class="row">
     <div class="col-md-9">
@@ -95,19 +95,21 @@
       </div>
     </div>
 
-    <div class="col-md-2">
-      <div class="position-fixed bg-faded shadow-sm font-open-sans card mr-2 d-none d-sm-block">
+    <div class="col-md-3">
+      <div class="sticky-top bg-faded shadow-sm font-open-sans card mr-2 d-none d-sm-block" style="top:73px; z-index: 0;">
         <div class="card-body">
           <h5 class="card-title text-secondary">Judge document</h5>
           <div class="small"><code id="docno_text"></code><code id="document_id"></code></div>
 
-          <div class="btn-group mt-3" role="group">
-            <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);"
-               class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not relevant</a>
-            <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);"
-               class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
-            <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);"
-               class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly relevant</a>
+          <div class="text-center">
+            <div class="btn-group mt-3" role="group">
+              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);"
+                 class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not relevant</a>
+              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);"
+                 class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
+              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);"
+                 class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly relevant</a>
+            </div>
           </div>
           <h5 class="card-title text-secondary mt-4">Keyboard shortcuts</h5>
 

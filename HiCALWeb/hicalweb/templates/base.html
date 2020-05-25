@@ -49,7 +49,7 @@
 
         {% block navbar-form %} {% endblock %}
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav pl-md-3">
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">Session</a>
@@ -79,7 +79,7 @@
         <main class="col-md-12 pt-4">
           {% block messages %}
           {% if messages %}
-          <div class="alert alert-info" role="alert">
+          <div class="alert alert-secondary" role="alert">
             <button type="button" class="close" data-dismiss="alert">
               <span>&times;</span>
             </button>

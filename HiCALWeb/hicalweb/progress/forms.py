@@ -18,20 +18,40 @@ class TaskForm(forms.ModelForm):
         model = Task
         exclude = ["username", "setting", "timespent", "last_activity"]
         help_texts = {
-            'max_number_of_judgments': 'Max number of judgments for this topic. '
-                                       'Enter <= 0 to disable (i.e. no max).',
+            'max_number_of_judgments': '(Optional) Set max number of judgments.',
             'strategy': 'CAL strategy of retrieval.',
             'show_full_document_content': 'Only for paragraph strategies.'
         }
+
+    max_number_of_judgments = forms.IntegerField(required=False,
+                                                 label="Effort",
+                                                 help_text=Meta.help_texts.get(
+                                                     'max_number_of_judgments'))
 
     def __init__(self, *args, **kwargs):
         super(TaskForm, self).__init__(*args, **kwargs)
         self.fields['topic'].queryset = Topic.objects.filter(~Q(number=None)).order_by('number')
         self.helper = FormHelper(self)
-        self.helper.layout.append(
-            Submit(self.submit_name, u'Change topic and start judging',
-                   css_class='btn btn-warning btn-sm')
+
+        self.helper.layout = Layout(
+            'topic',
+            Row(
+                Column('max_number_of_judgments', css_class='form-group col-md-6 mb-0'),
+                Column('strategy', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            'show_full_document_content',
+            StrictButton(u'Select topic and start judging',
+                         name=self.submit_name,
+                         type="submit",
+                         css_class='btn btn-sm btn-outline-secondary')
         )
+
+    def clean_max_number_of_judgments(self):
+        data = self.cleaned_data['max_number_of_judgments']
+        if not data:
+            data = 0
+        return data
 
 
 class TopicForm(forms.ModelForm):
@@ -41,7 +61,11 @@ class TopicForm(forms.ModelForm):
     """
     submit_name = 'submit-topic-form'
 
-    max_number_of_judgments = forms.IntegerField(required=True,
+    class Meta:
+        model = Topic
+        exclude = ["number", "display_description", "narrative"]
+
+    max_number_of_judgments = forms.IntegerField(required=False,
                                                  label="Effort",
                                                  help_text=TaskForm.Meta.help_texts.get('max_number_of_judgments'))
     strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES,
@@ -49,10 +73,6 @@ class TopicForm(forms.ModelForm):
                                  help_text=TaskForm.Meta.help_texts.get('strategy'))
     show_full_document_content = forms.BooleanField(required=False,
                                                     help_text=TaskForm.Meta.help_texts.get('show_full_document_content'))
-
-    class Meta:
-        model = Topic
-        exclude = ["number", "display_description", "narrative"]
 
     def __init__(self, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
@@ -72,10 +92,16 @@ class TopicForm(forms.ModelForm):
             ),
             'show_full_document_content',
             StrictButton(u'Create topic and start judging',
-                   name=self.submit_name,
-                   type="submit",
-                   css_class='btn btn-sm btn-outline-secondary')
+                         name=self.submit_name,
+                         type="submit",
+                         css_class='btn btn-sm btn-outline-secondary')
             # Alternative to StrictButton
             # Submit(self.submit_name, u'Create topic and start judging',
             #       css_class='btn btn-sm')
         )
+
+    def clean_max_number_of_judgments(self):
+        data = self.cleaned_data['max_number_of_judgments']
+        if not data:
+            data = 0
+        return data

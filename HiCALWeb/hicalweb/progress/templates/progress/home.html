@@ -14,11 +14,24 @@
     <div class="card border-0">
       <div class="card-block">
         {% if user.current_task %}
-        <h2 class="text-secondary">Current topic</h2>
-        <hr>
-        <p><strong>Title</strong>: {{ user.current_task.topic.title }}</p>
-        <p><strong>Seed query</strong>: {{ user.current_task.topic.seed_query }}</p>
-        {% if user.current_task.topic.description %}<p><strong>Description</strong>: {{ user.current_task.topic.description }}</p> {% endif %}
+
+        <h2 class="text-secondary">Current session</h2>
+        <hr class="d-none d-md-block">
+
+        <div class="list-group">
+          <div class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ user.current_task.topic.title }}</h5>
+              {% if user.current_task.topic.number %}<small>#{{ user.current_task.topic.number }}</small>{% endif %}
+            </div>
+            {% if user.current_task.topic.description %}<p class="mb-1">{{ user.current_task.topic.description }}</p>{% endif %}
+            <p class="mb-1"><small><strong>Seed query:</strong> {{ user.current_task.topic.seed_query }}</small></p>
+            <p class="mb-1"><small><strong>Strategy:</strong> {{ user.current_task.get_strategy_display }}</small></p>
+            {% if task.task_obj.max_number_of_judgments > 0 %}<p class="mb-1"><small><strong>Effort (max judgments):</strong> {{ user.current_task.max_number_of_judgments }}</small></p>{% endif %}
+            <small>{{ user.current_task.created_at }}</small>
+          </div>
+        </div>
+
         {% else %}
         <h2 class="text-danger">Please create a topic</h2>
         <hr>
@@ -123,20 +136,48 @@
   <div class="col-md-4">
     <div class="card border-0 mb-4 ">
       <div class="card-block">
-        <h2 class="text-secondary">Create new topic </h2>
+        <h2 class="text-secondary">Create new topic</h2>
         <hr>
-        <div class=row>
-          <div class="col-md-12">
-            <div class="card">
-              <div class="card-body">
-                <form method="POST">
-                  {% csrf_token %}
-                  {% crispy form_topic %}
-                </form>
+
+        <div class="btn-group btn-group-sm d-flex w-100 nav nav-pills flex-nowrap mb-3" role="group">
+          <button type="button" class="btn btn-outline-secondary shadow-none w-100 active" data-toggle="pill" href="#pills-custom-topic">Custom</button>
+          <button type="button" class="btn btn-outline-secondary shadow-none w-100" data-toggle="pill" href="#pills-predefined-topic">Pre-defined</button>
+        </div>
+
+        <div class="tab-content">
+
+          <div class="tab-pane fade active show" id="pills-custom-topic" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <form method="POST">
+                    {% csrf_token %}
+                    {% crispy form_topic %}
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <div class="tab-pane fade" id="pills-predefined-topic" role="tabpanel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <form method="POST">
+                    {% csrf_token %}
+                    {% crispy form %}
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
     </div>
   </div>
