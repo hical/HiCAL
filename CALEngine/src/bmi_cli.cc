@@ -100,14 +100,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             CMD_LINE_INTS["--judgments-per-iteration"],
             CMD_LINE_INTS["--async-mode"],
             CMD_LINE_INTS["--training-iterations"]);
-    }  else if(mode == "BMI_DOC_SCAL"){
-        bmi = make_unique<BMI_doc_scal>(seed_query.second,
-            documents.get(),
-            CMD_LINE_INTS["--threads"],
-            CMD_LINE_INTS["--judgments-per-iteration"],
-            CMD_LINE_INTS["--async-mode"],
-            CMD_LINE_INTS["--training-iterations"],
-            CMD_LINE_INTS["--scal-n"]);
     } else if(mode == "BMI_PARA"){
         bmi = make_unique<BMI_para>(seed_query.second,
             documents.get(),
@@ -216,12 +208,6 @@ void begin_bmi_helper(const pair<string, Seed> &seed_query, const unique_ptr<Dat
             break;
     }
     logfile.close();
-    
-    string stratum_record = bmi->get_log();
-    ofstream stratafile(CMD_LINE_STRINGS["--judgment-logpath"] + "/" +
-       seed_query.first+ ".strata");
-    stratafile << stratum_record <<endl;
-    stratafile.close();
 }
 
 void SanityCheck(){
@@ -352,7 +338,7 @@ int main(int argc, char **argv){
         else
             feature_parser = make_unique<BinFeatureParser>(CMD_LINE_STRINGS["--doc-features"]);
         documents = Dataset::build(feature_parser.get());
-        cout<<"Read "<<documents->size()<<" docs"<<endl;
+        cerr<<"Read "<<documents->size()<<" docs"<<endl;
     }
     TIMER_END(documents_loader);
 
@@ -368,7 +354,7 @@ int main(int argc, char **argv){
             else
                 feature_parser = make_unique<BinFeatureParser>(para_features_path);
             paragraphs = ParagraphDataset::build(feature_parser.get(), *documents);
-            cout<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
+            cerr<<"Read "<<paragraphs->size()<<" paragraphs"<<endl;
         }
         TIMER_END(paragraph_loader);
     }

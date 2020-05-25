@@ -4,6 +4,7 @@
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
 #include "bmi_para_scal.h"
+#include "bmi_doc_scal.h"
 #include "features.h"
 #include "utils/feature_parser.h"
 #include "utils/utils.h"
@@ -178,6 +179,12 @@ void begin_session_view(const FCGX_Request & request, const vector<pair<string, 
                 seed_query,
                 documents.get(),
                 paragraphs.get(),
+                CMD_LINE_INTS["--threads"],
+                200000, 25, seed_judgments);
+    }else if(mode == "doc_scal"){
+        SESSIONS[session_id] = make_unique<BMI_doc_scal>(
+                seed_query,
+                documents.get(),
                 CMD_LINE_INTS["--threads"],
                 200000, 25, seed_judgments);
     }else {
