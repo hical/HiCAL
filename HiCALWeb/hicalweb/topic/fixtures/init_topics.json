@@ -1,422 +1,492 @@
 [
-    {
-        "pk": 1,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what is the origin of COVID-19",
-            "title": "coronavirus origin",
-            "narrative": "seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
-            "seed_query": "coronavirus originwhat is the origin of COVID-19seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
-            "display_description": "seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
-            "number": "1",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 2,
-        "model": "topic.topic",
-        "fields": {
-            "description": "how does the coronavirus respond to changes in the weather",
-            "title": "coronavirus response to weather changes",
-            "narrative": "seeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
-            "seed_query": "coronavirus response to weather changeshow does the coronavirus respond to changes in the weatherseeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
-            "display_description": "seeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
-            "number": "2",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 3,
-        "model": "topic.topic",
-        "fields": {
-            "description": "will SARS-CoV2 infected people develop immunity? Is cross protection possible?",
-            "title": "coronavirus immunity",
-            "narrative": "seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
-            "seed_query": "coronavirus immunitywill SARS-CoV2 infected people develop immunity? Is cross protection possible?seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
-            "display_description": "seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
-            "number": "3",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 4,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what causes death from Covid-19?",
-            "title": "how do people die from the coronavirus",
-            "narrative": "Studies looking at mechanisms of death from Covid-19.",
-            "seed_query": "how do people die from the coronaviruswhat causes death from Covid-19?Studies looking at mechanisms of death from Covid-19.",
-            "display_description": "Studies looking at mechanisms of death from Covid-19.",
-            "number": "4",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 5,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?",
-            "title": "animal models of COVID-19",
-            "narrative": "Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
-            "seed_query": "animal models of COVID-19what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
-            "display_description": "Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
-            "number": "5",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 6,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what types of rapid testing for Covid-19 have been developed?",
-            "title": "coronavirus test rapid testing",
-            "narrative": "Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
-            "seed_query": "coronavirus test rapid testingwhat types of rapid testing for Covid-19 have been developed?Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
-            "display_description": "Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
-            "number": "6",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 7,
-        "model": "topic.topic",
-        "fields": {
-            "description": "are there serological tests that detect antibodies to coronavirus?",
-            "title": "serological tests for coronavirus",
-            "narrative": "Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
-            "seed_query": "serological tests for coronavirusare there serological tests that detect antibodies to coronavirus?Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
-            "display_description": "Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
-            "number": "7",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 8,
-        "model": "topic.topic",
-        "fields": {
-            "description": "how has lack of testing availability led to underreporting of true incidence of Covid-19?",
-            "title": "coronavirus under reporting",
-            "narrative": "Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
-            "seed_query": "coronavirus under reportinghow has lack of testing availability led to underreporting of true incidence of Covid-19?Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
-            "display_description": "Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
-            "number": "8",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 9,
-        "model": "topic.topic",
-        "fields": {
-            "description": "how has COVID-19 affected Canada",
-            "title": "coronavirus in Canada",
-            "narrative": "seeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
-            "seed_query": "coronavirus in Canadahow has COVID-19 affected Canadaseeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
-            "display_description": "seeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
-            "number": "9",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 10,
-        "model": "topic.topic",
-        "fields": {
-            "description": "has social distancing had an impact on slowing the spread of COVID-19?",
-            "title": "coronavirus social distancing impact",
-            "narrative": "seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
-            "seed_query": "coronavirus social distancing impacthas social distancing had an impact on slowing the spread of COVID-19?seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
-            "display_description": "seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
-            "number": "10",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 11,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what are the guidelines for triaging patients infected with coronavirus?",
-            "title": "coronavirus hospital rationing",
-            "narrative": "Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
-            "seed_query": "coronavirus hospital rationingwhat are the guidelines for triaging patients infected with coronavirus?Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
-            "display_description": "Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
-            "number": "11",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 12,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what are best practices in hospitals and at home in maintaining quarantine?",
-            "title": "coronavirus quarantine",
-            "narrative": "Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
-            "seed_query": "coronavirus quarantinewhat are best practices in hospitals and at home in maintaining quarantine?Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
-            "display_description": "Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
-            "number": "12",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 13,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what are the transmission routes of coronavirus?",
-            "title": "how does coronavirus spread",
-            "narrative": "Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
-            "seed_query": "how does coronavirus spreadwhat are the transmission routes of coronavirus?Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
-            "display_description": "Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
-            "number": "13",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 14,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what evidence is there related to COVID-19 super spreaders",
-            "title": "coronavirus super spreaders",
-            "narrative": "seeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
-            "seed_query": "coronavirus super spreaderswhat evidence is there related to COVID-19 super spreadersseeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
-            "display_description": "seeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
-            "number": "14",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 15,
-        "model": "topic.topic",
-        "fields": {
-            "description": "how long can the coronavirus live outside the body",
-            "title": "coronavirus outside body",
-            "narrative": "seeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
-            "seed_query": "coronavirus outside bodyhow long can the coronavirus live outside the bodyseeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
-            "display_description": "seeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
-            "number": "15",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 16,
-        "model": "topic.topic",
-        "fields": {
-            "description": "how long does coronavirus remain stable  on surfaces?",
-            "title": "how long does coronavirus survive on surfaces",
-            "narrative": "Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
-            "seed_query": "how long does coronavirus survive on surfaceshow long does coronavirus remain stable  on surfaces?Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
-            "display_description": "Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
-            "number": "16",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 17,
-        "model": "topic.topic",
-        "fields": {
-            "description": "are there any clinical trials available for the coronavirus",
-            "title": "coronavirus clinical trials",
-            "narrative": "seeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
-            "seed_query": "coronavirus clinical trialsare there any clinical trials available for the coronavirusseeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
-            "display_description": "seeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
-            "number": "17",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 18,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what are the best masks for preventing infection by Covid-19?",
-            "title": "masks prevent coronavirus",
-            "narrative": "What types of masks should or should not be used to prevent infection by Covid-19?",
-            "seed_query": "masks prevent coronaviruswhat are the best masks for preventing infection by Covid-19?What types of masks should or should not be used to prevent infection by Covid-19?",
-            "display_description": "What types of masks should or should not be used to prevent infection by Covid-19?",
-            "number": "18",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 19,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what type of hand sanitizer is needed to destroy Covid-19?",
-            "title": "what alcohol sanitizer kills coronavirus",
-            "narrative": "Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
-            "seed_query": "what alcohol sanitizer kills coronaviruswhat type of hand sanitizer is needed to destroy Covid-19?Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
-            "display_description": "Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
-            "number": "19",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 20,
-        "model": "topic.topic",
-        "fields": {
-            "description": "are patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?",
-            "title": "coronavirus and ACE inhibitors",
-            "narrative": "Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
-            "seed_query": "coronavirus and ACE inhibitorsare patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
-            "display_description": "Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
-            "number": "20",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 21,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what are the mortality rates overall and in specific populations",
-            "title": "coronavirus mortality",
-            "narrative": "Seeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
-            "seed_query": "coronavirus mortalitywhat are the mortality rates overall and in specific populationsSeeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
-            "display_description": "Seeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
-            "number": "21",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 22,
-        "model": "topic.topic",
-        "fields": {
-            "description": "are cardiac complications likely in patients with COVID-19?",
-            "title": "coronavirus heart impacts",
-            "narrative": "Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
-            "seed_query": "coronavirus heart impactsare cardiac complications likely in patients with COVID-19?Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
-            "display_description": "Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
-            "number": "22",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 23,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what kinds of complications related to COVID-19 are associated with hypertension?",
-            "title": "coronavirus hypertension",
-            "narrative": "seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
-            "seed_query": "coronavirus hypertensionwhat kinds of complications related to COVID-19 are associated with hypertension?seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
-            "display_description": "seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
-            "number": "23",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 24,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what kinds of complications related to COVID-19 are associated with diabetes",
-            "title": "coronavirus diabetes",
-            "narrative": "seeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
-            "seed_query": "coronavirus diabeteswhat kinds of complications related to COVID-19 are associated with diabetesseeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
-            "display_description": "seeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
-            "number": "24",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 25,
-        "model": "topic.topic",
-        "fields": {
-            "description": "which biomarkers predict the severe clinical course of 2019-nCOV infection?",
-            "title": "coronavirus biomarkers",
-            "narrative": "Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
-            "seed_query": "coronavirus biomarkerswhich biomarkers predict the severe clinical course of 2019-nCOV infection?Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
-            "display_description": "Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
-            "number": "25",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 26,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what are the initial symptoms of Covid-19?",
-            "title": "coronavirus early symptoms",
-            "narrative": "Studies of patients and the first clinical manifestations they develop upon active infection?",
-            "seed_query": "coronavirus early symptomswhat are the initial symptoms of Covid-19?Studies of patients and the first clinical manifestations they develop upon active infection?",
-            "display_description": "Studies of patients and the first clinical manifestations they develop upon active infection?",
-            "number": "26",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 27,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what is known about those infected with Covid-19 but are asymptomatic?",
-            "title": "coronavirus asymptomatic",
-            "narrative": "Studies of people who are known to be infected with Covid-19 but show no symptoms?",
-            "seed_query": "coronavirus asymptomaticwhat is known about those infected with Covid-19 but are asymptomatic?Studies of people who are known to be infected with Covid-19 but show no symptoms?",
-            "display_description": "Studies of people who are known to be infected with Covid-19 but show no symptoms?",
-            "number": "27",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 28,
-        "model": "topic.topic",
-        "fields": {
-            "description": "what evidence is there for the value of hydroxychloroquine in treating Covid-19?",
-            "title": "coronavirus hydroxychloroquine",
-            "narrative": "Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
-            "seed_query": "coronavirus hydroxychloroquinewhat evidence is there for the value of hydroxychloroquine in treating Covid-19?Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
-            "display_description": "Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
-            "number": "28",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 29,
-        "model": "topic.topic",
-        "fields": {
-            "description": "which SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?",
-            "title": "coronavirus drug repurposing",
-            "narrative": "Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
-            "seed_query": "coronavirus drug repurposingwhich SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
-            "display_description": "Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
-            "number": "29",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
-    },
-    {
-        "pk": 30,
-        "model": "topic.topic",
-        "fields": {
-            "description": "is remdesivir an effective treatment for COVID-19",
-            "title": "coronavirus remdesivir",
-            "narrative": "seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
-            "seed_query": "coronavirus remdesiviris remdesivir an effective treatment for COVID-19seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
-            "display_description": "seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
-            "number": "30",
-            "created_at": "2020-01-01T00:00:00.0000",
-            "updated_at": "2020-01-01T00:00:00.0000"
-        }
+  {
+    "pk": 1,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what is the origin of COVID-19",
+      "title": "coronavirus origin",
+      "narrative": "seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
+      "seed_query": "coronavirus originwhat is the origin of COVID-19seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
+      "display_description": "seeking range of information about the SARS-CoV-2 virus's origin, including its evolution, animal source, and first transmission into humans",
+      "number": "1",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
     }
+  },
+  {
+    "pk": 2,
+    "model": "topic.topic",
+    "fields": {
+      "description": "how does the coronavirus respond to changes in the weather",
+      "title": "coronavirus response to weather changes",
+      "narrative": "seeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
+      "seed_query": "coronavirus response to weather changeshow does the coronavirus respond to changes in the weatherseeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
+      "display_description": "seeking range of information about the SARS-CoV-2 virus viability in different weather/climate conditions as well as information related to transmission of the virus in different climate conditions",
+      "number": "2",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "topic.topic",
+    "fields": {
+      "description": "will SARS-CoV2 infected people develop immunity? Is cross protection possible?",
+      "title": "coronavirus immunity",
+      "narrative": "seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
+      "seed_query": "coronavirus immunitywill SARS-CoV2 infected people develop immunity? Is cross protection possible?seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
+      "display_description": "seeking studies of immunity developed due to infection with SARS-CoV2 or cross protection gained due to infection with other coronavirus types",
+      "number": "3",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what causes death from Covid-19?",
+      "title": "how do people die from the coronavirus",
+      "narrative": "Studies looking at mechanisms of death from Covid-19.",
+      "seed_query": "how do people die from the coronaviruswhat causes death from Covid-19?Studies looking at mechanisms of death from Covid-19.",
+      "display_description": "Studies looking at mechanisms of death from Covid-19.",
+      "number": "4",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?",
+      "title": "animal models of COVID-19",
+      "narrative": "Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
+      "seed_query": "animal models of COVID-19what drugs have been active against SARS-CoV or SARS-CoV-2 in animal studies?Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
+      "display_description": "Papers that describe the results  of testing drugs that bind to spike proteins of the virus or any other drugs in any animal models. Papers about SARS-CoV-2 infection in cell culture assays are also relevant.",
+      "number": "5",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what types of rapid testing for Covid-19 have been developed?",
+      "title": "coronavirus test rapid testing",
+      "narrative": "Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
+      "seed_query": "coronavirus test rapid testingwhat types of rapid testing for Covid-19 have been developed?Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
+      "display_description": "Looking for studies identifying ways to diagnose Covid-19 more rapidly.",
+      "number": "6",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "topic.topic",
+    "fields": {
+      "description": "are there serological tests that detect antibodies to coronavirus?",
+      "title": "serological tests for coronavirus",
+      "narrative": "Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
+      "seed_query": "serological tests for coronavirusare there serological tests that detect antibodies to coronavirus?Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
+      "display_description": "Looking for assays that measure immune response to COVID-19 that will help determine past infection and subsequent possible immunity.",
+      "number": "7",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "topic.topic",
+    "fields": {
+      "description": "how has lack of testing availability led to underreporting of true incidence of Covid-19?",
+      "title": "coronavirus under reporting",
+      "narrative": "Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
+      "seed_query": "coronavirus under reportinghow has lack of testing availability led to underreporting of true incidence of Covid-19?Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
+      "display_description": "Looking for studies answering questions of impact of lack of complete testing for Covid-19 on incidence and prevalence of Covid-19.",
+      "number": "8",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "topic.topic",
+    "fields": {
+      "description": "how has COVID-19 affected Canada",
+      "title": "coronavirus in Canada",
+      "narrative": "seeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
+      "seed_query": "coronavirus in Canadahow has COVID-19 affected Canadaseeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
+      "display_description": "seeking data related to infections (confirm, suspected, and projected) and health outcomes (symptoms, hospitalization, intensive care, mortality)",
+      "number": "9",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 10,
+    "model": "topic.topic",
+    "fields": {
+      "description": "has social distancing had an impact on slowing the spread of COVID-19?",
+      "title": "coronavirus social distancing impact",
+      "narrative": "seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
+      "seed_query": "coronavirus social distancing impacthas social distancing had an impact on slowing the spread of COVID-19?seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
+      "display_description": "seeking specific information on studies that have measured COVID-19's transmission in one or more social distancing (or non-social distancing) approaches",
+      "number": "10",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what are the guidelines for triaging patients infected with coronavirus?",
+      "title": "coronavirus hospital rationing",
+      "narrative": "Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
+      "seed_query": "coronavirus hospital rationingwhat are the guidelines for triaging patients infected with coronavirus?Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
+      "display_description": "Seeking information on any guidelines for prioritizing COVID-19 patients infected with coronavirus based on demographics, clinical signs, serology and other tests.",
+      "number": "11",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what are best practices in hospitals and at home in maintaining quarantine?",
+      "title": "coronavirus quarantine",
+      "narrative": "Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
+      "seed_query": "coronavirus quarantinewhat are best practices in hospitals and at home in maintaining quarantine?Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
+      "display_description": "Seeking information on best practices for activities and duration of quarantine for those exposed and/ infected to COVID-19 virus.",
+      "number": "12",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what are the transmission routes of coronavirus?",
+      "title": "how does coronavirus spread",
+      "narrative": "Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
+      "seed_query": "how does coronavirus spreadwhat are the transmission routes of coronavirus?Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
+      "display_description": "Looking for information on all possible ways to contract COVID-19 from people, animals and objects",
+      "number": "13",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what evidence is there related to COVID-19 super spreaders",
+      "title": "coronavirus super spreaders",
+      "narrative": "seeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
+      "seed_query": "coronavirus super spreaderswhat evidence is there related to COVID-19 super spreadersseeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
+      "display_description": "seeking range of information related to the number and proportion of super spreaders, their patterns of behavior that lead to spread, and potential prevention strategies targeted specifically toward super spreaders",
+      "number": "14",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "topic.topic",
+    "fields": {
+      "description": "how long can the coronavirus live outside the body",
+      "title": "coronavirus outside body",
+      "narrative": "seeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
+      "seed_query": "coronavirus outside bodyhow long can the coronavirus live outside the bodyseeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
+      "display_description": "seeking range of information on the SARS-CoV-2's virus's survival in different environments (surfaces, liquids, etc.) outside the human body while still being viable for transmission to another human",
+      "number": "15",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "topic.topic",
+    "fields": {
+      "description": "how long does coronavirus remain stable  on surfaces?",
+      "title": "how long does coronavirus survive on surfaces",
+      "narrative": "Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
+      "seed_query": "how long does coronavirus survive on surfaceshow long does coronavirus remain stable  on surfaces?Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
+      "display_description": "Studies of time SARS-CoV-2 remains stable after being deposited from an infected person on everyday surfaces in a household or hospital setting, such as through coughing or touching objects.",
+      "number": "16",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 17,
+    "model": "topic.topic",
+    "fields": {
+      "description": "are there any clinical trials available for the coronavirus",
+      "title": "coronavirus clinical trials",
+      "narrative": "seeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
+      "seed_query": "coronavirus clinical trialsare there any clinical trials available for the coronavirusseeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
+      "display_description": "seeking specific COVID-19 clinical trials ranging from trials in recruitment to completed trials with results",
+      "number": "17",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 18,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what are the best masks for preventing infection by Covid-19?",
+      "title": "masks prevent coronavirus",
+      "narrative": "What types of masks should or should not be used to prevent infection by Covid-19?",
+      "seed_query": "masks prevent coronaviruswhat are the best masks for preventing infection by Covid-19?What types of masks should or should not be used to prevent infection by Covid-19?",
+      "display_description": "What types of masks should or should not be used to prevent infection by Covid-19?",
+      "number": "18",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 19,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what type of hand sanitizer is needed to destroy Covid-19?",
+      "title": "what alcohol sanitizer kills coronavirus",
+      "narrative": "Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
+      "seed_query": "what alcohol sanitizer kills coronaviruswhat type of hand sanitizer is needed to destroy Covid-19?Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
+      "display_description": "Studies assessing chemicals and their concentrations needed to destroy the Covid-19 virus.",
+      "number": "19",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 20,
+    "model": "topic.topic",
+    "fields": {
+      "description": "are patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?",
+      "title": "coronavirus and ACE inhibitors",
+      "narrative": "Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
+      "seed_query": "coronavirus and ACE inhibitorsare patients taking Angiotensin-converting enzyme inhibitors (ACE) at increased risk for COVID-19?Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
+      "display_description": "Looking for information on interactions between  coronavirus and  angiotensin converting enzyme 2 (ACE2) receptors, risk for patients taking these medications, and recommendations for these patients.",
+      "number": "20",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 21,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what are the mortality rates overall and in specific populations",
+      "title": "coronavirus mortality",
+      "narrative": "Seeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
+      "seed_query": "coronavirus mortalitywhat are the mortality rates overall and in specific populationsSeeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
+      "display_description": "Seeking  information on COVID-19 fatality rates in different countries and in different population groups based on gender, blood types, or other factors",
+      "number": "21",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 22,
+    "model": "topic.topic",
+    "fields": {
+      "description": "are cardiac complications likely in patients with COVID-19?",
+      "title": "coronavirus heart impacts",
+      "narrative": "Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
+      "seed_query": "coronavirus heart impactsare cardiac complications likely in patients with COVID-19?Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
+      "display_description": "Seeking information on the types, frequency and mechanisms of cardiac complications caused by coronavirus.",
+      "number": "22",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 23,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what kinds of complications related to COVID-19 are associated with hypertension?",
+      "title": "coronavirus hypertension",
+      "narrative": "seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
+      "seed_query": "coronavirus hypertensionwhat kinds of complications related to COVID-19 are associated with hypertension?seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
+      "display_description": "seeking specific outcomes that hypertensive  (any type) patients are more/less likely to face if infected with the virus",
+      "number": "23",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 24,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what kinds of complications related to COVID-19 are associated with diabetes",
+      "title": "coronavirus diabetes",
+      "narrative": "seeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
+      "seed_query": "coronavirus diabeteswhat kinds of complications related to COVID-19 are associated with diabetesseeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
+      "display_description": "seeking specific outcomes that diabetic (any type) patients are more/less likely to face if infected with the virus",
+      "number": "24",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 25,
+    "model": "topic.topic",
+    "fields": {
+      "description": "which biomarkers predict the severe clinical course of 2019-nCOV infection?",
+      "title": "coronavirus biomarkers",
+      "narrative": "Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
+      "seed_query": "coronavirus biomarkerswhich biomarkers predict the severe clinical course of 2019-nCOV infection?Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
+      "display_description": "Looking for information on biomarkers that predict disease outcomes in people infected with coronavirus, specifically those that predict severe and fatal outcomes.",
+      "number": "25",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 26,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what are the initial symptoms of Covid-19?",
+      "title": "coronavirus early symptoms",
+      "narrative": "Studies of patients and the first clinical manifestations they develop upon active infection?",
+      "seed_query": "coronavirus early symptomswhat are the initial symptoms of Covid-19?Studies of patients and the first clinical manifestations they develop upon active infection?",
+      "display_description": "Studies of patients and the first clinical manifestations they develop upon active infection?",
+      "number": "26",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 27,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what is known about those infected with Covid-19 but are asymptomatic?",
+      "title": "coronavirus asymptomatic",
+      "narrative": "Studies of people who are known to be infected with Covid-19 but show no symptoms?",
+      "seed_query": "coronavirus asymptomaticwhat is known about those infected with Covid-19 but are asymptomatic?Studies of people who are known to be infected with Covid-19 but show no symptoms?",
+      "display_description": "Studies of people who are known to be infected with Covid-19 but show no symptoms?",
+      "number": "27",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 28,
+    "model": "topic.topic",
+    "fields": {
+      "description": "what evidence is there for the value of hydroxychloroquine in treating Covid-19?",
+      "title": "coronavirus hydroxychloroquine",
+      "narrative": "Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
+      "seed_query": "coronavirus hydroxychloroquinewhat evidence is there for the value of hydroxychloroquine in treating Covid-19?Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
+      "display_description": "Basic science or clinical studies assessing the benefit and harms of treating Covid-19 with hydroxychloroquine.",
+      "number": "28",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 29,
+    "model": "topic.topic",
+    "fields": {
+      "description": "which SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?",
+      "title": "coronavirus drug repurposing",
+      "narrative": "Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
+      "seed_query": "coronavirus drug repurposingwhich SARS-CoV-2 proteins-human proteins interactions indicate potential for drug targets. Are there approved drugs that can be repurposed based on this information?Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
+      "display_description": "Seeking information about protein-protein interactions for any of the SARS-CoV-2  structural proteins that represent a promising therapeutic target,  and the drug  molecules that may inhibit the virus and the host cell receptors at entry step.",
+      "number": "29",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 30,
+    "model": "topic.topic",
+    "fields": {
+      "description": "is remdesivir an effective treatment for COVID-19",
+      "title": "coronavirus remdesivir",
+      "narrative": "seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
+      "seed_query": "coronavirus remdesiviris remdesivir an effective treatment for COVID-19seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
+      "display_description": "seeking specific information on clinical outcomes in COVID-19 patients treated with remdesivir",
+      "number": "30",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 31,
+    "model": "topic.topic",
+    "fields": {
+      "description": "How does the coronavirus differ from seasonal flu?",
+      "title": "difference between coronavirus and flu",
+      "narrative": "Includes studies ranging from those focusing on genomic differences to global public health impacts, but must draw direct comparisons between COVID-19 and seasonal influenza.",
+      "seed_query": "difference between coronavirus and fluHow does the coronavirus differ from seasonal flu?Includes studies ranging from those focusing on genomic differences to global public health impacts, but must draw direct comparisons between COVID-19 and seasonal influenza.",
+      "display_description": "Includes studies ranging from those focusing on genomic differences to global public health impacts, but must draw direct comparisons between COVID-19 and seasonal influenza.",
+      "number": "31",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 32,
+    "model": "topic.topic",
+    "fields": {
+      "description": "Does SARS-CoV-2 have any subtypes, and if so what are they?",
+      "title": "coronavirus subtypes",
+      "narrative": "Papers that discuss subtypes of the virus, from named subtypes to speculative subtypes based on genomic or geographic clustering.",
+      "seed_query": "coronavirus subtypesDoes SARS-CoV-2 have any subtypes, and if so what are they?Papers that discuss subtypes of the virus, from named subtypes to speculative subtypes based on genomic or geographic clustering.",
+      "display_description": "Papers that discuss subtypes of the virus, from named subtypes to speculative subtypes based on genomic or geographic clustering.",
+      "number": "32",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 33,
+    "model": "topic.topic",
+    "fields": {
+      "description": "What vaccine candidates are being tested for Covid-19?",
+      "title": "coronavirus vaccine candidates",
+      "narrative": "Seeking studies that discuss possible, but specific, COVID-19 vaccines. Includes articles from those describing the mechanisms of action of specific proposed vaccines to actual clinical trials, but excluding articles that do not name a specific vaccine candidate.",
+      "seed_query": "coronavirus vaccine candidatesWhat vaccine candidates are being tested for Covid-19?Seeking studies that discuss possible, but specific, COVID-19 vaccines. Includes articles from those describing the mechanisms of action of specific proposed vaccines to actual clinical trials, but excluding articles that do not name a specific vaccine candidate.",
+      "display_description": "Seeking studies that discuss possible, but specific, COVID-19 vaccines. Includes articles from those describing the mechanisms of action of specific proposed vaccines to actual clinical trials, but excluding articles that do not name a specific vaccine candidate.",
+      "number": "33",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 34,
+    "model": "topic.topic",
+    "fields": {
+      "description": "What are the longer-term complications of those who recover from COVID-19?",
+      "title": "coronavirus recovery",
+      "narrative": "Seeking information on the health outcomes for those that recover from the virus. Excludes studies only focusing on adverse effects related to a particular COVID-19 drug.",
+      "seed_query": "coronavirus recoveryWhat are the longer-term complications of those who recover from COVID-19?Seeking information on the health outcomes for those that recover from the virus. Excludes studies only focusing on adverse effects related to a particular COVID-19 drug.",
+      "display_description": "Seeking information on the health outcomes for those that recover from the virus. Excludes studies only focusing on adverse effects related to a particular COVID-19 drug.",
+      "number": "34",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  },
+  {
+    "pk": 35,
+    "model": "topic.topic",
+    "fields": {
+      "description": "What new public datasets are available related to COVID-19?",
+      "title": "coronavirus public datasets",
+      "narrative": "Seeking articles that specifically release new data related to SARS-CoV-2 or COVID-19, including genomic data, patient data, public health data, etc. Articles that reference previously existing datasets are not relevant.",
+      "seed_query": "coronavirus public datasetsWhat new public datasets are available related to COVID-19?Seeking articles that specifically release new data related to SARS-CoV-2 or COVID-19, including genomic data, patient data, public health data, etc. Articles that reference previously existing datasets are not relevant.",
+      "display_description": "Seeking articles that specifically release new data related to SARS-CoV-2 or COVID-19, including genomic data, patient data, public health data, etc. Articles that reference previously existing datasets are not relevant.",
+      "number": "35",
+      "created_at": "2020-01-01T00:00:00.0000",
+      "updated_at": "2020-01-01T00:00:00.0000"
+    }
+  }
 ]
