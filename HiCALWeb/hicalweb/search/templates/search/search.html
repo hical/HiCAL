@@ -3,67 +3,32 @@
 
 {% block pagetitle %}Search{% endblock %}
 
-{% block nav-header %}{% endblock %}
-
-
-{% block help_modal_text %}
-    <p>This is the Interactive Search and Judging (ISJ) interface.
-    You can search for documents by submitting your query in the search box.
-        You can also select the number of documents to return.</p>
-
-    <p>Documents can be clicked to view their full content.</p>
-
-    <p>To judge a document, you can click on any of the judging buttons or use the keyboard shortcuts.</p>
-
+{% block navbar-center %}
+<form id="search_form" name="search_input" class="input-group mx-auto w-75">
+  <input autocomplete="off" class="form-control py-2 rounded-pill mr-1 pr-5" type="search" placeholder="Search" id="search_input" name="search_input">
+  <span class="input-group-append">
+     <button class="btn rounded-pill border-0 ml-n5" type="submit"
+             ic-target="#search_result" ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
+     >
+	<i class="fa fa-search text-secondary"></i>
+     </button>
+    </span>
+</form>
 {% endblock %}
 
-
 {% block main %}
-    <div class="row flex-items-lg-middle">
-        <div class="col-lg-2 mt-1 text-primary font-montserrat">
-            <h3>Search</h3>
-        </div>
-        <div class="col-lg-10">
-          <form class="input-group" id="search_form">
-              <input type="text" class="form-control moustrap" placeholder="Search" id="search_input"
-                   name="search_input">
-              <span class="input-group-btn pr-4">
-                <button class="btn btn-outline-primary" type="submit"
-                        ic-indicator="#searchSpinner" ic-target="#search_result"
-                        ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
-                        tabindex="-1" id="search_button">Search
-                </button>
-              </span>
-              <h3 class="ml-1 center-text pr-2" style="min-width: 35px"><i id="searchSpinner" style="display: none;"
-                   class="fas fa-sync fa-spin text-primary"></i></h3>
-              <span class="input-btn left-margin mt-1">
-                #docs:
-                <select class="select btn btn-lg btn-outline-primary" id="id_numdisplay" name="numdisplay">
-                    <option value="10" selected="selected">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-              </span>
-          </form>
-        </div>
-    </div>
+<div class="row flex-items-lg-middle">
+</div>
 
-    <div class="extra-top-margin">
-    <div class="double-extra-padding-left-right">
-
-    </div>
-        <div id="search_result">
-        </div>
-
-    </div>
-
+<div class="col-md-7 pt-2 mx-auto">
+  <div id="search_result">
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.1.min.js"></script>
     <script src="{% static 'js/mousetrap.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/moment.min.js' %}"></script>
     <script src="{% static 'js/idle.js' %}"></script>
     <script src="{% static 'js/timer.js' %}"></script>
@@ -297,14 +262,15 @@
             return false;
         }
 
+        var find_borders_css = function (index, className){return (className.match (/(^|\s)border-\S+/g) || []).join(' ');};
         function update_doc_status(doc_id, highlyRelevant, non, relevant){
             console.log("Updating document " + doc_id + " status");
             if(highlyRelevant){
-                $("#doc_"+doc_id+"_status").html("<div class='bg-success' style='height: 100%; padding: 2px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
+                $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-success");
             }else if(non){
-                $("#doc_"+doc_id+"_status").html("<div class='bg-danger' style='height: 100%; padding: 2px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
+                $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-danger");
             }else if(relevant){
-                $("#doc_"+doc_id+"_status").html("<div class='bg-warning' style='height: 100%; padding: 2px;' ><i class='fa' aria-hidden='true'></i></div>").hide().fadeIn();
+                $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-warning");
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
         }
