@@ -10,8 +10,9 @@ from hicalweb.topic.models import Topic
 
 class Task(models.Model):
     STRATEGY_CHOICES = (
-        ('doc', 'Full document (CAL)'),
+        ('doc', 'Document (CAL)'),
         ('para', 'Paragraph (CAL)'),
+        ('doc_scal', 'Document (S-CAL)'),
         ('para_scal', 'Paragraph (S-CAL)'),
     )
 
