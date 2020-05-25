@@ -125,7 +125,7 @@ Data Params:
     session_id=[string]
     seed_query=[string]
     async=[bool]
-    mode=[para,doc]
+    mode=[para,doc, para_scal, doc_scal]
     seed_judgments=doc1:rel1,doc2:rel2
     judgments_per_iteration=[-1 or positive integer]
     

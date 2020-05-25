@@ -18,6 +18,7 @@ using namespace std;
 
 vector<string> BMI_TYPES = {
     "BMI_DOC",
+    "BMI_DOC_SCAL",
     "BMI_PARA",
     "BMI_PARTIAL_RANKING",
     "BMI_ONLINE_LEARNING",
@@ -312,6 +313,7 @@ int main(int argc, char **argv){
     AddFlag("--generate-ranklists", "Generate ranklists instead of simulating", bool(false));
     AddFlag("--judgment-logpath", "Path to log judgments. Specify a directory within which topic-specific logs will be generated.", string("./judgments.list"));
     AddFlag("--df", "Path of the file with list of terms and their document frequencies. The file contains space-separated word and df on every line. Specify only when df information is not encoded in the document features file.", string(""));
+    AddFlag("--scal-n", "Set SCAL sample size", int(25));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
