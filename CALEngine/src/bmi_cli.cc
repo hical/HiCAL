@@ -6,7 +6,6 @@
 #include "utils/utils.h"
 #include "utils/simple-cmd-line-helper.h"
 #include "bmi_para.h"
-#include "bmi_doc_scal.h"
 #include "bmi_reduced_ranking.h"
 #include "bmi_online_learning.h"
 #include "bmi_precision_delay.h"
