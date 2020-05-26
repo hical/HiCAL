@@ -52,3 +52,5 @@ lxml
 raven
 
 uwsgi
+
+beautifulsoup4==4.4.0

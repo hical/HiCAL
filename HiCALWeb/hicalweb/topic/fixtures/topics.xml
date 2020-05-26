@@ -1,0 +1,412 @@
+<topics>
+
+<topic>
+  <number>1</number>
+  <query>cranberries urinary tract infections</query>
+  <cochranedoi>10.1002/14651858.CD001321.pub5</cochranedoi>
+  <description>Can cranberries prevent urinary tract infections?</description>
+  <narrative>Symptoms of a urinary tract infection (UTI) include burning while urinating and a persistent urge to urinate. Relevant documents should discuss the effectiveness of consuming cranberries or cranberry juice for prevention of UTIs.  This topic is specifically about prevention rather than treatment of an existing infection.</narrative>
+</topic>
+
+<topic>
+  <number>2</number>
+  <query>acupuncture insomnia</query>
+  <cochranedoi>10.1002/14651858.CD005472.pub3</cochranedoi>
+  <description>Can acupuncture be a solution to insomnia?</description>
+  <narrative>Acupuncture has been used to ease issues that can cause sleeplessness (insomnia) such as anxiety and stress. A relevant document should discuss whether acupuncture can treat insomnia.</narrative>
+</topic>
+
+<topic>
+  <number>3</number>
+  <query>acupuncture epilepsy</query>
+  <cochranedoi>10.1002/14651858.CD006135.pub3</cochranedoi>
+  <description>Can acupuncture be effective for people with epilepsy?</description>
+  <narrative>Acupuncture, a traditional Chinese treatment which is applied by inserting thin needles in certain locations of body, has been used as a treatment for epilepsy. There are reports that it reduces the regularity and severity of epileptic episodes (seizures). A relevant document should discuss whether acupuncture can be used to treat epilepsy or control seizures and epilepsy symptoms.</narrative>
+</topic>
+
+<topic>
+  <number>4</number>
+  <query>honey wound</query>
+  <cochranedoi>10.1002/14651858.CD005083.pub4</cochranedoi>
+  <description>Can honey be used to heal wounds?</description>
+  <narrative>Honey has been suggested as a treatment for a variety of health issues and also been claimed to be a remedy for acute or chronic wounds. Relevant documents discuss whether topically applied honey is effective for healing wounds.</narrative>
+</topic>
+
+<topic>
+  <number>5</number>
+  <query>acupuncture migraine</query>
+  <cochranedoi>10.1002/14651858.CD001218.pub3</cochranedoi>
+  <description>Can acupuncture prevent migraines?</description>
+  <narrative>Acupuncture has been suggested to be an effective treatment for episodic migraine. Relevant documents discuss whether acupuncture can reduce the frequency of migraine attacks.  Documents discussing other types of headache, but not migraine, should be considered as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>6</number>
+  <query>amygdalin laetrile cancer</query>
+  <cochranedoi>10.1002/14651858.CD005476.pub4</cochranedoi>
+  <description>Is amygdalin or laetrile an effective cancer treatment?</description>
+  <narrative>Amygdalin, also known as Vitamin B17 and as its semi-synthetic form Laetrile, is claimed to be used as a potential treatment for cancer. A relevant document discusses whether Amygdalin or Laetrile is a useful treatment of cancer. Relevant documents might also discuss consumption of foods containing Amygdalin such as raw nuts and fruit pits as an effective cancer treatment.</narrative>
+</topic>
+
+<topic>
+  <number>7</number>
+  <query>aspirin vascular dementia</query>
+  <cochranedoi>10.1002/14651858.CD001296</cochranedoi>
+  <description>Can aspirin improve the lives of people with vascular dementia?</description>
+  <narrative>Vascular dementia is a brain disorder that occurs as a result of dysfunction in the vascular system that carries blood to the brain. It is suggested that aspirin can help to improve the vascular system and benefit people with dementia. Relevant documents should discuss whether aspirin could be used as a treatment to help people with vascular dementia and reduce severity of its symptoms. Documents that don't discuss the effectiveness of aspirin for treating vascular dementia but discuss other dementia related issues such as Alzheimer and Lewy Bodies should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>8</number>
+  <query>melatonin jet lag</query>
+  <cochranedoi>10.1002/14651858.CD001520</cochranedoi>
+  <description>Can melatonin be used to reduce jet lag?</description>
+  <narrative>Jet lag is a fatigue and sleep disorder caused by air travel across several time zones.  It has been suggested that melatonin can be used to reduce or prevent the effects of jet lag. Relevant documents should discuss whether taking melatonin can be effective for treating jet lag.</narrative>
+</topic>
+
+<topic>
+  <number>9</number>
+  <query>ear drops remove ear wax</query>
+  <cochranedoi>10.1002/14651858.CD012171.pub2</cochranedoi>
+  <description>Can ear drops remove ear wax?</description>
+  <narrative>Build up of ear wax can cause problems, e.g. hearing loss, and may require interventions such as syringing. Different types of ear drops have been suggested to be useful to soften ear wax and be used to remove it. A relevant document should discuss the effectiveness of any type of ear drops in removing ear wax.</narrative>
+</topic>
+
+<topic>
+  <number>10</number>
+  <query>gene therapy sickle cell</query>
+  <cochranedoi>10.1002/14651858.CD007652.pub6</cochranedoi>
+  <description>Can gene therapy prevent complications caused by sickle cell disease?</description>
+  <narrative>Sickle cell disease (SCD) is an inherited blood disorder that affects the development of healthy red blood cells and causes red blood cells to change their form from a normal round shape to a crescent and rigid shape. People with sickle cell disease have fewer healthy blood cells, which can affect their oxygen carrying capacity and lead to serious or life-threatening complications. Gene therapy, as a newly advanced field, is claimed to be helpful for this disease. A relevant document discusses using gene therapy for preventing the symptoms and complications of SCD.</narrative>
+</topic>
+
+<topic>
+  <number>11</number>
+  <query>exercise lower back pain</query>
+  <cochranedoi>10.1002/14651858.CD000335.pub2</cochranedoi>
+  <description>Can exercises relieve lower back pain?</description>
+  <narrative>Lower back pain is a common health issue. It can be chronic, acute or sub-acute with no identifiable cause. There are several exercises claiming reduction in non-specific low-back pain. A relevant document discusses whether exercises are helpful in reducing chronic or sub-acute low-back pain. The documents that do not mention non-acute low-back pain (i.e. chronic or sub-acute) should be regarded as not relevant.</narrative>
+</topic>
+
+<topic>
+  <number>12</number>
+  <query>circumcision hiv</query>
+  <cochranedoi>10.1002/14651858.CD003362.pub2</cochranedoi>
+  <description>Is male circumcision helpful in reducing heterosexual men's chances of getting HIV?</description>
+  <narrative>Relevant documents will discuss the effectiveness of male circumcision, the surgical removal of some or all of the foreskin of the penis, for reducing the risk of heterosexual men becoming infected by HIV.</narrative>
+</topic>
+
+<topic>
+  <number>13</number>
+  <query>antidepressants low-back pain</query>
+  <cochranedoi>10.1002/14651858.CD001703.pub3</cochranedoi>
+  <description>Find documents that discuss using antidepressants for helping to manage or relieve lower back pain.</description>
+  <narrative>Lower back pain is a common health problem which mostly doesn't have an identifiable cause. Antidepressants such as Tofranil, Anafranil and many others, are widely used by people with low-back pain in an attempt to relieve the pain and help with sleep. A relevant document should discuss, in the context of low-back pain, whether antidepressants can be used to manage pain, help people sleep, or increase productivity.</narrative>
+</topic>
+
+<topic>
+  <number>14</number>
+  <query>breathing exercises kids with asthma</query>
+  <cochranedoi>10.1002/14651858.CD011017.pub2</cochranedoi>
+  <description>Are breathing exercises helpful for children with asthma?</description>
+  <narrative>Breathing exercises are often recommended as a helpful treatment to reduce asthma's symptoms, such as shortness of breath and chest pain. A relevant document discusses whether breathing exercises can help asthma in children. Documents discussing breathing exercises for people with asthma, but not for children, should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>15</number>
+  <query>probiotics bacterial vaginosis</query>
+  <cochranedoi>10.1002/14651858.CD006289.pub2</cochranedoi>
+  <description>Can probiotics treat bacterial vaginosis?</description>
+  <narrative>Bacterial vaginosis (BV) is a mild bacterial infection of the vagina. Consumption of probiotic medicines (e.g. pills, tablets) or probiotic rich products (e.g. yogurt) has been suggested as cure for BV. Relevant documents discuss the effectiveness of probiotics for treating BV.</narrative>
+</topic>
+
+<topic>
+  <number>16</number>
+  <query>magnesium muscle cramps</query>
+  <cochranedoi>10.1002/14651858.CD009402.pub2</cochranedoi>
+  <description>Can magnesium prevent muscle cramps?</description>
+  <narrative>Muscle cramps, which occur in different skeleton muscles, are seen more frequently in older ages, pregnant women, and during exercise, but may also occur in any setting. One possible treatment suggested is consuming products containing magnesium, such as magnesium rich food or magnesium supplements. A relevant document should discuss whether or not magnesium consumption can prevent muscle cramps.</narrative>
+</topic>
+
+<topic>
+  <number>17</number>
+  <query>lumbar supports lower back pain</query>
+  <cochranedoi>10.1002/14651858.CD001823.pub3</cochranedoi>
+  <description>Can lumbar supports treat or prevent lower back pain?</description>
+  <narrative>Lumbar supports, also called as lumbar back support, lumbar spine support, corsets and braces, are wearable products that are introduced for treatment of lower back pain by providing support to the spine. Relevant documents discuss the effectiveness of lumbar supports in preventing new occurrences of or treating existing low-back pain. Documents that don't discuss the effectiveness of lumbar supports for low-back pain but for other spine issues, e.g. neck pain, should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>18</number>
+  <query>electrical stimulation male urinary incontinence</query>
+  <cochranedoi>10.1002/14651858.CD001202.pub5</cochranedoi>
+  <description>Can electrical stimulation devices treat male urinary incontinence?</description>
+  <narrative>Electric stimulation using non-implanted devices is suggested as a treatment for male urinary incontinence (urine leakage). A relevant document should discuss whether electrical stimulation with such devices can prevent urine leakage, or treat urinary incontinence in men.</narrative>
+</topic>
+
+<topic>
+  <number>19</number>
+  <query>honey children cough</query>
+  <cochranedoi>10.1002/14651858.CD007094.pub5</cochranedoi>
+  <description>Can honey offer relief from cough symptoms in children?</description>
+  <narrative>Relevant documents should discuss the effectiveness of using honey for relieving cough symptoms in children.</narrative>
+</topic>
+
+<topic>
+  <number>20</number>
+  <query>steroids spinal cord injury</query>
+  <cochranedoi>10.1002/14651858.CD001046.pub2</cochranedoi>
+  <description>Can steroids be used as a treatment for spinal cord injury?</description>
+  <narrative>Relevant documents should discuss whether or not the steroid, methylprednisolone, is helpful for acute spinal cord injury.</narrative>
+</topic>
+
+<topic>
+  <number>21</number>
+  <query>acupuncture vascular dementia</query>
+  <cochranedoi>10.1002/14651858.CD004987.pub2</cochranedoi>
+  <description>Can acupuncture treat vascular dementia?</description>
+  <narrative>Dementia is a set of symptoms associated with loss of memory or thinking skills. Vascular dementia (VaD) is a subclass of dementia that occurs when the circulation system fails to carry enough blood to the brain. Among other interventions having side effects, acupuncture is said to be an effective treatment of VaD. A relevant document discusses whether or not acupuncture is an effective treatment for VaD. Documents discussing other types of dementia (e.g. Alzheimer, Lewy Bodies) should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>22</number>
+  <query>hydroxyzine generalized anxiety disorder</query>
+  <cochranedoi>10.1002/14651858.CD006815.pub2</cochranedoi>
+  <description>How effective is hydroxyzine (also known as Atarax) for treating generalized anxiety disorder?</description>
+  <narrative>Anxiety disorder is a common class of psychiatric disorders covering generalized anxiety disorder (GAD), panic attack, and phobia related disorders such as Acrophobia. Relevant documents should discuss the effectiveness of hydroxyzine (also sold under different brand names such as Atarax) for treating GAD or controlling GAD related anxiety, but may or may not mention other types of anxiety disorders.</narrative>
+</topic>
+
+<topic>
+  <number>23</number>
+  <query>insulin gestational diabetes</query>
+  <cochranedoi>10.1002/14651858.CD012037.pub2</cochranedoi>
+  <description>Is insulin an effective treatment for gestational diabetes?</description>
+  <narrative>Gestational diabetes (also known as gestational diabetes mellitus or GDM) is a subclass of diabetes that occurs during pregnancy and usually goes away after birth. However, GDM may have harmful consequences to the baby during birth and one solution suggested is insulin injections or anti-diabetic medicines. A relevant document discusses whether insulin or other anti-diabetic pharmacological medicines can be used to treat GDM. Documents not discussing GDM, but other types of diabetes (i.e. Type I and Type II), should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>24</number>
+  <query>yoga epilepsy</query>
+  <cochranedoi>10.1002/14651858.CD001524.pub3</cochranedoi>
+  <description>Can yoga control epilepsy?</description>
+  <narrative>It has been suggested that some types of yoga involving postural and breathing exercises can help to control epileptic episodes and treat epilepsy. Relevant documents discuss whether yoga is effective at controlling epilepsy and helps to reduce the frequency or duration of seizures.</narrative>
+</topic>
+
+<topic>
+  <number>25</number>
+  <query>fish oil ulcerative colitis</query>
+  <cochranedoi>10.1002/14651858.CD005986.pub2</cochranedoi>
+  <description>Can fish oil be used to maintain the remission of ulcerative colitis?</description>
+  <narrative>Ulcerative Colitis (UC) is an inflammatory disease affecting the rectum and colon and can eventually cause internal wounds. It has been suggested that fish oil can be used for people with UC to manage its symptoms. Relevant documents should discuss whether fish oil can be an effective solution to managing symptoms of UC.</narrative>
+</topic>
+
+<topic>
+  <number>26</number>
+  <query>vaccine common cold</query>
+  <cochranedoi>10.1002/14651858.CD002190.pub5</cochranedoi>
+  <description>Can vaccines prevent the common cold?</description>
+  <narrative>The common cold is a viral infection with common symptoms such as sneezing, runny nose, sore throat etc. and is different than the flu (influenza). Relevant documents should discuss whether vaccines can prevent the common cold. Documents not discussing the effectiveness of vaccines on the common cold, e.g. they discuss influenza, should be regarded as not relevant.</narrative>
+</topic>
+
+<topic>
+  <number>27</number>
+  <query>antibiotics children wet cough</query>
+  <cochranedoi>10.1002/14651858.CD004822.pub3</cochranedoi>
+  <description>Can antibiotics be used as a treatment for wet cough (productive or chesty cough) in children?</description>
+  <narrative>Wet cough, also known as a productive cough or chesty cough, is a cough that produces mucus or phlegm. In children, when a wet cough is persistent (e.g. for four weeks) it is considered a symptom of bacterial or viral infection that needs attention. Relevant documents discuss whether or not antibiotics can heal wet cough. Documents not discussing the effectiveness of antibiotics for persistent wet cough but for issues such as whooping cough, or ones not mentioning its effect on children should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>28</number>
+  <query>antibiotics whooping cough</query>
+  <cochranedoi>10.1002/14651858.CD004404.pub3</cochranedoi>
+  <description>Can antibiotics be used as a treatment for whooping cough (pertussis)?</description>
+  <narrative>Pertussis (whooping cough) is a bacterial infection that causes episodes of acute cough and can lead to death. Relevant documents discuss the effectiveness of antibiotics to treat pertussis.</narrative>
+</topic>
+
+<topic>
+  <number>29</number>
+  <query>antibiotics children pneumonia</query>
+  <cochranedoi>10.1002/14651858.CD004874.pub4</cochranedoi>
+  <description>Can antibiotics be use to treat community acquired pneumonia in children?</description>
+  <narrative>Antibiotics have been suggested as a treatment for children diagnosed with community acquired pneumonia, which is a different health issue than hospital acquired pneumonia. A relevant document should discuss this claim, whether or not antibiotics can heal children with pneumonia acquired outside hospitals. Documents discussing only hospital acquired pneumonia (nosocomial pneumonia) should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>30</number>
+  <query>aloe vera wounds</query>
+  <cochranedoi>10.1002/14651858.CD008762.pub2</cochranedoi>
+  <description>Can you apply aloe vera to treat wounds?</description>
+  <narrative>Aloe vera is a cactus-like plant that has been used in cosmetic and skin care products. It has been suggested that aloe vera is useful as a wound remedy. Relevant documents discuss whether aloe vera, topically applied as a gel or cream, can heal wounds.</narrative>
+</topic>
+
+<topic>
+  <number>31</number>
+  <query>exercise hot flashes night sweats menopause</query>
+  <cochranedoi>10.1002/14651858.CD006108.pub4</cochranedoi>
+  <description>Are exercises helpful in reducing hot flashes and night sweats in menopausal women?</description>
+  <narrative>Exercising has been suggested to ease vasomotor menopausal symptoms such as hot flashes/flushes and night sweats. Relevant documents discuss whether or not exercise can help to reduce hot flashes and night sweats in menopausal women.</narrative>
+</topic>
+
+<topic>
+  <number>32</number>
+  <query>ginkgo biloba tinnitus</query>
+  <cochranedoi>10.1002/14651858.CD003852.pub3</cochranedoi>
+  <description>Can ginkgo biloba treat tinnitus?</description>
+  <narrative>It has been suggested that tinnitus (persistent ringing in the ears) can be reduced or eliminated with ginkgo biloba (an antioxidant rich herb) supplements. A relevant document discusses whether or not ginkgo biloba based products such as pills or ginkgo biloba rich food can help to reduce the severity of tinnitus.</narrative>
+</topic>
+
+<topic>
+  <number>33</number>
+  <query>hypnotherapy quit smoking</query>
+  <cochranedoi>10.1002/14651858.CD001008.pub2</cochranedoi>
+  <description>Does hypnotherapy help people quit smoking?</description>
+  <narrative>Some have suggested that hypnotherapy is a useful method to help quit smoking. Relevant documents discuss whether any type of hypnotherapy can be a treatment to help people quit smoking.</narrative>
+</topic>
+
+<topic>
+  <number>34</number>
+  <query>exercises for female incontinence</query>
+  <cochranedoi>10.1002/14651858.CD005654.pub4</cochranedoi>
+  <description>How effective are pelvic floor exercises for treating female incontinence?</description>
+  <narrative>Female urinary incontinence (UI, also known as urinary leakage) is leakage of urine due to lessening control over pelvic muscles, which may occur because of pregnancy, menopause, or other events that contribute to weakening of muscles. There are different types of UI, including but not limited to, stress incontinence, urge incontinence and mixed incontinence. Pelvic floor muscle training (PFMT) exercises such as kegels, squeeze-release and others have been claimed to be a treatment for urinary leakage. Relevant documents should discuss whether or not pelvic muscle exercises can cure female urinary incontinence of any type or improve its symptoms.</narrative>
+</topic>
+
+<topic>
+  <number>35</number>
+  <query>valerian anxiety disorder</query>
+  <cochranedoi>10.1002/14651858.CD004515.pub2</cochranedoi>
+  <description>Is valerian an effective treatment for anxiety disorders?</description>
+  <narrative>Valerian is a plant used as a herbal remedy for a number of issues such as sleeplessness and anxiety. A relevant document discusses if valerian is an effective method to treat anxiety disorders.</narrative>
+</topic>
+
+<topic>
+  <number>36</number>
+  <query>dental sealants</query>
+  <cochranedoi>10.1002/14651858.CD001830.pub5</cochranedoi>
+  <description>Are dental sealants helpful in preventing tooth decay?</description>
+  <narrative>Resin-based and glass ionomer sealants applied to teeth have been purported to prevent tooth decay (cavities and caries). Relevant documents should discuss whether or not dental sealants are an effective treatment to prevent tooth decay.</narrative>
+</topic>
+
+<topic>
+  <number>37</number>
+  <query>laxatives hemorrhoids</query>
+  <cochranedoi>10.1002/14651858.CD004649.pub2</cochranedoi>
+  <description>Can taking laxatives help with hemorrhoids?</description>
+  <narrative>Hemorrhoids (aka piles) are swollen veins near the rectum and anus that cause itching, pain, and sometimes bleeding. Laxatives, such as fiber or laxative drugs, have been suggested to relieve hemorrhoid symptoms by loosening stools and increasing frequency of bowel movements. Relevant documents will discuss this claim and whether or not laxatives are beneficial in relieving hemorrhoid symptoms.</narrative>
+</topic>
+
+<topic>
+  <number>38</number>
+  <query>traction lower back pain</query>
+  <cochranedoi>10.1002/14651858.CD003010.pub5</cochranedoi>
+  <description>Is lumbar traction an effective treatment for lower back pain?</description>
+  <narrative>Traction is a treatment that can be applied with machines or manually by physiotherapists and chiropractors. The method aims to treat lower back pain by increasing the space between vertebrae and realigning them. A relevant document discusses the effectiveness of traction for treating low-back pain.</narrative>
+</topic>
+
+<topic>
+  <number>39</number>
+  <query>muscle relaxants back pain</query>
+  <cochranedoi>10.1002/14651858.CD004252</cochranedoi>
+  <description>Can muscle relaxants be used to relieve back pain?</description>
+  <narrative>Muscle relaxants (or muscle relaxers) target the skeletal muscles to reduce their tension. Relevant documents discuss whether or not using muscle relaxants are effective for relieving back pain.</narrative>
+</topic>
+
+<topic>
+  <number>40</number>
+  <query>cinnamon diabetes</query>
+  <cochranedoi>10.1002/14651858.CD007170.pub2</cochranedoi>
+  <description>Can cinnamon help people with diabetes?</description>
+  <narrative>It has been reported that cinnamon might be used to control blood-sugar levels and thus might help in the management of diabetes. There are three types of diabetes, Type I, type II and gestational diabetes (occurs during pregnancy). This topic excludes gestational diabetes. Relevant documents should discuss whether or not cinnamon can help people with diabetes.</narrative>
+</topic>
+
+<topic>
+  <number>41</number>
+  <query>benzos alcohol withdrawal</query>
+  <cochranedoi>10.1002/14651858.CD005063.pub3</cochranedoi>
+  <description>Can benzos (benzodiazepines) help with alcohol withdrawal?</description>
+  <narrative>Benzodiazepines, also commonly called benzos, are drugs that are mostly administered orally. A relevant document discusses the effectiveness of using benzos for alcohol withdrawal.</narrative>
+</topic>
+
+<topic>
+  <number>42</number>
+  <query>probiotics eczema</query>
+  <cochranedoi>10.1002/14651858.CD006135.pub3</cochranedoi>
+  <description>Are probiotics an effective treatment for eczema?</description>
+  <narrative>Probiotics, bacteria beneficial for human health, are contained in some everyday food such as yogurt. It has been suggested that probiotics can be used to treat eczema, which is a skin problem that usually occurs as red, dry, and itchy skin but also occurs as other skin problems in different forms. A relevant document discusses the effectiveness of consuming products or medication containing probiotics to treat eczema.</narrative>
+</topic>
+
+<topic>
+  <number>43</number>
+  <query>compression stockings varicose veins</query>
+  <cochranedoi>10.1002/14651858.CD008819.pub3</cochranedoi>
+  <description>Are compression stockings helpful for varicose veins?</description>
+  <narrative>Varicose veins are widened veins visible under the skin. Relevant documents discuss whether or not compression stockings are helpful for initial treatment of varicose veins without venous ulceration.</narrative>
+</topic>
+
+<topic>
+  <number>44</number>
+  <query>vitamins epilepsy</query>
+  <cochranedoi>10.1002/14651858.CD004304.pub2</cochranedoi>
+  <description>Can vitamins help manage epilepsy?</description>
+  <narrative>It has been suggested that some vitamins (e.g. folic acid, thiamine, vitamin D and vitamin E) are effective for controlling symptoms of epilepsy. Relevant documents discuss this claim, whether or not usage of vitamins can help to control epileptic episodes such as uncontrollable movements, loss of consciousness or awareness etc. or improve lives of people with epilepsy.</narrative>
+</topic>
+
+<topic>
+  <number>45</number>
+  <query>caffeine asthma</query>
+  <cochranedoi>10.1002/14651858.CD001112.pub2</cochranedoi>
+  <description>Can caffeine help people with asthma?</description>
+  <narrative>Asthma is a lung disease that has symptoms such as shortness of breath and chest pain. Caffeine-rich products such as coffee and tea are suggested to be effective to manage asthma symptoms. A relevant document discusses whether caffeine can relieve asthma or manage its symptoms. Documents discussing caffeine for treatment of other airway issues but not asthma should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>46</number>
+  <query>feverfew migraines</query>
+  <cochranedoi>10.1002/14651858.CD002286.pub3</cochranedoi>
+  <description>Can feverfew prevent migraine headaches?</description>
+  <narrative>Feverfew, a plant native to Eastern Europe, is used as a herbal remedy for some diseases and for preventing migraines. A relevant document discusses whether feverfew is an effective treatment for prevention of migraines. Documents discussing other types of chronic and acute headaches but not migraines should be regarded as irrelevant.</narrative>
+</topic>
+
+<topic>
+  <number>47</number>
+  <query>insoles back pain</query>
+  <cochranedoi>10.1002/14651858.CD005275.pub2</cochranedoi>
+  <description>Can insoles treat back pain?</description>
+  <narrative>Insoles (shoe inserts or foot orthotics) are suggested by some to prevent or treat back pain by absorbing the shock that is transmitted to spine or by correcting feet issues that may result in spine misalignment. A relevant document discusses whether using insoles can prevent occurrence of back pain or treat existing back pain.</narrative>
+</topic>
+
+<topic>
+  <number>48</number>
+  <query>acupuncture asthma</query>
+  <cochranedoi>10.1002/14651858.CD000008.pub2</cochranedoi>
+  <description>Is acupuncture helpful for easing the symptoms of chronic asthma?</description>
+  <narrative>Acupuncture is a well-known traditional medicine that has been practiced in Asian countries for centuries. It has been suggested that acupuncture can be helpful for easing asthma symptoms and could be a good alternative to medication with side effects. A relevant document discusses whether or not acupuncture is a helpful treatment for people with chronic asthma and eases its symptoms.</narrative>
+</topic>
+
+<topic>
+  <number>49</number>
+  <query>sulfasalazine rheumatoid arthritis</query>
+  <cochranedoi>10.1002/14651858.CD000958</cochranedoi>
+  <description>Is sulfasalazine an effective treatment for rheumatoid arthritis?</description>
+  <narrative>Relevant documents discuss the effectiveness of using sulfasalazine for treating rheumatoid arthritis.</narrative>
+</topic>
+
+<topic>
+  <number>50</number>
+  <query>surgery obesity</query>
+  <cochranedoi>10.1002/14651858.CD003641.pub4</cochranedoi>
+  <description>Is bariatric surgery effective for obesity?</description>
+  <narrative>Bariatric surgery (also known as obesity surgery and weight loss surgery) is an operation to reduce size of the stomach. Relevant documents discuss whether bariatric surgery in any form can be beneficial in treating obesity.</narrative>
+</topic>
+
+<topic>
+  <number>51</number>
+  <query>dehumidifiers asthma</query>
+  <cochranedoi>10.1002/14651858.CD003563.pub2</cochranedoi>
+  <description>Can dehumidifiers be used to control asthma?</description>
+  <narrative>Dehumidification homes might improve lives of people with asthma. Dehumidifiers are electronic devices to control the level of humidity of environment which is suggested to contribute to factors that might affect asthma. A relevant document should discuss whether or not dehumidifiers can be used to control asthma symptoms or can improve lives of people with asthma.</narrative>
+</topic>
+
+</topics>
+
