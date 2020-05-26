@@ -66,7 +66,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
 
     def post(self, request, *args, **kwargs):
         success_message = 'Your topic has been initialized. ' \
-                          'Choose a platform from the left sidebar to start judging.'
+                          'Choose a retrieval method to start judging.'
         if 'submit-task-form' in request.POST:
             form = TaskForm(request.POST)
             if form.is_valid():
@@ -159,7 +159,7 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
         self.request.user.save()
 
         message = 'Your session has been activated. ' \
-                  'Choose a platform from the left sidebar to start judging.'
+                  'Choose a retrieval method to start judging.'
         messages.add_message(request,
                              messages.SUCCESS,
                              message)

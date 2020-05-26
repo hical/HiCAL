@@ -22,7 +22,7 @@ class Topic(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "{}: {}".format(self.number, self.title)
+        return "{} {}".format(self.number, self.title)
 
     def __str__(self):
         return self.__unicode__()
