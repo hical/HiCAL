@@ -9,6 +9,7 @@
       <title>HiCAL - {% block pagetitle %}home{% endblock %}</title>
       <!-- Bootstrap core CSS -->
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
       <!-- Custom styles for this template -->
       <link href="{% static 'css/project.css' %}" rel="stylesheet">
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
@@ -55,9 +56,9 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">Session</a>
             <div class="dropdown-menu dropdown-menu-right">
               <a class="dropdown-item" href="{% url 'archive:main' %}">Judged Documents</a>
+              <a class="dropdown-item" href="{% url 'progress:sessions' %}">View Sessions</a>
 
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{% url 'progress:sessions' %}">All Sessions</a>
               {% if request.user.is_authenticated and request.user|has_group:"practice" %}
               <a href="{% url 'progress:practice_complete' %}" class="dropdown-item">Exit practice</a>
               {% elif request.user.is_authenticated %}

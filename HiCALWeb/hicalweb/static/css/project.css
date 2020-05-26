@@ -128,17 +128,6 @@ a.sidebar-brand {
   padding-bottom: 1.5rem;
 }
 
-.alert-debug {
-  color: black;
-  background-color: white;
-  border-color: #d6e9c6;
-}
-
-.alert-error {
-  color: #b94a48;
-  background-color: #f2dede;
-  border-color: #eed3d7;
-}
 
 /* This is a fix for the bootstrap4 alpha release */
 @media (max-width: 47.9em) {
@@ -727,37 +716,6 @@ a.dropdown-item {
 
 .bg-faded {
   background-color: #F5F8FA;
-}
-
-.btn-success, .bg-success, .badge-success {
-  background-color: #13ce66 !important;
-  border-color: #13ce66;
-}
-
-.btn-warning, .bg-warning, .badge-warning {
-  background-color: #ffc82c !important;
-  border-color: #ffc82c;
-}
-
-.btn-danger, .bg-danger, .badge-danger {
-  background-color: #ff4949 !important;
-  border-color: #ff4949;
-}
-
-.text-primary {
-  color: #6190e8 !important;
-}
-
-.text-danger {
-  color: #ff4949 !important;
-}
-
-.text-warning {
-  color: #ffc82c !important;
-}
-
-.text-success {
-  color: #13ce66 !important;
 }
 
 mark {

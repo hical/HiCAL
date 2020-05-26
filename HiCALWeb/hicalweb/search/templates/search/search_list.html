@@ -26,7 +26,7 @@
 
 {% for doc_id, document_values in documents.items %}
 <div class="row flex-items-md-middle">
-  <div class="col-md-6 mt-2
+  <div class="col-md-7 mt-2
         {% if document_values.relevance_judgment.highlyRelevant %}
         border-3 border-left border-success
         {% elif document_values.relevance_judgment.nonrelevant %}
@@ -43,10 +43,10 @@
     </div>
   </div>
   <div class="offset-md-1 col-md-4 align-self-center center-text">
-    <div class="btn-group top-margin" role="group">
-      <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary">Not relevant</a>
-      <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary">Relevant</a>
-      <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary">Highly Relevant</a>
+    <div class="btn-group" role="group">
+      <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, true, false, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not relevant</a>
+      <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
+      <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly Relevant</a>
     </div>
     <div class="left-padding gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none" {% endif %}>This document has been judged.</div>
   </div>

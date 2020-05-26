@@ -38,7 +38,7 @@
               <small><strong>Effort (max judgments):</strong> {{ task.task_obj.max_number_of_judgments }}</small>
             </p>
             {% endif %}
-            <small>{{ user.current_task.created_at }}</small>
+            <small>Created {{ user.current_task.created_at }}</small>
           </div>
         </div>
         {% else %}
@@ -75,7 +75,7 @@
               Topic description is unavailable.
               {% endif %}
             </p>
-            <p class="text-muted m-0" style="font-size: 65%;">{{ user.current_task.created_at }}</p>
+            <p class="text-muted m-0" style="font-size: 65%;">Created {{ user.current_task.created_at }}</p>
           </div>
           <div class="offset-md-1 col-md-2 mt-3 mt-md-0 btn-block align-self-center center-text">
             <form action="" method="POST">

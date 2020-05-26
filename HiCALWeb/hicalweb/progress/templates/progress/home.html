@@ -28,7 +28,7 @@
             <p class="mb-1"><small><strong>Seed query:</strong> {{ user.current_task.topic.seed_query }}</small></p>
             <p class="mb-1"><small><strong>Strategy:</strong> {{ user.current_task.get_strategy_display }}</small></p>
             {% if task.task_obj.max_number_of_judgments > 0 %}<p class="mb-1"><small><strong>Effort (max judgments):</strong> {{ user.current_task.max_number_of_judgments }}</small></p>{% endif %}
-            <small>{{ user.current_task.created_at }}</small>
+            <small>Created {{ user.current_task.created_at }}</small>
           </div>
         </div>
 
