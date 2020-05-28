@@ -74,21 +74,18 @@
              data-doc-id="">
           <h3 id="document_title" style="font-family: 'Playfair Display', georgia, 'times new roman',times,serif;"><span class="text-danger">Loading...</span></h3>
           <div class="row">
-            <div class=" col-md-11 text-truncate">
+            <div class="col-11 text-truncate">
               <code id="document_date" class="text-muted small"></code>
             </div>
           </div>
           <hr>
-          <div id="document_snippet">
-          </div>
+          <div id="document_snippet"></div>
           {% if request.user.current_task.show_full_document_content and request.user.current_task.strategy != 'doc' %}
-          <hr style="border-top: 3px solid rgba(0,0,0,.1);">
-          <div class="row">
-            <div class="col-md-12">
-              <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-primary" href="#" onclick="return show_full_doc();">Show full document.</a>
+          <div class="row mt-3">
+            <div class="col-12">
+              <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-secondary" href="#" onclick="return show_full_doc();">Show full document.</a>
             </div>
           </div>
-
           {% endif %}
           <div id="document_content"></div>
         </div>
@@ -111,45 +108,53 @@
                  class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly relevant</a>
             </div>
           </div>
-          <h5 class="card-title text-secondary mt-4">Keyboard shortcuts</h5>
 
-          <div class="row">
-            <div class="col-md-1">
-              <span class="badge badge-danger">s</span>
+
+           <div id="keyboard_shortcuts">
+            <h5 class="card-title text-secondary mt-4">Keyboard shortcuts</h5>
+
+            <div class="row">
+              <div class="col-md-1">
+                <span class="badge badge-danger">s</span>
+              </div>
+              <div class="col-md-10">
+                <small class="left-margin">Mark as non-relevant</small>
+              </div>
             </div>
-            <div class="col-md-10">
-              <small class="left-margin">Mark as non-relevant
-              </small>
+            <div class="row">
+              <div class="col-md-1">
+                <span class="badge badge-warning">r</span>
+              </div>
+              <div class="col-md-10">
+                <small class="left-margin">Mark as relevant</small>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-1">
+                <span class="badge badge-success">h</span>
+              </div>
+              <div class="col-md-10">
+                <small class="left-margin">Mark as highly relevant</small>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-1">
+                <span class="badge badge-primary">u</span>
+              </div>
+              <div class="col-md-10">
+                <small class="left-margin">Show previous judgments</small>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-1">
-              <span class="badge badge-warning">r</span>
-            </div>
-            <div class="col-md-10">
-              <small class="left-margin">Mark as relevant
-              </small>
-            </div>
+
+
+          <div id="highlighted_words">
+            <h5 class="card-title text-secondary mt-4">Highlighted terms <span class="badge badge-secondary">Beta</span></h5>
+            <ul class="list-group" id="highlighted_terms_list">
+            </ul>
           </div>
-          <div class="row">
-            <div class="col-md-1">
-              <span class="badge badge-success">h</span>
-            </div>
-            <div class="col-md-10">
-              <small class="left-margin">Mark as highly relevant
-              </small>
-            </div>
-          </div>
-          <hr>
-          <div class="row">
-            <div class="col-md-1">
-              <span class="badge badge-primary">u</span>
-            </div>
-            <div class="col-md-10">
-              <small class="left-margin">Show latest judged documents
-              </small>
-            </div>
-          </div>
+
+
         </div>
       </div>
     </div>
@@ -172,14 +177,26 @@
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        {% if request.user.current_task.strategy == 'doc' %}
-        toggle_full_doc = false;
+        {% if 'doc' in request.user.current_task.strategy %}
+        var para_show_full_doc_button = false;
+        var show_full_document_content = true;
+        {% elif 'para' in request.user.current_task.strategy %}
+        {% if request.user.current_task.show_full_document_content %}
+        var para_show_full_doc_button = true;
+        var show_full_document_content = true;
         {% else %}
-        var toggle_full_doc = true;
+        var para_show_full_doc_button = false;
+        var show_full_document_content = false;
         {% endif %}
+        {% endif %}
+
+        if (!show_full_document_content){
+          $("#document_content").hide();
+        }
+
         var time_on_paragraph = 0;
         var show_full_doc_button_clicked = false;
-        if(toggle_full_doc){
+        if(para_show_full_doc_button){
             $("#document_content").hide();
             time_on_paragraph = 0;
             show_full_doc_button_clicked = false;
@@ -316,13 +333,14 @@
             $("#document_title").removeClass();
             $("#document_date").html(date);
             $("#document_snippet").html(snippet);
-            $("#document_content").html(content);
-
-            $( "#document_content" ).trigger( "updated" );
+            if (show_full_document_content){
+              $("#document_content").html(content);
+              $( "#document_content" ).trigger( "updated" );
+            }
             window.scrollTo(0, 0);
 
             if(id){
-                if(toggle_full_doc){
+                if(para_show_full_doc_button){
                     // resetting.. hiding full document content and showing button
                     hide_full_doc();
                 }
@@ -357,7 +375,7 @@
 
             }else{
                 // when an error has occurred and no document is shown (e.g. no doc id) hide button.
-                if(toggle_full_doc){
+                if(para_show_full_doc_button){
                     $("#show_full_doc_button").hide();
                 }
             }

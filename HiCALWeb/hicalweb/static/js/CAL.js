@@ -59,6 +59,17 @@ $('#searchContentForm').submit(function (e) {
 var marked_matches_in_document_title = [];
 var marked_matches_in_document_snippet = [];
 var marked_matches_in_document_content = [];
+var marked_matches_counter = {};
+
+function update_highlighted_terms_view(){
+    var elm = $("#highlighted_terms_list");
+    elm.empty();
+    for (var keyMatch in marked_matches_counter) {
+       var count = marked_matches_counter[keyMatch];
+       var template = `<li class="list-group-item d-flex justify-content-between align-items-center p-0 border-0"><mark class="badge text-truncate">${keyMatch}</mark> <small class="px-2">${count}</small></li>`;
+       elm.append(template);
+    }
+}
 
 
 $(function() {
@@ -81,7 +92,7 @@ $(function() {
     // focused element
     currentClass = "current",
     // top offset for the jump (the search bar)
-    offsetTop = 50,
+    offsetTop = 73,
     // the current index of the focused element
     currentIndex = 0;
 
@@ -109,37 +120,40 @@ $(function() {
   }
 
   /**
-   * Update dicts of matches in document title, snippet, and content
+   * Update dicts of matches and matches counter in document title, snippet, and content
    */
   function updateMatchesDictionaries(){
     resetMatchesDict();
-    var document_title_mark_instances = $("#document_title").find("mark");
-    var document_snippet_mark_instances = $("#document_snippet").find("mark");
-    var document_content_mark_instances = $("#document_content").find("mark");
+    let document_title_mark_instances = $("#document_title").find("mark");
+    let document_snippet_mark_instances = $("#document_snippet").find("mark");
+    let document_content_mark_instances = $("#document_content").find("mark");
 
-    var i;
-    for(i = 0; i < document_title_mark_instances.length; i++){
-        var data = {
-            "match": document_title_mark_instances[i].innerHTML,
-            "wholeWord": get_surroundings_of_match(document_title_mark_instances[i])
-        };
-        marked_matches_in_document_title.push(data);
-    }
-    for(i = 0; i < document_snippet_mark_instances.length; i++){
-        var data = {
-            "match": document_snippet_mark_instances[i].innerHTML,
-            "wholeWord": get_surroundings_of_match(document_snippet_mark_instances[i])
-        };
-        marked_matches_in_document_snippet.push(data);
-    }
-    for(i = 0; i < document_content_mark_instances.length; i++){
-        var data = {
-            "match": document_content_mark_instances[i].innerHTML,
-            "wholeWord": get_surroundings_of_match(document_content_mark_instances[i])
-        };
-        marked_matches_in_document_content.push(data);
+    function update_in_location(instances, marked_matches_list){
+      /**
+       * Updates dict of matches and matches counter in a specific location
+       */
+      for(let i = 0; i < instances.length; i++){
+          let match_elm = instances[i];
+          let match_text = match_elm.innerHTML;
+          let data = {
+              "match": match_text,
+              "wholeWord": get_surroundings_of_match(match_elm)
+          };
+          // Append new match to matches list
+          marked_matches_list.push(data);
+
+          // Update counter
+          if (!(match_text.toLowerCase() in marked_matches_counter)){marked_matches_counter[match_text.toLowerCase()]=0;}
+          marked_matches_counter[match_text.toLowerCase()] += 1;
+      }
+
     }
 
+    update_in_location(document_title_mark_instances, marked_matches_in_document_title);
+    update_in_location(document_snippet_mark_instances, marked_matches_in_document_snippet);
+    update_in_location(document_content_mark_instances, marked_matches_in_document_content);
+
+    update_highlighted_terms_view();
   }
 
   /**
@@ -182,10 +196,11 @@ $(function() {
         }
     }
 
-  function resetMatchesDict(){
+  function resetMatchesDict() {
     marked_matches_in_document_title = [];
     marked_matches_in_document_snippet = [];
     marked_matches_in_document_content = [];
+    marked_matches_counter = {};
   }
 
   /**
