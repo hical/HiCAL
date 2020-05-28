@@ -38,6 +38,7 @@ int main(int argc, char **argv){
     AddFlag("--type", "Output file format:  bin (default) or svmlight", string("bin"));
     AddFlag("--para-in", "Input corpus paragraph archive", string(""));
     AddFlag("--para-out", "Output paragraph feature file", string(""));
+    AddFlag("--concatenated", "Input corpus archive is concatenated", bool(false));
     AddFlag("--help", "Show Help", bool(false));
 
     ParseFlags(argc, argv);
@@ -54,11 +55,15 @@ int main(int argc, char **argv){
     string out_filename = CMD_LINE_STRINGS["--out"];
     string para_out_filename = CMD_LINE_STRINGS["--para-out"];
     bool bin_out = (CMD_LINE_STRINGS["--type"] == "bin");
+    bool is_concatenated = CMD_LINE_BOOLS["--concatenated"];
 
     cerr<<"Opening file "<<in_filename<<endl;
     archive *a = archive_read_new();
     archive_read_support_format_all(a);
     archive_read_support_filter_all(a);
+
+    if(is_concatenated)
+        archive_read_set_options(a, "read_concatenated_archives");
 
     int r = archive_read_open_filename(a, in_filename.c_str(), 10240);
     if(r){
