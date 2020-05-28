@@ -48,7 +48,7 @@
       <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', false, false, true, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
       <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', true, false, false, true, false, false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly Relevant</a>
     </div>
-    <div class="left-padding gray-text top-margin small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none" {% endif %}>This document has been judged.</div>
+    <div class="gray-text mt-2 small bold" id="isJudged_{{ document_values.docno }}" {% if not document_values.isJudged %}style="display: none" {% endif %}>This document has been judged.</div>
   </div>
 </div>
 

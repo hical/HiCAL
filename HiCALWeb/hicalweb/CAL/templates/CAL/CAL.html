@@ -171,11 +171,11 @@
 
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
-
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        var toggle_full_doc = true;
         {% if request.user.current_task.strategy == 'doc' %}
-            toggle_full_doc = false;
+        toggle_full_doc = false;
+        {% else %}
+        var toggle_full_doc = true;
         {% endif %}
         var time_on_paragraph = 0;
         var show_full_doc_button_clicked = false;
@@ -362,7 +362,6 @@
                 }
             }
         }
-
 
         function update_documents_to_judge_list() {
             $.ajax({
@@ -588,7 +587,6 @@
         }
 
 
-
     function show_doc_view(doc){
         $('#cal-document').attr("data-doc-id", doc["doc_id"]).data("doc-id", doc["doc_id"]);
         $("#document_title").text(doc["title"]);
@@ -711,8 +709,7 @@
                         "");
                     }
 
-                    console.error("Something went wrong. " +
-                            "Judgment may have not been recorded.", result['responseText'])
+                    console.error("Something went wrong. Judgment may have not been recorded.", result['responseText'])
                 },
                 statusCode: {
                     502: function (xhr) {
@@ -723,8 +720,7 @@
                             xhr.responseText,
                             "");
                         }
-                        console.error("Something went wrong. Timeout error." +
-                            "Judgment may have not been recorded to CAL.", xhr.responseText);
+                        console.error("Something went wrong. Timeout error. Judgment may have not been recorded to CAL.", xhr.responseText);
                     }
                 }
             });
@@ -755,17 +751,20 @@
                 doc_status_div = '<div class="bg-warning" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
             }
 
-            var doc_div = '' +
-            '<a href="#" onclick="show_prev_judged_doc_and_hide_modal(' + i + ')"> \n\
-                <div class="row top-margin"> \n\
-                    <div class="col-md-1" style="min-width: 5px;"> \n\
-                        ' + doc_status_div + ' \n\
-                    </div> \n\
-                    <div class="col-md-11 text-truncate" style="font-family: georgia"> \n\
-                        ' + doc["doc_title"] + ' \n\
-                    </div> \n\
-                </div> \n\
-            </a>';
+          // language=HTML
+          var doc_div = `
+                <a href="#" onclick="show_prev_judged_doc_and_hide_modal(${i})">
+                <div class="row top-margin">
+                    <div class="col-md-1" style="min-width: 5px;">
+                        ${doc_status_div}
+                    </div>
+                    <div class="col-md-11 text-truncate">
+                        ${doc["doc_title"]}
+                    </div>
+                </div>
+                </a>
+            `;
+
             $( "#reviewCAL" ).append( doc_div );
         }
     }

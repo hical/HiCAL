@@ -64,7 +64,7 @@
         <p>There are currently no topic sessions..</p>
         {% endif %}
         {% for task in tasks %}
-        {% if user.current_task != task.task_obj %}
+
         <div class="row mb-4">
           <div class="col-md-9">
             <h5 class="text-truncate">{{ task.task_obj.topic.title }}</h5>
@@ -80,11 +80,14 @@
           <div class="offset-md-1 col-md-2 mt-3 mt-md-0 btn-block align-self-center center-text">
             <form action="" method="POST">
               {% csrf_token %}
+              {% if user.current_task != task.task_obj %}
               <button type="submit" name="sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary btn-block">Activate</button>
+              {% else %}
+              <button type="submit" name="sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary btn-block disabled">Activated</button>
+              {% endif %}
             </form>
           </div>
         </div>
-        {% endif %}
         {% endfor %}
       </div>
 
