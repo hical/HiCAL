@@ -27,6 +27,7 @@ class UploadForm(forms.Form):
         self.helper = FormHelper(self)
         self.helper.use_custom_control = True
         self.helper.help_text_inline = True
+        self.helper.form_tag = False
 
         self.helper.layout = Layout(
             'csv_file',

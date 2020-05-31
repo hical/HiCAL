@@ -180,10 +180,6 @@
 
 {% block extra_scripts %}
     <script>
-        // since crispy forms doesn't make it easy to position submit button in forms...
-        $('#import_csv_button').click(function() {
-            $("#import_csv_form").submit();
-        });
 
         var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
 

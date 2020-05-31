@@ -184,3 +184,26 @@
 
 </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+// dynamically show "show_full_document_content" field based on strategy field value
+$('#id_topic-strategy').on('change', function() {
+  let newval = this.value;
+  if (newval.includes("para")){
+    $("#topic-show_full_document_content").removeClass("d-none");
+  }else{
+    $("#topic-show_full_document_content").addClass("d-none");
+  }
+});
+$('#id_predefined-strategy').on('change', function() {
+  let newval = this.value;
+  if (newval.includes("para")){
+    $("#predefined-show_full_document_content").removeClass("d-none");
+  }else{
+    $("#predefined-show_full_document_content").addClass("d-none");
+  }
+});
+</script>
+
+{% endblock %}

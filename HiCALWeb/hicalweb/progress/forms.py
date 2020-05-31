@@ -1,6 +1,6 @@
 from crispy_forms.bootstrap import StrictButton
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Column, Row
+from crispy_forms.layout import Submit, Layout, Column, Row, Field, Div
 from django import forms
 from django.db.models import Q
 from hicalweb.progress.models import Task
@@ -13,6 +13,7 @@ class TaskForm(forms.ModelForm):
 
     """
     submit_name = 'submit-task-form'
+    prefix = "predefined"
 
     class Meta:
         model = Task
@@ -20,7 +21,6 @@ class TaskForm(forms.ModelForm):
         help_texts = {
             'max_number_of_judgments': '(Optional) Set max number of judgments.',
             'strategy': 'CAL strategy of retrieval.',
-            'show_full_document_content': 'Only for paragraph strategies.'
         }
 
     max_number_of_judgments = forms.IntegerField(required=False,
@@ -40,7 +40,11 @@ class TaskForm(forms.ModelForm):
                 Column('strategy', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
-            'show_full_document_content',
+            Div(
+                Field('show_full_document_content'),
+                css_class='d-none',
+                css_id="predefined-show_full_document_content"
+            ),
             StrictButton(u'Select topic and start judging',
                          name=self.submit_name,
                          type="submit",
@@ -60,6 +64,7 @@ class TopicForm(forms.ModelForm):
 
     """
     submit_name = 'submit-topic-form'
+    prefix = "topic"
 
     class Meta:
         model = Topic
@@ -71,8 +76,7 @@ class TopicForm(forms.ModelForm):
     strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES,
                                  required=True,
                                  help_text=TaskForm.Meta.help_texts.get('strategy'))
-    show_full_document_content = forms.BooleanField(required=False,
-                                                    help_text=TaskForm.Meta.help_texts.get('show_full_document_content'))
+    show_full_document_content = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         super(TopicForm, self).__init__(*args, **kwargs)
@@ -90,7 +94,11 @@ class TopicForm(forms.ModelForm):
                 Column('strategy', css_class='form-group col-md-6 mb-0'),
                 css_class='form-row'
             ),
-            'show_full_document_content',
+            Div(
+                Field('show_full_document_content'),
+                css_class='d-none',
+                css_id="topic-show_full_document_content"
+            ),
             StrictButton(u'Create topic and start judging',
                          name=self.submit_name,
                          type="submit",
