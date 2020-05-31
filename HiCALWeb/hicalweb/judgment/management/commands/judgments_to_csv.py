@@ -27,16 +27,8 @@ class Command(BaseCommand):
                 user = judgment.user
                 topic = judgment.task.topic.number
                 docid = judgment.doc_id
-                if judgment.isFromSearchModal:
-                    method = 'SEARCHMODAL'
-                elif judgment.isFromSearch:
-                    method = 'SERP'
-                elif judgment.isFromCAL:
-                    method = 'CAL'
-                elif judgment.isFromIterative:
-                    method = 'ITERATIVE'
-                else:
-                    method = None
+                method = judgment.source
+
                 time_to_judge = 0.0
                 time_away = 0.0
                 for d in judgment.timeVerbose:

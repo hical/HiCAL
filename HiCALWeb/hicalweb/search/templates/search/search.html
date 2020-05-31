@@ -213,7 +213,10 @@
                 var now = timeVerbose['timestamp'];
             }
             console.log("Sending judgment call to backend for document id: " + doc_id);
-
+            let source = "search";
+            if (isFromSearchModal) {
+              source = "searchmodal"
+            }
             var data = {
                 'doc_id': doc_id,
                 'doc_title': current_doc_title,
@@ -224,10 +227,7 @@
                 'nonrelevant': non,
                 'relevant': relevant,
                 'time_to_judge': "NA",
-                'isFromCAL': false,
-                'isFromSearch': true,
-                'isFromSearchModal': isFromSearchModal,
-                'isFromIterative': false,
+                'source': source,
                 'client_time': now,
                 'fromMouse': isMouse,
                 'fromKeyboard': isKeyboard,

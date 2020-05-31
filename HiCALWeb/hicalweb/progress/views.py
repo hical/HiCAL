@@ -17,6 +17,8 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 
+from hicalweb.CAL.exceptions import CALError
+from hicalweb.interfaces.CAL import functions as CALFunctions
 from hicalweb.judgment.models import Judgement
 from hicalweb.progress.forms import TaskForm
 from hicalweb.progress.forms import TopicForm
@@ -36,7 +38,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
 
         # COUNTERS
         counters = Judgement.objects.filter(user=self.request.user,
-                                            isFromCAL=True,
+                                            source="CAL",
                                             task=self.request.user.current_task).aggregate(
             total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
@@ -48,7 +50,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         context["total_relevant_CAL"] = counters["total_relevant"]
 
         counters = Judgement.objects.filter(user=self.request.user,
-                                            isFromSearch=True,
+                                            source__contains="search",
                                             task=self.request.user.current_task).aggregate(
             total_highlyRelevant=Count(Case(When(highlyRelevant=True, then=1))),
             total_nonrelevant=Count(Case(When(nonrelevant=True, then=1))),
@@ -142,27 +144,56 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
         return super(Sessions, self).get(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        print(request.POST)
-        session_id = request.POST.get("sessionid")
-        try:
-            task = Task.objects.get(username=self.request.user,
-                                    uuid=session_id)
-        except Task.DoesNotExist:
-            message = 'Ops! your session cant be found.'
+
+        if request.POST.get("activate_sessionid"):
+            session_id = request.POST.get("activate_sessionid")
+
+            try:
+                task = Task.objects.get(username=self.request.user,
+                                        uuid=session_id)
+            except Task.DoesNotExist:
+                message = 'Ops! your session cant be found.'
+                messages.add_message(request,
+                                     messages.ERROR,
+                                     message)
+
+                return HttpResponseRedirect(reverse_lazy('progress:sessions'))
+
+            self.request.user.current_task = task
+            self.request.user.save()
+
+            message = 'Your session has been activated. ' \
+                      'Choose a retrieval method to start judging.'
             messages.add_message(request,
-                                 messages.ERROR,
+                                 messages.SUCCESS,
                                  message)
 
-            return HttpResponseRedirect(reverse_lazy('progress:sessions'))
+        elif request.POST.get("delete_sessionid"):
+            session_id = request.POST.get("delete_sessionid")
+            task = Task.objects.filter(username=self.request.user,
+                                       uuid=session_id)
+            if task.exists():
 
-        self.request.user.current_task = task
-        self.request.user.save()
+                if self.request.user.current_task and str(self.request.user.current_task.uuid) == session_id:
+                    self.request.user.current_task = None
+                    self.request.user.save()
 
-        message = 'Your session has been activated. ' \
-                  'Choose a retrieval method to start judging.'
-        messages.add_message(request,
-                             messages.SUCCESS,
-                             message)
+                task = task.first()
+                task.delete()
+                try:
+                    CALFunctions.delete_session(session_id)
+                except CALError:
+                    pass
+                message = 'Session has been deleted.'
+                messages.add_message(request,
+                                     messages.SUCCESS,
+                                     message)
+
+            else:
+                message = 'Ops! session can not be found.'
+                messages.add_message(request,
+                                     messages.ERROR,
+                                     message)
 
         return HttpResponseRedirect(reverse_lazy('progress:sessions'))
 

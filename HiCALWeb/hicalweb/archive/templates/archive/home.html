@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static crispy_forms_tags  %}
 {% block pagetitle %}Archive{% endblock %}
 
 
@@ -52,11 +52,46 @@
       <div class="card-block">
         <h2 class="text-secondary">Operations</h2>
         <hr>
-        <a id="tocsv" href="#" class="btn btn-outline-secondary btn-sm mb-3">Export to csv</a>
+        <a id="import_csv" href="#" class="btn btn-outline-secondary btn-sm mb-3 btn-block" data-toggle="modal" data-target="#importModal">Import judgments</a>
+        <a id="export_csv" href="#" class="btn btn-outline-secondary btn-sm mb-3 btn-block">Export to csv</a>
       </div>
     </div>
   </div>
 
+  <!-- Import Modal -->
+  <div class="modal fade" id="importModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Import judgments</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="POST" enctype="multipart/form-data" id="import_csv_form">
+          <div class="modal-body">
+              <span class="">Your document judgment file needs to be in csv format. Please reformat your csv to have two columns, <code>docno</code>, and <code>judgments</code>. For example:</span>
+              <pre class="small text-muted">
+                docno, judgment
+                mydocid1, Relevant,
+                mydocid2, Nonrelevant,
+                mydocid3, HighlyRelevant</pre>
+
+              {% csrf_token %}
+              {% crispy upload_form %}
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button class="btn btn-outline-secondary" id="import_csv_button" type="submit">Upload</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document Modal -->
   <div class="modal fade doc-modal" id="doc-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xlg">
       <div class="modal-content">
@@ -145,6 +180,7 @@
 
 {% block extra_scripts %}
     <script>
+
         var loaded_docs = {}; // dict of loaded documents to prevent reloading doc content.
 
         function load_doc(docid) {
@@ -319,7 +355,7 @@
 
 
         // EXPORT TO CSV
-        const rows = [["DOCID", "JUDGMENT"]];
+        const rows = [["docno", "judgment"]];
         {% for row in judgments %}
             rows.push(["{{ row.doc_id }}", "{% if row.highlyRelevant %}HighlyRelevant{% elif row.relevant %}Relevant{% else %}NonRelevant{% endif %}"])
         {% endfor %}
@@ -329,7 +365,7 @@
            csvContent += row + "\n";
         });
         var encodedUri = encodeURI(csvContent);
-        $('#tocsv').attr('href', encodedUri).attr("download", "{{ request.user.current_task.topic.number }}" + ".txt");
+        $('#export_csv').attr('href', encodedUri).attr("download", "{{ request.user.current_task.topic.number }}" + ".csv");
 
     </script>
 {% endblock %}

@@ -75,24 +75,63 @@
               Topic description is unavailable.
               {% endif %}
             </p>
-            <p class="text-muted m-0" style="font-size: 65%;">Created {{ user.current_task.created_at }}</p>
+            <p class="text-muted m-0" style="font-size: 65%;">Created {{ task.task_obj.created_at }}</p>
           </div>
-          <div class="offset-md-1 col-md-2 mt-3 mt-md-0 btn-block align-self-center center-text">
+          <div class="col-md-3 mt-3 mt-md-0 align-self-center center-text">
             <form action="" method="POST">
               {% csrf_token %}
               {% if user.current_task != task.task_obj %}
-              <button type="submit" name="sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary btn-block">Activate</button>
+              <button type="submit" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" name="activate_sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary">Activate</button>
+              <a href="#" data-toggle="modal" data-target="#deleteSessionModal" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" class="btn btn-sm btn-outline-danger delete-modal">Delete</a>
               {% else %}
-              <button type="submit" name="sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary btn-block disabled">Activated</button>
-              {% endif %}
+              <button type="submit" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" name="activate_sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary disabled">Activated</button>
+              <a href="#" data-toggle="modal" data-target="#deleteSessionModal" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" class="btn btn-sm btn-outline-danger delete-modal">Delete</a>{% endif %}
             </form>
           </div>
         </div>
         {% endfor %}
       </div>
 
+      <!-- Delete session modal -->
+      <div class="modal fade" id="deleteSessionModal" tabindex="-1" role="dialog" >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteSessionModalTitle"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this session?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+              <form action="" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" name="delete_sessionid" value="" id="deleteSessionModalDeleteButton">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).on("click", ".delete-modal", function () {
+     var session_title = $(this).data('session-title');
+     var session_id = $(this).data('session-id');
+     console.log(session_title, session_id);
+     $("#deleteSessionModalTitle").html( session_title );
+     $("#deleteSessionModalDeleteButton").val( session_id );
+
+     return false;
+});
+</script>
 {% endblock %}

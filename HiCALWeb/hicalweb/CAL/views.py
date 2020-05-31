@@ -81,7 +81,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     doc['doc_id'], doc['para_id'] = doc_id.split('.')
                 doc_ids_hack.append(doc)
 
-            if self.request.user.current_task.strategy == 'doc':
+            if 'doc' in self.request.user.current_task.strategy:
                 documents = DocEngine.get_documents(docs_ids_to_judge,
                                                     self.request.user.current_task.topic.seed_query)
             else:
@@ -93,7 +93,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             error_dict = {u"message": u"Timeout error. Please check status of servers."}
             return self.render_timeout_request_response(error_dict)
         except CALError as e:
-            error_dict = {u"message": u"Error occurred. Please inform study coordinators"}
+            error_dict = {u"message": u"Error occurred."}
 
             # TODO: add proper http response for CAL errors
             return self.render_timeout_request_response(error_dict)

@@ -230,13 +230,30 @@ Error Response:
 #### Get logs from a session
 
 ```
-DELETE /log
+GET /log
 Data Params:
     session_id: [string]
 
 Success Response:
     Code: 200
     Content: {...}
+
+Error Response:
+    Code: 404
+    Content: {'error': 'session not found'}
+```
+
+#### Check if docid exits
+
+```
+GET /docid_exists
+Data Params:
+    session_id: [string]
+    docid: [string]
+
+Success Response:
+    Code: 200
+    Content: {'exists': true/false}
 
 Error Response:
     Code: 404

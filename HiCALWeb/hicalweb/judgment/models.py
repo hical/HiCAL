@@ -37,11 +37,7 @@ class Judgement(models.Model):
     # method used to make the judgment
     fromMouse = models.NullBooleanField()
     fromKeyboard = models.NullBooleanField()
-    # set only when an explicit judgment is made
-    isFromCAL = models.NullBooleanField()
-    isFromSearch = models.NullBooleanField()
-    isFromSearchModal = models.NullBooleanField()
-    isFromIterative = models.NullBooleanField()
+    source = models.CharField(null=True, blank=True, max_length=64)
     # Search query and Ctrl+F terms related fields
     search_query = models.TextField(null=True, blank=True)
     ctrl_f_terms_input = models.TextField(null=True, blank=True)

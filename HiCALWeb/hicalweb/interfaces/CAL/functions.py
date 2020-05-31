@@ -12,6 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 def send_judgment(session, doc_id, rel, next_batch_size=5):
+    """
+    Send judgment to CAL server for training
+    :param session:
+    :param doc_id:
+    :param rel:
+    :param next_batch_size:
+    :return:
+    """
     h = httplib2.Http()
     url = "http://{}:{}/CAL/judge"
 
@@ -28,6 +36,31 @@ def send_judgment(session, doc_id, rel, next_batch_size=5):
     if resp and resp['status'] == '200':
         content = json.loads(content.decode('utf-8'))
         return content['docs']
+    else:
+        raise CALServerError(resp['status'])
+
+
+def check_docid_exists(session, doc_id):
+    """
+    Checks if a docid exists in collection
+    :param session:
+    :param doc_id:
+    :return:
+    """
+    h = httplib2.Http()
+    url = "http://{}:{}/CAL/docid_exists?"
+
+    parameters = {
+        'session_id': str(session),
+        'doc_id': doc_id}
+    parameters = urllib.parse.urlencode(parameters)
+    resp, content = h.request(url.format(CAL_SERVER_IP,
+                                         CAL_SERVER_PORT) + parameters,
+                              method="GET")
+
+    if resp and resp['status'] == '200':
+        content = json.loads(content.decode('utf-8'))
+        return content["exists"]
     else:
         raise CALServerError(resp['status'])
 
@@ -56,6 +89,29 @@ def add_session(session, seed_query, mode):
                               method="POST")
     if resp and resp['status'] != '200':
         return False
+    else:
+        raise CALServerError(resp['status'])
+
+
+def delete_session(session):
+    """
+    Removes session from CAL memory
+    :param session:
+    :return:
+    """
+    h = httplib2.Http()
+    url = "http://{}:{}/CAL/delete_session"
+
+    body = {'session_id': str(session)}
+    body = urllib.parse.urlencode(body)
+    resp, content = h.request(url.format(CAL_SERVER_IP,
+                                         CAL_SERVER_PORT),
+                              body=body,
+                              headers={'Content-Type': 'application/json; charset=UTF-8'},
+                              method="DELETE")
+
+    if resp and resp['status'] == '200':
+        return True
     else:
         raise CALServerError(resp['status'])
 

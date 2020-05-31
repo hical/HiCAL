@@ -80,14 +80,14 @@
         <main class="col-md-12 pt-4">
           {% block messages %}
           {% if messages %}
-          <div class="alert alert-secondary" role="alert">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}" role="alert">
             <button type="button" class="close" data-dismiss="alert">
               <span>&times;</span>
             </button>
-            {% for message in messages %}
-            <p class="m-0"><strong>Done</strong> {{ message }}</p>
-            {% endfor %}
+            <p class="m-0">{% if message.tags == "success" %}<strong>Done</strong>{% endif %} {{ message }}</p>
           </div>
+          {% endfor %}
           {% endif %}
           {% endblock %}
           {% block main %}
