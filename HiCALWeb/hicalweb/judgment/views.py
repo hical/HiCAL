@@ -42,10 +42,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             highlyRelevant = self.request_json[u"highlyRelevant"]
             nonrelevant = self.request_json[u"nonrelevant"]
             relevant = self.request_json[u"relevant"]
-            isFromCAL = self.request_json[u"isFromCAL"]
-            isFromSearch = self.request_json[u"isFromSearch"]
-            isFromSearchModal = self.request_json[u"isFromSearchModal"]
-            isFromIterative = self.request_json[u"isFromIterative"]
+            source = self.request_json[u"source"]
             fromMouse = self.request_json[u"fromMouse"]
             fromKeyboard = self.request_json[u"fromKeyboard"]
             query = self.request_json.get(u"query", None)
@@ -79,10 +76,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.highlyRelevant = highlyRelevant
             exists.nonrelevant = nonrelevant
             exists.relevant = relevant
-            exists.isFromCAL = isFromCAL
-            exists.isFromSearch = isFromSearch
-            exists.isFromSearchModal = isFromSearchModal
-            exists.isFromIterative = isFromIterative
+            exists.source = source
             exists.fromMouse = fromMouse
             exists.fromKeyboard = fromKeyboard
             exists.timeVerbose.append(timeVerbose)
@@ -105,10 +99,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 highlyRelevant=highlyRelevant,
                 nonrelevant=nonrelevant,
                 relevant=relevant,
-                isFromCAL=isFromCAL,
-                isFromSearch=isFromSearch,
-                isFromSearchModal=isFromSearchModal,
-                isFromIterative=isFromIterative,
+                source=source,
                 fromMouse=fromMouse,
                 fromKeyboard=fromKeyboard,
                 timeVerbose=[timeVerbose],
@@ -119,14 +110,14 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 found_ctrl_f_terms_in_full_doc=found_ctrl_f_terms_in_full_doc
             )
 
-
-
-
-        context = {u"message": u"Your judgment on {} has been received!".format(doc_id)}
-        context[u"is_max_judged_reached"] = False
+        context = {u"message": u"Your judgment on {} has been received!".format(doc_id),
+                   u"is_max_judged_reached": False}
         error_message = None
 
-        if isFromCAL:
+        is_from_cal = source == "CAL"
+        is_from_search = "search" in source
+
+        if is_from_cal:
             context[u"next_docs"] = []
             # mark relevant documents as `relevant` only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
@@ -145,7 +136,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         doc['doc_id'], doc['para_id'] = doc_id.split('.')
                     doc_ids_hack.append(doc)
 
-                if self.request.user.current_task.strategy == 'doc':
+                if 'doc' in self.request.user.current_task.strategy:
                     documents = DocEngine.get_documents(next_patch,
                                                         self.request.user.current_task.topic.seed_query)
                 else:
@@ -161,7 +152,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             except Exception as e:
                 error_message = str(e)
 
-        elif isFromSearch:
+        elif is_from_search:
             # mark relevant (used to be "on topic") documents as relevant only to CAL.
             rel = 1 if relevant else -1 if nonrelevant else 1
             try:
@@ -196,10 +187,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "highlyRelevant": highlyRelevant,
                         "nonrelevant": nonrelevant,
                         "relevant": relevant,
-                        "isFromCAL": isFromCAL,
-                        "isFromSearch": isFromSearch,
-                        "isFromSearchModal": isFromSearchModal,
-                        "isFromIterative": isFromIterative,
+                        "source": source,
                         "fromMouse": fromMouse,
                         "fromKeyboard": fromKeyboard,
                         "timeVerbose": timeVerbose,
@@ -277,10 +265,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 highlyRelevant=False,
                 nonrelevant=False,
                 relevant=False,
-                isFromCAL=False,
-                isFromSearch=False,
-                isFromSearchModal=False,
-                isFromIterative=False,
+                source=None,
                 fromMouse=False,
                 fromKeyboard=False,
                 timeVerbose=[timeVerbose],
@@ -304,7 +289,7 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         latest = Judgement.objects.filter(
                     user=self.request.user,
                     task=self.request.user.current_task,
-                    isFromSearch=False
+                    source="CAL"
                  ).filter(
                     Q(highlyRelevant=True) | Q(relevant=True) | Q(nonrelevant=True)
                 ).order_by('-updated_at')[:number_of_docs_to_show]

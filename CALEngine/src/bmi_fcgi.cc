@@ -315,6 +315,32 @@ void log_view(const FCGX_Request & request, const vector<pair<string, string>> &
     write_response(request, 200, "text/plain", SESSIONS[session_id]->get_log());
 }
 
+// Handler for /docid_exists
+void docid_exists_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
+    string session_id, doc_id;
+
+    for(auto kv: params){
+        if(kv.first == "session_id"){
+            session_id = kv.second;
+        }else if(kv.first == "doc_id"){
+            doc_id = kv.second;
+        }
+    }
+
+    if(SESSIONS.find(session_id) == SESSIONS.end()){
+        write_response(request, 404, "application/json", "{\"error\": \"session not found\"}");
+        return;
+    }
+
+    const unique_ptr<BMI> &bmi = SESSIONS[session_id];
+
+    if(bmi->get_dataset()->get_index(doc_id) == bmi->get_dataset()->NPOS){
+        write_response(request, 200, "application/json", "{\"exists\": false}");
+        return;
+    }
+    write_response(request, 200, "application/json", "{\"exists\": true}");
+}
+
 // Handler for /judge
 void judge_view(const FCGX_Request & request, const vector<pair<string, string>> &params){
     string session_id, doc_id;
@@ -383,6 +409,10 @@ void process_request(const FCGX_Request & request) {
     }else if(action == "get_docs"){
         if(method == "GET"){
             get_docs_view(request, params);
+        }
+    }else if(action == "docid_exists"){
+        if(method == "GET"){
+            docid_exists_view(request, params);
         }
     }else if(action == "judge"){
         if(method == "POST"){
