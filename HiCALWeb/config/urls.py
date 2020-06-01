@@ -24,7 +24,6 @@ urlpatterns = [
     url(r'^search/', include('hicalweb.search.urls', namespace='search')),
     url(r'^topic/', include('hicalweb.topic.urls', namespace='topic')),
     url(r'^judgment/', include('hicalweb.judgment.urls', namespace='judgment')),
-    url(r'^archive/', include('hicalweb.archive.urls', namespace='archive')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

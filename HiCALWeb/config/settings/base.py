@@ -66,7 +66,6 @@ LOCAL_APPS = [
     'hicalweb.search',
     'hicalweb.iterative',
 
-    'hicalweb.archive'
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -273,7 +272,7 @@ SOCIALACCOUNT_ADAPTER = 'hicalweb.users.adapters.SocialAccountAdapter'
 # Custom user app defaults
 # Select the correct user model
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'progress:home'
+LOGIN_REDIRECT_URL = 'core:home'
 LOGIN_URL = 'account_login'
 
 

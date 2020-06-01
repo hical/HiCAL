@@ -4,6 +4,8 @@ from hicalweb.judgment import views
 
 urlpatterns = [
 
+    url(r'^view/$', views.JudgmentsView.as_view(), name='view'),
+
     # Ajax views
     url(r'^post_judgment/$',
         views.JudgmentAJAXView.as_view(),
@@ -14,7 +16,5 @@ urlpatterns = [
     url(r'^get_latest/(?P<number_of_docs_to_show>\d+)/$',
         views.GetLatestAJAXView.as_view(),
         name='get_latest'),
-    url(r'^get_all/$',
-        views.GetAllView.as_view(),
-        name='get_all')
+
 ]
