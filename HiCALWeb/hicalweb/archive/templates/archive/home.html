@@ -28,9 +28,9 @@
                 </th>
                 <td>{{ row.doc_title|truncatechars:100 }}</td>
                 <td>
-                  {% if row.highlyRelevant %}
+                  {% if row.relevance == 2 %}
                   <span class="text-success">Highly relevant</span>
-                  {% elif row.relevant %}
+                  {% elif row.relevance == 1 %}
                   <span class="text-warning">Relevant</span>
                   {% else %}
                   <span class="text-danger">Non-relevant</span>
@@ -53,7 +53,7 @@
         <h2 class="text-secondary">Operations</h2>
         <hr>
         <a id="import_csv" href="#" class="btn btn-outline-secondary btn-sm mb-3 btn-block" data-toggle="modal" data-target="#importModal">Import judgments</a>
-        <a id="export_csv" href="#" class="btn btn-outline-secondary btn-sm mb-3 btn-block">Export to csv</a>
+        <a id="export_csv" href="#" class="btn btn-outline-secondary btn-sm mb-3 btn-block" data-toggle="modal" data-target="#exportModal">Export to csv</a>
       </div>
     </div>
   </div>
@@ -63,19 +63,19 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Import judgments</h5>
+          <h5 class="modal-title">Import judgments</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <form method="POST" enctype="multipart/form-data" id="import_csv_form">
           <div class="modal-body">
-              <span class="">Your document judgment file needs to be in csv format. Please reformat your csv to have two columns, <code>docno</code>, and <code>judgments</code>. For example:</span>
+              <span class="">Your document judgment file needs to be in csv format. Please reformat your csv to have two columns, <code>docno</code>, and <code>judgment</code>. For example:</span>
               <pre class="small text-muted">
                 docno, judgment
-                mydocid1, Relevant,
-                mydocid2, Nonrelevant,
-                mydocid3, HighlyRelevant</pre>
+                mydocid1, 1,
+                mydocid2, 0,
+                mydocid3, 2</pre>
 
               {% csrf_token %}
               {% crispy upload_form %}
@@ -83,13 +83,46 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
             <button class="btn btn-outline-secondary" id="import_csv_button" type="submit">Upload</button>
           </div>
         </form>
       </div>
     </div>
   </div>
+
+
+  <!-- Export Modal -->
+  <div class="modal fade" id="exportModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Export judgments</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form method="GET" id="export_csv_form">
+          {% csrf_token %}
+          <div class="modal-body">
+              <span class="">Your judgments will be in csv format, with two columns, <code>docno</code>, and <code>judgment</code>. For example:</span>
+              <pre class="small text-muted">
+                docno, judgment
+                mydocid1, 1,
+                mydocid2, 0,
+                mydocid3, 2</pre>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            <button class="btn btn-outline-secondary" id="export_csv_button" name="export_csv" value="export_csv" type="submit">Export to CSV</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Document Modal -->
   <div class="modal fade doc-modal" id="doc-modal" tabindex="-1" role="dialog">
@@ -352,20 +385,6 @@
             }
           });
         });
-
-
-        // EXPORT TO CSV
-        const rows = [["docno", "judgment"]];
-        {% for row in judgments %}
-            rows.push(["{{ row.doc_id }}", "{% if row.highlyRelevant %}HighlyRelevant{% elif row.relevant %}Relevant{% else %}NonRelevant{% endif %}"])
-        {% endfor %}
-        let csvContent = "data:text/csv;charset=utf-8,";
-        rows.forEach(function(rowArray){
-           let row = rowArray.join(",");
-           csvContent += row + "\n";
-        });
-        var encodedUri = encodeURI(csvContent);
-        $('#export_csv').attr('href', encodedUri).attr("download", "{{ request.user.current_task.topic.number }}" + ".csv");
 
     </script>
 {% endblock %}

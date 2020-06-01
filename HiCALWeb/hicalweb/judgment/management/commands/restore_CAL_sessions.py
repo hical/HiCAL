@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 from hicalweb.progress.models import Task
 from config.settings.base import CAL_SERVER_IP, CAL_SERVER_PORT
 import time
@@ -20,11 +20,11 @@ class Command(BaseCommand):
 
             judgments[(session_id, seed_query)] = []
 
-        for row in Judgement.objects.all():
+        for row in Judgment.objects.all():
             session_id = str(row.task.uuid)
             seed_query = str(row.task.topic.seed_query)
 
-            judgments[(session_id, seed_query)].append((row.doc_id, -1 if row.nonrelevant else 1))
+            judgments[(session_id, seed_query)].append((row.doc_id, -1 if row.relevance == 0 else 1))
 
         while True:
             print("Waiting for cal server to come online")

@@ -4,14 +4,12 @@ Mousetrap.bind(['h', 's', 'r', 'u'], function(e, key) {
     var doc_title = $('#document_title').text();
     var doc_snippet = $('#document_snippet').html();
     if(key == 'h') {
-        send_judgment(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
-    }
-    else if(key == 's') {
-        send_judgment(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
-    }
-    else if(key == 'r') {
-        send_judgment(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
-    }else if(key == 'u') {
+        send_judgment(current_doc_id, doc_title, doc_snippet, 2, 'keyboard');
+    } else if(key == 'r') {
+        send_judgment(current_doc_id, doc_title, doc_snippet, 1, 'keyboard');
+    } else if(key == 's') {
+        send_judgment(current_doc_id, doc_title, doc_snippet, 0, 'keyboard');
+    } else if(key == 'u') {
         $('#reviewDocsModal').modal('toggle');
     }
     document.body.click();

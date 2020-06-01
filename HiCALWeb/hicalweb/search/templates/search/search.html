@@ -135,13 +135,11 @@
             var doc_snippet = $("#doc-"+current_doc_id+"-snippet").html();
 
             if(key == 'h') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, true, false, false, false, true);
-            }
-            else if(key == 's') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, true, false, false, true);
-            }
-            else if(key == 'r') {
-                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, false, false, true, false, true);
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, 2, 'keyboard');
+            } else if(key == 'r') {
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, 1, 'keyboard');
+            } else if(key == 's') {
+                send_judgment_and_hide_modal(current_doc_id, doc_title, doc_snippet, 0, 'keyboard');
             }
             document.body.click();
         });
@@ -193,7 +191,7 @@
             else return null;
         }
 
-        function send_judgment(doc_id, current_doc_title, current_doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, isFromSearchModal, timeVerbose, ctrlf_terms) {
+        function send_judgment(doc_id, current_doc_title, current_doc_snippet, relevance, method, isFromSearchModal, timeVerbose, ctrlf_terms) {
             if(timeVerbose == null){
                 var now = + new Date();
                 timeVerbose = {
@@ -202,9 +200,8 @@
                     "timeAway": null,
                     "source": "searchSERP",
                     "judged": true,
-                    "highlyRelevant": highlyRelevant,
-                    "nonrelevant": non,
-                    "relevant": relevant,
+                    "relevance": relevance,
+                    "method": method,
                     'ctrl_f_terms_input': ctrlf_terms,
                     'found_ctrl_f_terms_in_title': marked_matches_in_document_title,
                     'found_ctrl_f_terms_in_full_doc': marked_matches_in_document_content
@@ -223,14 +220,11 @@
                 'doc_CAL_snippet': "",
                 'doc_search_snippet': current_doc_snippet,
                 'query': $("#search_input").val(),
-                'highlyRelevant': highlyRelevant,
-                'nonrelevant': non,
-                'relevant': relevant,
+                'relevance': relevance,
                 'time_to_judge': "NA",
                 'source': source,
                 'client_time': now,
-                'fromMouse': isMouse,
-                'fromKeyboard': isKeyboard,
+                'method': method,
                 'timeVerbose': timeVerbose,
                 'search_query': $("#search_input").val(),
                 'ctrl_f_terms_input': ctrlf_terms,
@@ -257,20 +251,20 @@
                 }
             });
 
-            update_doc_status(doc_id, highlyRelevant, non, relevant);
+            update_doc_status(doc_id, relevance);
 
             return false;
         }
 
         var find_borders_css = function (index, className){return (className.match (/(^|\s)border-\S+/g) || []).join(' ');};
-        function update_doc_status(doc_id, highlyRelevant, non, relevant){
+        function update_doc_status(doc_id, relevance){
             console.log("Updating document " + doc_id + " status");
-            if(highlyRelevant){
+            if(relevance === 2){
                 $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-success");
-            }else if(non){
-                $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-danger");
-            }else if(relevant){
+            }else if(relevance === 1){
                 $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-warning");
+            }else if(relevance === 0){
+                $("#doc_"+doc_id+"_card").removeClass(find_borders_css).addClass("border-left border-3 border-danger");
             }
             document.getElementById("isJudged_"+doc_id).style.display = "inherit";
         }
@@ -281,7 +275,7 @@
             resetMatchesLists();
         }
 
-        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard){
+        function send_judgment_and_hide_modal(doc_id, doc_title, doc_snippet, relevance, method){
             var now = + new Date;
             if(documents_timers[doc_id] == undefined){
                 return;
@@ -295,14 +289,13 @@
                 "timeAway": timeAway,
                 "source": "searchModal",
                 "judged": true,
-                "highlyRelevant": highlyRelevant,
-                "nonrelevant": non,
-                "relevant": relevant,
+                "relevance": relevance,
+                "method": method,
                 "ctrl_f_terms_input": ctrlf_terms,
                 "found_ctrl_f_terms_in_title": marked_matches_in_document_title,
                 "found_ctrl_f_terms_in_full_doc": marked_matches_in_document_content
             };
-            send_judgment(doc_id, doc_title, doc_snippet, highlyRelevant, non, relevant, isMouse, isKeyboard, true, timeVerbose, ctrlf_terms);
+            send_judgment(doc_id, doc_title, doc_snippet, relevance, method,  true, timeVerbose, ctrlf_terms);
             var element = document;
             var event = new CustomEvent("new_judgment");
             element.dispatchEvent(event);

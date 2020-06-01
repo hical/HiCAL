@@ -12,7 +12,7 @@ from interfaces.DocumentSnippetEngine import functions as DocEngine
 
 from hicalweb.CAL.exceptions import CALError
 from hicalweb.interfaces.CAL import functions as CALFunctions
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 logger = logging.getLogger(__name__)
 
@@ -39,12 +39,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             doc_title = self.request_json[u"doc_title"]
             doc_CAL_snippet = self.request_json[u"doc_CAL_snippet"]
             doc_search_snippet = self.request_json[u"doc_search_snippet"]
-            highlyRelevant = self.request_json[u"highlyRelevant"]
-            nonrelevant = self.request_json[u"nonrelevant"]
-            relevant = self.request_json[u"relevant"]
+            relevance = self.request_json[u"relevance"]
             source = self.request_json[u"source"]
-            fromMouse = self.request_json[u"fromMouse"]
-            fromKeyboard = self.request_json[u"fromKeyboard"]
+            method = self.request_json[u"method"]
             query = self.request_json.get(u"query", None)
             client_time = self.request_json.get(u"client_time", None)
             timeVerbose = self.request_json.get(u"timeVerbose")
@@ -55,13 +52,12 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             found_ctrl_f_terms_in_full_doc = self.request_json[u"found_ctrl_f_terms_in_full_doc"]
         except KeyError:
             error_dict = {u"message": u"your input must include doc_id, doc_title, "
-                                      u"highlyRelevant, nonrelevant, relevant, "
-                                      u"doc_CAL_snippet, doc_search_snippet, etc.."}
+                                      u"relevance, etc.."}
 
             return self.render_bad_request_response(error_dict)
 
         # Check if a judgment exists already, if so, update the db row.
-        exists = Judgement.objects.filter(user=self.request.user,
+        exists = Judgment.objects.filter(user=self.request.user,
                                           doc_id=doc_id,
                                           task=self.request.user.current_task)
 
@@ -73,12 +69,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 exists.doc_CAL_snippet = doc_CAL_snippet
             if doc_search_snippet != "":
                 exists.doc_search_snippet = doc_search_snippet
-            exists.highlyRelevant = highlyRelevant
-            exists.nonrelevant = nonrelevant
-            exists.relevant = relevant
+            exists.relevance = relevance
             exists.source = source
-            exists.fromMouse = fromMouse
-            exists.fromKeyboard = fromKeyboard
+            exists.method = method
             exists.timeVerbose.append(timeVerbose)
             exists.search_query = search_query
             exists.ctrl_f_terms_input = ctrl_f_terms_input
@@ -88,7 +81,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.save()
 
         else:
-            Judgement.objects.create(
+            Judgment.objects.create(
                 user=self.request.user,
                 doc_id=doc_id,
                 doc_title=doc_title,
@@ -96,12 +89,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_search_snippet=doc_search_snippet,
                 task=self.request.user.current_task,
                 query=query,
-                highlyRelevant=highlyRelevant,
-                nonrelevant=nonrelevant,
-                relevant=relevant,
+                relevance=relevance,
                 source=source,
-                fromMouse=fromMouse,
-                fromKeyboard=fromKeyboard,
+                method=method,
                 timeVerbose=[timeVerbose],
                 search_query=search_query,
                 ctrl_f_terms_input=ctrl_f_terms_input,
@@ -116,16 +106,16 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         is_from_cal = source == "CAL"
         is_from_search = "search" in source
+        # mark relevant documents as 1 to CAL.
+        rel_CAL = -1 if relevance <= 0 else 1
 
         if is_from_cal:
             context[u"next_docs"] = []
-            # mark relevant documents as `relevant` only to CAL.
-            rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 next_patch = CALFunctions.send_judgment(
                     self.request.user.current_task.uuid,
                     doc_id,
-                    rel)
+                    rel_CAL)
                 if not next_patch:
                     return self.render_json_response(context)
 
@@ -153,12 +143,10 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 error_message = str(e)
 
         elif is_from_search:
-            # mark relevant (used to be "on topic") documents as relevant only to CAL.
-            rel = 1 if relevant else -1 if nonrelevant else 1
             try:
                 CALFunctions.send_judgment(self.request.user.current_task.uuid,
                                            doc_id,
-                                           rel)
+                                           rel_CAL)
             except TimeoutError:
                 traceback.print_exc()
                 error_dict = {u"message": u"Timeout error. "
@@ -184,12 +172,9 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         "topic_number": self.request.user.current_task.topic.number,
                         "session": str(self.request.user.current_task.uuid),
                         "query": query,
-                        "highlyRelevant": highlyRelevant,
-                        "nonrelevant": nonrelevant,
-                        "relevant": relevant,
+                        "relevance": relevance,
                         "source": source,
-                        "fromMouse": fromMouse,
-                        "fromKeyboard": fromKeyboard,
+                        "method": method,
                         "timeVerbose": timeVerbose,
                         "search_query": search_query,
                         "ctrl_f_terms_input": ctrl_f_terms_input,
@@ -204,7 +189,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         if not exists:
             # Check if user has judged `max_judged` documents in total.
-            judgements = Judgement.objects.filter(user=self.request.user,
+            judgements = Judgment.objects.filter(user=self.request.user,
                                                   task=self.request.user.current_task)
             max_judged = self.request.user.current_task.max_number_of_judgments
             # Exit task only if number of judgments reached max (and maxjudged is enabled)
@@ -241,7 +226,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             return self.render_bad_request_response(error_dict)
 
         # Check if a judgment exists already, if so, update the db row.
-        exists = Judgement.objects.filter(user=self.request.user,
+        exists = Judgment.objects.filter(user=self.request.user,
                                           doc_id=doc_id,
                                           task=self.request.user.current_task)
 
@@ -254,7 +239,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             exists.save()
 
         else:
-            Judgement.objects.create(
+            Judgment.objects.create(
                 user=self.request.user,
                 doc_id=doc_id,
                 doc_title=doc_title,
@@ -262,12 +247,9 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_search_snippet=doc_search_snippet,
                 task=self.request.user.current_task,
                 query=query,
-                highlyRelevant=False,
-                nonrelevant=False,
-                relevant=False,
+                relevance=None,
                 source=None,
-                fromMouse=False,
-                fromKeyboard=False,
+                method=None,
                 timeVerbose=[timeVerbose],
             )
 
@@ -286,12 +268,12 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             number_of_docs_to_show = int(number_of_docs_to_show)
         except ValueError:
             return self.render_json_response([])
-        latest = Judgement.objects.filter(
+        latest = Judgment.objects.filter(
                     user=self.request.user,
                     task=self.request.user.current_task,
                     source="CAL"
                  ).filter(
-                    Q(highlyRelevant=True) | Q(relevant=True) | Q(nonrelevant=True)
+                    relevance__isnull=False
                 ).order_by('-updated_at')[:number_of_docs_to_show]
         result = []
         for judgment in latest:
@@ -302,9 +284,7 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_date": "",
                     "doc_CAL_snippet": judgment.doc_CAL_snippet,
                     "doc_content": "",
-                    "highlyRelevant": judgment.highlyRelevant,
-                    "nonrelevant": judgment.nonrelevant,
-                    "relevant": judgment.relevant,
+                    "relevance": judgment.relevance,
                 }
             )
 
@@ -316,7 +296,7 @@ class GetAllView(views.LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = {
-            "judgments_list": Judgement.objects.filter(
+            "judgments_list": Judgment.objects.filter(
                     user=self.request.user,
                     task=self.request.user.current_task,
                  ).order_by('-updated_at')

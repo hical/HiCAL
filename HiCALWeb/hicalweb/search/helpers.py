@@ -1,5 +1,5 @@
 from django.db.models import Q
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 
 def join_judgments(document_values, document_ids, user, task):
@@ -12,27 +12,21 @@ def join_judgments(document_values, document_ids, user, task):
     :param document_ids:
     :return: document_values with extra information about the document
     """
+    judged_docs = Judgment.objects.filter(user=user,
+                                          task=task,
+                                          doc_id__in=document_ids,
+                                          relevance__isnull=False)
 
-    judged_docs = Judgement.objects.filter(Q(user=user,
-                                             task=task,
-                                             doc_id__in=document_ids) &
-                                           (
-                                               Q(highlyRelevant=True) |
-                                               Q(relevant=True) |
-                                               Q(nonrelevant=True)
-                                           )
-                                           )
     judged_docs = {j.doc_id: j for j in judged_docs}
-    for key in document_values:
-        isJudged = True if key in judged_docs else False
-        if isJudged:
-            judgedment = judged_docs.get(key)
-            document_values[key]['relevance_judgment'] = {
-                "highlyRelevant": judgedment.highlyRelevant,
-                "nonrelevant": judgedment.nonrelevant,
-                "relevant": judgedment.relevant,
-            }
-        document_values[key]['isJudged'] = isJudged
+    for id in document_values:
+        is_judged = True if id in judged_docs else False
+
+        if is_judged:
+            judgment_object = judged_docs.get(id)
+            document_values[id]['rel'] = judgment_object.relevance
+            document_values[id]['isJudged'] = is_judged
+            document_values[id]['relevance_judgment'] = judgment_object.relevance
+
     return document_values
 
 

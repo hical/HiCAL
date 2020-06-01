@@ -335,8 +335,7 @@
             });
         }
 
-        function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
-                               highlyRelevant, notrelevant, relevant, isMouse, isKeyboard) {
+        function send_judgment(current_doc_id, current_doc_title, current_doc_snippet, relevance, method) {
             window.scrollTo(0, 0);
             if(current_doc_id == "") {
                 console.log("Please wait...");
@@ -363,11 +362,8 @@
                 "timeAway": documentTimer.totalAwayTime,
                 "source": "Iterative",
                 "judged": true,
-                "isMouse": isMouse,
-                "isKeyboard": isKeyboard,
-                "highlyRelevant": highlyRelevant,
-                "nonrelevant": notrelevant,
-                "relevant": relevant
+                "method": method,
+                "relevance": relevance
             };
 
             var data = {
@@ -375,13 +371,10 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': "",
                 'doc_search_snippet': "",
-                'highlyRelevant': highlyRelevant,
-                'nonrelevant': notrelevant,
-                'relevant': relevant,
+                'relevance': relevance,
                 'source': 'iterative',
                 'client_time': now,
-                'fromMouse': isMouse,
-                'fromKeyboard': isKeyboard,
+                'method': method,
                 'timeVerbose': timeVerbose,
                 'search_query': null,
                 'ctrl_f_terms_input': $("#search_content").val(),
@@ -511,9 +504,7 @@
                 "doc_title": current_doc_title,
                 "doc_date": current_doc_date,
                 "doc_content": current_doc_content,
-                'highlyRelevant': highlyRelevant,
-                'nonrelevant': notrelevant,
-                'relevant': relevant
+                'relevance': relevance,
             };
 
             if(isInLatestJudgedDocsQueue){
@@ -589,12 +580,12 @@
 
         var doc_id = doc['doc_id'];
         var doc_title = doc['doc_title'];
-        if (doc["highlyRelevant"]){
+        if (doc["relevance"] === 2){
             var doc_judgment_class = 'judged_doc_title_highly_relevant';
-        }else if(doc["nonrelevant"]){
-            var doc_judgment_class = 'judged_doc_title_nonrelevant';
-        }else if(doc["relevant"]){
+        }else if(doc["relevance"] === 1){
             var doc_judgment_class = 'judged_doc_title_relevant';
+        }else if(doc["relevance"] === 0){
+            var doc_judgment_class = 'judged_doc_title_nonrelevant';
         }
         var doc_date = doc['doc_date'];
         if (doc_date == ""){
@@ -685,12 +676,12 @@
 
             var doc_status_div = "";
 
-            if (doc["highlyRelevant"]){
+            if (doc["relevance"] === 2){
                 doc_status_div = '<div class="bg-success" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
-            }else if(doc["nonrelevant"]){
-                doc_status_div = '<div class="bg-danger" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
-            }else if(doc["relevant"]){
+            }else if(doc["relevance"] === 0){
                 doc_status_div = '<div class="bg-warning" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
+            }else if(doc["relevance"] === 1){
+                doc_status_div = '<div class="bg-danger" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
             }
 
             var doc_div = '' +

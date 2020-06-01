@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 
 def remove_judged_docs(document_ids, user, task):
@@ -12,14 +12,10 @@ def remove_judged_docs(document_ids, user, task):
     :return: document_ids list of documents that are not judged, in the same given order.
     """
 
-    judged_docs = Judgement.objects.filter(Q(user=user,
-                                             task=task,
-                                             doc_id__in=document_ids) &
-                                           (
-                                               Q(highlyRelevant=True) |
-                                               Q(relevant=True) |
-                                               Q(nonrelevant=True)
-                                           )
+    judged_docs = Judgment.objects.filter(user=user,
+                                           task=task,
+                                           doc_id__in=document_ids,
+                                           relevance__isnull=False
                                            ).values_list('doc_id', flat=True)
 
     document_ids = [elem for elem in document_ids if elem not in judged_docs]

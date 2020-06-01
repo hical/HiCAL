@@ -1,17 +1,19 @@
 import csv
 import io
+import itertools
 import logging
+
 
 from braces import views
 from django.contrib import messages
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import generic
+from django.http import StreamingHttpResponse
 
 from hicalweb.interfaces.CAL import functions as CALFunctions
 from hicalweb.judgment.forms import UploadForm
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 from hicalweb.CAL.exceptions import CALError
 
 logger = logging.getLogger(__name__)
@@ -23,13 +25,10 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
 
-        judgments = Judgement.objects.filter(Q(user=self.request.user,
-                                             task=self.request.user.current_task) &
-                                           (
-                                               Q(highlyRelevant=True) |
-                                               Q(relevant=True) |
-                                               Q(nonrelevant=True)
-                                           ))
+        judgments = Judgment.objects.filter(user=self.request.user,
+                                             task=self.request.user.current_task,
+                                             relevance__isnull=False)
+
         context["judgments"] = judgments
         context['upload_form'] = UploadForm()
         return context
@@ -65,11 +64,11 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
         new, updated, failed = 0, 0, 0
         for row in reader:
             try:
-                docno, rel = row['docno'], row['judgment'].lower()
+                docno, rel = row['docno'], int(row['judgment'])
             except KeyError:
                 messages.error(request, 'Ops! Please make sure you upload a valid csv file.')
                 return HttpResponseRedirect(reverse_lazy('archive:main'))
-            rel = 1 if rel == "relevant" else -1 if rel == "nonrelevant" else 2
+
             # Check if docid is valid
             if not CALFunctions.check_docid_exists(self.request.user.current_task.uuid,
                                                    docno):
@@ -77,7 +76,7 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
                 continue
 
             # check if judged
-            judged = Judgement.objects.filter(user=self.request.user,
+            judged = Judgment.objects.filter(user=self.request.user,
                                               doc_id=docno,
                                               task=self.request.user.current_task)
             if train_model:
@@ -92,22 +91,18 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
             if judged.exists():
                 if update_existing:
                     judged = judged.first()
-                    judged_rel = 2 if judged.highlyRelevant else 1 if judged.relevant else -1
+                    judged_rel = judged.relevance
                     if judged_rel != rel:
-                        judged.highlyRelevant = rel == 2
-                        judged.relevant = rel == 1
-                        judged.nonrelevant = rel == -1
+                        judged.relevance = rel
                         judged.source = "uploaded"
                         judged.save()
                         updated += 1
             else:
-                Judgement.objects.create(
+                Judgment.objects.create(
                     user=self.request.user,
                     doc_id=docno,
                     task=self.request.user.current_task,
-                    highlyRelevant=rel == 2,
-                    relevant=rel == 1,
-                    nonrelevant=rel == -1,
+                    relevance=rel,
                     source="uploaded",
                 )
                 new += 1
@@ -123,4 +118,28 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
         return HttpResponseRedirect(reverse_lazy('archive:main'))
 
     def get(self, request, *args, **kwargs):
+
+        if request.GET.get("export_csv"):
+            class Echo:
+                """An object that implements just the write method of the file-like
+                interface.
+                """
+
+                def write(self, value):
+                    """Write the value by returning it, instead of storing in a buffer."""
+                    return value
+
+            judgments = Judgment.objects.filter(user=self.request.user,
+                                                 task=self.request.user.current_task,
+                                                 relevance__isnull=False)
+            header = ["docno", "judgment"]
+            rows = ([judgment.doc_id, judgment.relevance] for judgment in judgments)
+            data = itertools.chain([header], rows)
+            filename = "{}.csv".format(str(self.request.user.current_task.uuid))
+            pseudo_buffer = Echo()
+            writer = csv.writer(pseudo_buffer)
+            response = StreamingHttpResponse((writer.writerow(row) for row in data),
+                                             content_type="text/csv")
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+            return response
         return super(HomePageView, self).get(self, request, *args, **kwargs)

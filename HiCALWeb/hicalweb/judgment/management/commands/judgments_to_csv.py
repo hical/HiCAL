@@ -2,7 +2,7 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from hicalweb.judgment.models import Judgement
+from hicalweb.judgment.models import Judgment
 
 
 class Command(BaseCommand):
@@ -17,9 +17,9 @@ class Command(BaseCommand):
         with open(self.filename, 'wt') as f:
             writer = csv.writer(f)
             writer.writerow(self.header)
-            judgments = Judgement.objects.order_by('user', 'created_at')
+            judgments = Judgment.objects.order_by('user', 'created_at')
             for judgment in judgments:
-                value = 2 if judgment.highlyRelevant else 1 if judgment.relevant else 0 if judgment.nonrelevant else None
+                value = judgment.relevance
                 # if value is empty, then user looked at document but not has not judged
                 if value is None:
                     continue

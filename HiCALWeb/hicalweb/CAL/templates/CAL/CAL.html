@@ -23,9 +23,9 @@
 <div class="d-lg-none nav navbar-nav mx-auto justify-content-center center-text pl-2 pr-2">
   <form class="form-inline">
     <div class="btn-group" role="group">
-        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not Rel</a>
-        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Rel</a>
-        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly Rel</a>
+        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), 0, 'click');" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not Rel</a>
+        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), 1, 'click');" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Rel</a>
+        <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), 2, 'click');" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly Rel</a>
      </div>
   </form>
 </div>
@@ -100,11 +100,11 @@
 
           <div class="text-center">
             <div class="btn-group mt-3" role="group">
-              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, true, false, true, false);"
+              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), 0, 'click');"
                  class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not relevant</a>
-              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), false, false, true, true, false);"
+              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), 1, 'click');"
                  class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
-              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), true, false, false, true, false);"
+              <a href="#" onclick="return send_judgment($('#cal-document').data('doc-id'), $('#document_title').text(), $('#document_snippet').html(), 2, 'click');"
                  class="btn btn-sm btn-outline-secondary d-flex align-items-center">Highly relevant</a>
             </div>
           </div>
@@ -396,8 +396,7 @@
             });
         }
 
-        function send_judgment(current_doc_id, current_doc_title, current_doc_snippet,
-                               highlyRelevant, notrelevant, relevant, isMouse, isKeyboard) {
+        function send_judgment(current_doc_id, current_doc_title, current_doc_snippet, relevance, method) {
             window.scrollTo(0, 0);
             if(current_doc_id == "") {
                 console.log("Please wait...");
@@ -430,11 +429,8 @@
                 "show_full_doc_button_clicked": show_full_doc_button_clicked,
                 "source": "CAL",
                 "judged": true,
-                "isMouse": isMouse,
-                "isKeyboard": isKeyboard,
-                "highlyRelevant": highlyRelevant,
-                "nonrelevant": notrelevant,
-                "relevant": relevant
+                "method": method,
+                "relevance": relevance,
             };
 
             var data = {
@@ -442,13 +438,10 @@
                 'doc_title': current_doc_title,
                 'doc_CAL_snippet': current_doc_snippet,
                 'doc_search_snippet': "",
-                'highlyRelevant': highlyRelevant,
-                'nonrelevant': notrelevant,
-                'relevant': relevant,
+                'relevance': relevance,
                 'source': "CAL",
                 'client_time': now,
-                'fromMouse': isMouse,
-                'fromKeyboard': isKeyboard,
+                'method': method,
                 'timeVerbose': timeVerbose,
                 'search_query': null,
                 'ctrl_f_terms_input': $("#search_content").val(),
@@ -582,9 +575,7 @@
                 "doc_date": current_doc_date,
                 "doc_CAL_snippet": current_doc_snippet,
                 "doc_content": current_doc_content,
-                'highlyRelevant': highlyRelevant,
-                'nonrelevant': notrelevant,
-                'relevant': relevant
+                'relevance': relevance
             };
 
             if(isInLatestJudgedDocsQueue){
@@ -644,11 +635,11 @@
 
         var doc_id = doc['doc_id'];
         var doc_title = doc['doc_title'];
-        if (doc["highlyRelevant"]){
+        if (doc["relevance"] === 2){
             var doc_judgment_class = 'judged_doc_title_highly_relevant';
-        }else if(doc["nonrelevant"]){
+        }else if(doc["relevance"] === 0){
             var doc_judgment_class = 'judged_doc_title_nonrelevant';
-        }else if(doc["relevant"]){
+        }else if(doc["relevance"] === 1){
             var doc_judgment_class = 'judged_doc_title_relevant';
         }
         var doc_date = doc['doc_date'];
@@ -758,12 +749,12 @@
 
             var doc_status_div = "";
 
-            if (doc["highlyRelevant"]){
+            if (doc["relevance"] === 2){
                 doc_status_div = '<div class="bg-success" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
-            }else if(doc["nonrelevant"]){
-                doc_status_div = '<div class="bg-danger" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
-            }else if(doc["relevant"]){
+            }else if(doc["relevance"] === 1){
                 doc_status_div = '<div class="bg-warning" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
+            }else if(doc["relevance"] === 0){
+                doc_status_div = '<div class="bg-danger" style="height: 100%; width:4px;"><i class="fa" aria-hidden="true"></i></div>';
             }
 
           // language=HTML
