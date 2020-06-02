@@ -3,10 +3,6 @@
 
 {% block pagetitle %}Sessions{% endblock %}
 
-{% block extra_head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js" type="application/javascript"></script>
-{% endblock %}
-
 {% block main %}
 <div class="row">
 
@@ -42,9 +38,9 @@
           </div>
         </div>
         {% else %}
-        <h2 class="text-danger">Please create a topic</h2>
+        <h2 class="text-danger">Please create a session</h2>
         <hr>
-        <p>You currently do not have an active topic session.</p>
+        <p>You currently do not have an active session.</p>
         {% endif %}
 
       </div>
@@ -59,9 +55,9 @@
         <h2 class="text-secondary">Your sessions</h2>
         <hr>
         {% else %}
-        <h2 class="text-danger">Please create or select a topic</h2>
+        <h2 class="text-danger">Please create or select a session</h2>
         <hr>
-        <p>There are currently no topic sessions..</p>
+        <p>There are currently no sessions..</p>
         {% endif %}
         {% for task in tasks %}
 

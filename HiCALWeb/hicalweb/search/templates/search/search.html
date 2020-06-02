@@ -3,6 +3,21 @@
 
 {% block pagetitle %}Search{% endblock %}
 
+{% block navbar-noncollapse %}
+<form id="search_form" name="search_input" class="input-group mx-auto w-50 d-lg-none">
+    <input autocomplete="off" class="form-control search_input-sm py-2 rounded-pill mr-1 pr-5" type="search" placeholder="Search" id="search_input-sm" name="search_input">
+    <span class="input-group-append">
+     <button class="btn rounded-pill border-0 ml-n5" type="submit"
+         ic-indicator="#searchSpinner" ic-target="#search_result"
+         ic-include="#search_input-sm" ic-post-to="{% url 'search:get_docs' %}"
+
+            >
+        <i class="fas fa-search text-secondary"></i>
+     </button>
+    </span>
+</form>
+{% endblock %}
+
 {% block navbar-center %}
 <form id="search_form" name="search_input" class="input-group mx-auto w-75">
   <input autocomplete="off" class="form-control py-2 rounded-pill mr-1 pr-5" type="search" placeholder="Search" id="search_input" name="search_input">
@@ -10,7 +25,7 @@
      <button class="btn rounded-pill border-0 ml-n5" type="submit"
              ic-target="#search_result" ic-include="#search_input" ic-post-to="{% url 'search:get_docs' %}"
      >
-	<i class="fa fa-search text-secondary"></i>
+  	  <i class="fas fa-search text-secondary"></i>
      </button>
     </span>
 </form>

@@ -33,9 +33,9 @@
         </div>
 
         {% else %}
-        <h2 class="text-danger">Please create a topic</h2>
+        <h2 class="text-danger">Please create a session</h2>
         <hr>
-        <p>You currently don't have an active topic session. Please create a topic first.</p>
+        <p>You currently don't have an active session. Please create a session first.</p>
         {% endif %}
       </div>
     </div>
@@ -136,16 +136,17 @@
   <div class="col-md-4">
     <div class="card border-0 mb-4 ">
       <div class="card-block">
-        <h2 class="text-secondary">Create new topic</h2>
+        <h2 class="text-secondary">Create new session</h2>
         <hr>
 
         <div class="btn-group btn-group-sm d-flex w-100 nav nav-pills flex-nowrap mb-3" role="group">
           <button type="button" class="btn btn-outline-secondary shadow-none w-100 active" data-toggle="pill" href="#pills-custom-topic">Custom</button>
-          <button type="button" class="btn btn-outline-secondary shadow-none w-100" data-toggle="pill" href="#pills-predefined-topic">Pre-defined</button>
+          <button type="button" class="btn btn-outline-secondary shadow-none w-100" data-toggle="pill" href="#pills-predefined-topic">Pre-defined topics</button>
         </div>
 
         <div class="tab-content">
 
+          <!-- Custom topic tab -->
           <div class="tab-pane fade active show" id="pills-custom-topic" role="tabpanel">
             <div class="row">
               <div class="col-md-12">
@@ -161,6 +162,7 @@
             </div>
           </div>
 
+          <!-- Predefined topic tab -->
           <div class="tab-pane fade" id="pills-predefined-topic" role="tabpanel">
             <div class="row">
               <div class="col-md-12">
