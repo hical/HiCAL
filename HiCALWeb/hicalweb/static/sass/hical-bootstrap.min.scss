@@ -13,17 +13,48 @@ $light:#F5F8FA;
 $dark:#394B59;
 
 // Modals
-$modal-backdrop-opacity:            .85 !default;
-$modal-backdrop-bg:                 $light !default;
-$modal-content-border-radius:       0 !default;
-$modal-header-border-width:         0 !default;
-$modal-footer-border-width:         0 !default;
+$modal-backdrop-opacity:            .85;
+$modal-backdrop-bg:                 $light;
+$modal-content-border-radius:       0;
+$modal-header-border-width:         0;
+$modal-footer-border-width:         0;
 
 // Typography
-$font-size-base:              1rem !default; // Assumes the browser default, typically `16px`
+$font-size-base:              1rem; // Assumes the browser default, typically `16px`
 
 // Buttons
-$btn-font-size-sm:            $font-size-base * .775 !default;
+$btn-font-size-sm:            $font-size-base * .775;
+
+
+@import "_functions.scss";
+@import "_variables.scss";
+@import "mixins/_breakpoints.scss";
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .border#{$infix}-top {      border-top: $border-width solid $border-color !important; }
+    .border#{$infix}-right {    border-right: $border-width solid $border-color !important; }
+    .border#{$infix}-bottom {   border-bottom: $border-width solid $border-color !important; }
+    .border#{$infix}-left {     border-left: $border-width solid $border-color !important; }
+
+    .border#{$infix}-top-0 {    border-top: 0 !important; }
+    .border#{$infix}-right-0 {  border-right: 0 !important; }
+    .border#{$infix}-bottom-0 { border-bottom: 0 !important; }
+    .border#{$infix}-left-0 {   border-left: 0 !important; }
+
+    .border#{$infix}-x {
+      border-left: $border-width solid $border-color !important;
+      border-right: $border-width solid $border-color !important;
+    }
+
+    .border#{$infix}-y {
+      border-top: $border-width solid $border-color !important;
+      border-bottom: $border-width solid $border-color !important;
+    }
+  }
+}
 
 @import "bootstrap";
 

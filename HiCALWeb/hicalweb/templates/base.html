@@ -22,7 +22,7 @@
 
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand border-right pr-3" href="/">
+        <a class="navbar-brand border-sm-0 border-md-right pr-4" href="/">
           <img src="{% static 'images/hicalsmall.png' %}" width="31" height="31" alt="">
         </a>
       {% block navbar-noncollapse %}{% endblock %}
@@ -40,18 +40,20 @@
         <ul class="nav navbar-nav flex-fill justify-content-center center-text pl-5 pr-5 {%block navbar-hidesmall %}d-none d-sm-block{%endblock%}">
           {% block navbar-center %}
           <span class="navbar-text text-truncate" style="max-width: 15rem;">
-           {% if request.user.current_task %}
-           {{user.current_task.topic.title}}
-           {% elif request.user.is_authenticated %}
-           Please create a new session
-           {% endif %}
+           {% if request.user.current_task %}{{user.current_task.topic.title}}{% elif request.user.is_authenticated %}Please create a new session{% endif %}
           </span>
           {% endblock %}
         </ul>
 
         {% block navbar-form %} {% endblock %}
 
-        <ul class="navbar-nav pl-md-3">
+        <ul class="navbar-nav pl-md-3 border-sm-0 border-md-left ml-0 ml-md-4">
+
+          <a class="nav-item nav-link"  data-toggle="modal" data-target="#helpModal" href="#">
+            <h5 class="d-none d-md-inline pr-2"><i class="fas fa-question-circle"></i></h5>
+            <span class="d-md-none">Help</span>
+          </a>
+
           {% if request.user.is_authenticated %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
@@ -74,11 +76,37 @@
             </div>
           </li>
           {% else %}
-          <a class="btn btn-sm btn-outline-secondary" href="{% url 'progress:practice' %}">Click here to practice</a>
+          <a class="btn btn-secondary d-flex align-items-center" href="{% url 'progress:practice' %}">Click here to try</a>
           {% endif %}
         </ul>
       </div>
     </nav>
+
+    <!-- Help modal -->
+    <div class="modal" id="helpModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-primary">{%block help-modal-title%}How to use HiCAL{%endblock%}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {%block help-modal-body%}<p>HiCAL is a system for efficient high-recall retrieval that allows retrieving and assessing relevant documents, provides high data processing performance and a user-friendly document assessment interface.</p>
+            <p>There are two retrieval components in HiCAL.</p>
+            <p><strong class="text-primary">Search:</strong> the search component allows you to search for documents using a search engine. Judgments made in the search component are used to train the CAL model.</p>
+            <p><strong class="text-primary">Continuous Active Learning (CAL):</strong> CAL is an iterative feedback process that uses a machine learning classifier to train on relevance judgments made by the user.
+             The CAL interface presents the user with top scoring unjudged documents in the collection. After each iteration of judging and re-training, the learning model improves and returns the next most likely relevant documents to judge.
+            </p>
+            <p class="text-muted small m-0">To learn more about HiCAL, visit the <a href="http://hical.github.io">project's website.</a></p>{%endblock%}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid">
       <div class="row">
