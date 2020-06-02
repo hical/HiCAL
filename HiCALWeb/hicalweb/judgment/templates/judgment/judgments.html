@@ -59,7 +59,7 @@
   </div>
 
   <!-- Import Modal -->
-  <div class="modal fade" id="importModal" tabindex="-1" role="dialog">
+  <div class="modal" id="importModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -70,12 +70,13 @@
         </div>
         <form method="POST" enctype="multipart/form-data" id="import_csv_form">
           <div class="modal-body">
-              <span class="">Your document judgment file needs to be in csv format. Please reformat your csv to have two columns, <code>docno</code>, and <code>judgment</code>. For example:</span>
-              <pre class="small text-muted">
-                docno, judgment
-                mydocid1, 1,
-                mydocid2, 0,
-                mydocid3, 2</pre>
+              <p>Your document judgment file needs to be in csv format. Please reformat your csv to have two columns, <code>docno</code>, and <code>judgment</code>.</p>
+              <p>For example:</p>
+                    <pre class="small text-muted">
+                      docno, judgment
+                      mydocid1, 1,
+                      mydocid2, 0,
+                      mydocid3, 2</pre>
 
               {% csrf_token %}
               {% crispy upload_form %}
@@ -93,7 +94,7 @@
 
 
   <!-- Export Modal -->
-  <div class="modal fade" id="exportModal" tabindex="-1" role="dialog">
+  <div class="modal" id="exportModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -105,12 +106,13 @@
         <form method="GET" id="export_csv_form">
           {% csrf_token %}
           <div class="modal-body">
-              <span class="">Your judgments will be in csv format, with two columns, <code>docno</code>, and <code>judgment</code>. For example:</span>
-              <pre class="small text-muted">
-                docno, judgment
-                mydocid1, 1,
-                mydocid2, 0,
-                mydocid3, 2</pre>
+              <p>Your judgments will be in csv format, with two columns, <code>docno</code>, and <code>judgment</code>.</p>
+              <p>For example:</p>
+                    <pre class="small text-muted">
+                      docno, judgment
+                      mydocid1, 1,
+                      mydocid2, 0,
+                      mydocid3, 2</pre>
 
           </div>
 
@@ -125,7 +127,7 @@
 
 
   <!-- Document Modal -->
-  <div class="modal fade doc-modal" id="doc-modal" tabindex="-1" role="dialog">
+  <div class="modal doc-modal" id="doc-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-xlg">
       <div class="modal-content">
         <div class="modal-header">
@@ -165,7 +167,7 @@
                 <ul class="nav nav-pills flex-column little-padding">
                   <div class="cal-search">
                     <li class="mt-1">
-                      <h5 class="gray-text align-left">Highlight content</h5>
+                      <span class="gray-text align-left">Highlight content:</span>
                       <form id="searchContentForm_doc"
                             class="top-margin">
                         <div class="input-group">

@@ -45,10 +45,10 @@ class TaskForm(forms.ModelForm):
                 css_class='d-none',
                 css_id="predefined-show_full_document_content"
             ),
-            StrictButton(u'Select topic and start judging',
+            StrictButton(u'Create session',
                          name=self.submit_name,
                          type="submit",
-                         css_class='btn btn-sm btn-outline-secondary')
+                         css_class='btn btn-outline-secondary')
         )
 
     def clean_max_number_of_judgments(self):
@@ -99,13 +99,13 @@ class TopicForm(forms.ModelForm):
                 css_class='d-none',
                 css_id="topic-show_full_document_content"
             ),
-            StrictButton(u'Create topic and start judging',
+            StrictButton(u'Create session',
                          name=self.submit_name,
                          type="submit",
-                         css_class='btn btn-sm btn-outline-secondary')
+                         css_class='btn btn-outline-secondary')
             # Alternative to StrictButton
             # Submit(self.submit_name, u'Create topic and start judging',
-            #       css_class='btn btn-sm')
+            #       css_class='btn')
         )
 
     def clean_max_number_of_judgments(self):

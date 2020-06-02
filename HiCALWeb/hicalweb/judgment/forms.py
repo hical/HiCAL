@@ -14,7 +14,7 @@ class UploadForm(forms.Form):
                                widget=forms.FileInput)
     train_model = forms.BooleanField(
         required=False,
-        help_text="Use judgments to train CAL model.",
+        label="Use judgments to train CAL model.",
         widget=forms.CheckboxInput
     )
     update_existing = forms.BooleanField(

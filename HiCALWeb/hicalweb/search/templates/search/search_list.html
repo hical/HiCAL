@@ -42,7 +42,7 @@
       <div class="snippet" id="doc-{{ document_values.docno }}-snippet"> {{ document_values.snippet|safe }} </div>
     </div>
   </div>
-  <div class="offset-md-1 col-md-4 align-self-center center-text">
+  <div class="col-md-5 align-self-center center-text">
     <div class="btn-group" role="group">
       <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 0, 'click', false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Not relevant</a>
       <a href="#" data-dismiss="modal" onclick="return send_judgment('{{ document_values.docno }}', '{{ document_values.title|escapejs }}', '{{ document_values.snippet|escapejs }}', 1, 'click', false, null, null);" class="btn btn-sm btn-outline-secondary d-flex align-items-center">Relevant</a>
@@ -53,17 +53,16 @@
 </div>
 
 <!-- DOCUMENT {{ document_values.docno }} MODAL  -->
-<div class="modal fade doc-{{ document_values.docno }}-modal" id="doc-{{ document_values.docno }}-modal" tabindex="-1"
-     role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal doc-{{ document_values.docno }}-modal" id="doc-{{ document_values.docno }}-modal" tabindex="-1"
+     role="dialog">
   <div class="modal-dialog modal-xlg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modal-title-{{ document_values.docno }}">
           <span class="text-danger">Please wait...</span>
         </h5>
-        <button type="button" class="close" data-dismiss="modal"
-                aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal">
+          <span >&times;</span>
         </button>
       </div>
       <div class="modal-body" style="overflow: auto; min-height: 450px; max-height: inherit;">
@@ -88,8 +87,8 @@
           </div>
 
           <div class="col-md-2" id="{{ document_values.docno }}-sideBar">
-            <nav class="sidebar-nav-fixed bg-faded font-open-sans small-shadow">
-              <ul class="nav nav-pills flex-column little-padding small-border small-radius">
+            <nav class="sidebar-nav-fixed bg-faded border-0">
+              <ul class="nav nav-pills flex-column p-4">
                 <div class="cal-search">
                   <li>
                     <span class="gray-text align-left">Highlight content:</span>

@@ -1,0 +1,29 @@
+/*! `Custom` Bootstrap 4 theme
+ Bootstrap v.4.5.0
+ */
+
+// Color system
+$primary:#137CBD;
+$secondary:#5C7080;
+$success:#0F9960;
+$danger:#DB3737;
+$info:#00B3A4;
+$warning:#D9822B;
+$light:#F5F8FA;
+$dark:#394B59;
+
+// Modals
+$modal-backdrop-opacity:            .85 !default;
+$modal-backdrop-bg:                 $light !default;
+$modal-content-border-radius:       0 !default;
+$modal-header-border-width:         0 !default;
+$modal-footer-border-width:         0 !default;
+
+// Typography
+$font-size-base:              1rem !default; // Assumes the browser default, typically `16px`
+
+// Buttons
+$btn-font-size-sm:            $font-size-base * .775 !default;
+
+@import "bootstrap";
+

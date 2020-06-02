@@ -8,7 +8,7 @@
       <meta name="author" content="University of Waterloo - Information Retrieval Lab">
       <title>HiCAL - {% block pagetitle %}home{% endblock %}</title>
       <!-- Bootstrap core CSS -->
-      <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+      <link href="{% static 'css/hical-bootstrap.min.css' %}" rel="stylesheet">
       <!-- Custom styles for HiCAL -->
       <link href="{% static 'css/project.css' %}" rel="stylesheet">
       <!-- Other -->
@@ -82,7 +82,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <main class="col-md-12 pt-4">
+        <main class="{%block main-class%}col-md-12 pt-4{%endblock%}">
           {% block messages %}
           {% if messages %}
           {% for message in messages %}
