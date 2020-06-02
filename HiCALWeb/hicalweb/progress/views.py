@@ -1,3 +1,4 @@
+import json
 import logging
 import random
 import string
@@ -12,7 +13,7 @@ from django.contrib.auth.models import Group
 from django.db.models import Case
 from django.db.models import Count
 from django.db.models import When
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
@@ -196,6 +197,64 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
                                      message)
 
         return HttpResponseRedirect(reverse_lazy('progress:sessions'))
+
+
+class SessionDetailsAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
+                             views.JsonRequestResponseMixin,
+                             views.AjaxResponseMixin, generic.View):
+
+    require_json = False
+
+    def render_timeout_request_response(self, error_dict=None):
+        if error_dict is None:
+            error_dict = self.error_response_dict
+        json_context = json.dumps(
+            error_dict,
+            cls=self.json_encoder_class,
+            **self.get_json_dumps_kwargs()
+        ).encode('utf-8')
+        return HttpResponse(json_context, content_type=self.get_content_type(), status=502)
+
+    def get_ajax(self, request, *args, **kwargs):
+        session_id = request.GET.get('uuid')
+        if not session_id:
+            return self.render_json_response([])
+        session = {
+            "uuid": session_id,
+        }
+
+        try:
+            session_obj = Task.objects.get(username=self.request.user, uuid=session_id)
+            session['topic_title'] = session_obj.topic.title
+            session['topic_number'] = session_obj.topic.number
+            session['topic_description'] = session_obj.topic.description
+            session['topic_seed_query'] = session_obj.topic.seed_query
+            session['topic_narrative'] = session_obj.topic.narrative
+
+            session['strategy'] = session_obj.get_strategy_display()
+            session['effort'] = session_obj.max_number_of_judgments
+            session['show_full_document_content'] = session_obj.show_full_document_content
+            session['created_at'] = session_obj.created_at
+
+            counters = Judgment.objects.filter(user=self.request.user,
+                                               task=session_obj).aggregate(
+                total_highlyRelevant=Count(Case(When(relevance=2, then=1))),
+                total_relevant=Count(Case(When(relevance=1, then=1))),
+                total_nonrelevant=Count(Case(When(relevance=0, then=1)))
+            )
+
+            session["total_highlyRelevant"] = counters["total_highlyRelevant"]
+            session["total_nonrelevant"] = counters["total_nonrelevant"]
+            session["total_relevant"] = counters["total_relevant"]
+            session["total_judged"] = counters["total_highlyRelevant"] + counters["total_nonrelevant"] + counters["total_relevant"]
+
+        except TimeoutError:
+            error_msg = {u"message": u"Timeout error. Please check status of servers."}
+            return JsonResponse(error_msg, status=408)
+        except Task.DoesNotExist:
+            return JsonResponse({"message": "Session not found."}, status=404)
+
+        return self.render_json_response(session)
 
 
 class VisitAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,

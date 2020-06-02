@@ -28,5 +28,7 @@ urlpatterns = [
         views.MessageAJAXView.as_view(),
         name='post_log_msg'),
 
-
+    url(r'^get_session_details/$',
+        views.SessionDetailsAJAXView.as_view(),
+        name='get_session_details'),
 ]

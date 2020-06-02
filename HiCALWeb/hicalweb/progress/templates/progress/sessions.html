@@ -3,6 +3,10 @@
 
 {% block pagetitle %}Sessions{% endblock %}
 
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js" type="application/javascript"></script>
+{% endblock %}
+
 {% block main %}
 <div class="row">
 
@@ -15,7 +19,7 @@
         <hr class="d-none d-md-block">
 
         <div class="list-group">
-          <div class="list-group-item list-group-item-action">
+          <div class="list-group-item list-group-item-action btn session-details" data-toggle="modal" data-target="#sessionModal" data-session-id="{{ user.current_task.uuid }}" data-session-title="{{ user.current_task.topic.title }}">
             <div class="d-flex w-100 justify-content-between">
               <h5 class="mb-1">{{ user.current_task.topic.title }}</h5>
               {% if user.current_task.topic.number %}
@@ -59,10 +63,10 @@
         <hr>
         <p>There are currently no sessions..</p>
         {% endif %}
-        {% for task in tasks %}
 
-        <div class="row mb-4">
-          <div class="col-md-9">
+        {% for task in tasks %}
+        <div class="row mb-4 list-group flex-row">
+          <div class="col-md-9 list-group-item list-group-item-action border-0 btn session-details" data-toggle="modal" data-target="#sessionModal" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}">
             <h5 class="text-truncate">{{ task.task_obj.topic.title }}</h5>
             <p class="mb-1 small text-truncate">
               {% if task.task_obj.topic.description %}
@@ -86,14 +90,67 @@
           </div>
         </div>
         {% endfor %}
+
+        <!-- Session modal -->
+        <div class="modal" id="sessionModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-primary" id="sessionModalTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="sessionModalBody">
+
+                <div class="center-text" id="sessionModalSpinner">
+                  <div class="spinner-border text-secondary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+
+                <div id="sessionModalDetails" class="d-none">
+                  <p class="text-muted small">Created <span id="session_created_at"></span></p>
+
+                  <p class="mb-1">
+                    <strong>Description</strong>: <p id="session_description"></p>
+                  </p>
+                  <p class="mb-1">
+                    <strong>Narrative</strong>: <p id="session_narrative"></p>
+                  </p>
+                  <p class="mb-1">
+                    <strong>Seed query</strong>: <span id="session_seed_query"></span>
+                  </p>
+                  <p class="mb-1">
+                    <strong>Strategy:</strong> <span id="session_strategy"></span>
+                  </p>
+                  <p class="mb-1">
+                    <strong>Effort (max judgments):</strong> <span id="session_effort"></span>
+                  </p>
+
+                  <div class="row">
+                    <div class="col-md-5 col-sm-5 mx-auto center-text">
+                      <canvas id="piechart" width="200" height="200" class="mt-2"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Delete session modal -->
-      <div class="modal fade" id="deleteSessionModal" tabindex="-1" role="dialog" >
+      <div class="modal" id="deleteSessionModal" tabindex="-1" role="dialog" >
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="deleteSessionModalTitle"></h5>
+              <h5 class="modal-title text-primary" id="deleteSessionModalTitle"></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -123,11 +180,98 @@
 $(document).on("click", ".delete-modal", function () {
      var session_title = $(this).data('session-title');
      var session_id = $(this).data('session-id');
-     console.log(session_title, session_id);
      $("#deleteSessionModalTitle").html( session_title );
      $("#deleteSessionModalDeleteButton").val( session_id );
 
      return false;
 });
+
+$(document).on("click", ".session-details", function () {
+     var session_title = $(this).data('session-title');
+     var session_id = $(this).data('session-id');
+     $("#sessionModalTitle").html( session_title );
+
+     $("#sessionModalSpinner").removeClass("d-none");
+     $("#sessionModalDetails").addClass("d-none");
+
+     // fetch session details
+      $.ajax({
+        url: '{% url 'progress:get_session_details' %}?uuid=' +session_id,
+        method: 'GET',
+        success: function (result) {
+
+          let session = result
+          // session["total_highlyRelevant"]
+          // session["total_nonrelevant"]
+          // session["total_relevant"]
+          // session["total_judged"]
+          let title = session['topic_title']
+          let number = session['topic_number']
+          let show_full_document_content = session['show_full_document_content']
+          let effort = session['effort']
+          if (effort <= 0){
+            effort = "No max";
+          }
+
+          $("#session_created_at").html(session['created_at']);
+          $("#session_description").html(session['topic_description']);
+          $("#session_narrative").html(session['topic_narrative']);
+          $("#session_seed_query").html(session['topic_seed_query']);
+          $("#session_strategy").html(session['strategy']);
+          $("#session_effort").html(effort);
+
+
+          // Update piechart
+          var ctx = document.getElementById("piechart");
+          var data = {
+                  labels: [
+                      "Highly relevant",
+                      "Relevant",
+                      "Non relevant"
+                  ],
+                  datasets: [
+                      {
+                          data: [
+                              session["total_highlyRelevant"],
+                              session["total_relevant"],
+                              session["total_nonrelevant"]],
+                          backgroundColor: [
+                              "#5cb85c",
+                              "#f0ad4e",
+                              "#d9534f"
+                          ],
+                          hoverBackgroundColor: [
+                              "#5cb85c",
+                              "#f0ad4e",
+                              "#d9534f"
+                          ]
+                      }]
+              };
+          var myPieChart = new Chart(ctx, {
+                  type: 'pie',
+                  data: data,
+                  options: {
+                      legend: {
+                          display: true,
+                          position: 'right'
+                      }
+                  }
+              });
+
+
+          $("#sessionModalSpinner").addClass("d-none");
+          $("#sessionModalDetails").removeClass("d-none");
+
+        },
+        error: function (result) {
+
+        }
+      });
+
+
+     return false;
+});
+
+
 </script>
 {% endblock %}
