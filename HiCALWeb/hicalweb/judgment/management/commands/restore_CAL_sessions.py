@@ -12,6 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **option):
         self.stdout.write(self.style.SUCCESS("Restoring CAL sessions"))
+        url = "http://{}:{}/CAL/begin".format(CAL_SERVER_IP, CAL_SERVER_PORT)
 
         judgments = {}
         for row in Task.objects.all():
@@ -29,13 +30,12 @@ class Command(BaseCommand):
         while True:
             print("Waiting for cal server to come online")
             try:
-                requests.get('http://localhost:9001/CAL/begin', timeout=1)
+                requests.get(url, timeout=1)
                 break
             except requests.Timeout:
                 time.sleep(5)
 
         for session_id, seed_query in judgments:
-            url = "http://{}:{}/CAL/begin".format(CAL_SERVER_IP, CAL_SERVER_PORT)
             print("Restoring {}: '{}'...".format(session_id, seed_query))
             seed_docs = ','.join([doc_id + ':' + str(rel) for doc_id, rel in judgments[(session_id, seed_query)]])
 
