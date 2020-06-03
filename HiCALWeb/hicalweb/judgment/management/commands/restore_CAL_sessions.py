@@ -18,14 +18,16 @@ class Command(BaseCommand):
         for row in Task.objects.all():
             session_id = str(row.uuid)
             seed_query = str(row.topic.seed_query)
+            session_strategy = str(row.strategy)
 
-            judgments[(session_id, seed_query)] = []
+            judgments[(session_id, seed_query, session_strategy)] = []
 
         for row in Judgment.objects.all():
             session_id = str(row.task.uuid)
             seed_query = str(row.task.topic.seed_query)
+            session_strategy = str(row.strategy)
 
-            judgments[(session_id, seed_query)].append((row.doc_id, -1 if row.relevance == 0 else 1))
+            judgments[(session_id, seed_query, session_strategy)].append((row.doc_id, -1 if row.relevance <= 0 else 1))
 
         while True:
             print("Waiting for cal server to come online")
@@ -35,11 +37,12 @@ class Command(BaseCommand):
             except requests.Timeout:
                 time.sleep(5)
 
-        for session_id, seed_query in judgments:
+        for session_id, seed_query, session_strategy in judgments:
             print("Restoring {}: '{}'...".format(session_id, seed_query))
             seed_docs = ','.join([doc_id + ':' + str(rel) for doc_id, rel in judgments[(session_id, seed_query)]])
 
-            data = 'session_id=%s&seed_query=%s&seed_judgments=%s&mode=para' % (session_id, seed_query, seed_docs)
+            data = 'session_id={}&seed_query={}&seed_judgments={}&mode={}'.format(
+                session_id, seed_query, seed_docs, session_strategy)
             # print(data)
             resp = requests.post(url, data=data)
 
