@@ -8,11 +8,11 @@ from hicalweb.progress.models import Session
 
 class Judgment(models.Model):
     class Meta:
-        unique_together = ['user', 'doc_id', 'task']
-        index_together = ['user', 'doc_id', 'task']
+        unique_together = ['user', 'doc_id', 'session']
+        index_together = ['user', 'doc_id', 'session']
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    task = models.ForeignKey(Session, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
 
     doc_id = models.CharField(null=False, blank=False, max_length=512)
     doc_title = models.TextField(null=False, blank=False)

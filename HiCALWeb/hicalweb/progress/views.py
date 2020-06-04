@@ -39,8 +39,8 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
 
         # COUNTERS
         counters = Judgment.objects.filter(user=self.request.user,
-                                            source="CAL",
-                                            task=self.request.user.current_task).aggregate(
+                                           source="CAL",
+                                           session=self.request.user.current_session).aggregate(
             total_highlyRelevant=Count(Case(When(relevance=2, then=1))),
             total_relevant=Count(Case(When(relevance=1, then=1))),
             total_nonrelevant=Count(Case(When(relevance=0, then=1)))
@@ -51,8 +51,8 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         context["total_relevant_CAL"] = counters["total_relevant"]
 
         counters = Judgment.objects.filter(user=self.request.user,
-                                            source__contains="search",
-                                            task=self.request.user.current_task).aggregate(
+                                           source__contains="search",
+                                           session=self.request.user.current_session).aggregate(
             total_highlyRelevant=Count(Case(When(relevance=2, then=1))),
             total_relevant=Count(Case(When(relevance=1, then=1))),
             total_nonrelevant=Count(Case(When(relevance=0, then=1)))
@@ -76,7 +76,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 f = form.save(commit=False)
                 f.username = request.user
                 f.save()
-                self.request.user.current_task = form.instance
+                self.request.user.current_session = form.instance
                 self.request.user.save()
                 messages.add_message(request,
                                      messages.SUCCESS,
@@ -90,7 +90,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 max_number_of_judgments = form.cleaned_data['max_number_of_judgments']
                 strategy = form.cleaned_data['strategy']
                 show_full_document_content = form.cleaned_data['show_full_document_content']
-                task = Session.objects.create(
+                session = Session.objects.create(
                     username=self.request.user,
                     topic=form.instance,
                     max_number_of_judgments=max_number_of_judgments,
@@ -100,7 +100,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 messages.add_message(request,
                                      messages.SUCCESS,
                                      success_message)
-                self.request.user.current_task = task
+                self.request.user.current_session = session
                 self.request.user.save()
         else:
             messages.add_message(request,
@@ -114,30 +114,17 @@ class SessionListView(views.LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(SessionListView, self).get_context_data(**kwargs)
-        user_tasks = Session.objects.filter(username=self.request.user).order_by(
+
+        user_sessions = Session.objects.filter(username=self.request.user).order_by(
             "created_at")
 
-        tasks = []
-        for t in user_tasks:
-            task_info = {"task_obj": t,
-                         "created_at": timezone.localtime(t.created_at,pytz.timezone(
-                                                             'America/Toronto'))}
-
-            counters = Judgment.objects.filter(user=self.request.user,
-                                                task=t).aggregate(
-                total_highlyRelevant=Count(Case(When(relevance=2, then=1))),
-                total_relevant=Count(Case(When(relevance=1, then=1))),
-                total_nonrelevant=Count(Case(When(relevance=0, then=1)))
-            )
-
-            task_info["total_highlyRelevant"] = counters["total_highlyRelevant"]
-            task_info["total_nonrelevant"] = counters["total_nonrelevant"]
-            task_info["total_relevant"] = counters["total_relevant"]
-            task_info["total_judged"] = counters["total_highlyRelevant"] + counters["total_nonrelevant"] + counters["total_relevant"]
-
-            tasks.append(task_info)
-
-        context["tasks"] = tasks
+        sessions = []
+        for t in user_sessions:
+            session_info = {"session_obj": t,
+                            "created_at": timezone.localtime(t.created_at, pytz.timezone('America/Toronto'))
+                            }
+            sessions.append(session_info)
+        context["sessions"] = sessions
 
         return context
 
@@ -150,7 +137,7 @@ class SessionListView(views.LoginRequiredMixin, generic.TemplateView):
             session_id = request.POST.get("activate_sessionid")
 
             try:
-                task = Session.objects.get(username=self.request.user,
+                session = Session.objects.get(username=self.request.user,
                                            uuid=session_id)
             except Session.DoesNotExist:
                 message = 'Ops! your session cant be found.'
@@ -160,7 +147,7 @@ class SessionListView(views.LoginRequiredMixin, generic.TemplateView):
 
                 return HttpResponseRedirect(reverse_lazy('progress:sessions'))
 
-            self.request.user.current_task = task
+            self.request.user.current_session = session
             self.request.user.save()
 
             message = 'Your session has been activated. ' \
@@ -171,16 +158,16 @@ class SessionListView(views.LoginRequiredMixin, generic.TemplateView):
 
         elif request.POST.get("delete_sessionid"):
             session_id = request.POST.get("delete_sessionid")
-            task = Session.objects.filter(username=self.request.user,
+            session = Session.objects.filter(username=self.request.user,
                                           uuid=session_id)
-            if task.exists():
+            if session.exists():
 
-                if self.request.user.current_task and str(self.request.user.current_task.uuid) == session_id:
-                    self.request.user.current_task = None
+                if self.request.user.current_session and str(self.request.user.current_session.uuid) == session_id:
+                    self.request.user.current_session = None
                     self.request.user.save()
 
-                task = task.first()
-                task.delete()
+                session = session.first()
+                session.delete()
                 try:
                     CALFunctions.delete_session(session_id)
                 except CALError:
@@ -237,7 +224,7 @@ class SessionDetailsAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             session['created_at'] = session_obj.created_at
 
             counters = Judgment.objects.filter(user=self.request.user,
-                                               task=session_obj).aggregate(
+                                               session=session_obj).aggregate(
                 total_highlyRelevant=Count(Case(When(relevance=2, then=1))),
                 total_relevant=Count(Case(When(relevance=1, then=1))),
                 total_nonrelevant=Count(Case(When(relevance=0, then=1)))

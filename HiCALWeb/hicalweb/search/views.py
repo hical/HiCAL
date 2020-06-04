@@ -88,7 +88,7 @@ class SearchListView(views.CsrfExemptMixin, generic.base.View):
             # document_ids = helpers.padder(document_ids)
             documents_values = helpers.join_judgments(documents_values, document_ids,
                                                       self.request.user,
-                                                      self.request.user.current_task)
+                                                      self.request.user.current_session)
 
         context["documents"] = documents_values
         context["query"] = search_input

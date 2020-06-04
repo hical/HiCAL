@@ -16,7 +16,7 @@
 {% block nav-right%}
     {% if request.user.is_authenticated %}
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_task.topic.id %}">Topic</a>
+        <a class="nav-link" href="{% url 'topic:detail' pk=user.current_session.topic.id %}">Topic</a>
     </li>
     {% endif %}
 {% endblock %}

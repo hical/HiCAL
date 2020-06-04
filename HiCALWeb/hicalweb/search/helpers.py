@@ -2,18 +2,18 @@ from django.db.models import Q
 from hicalweb.judgment.models import Judgment
 
 
-def join_judgments(document_values, document_ids, user, task):
+def join_judgments(document_values, document_ids, user, session):
     """
     Adds the relevance judgment of the document to the document_values dict.
     If document has not been judged yet, `isJudged` will be False.
     :param user:
-    :param task:
+    :param session:
     :param document_values:
     :param document_ids:
     :return: document_values with extra information about the document
     """
     judged_docs = Judgment.objects.filter(user=user,
-                                          task=task,
+                                          session=session,
                                           doc_id__in=document_ids,
                                           relevance__isnull=False)
 

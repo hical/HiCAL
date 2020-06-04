@@ -17,11 +17,11 @@ class HomePageView(views.LoginRequiredMixin, generic.TemplateView):
 
     def get(self, request, *args, **kwargs):
 
-        current_task = self.request.user.current_task
-        docs_ids = IterativeEngine.get_documents(current_task.topic.number)
+        current_session = self.request.user.current_session
+        docs_ids = IterativeEngine.get_documents(current_session.topic.number)
         docs_ids = helpers.remove_judged_docs(docs_ids,
                                               self.request.user,
-                                              current_task)
+                                              current_session)
         # if user has judged all the document he has to judge, move to completed
         # if not docs_ids:
         #     return HttpResponseRedirect(reverse_lazy('progress:completed'))
@@ -76,11 +76,11 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
     def get_ajax(self, request, *args, **kwargs):
         try:
-            current_task = self.request.user.current_task
-            docs_ids = IterativeEngine.get_documents(current_task.topic.number)
+            current_session = self.request.user.current_session
+            docs_ids = IterativeEngine.get_documents(current_session.topic.number)
             docs_ids = helpers.remove_judged_docs(docs_ids,
                                                   self.request.user,
-                                                  current_task)
+                                                  current_session)
             documents = DocEngine.get_documents(docs_ids, query=None)
             return self.render_json_response(documents)
         except TimeoutError:

@@ -31,7 +31,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbars">
-        {% if request.user.is_authenticated and request.user.current_task %}
+        {% if request.user.is_authenticated and request.user.current_session %}
         <div class="navbar-nav">
           <a class="nav-item nav-link" href="{% url 'search:main' %}">Search</a>
           <a class="nav-item nav-link" href="{% url 'CAL:main' %}">CAL</a>
@@ -40,7 +40,7 @@
         <ul class="nav navbar-nav flex-fill justify-content-center center-text pl-5 pr-5 {%block navbar-hidesmall %}d-none d-sm-block{%endblock%}">
           {% block navbar-center %}
           <span class="navbar-text text-truncate" style="max-width: 15rem;">
-           {% if request.user.current_task %}{{user.current_task.topic.title}}{% elif request.user.is_authenticated %}Please create a new session{% endif %}
+           {% if request.user.current_session %}{{user.current_session.topic.title}}{% elif request.user.is_authenticated %}Please create a new session{% endif %}
           </span>
           {% endblock %}
         </ul>
@@ -203,7 +203,7 @@
                 'action': 'trig_user_clicked_on_topic_desc',
                 'message': 'User clicked on the topic desc.',
                 'extra_context': {
-                    "topic_title": "{{ user.current_task.topic.title|escapejs }}"
+                    "topic_title": "{{ user.current_session.topic.title|escapejs }}"
                 },
                 'client_time': now,
                 'csrfmiddlewaretoken': '{{ csrf_token }}',

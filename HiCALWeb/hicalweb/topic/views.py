@@ -22,7 +22,7 @@ class TopicView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = {
-            "form": TopicForm(instance=self.request.user.current_task.topic)
+            "form": TopicForm(instance=self.request.user.current_session.topic)
         }
 
         return context
@@ -109,7 +109,7 @@ class TopicActivateView(LoginRequiredMixin, generic.DetailView):
     def post(self, request, *args, **kwargs):
         topic_id = request.POST.get("topic_id")
         topic = Topic.objects.get(id=topic_id, username=request.user)
-        request.user.current_task.topic = topic
+        request.user.current_session.topic = topic
         request.user.save()
         messages.add_message(request,
                              messages.SUCCESS,

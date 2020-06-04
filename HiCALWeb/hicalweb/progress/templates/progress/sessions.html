@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n has_group %}
+{% load i18n has_group crispy_forms_tags %}
 
 {% block pagetitle %}Sessions{% endblock %}
 
@@ -14,31 +14,31 @@
     <div class="card border-0 sticky-top" style="top: 73px; z-index: 0;">
       <div class="card-block">
 
-        {% if user.current_task %}
+        {% if user.current_session %}
         <h2 class="text-secondary">Current session</h2>
         <hr class="d-none d-md-block">
 
         <div class="list-group">
-          <div class="list-group-item list-group-item-action btn session-details" data-toggle="modal" data-target="#sessionModal" data-session-id="{{ user.current_task.uuid }}" data-session-title="{{ user.current_task.topic.title }}">
+          <div class="list-group-item list-group-item-action btn session-details" data-toggle="modal" data-target="#sessionModal" data-session-id="{{ user.current_session.uuid }}" data-session-title="{{ user.current_session.topic.title }}">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">{{ user.current_task.topic.title }}</h5>
-              {% if user.current_task.topic.number %}
-              <small>#{{ user.current_task.topic.number }}</small>
+              <h5 class="mb-1">{{ user.current_session.topic.title }}</h5>
+              {% if user.current_session.topic.number %}
+              <small>#{{ user.current_session.topic.number }}</small>
               {% endif %}
             </div>
-            {% if user.current_task.topic.description %}<p class="mb-1">{{ user.current_task.topic.description }}</p>{% endif %}
+            {% if user.current_session.topic.description %}<p class="mb-1">{{ user.current_session.topic.description }}</p>{% endif %}
             <p class="mb-1">
-              <small><strong>Seed query</strong>: {{ user.current_task.topic.seed_query }}</small>
+              <small><strong>Seed query</strong>: {{ user.current_session.topic.seed_query }}</small>
             </p>
             <p class="mb-1">
-              <small><strong>Strategy:</strong> {{ user.current_task.get_strategy_display }}</small>
+              <small><strong>Strategy:</strong> {{ user.current_session.get_strategy_display }}</small>
             </p>
-            {% if task.task_obj.max_number_of_judgments > 0 %}
+            {% if session.session_obj.max_number_of_judgments > 0 %}
             <p class="mb-1">
-              <small><strong>Effort (max judgments):</strong> {{ task.task_obj.max_number_of_judgments }}</small>
+              <small><strong>Effort (max judgments):</strong> {{ session.session_obj.max_number_of_judgments }}</small>
             </p>
             {% endif %}
-            <small>Created {{ user.current_task.created_at }}</small>
+            <small>Created {{ user.current_session.created_at }}</small>
           </div>
         </div>
         {% else %}
@@ -51,11 +51,11 @@
     </div>
   </div>
 
-  {% if tasks %}
+  {% if sessions %}
   <div class="col-sm-12 col-md-8">
     <div class="card border-0">
       <div class="card-block">
-        {% if tasks %}
+        {% if sessions %}
         <h2 class="text-secondary">Your sessions</h2>
         <hr>
         {% else %}
@@ -64,34 +64,34 @@
         <p>There are currently no sessions..</p>
         {% endif %}
 
-        {% for task in tasks %}
+        {% for session in sessions %}
         <div class="row mb-4 list-group flex-row">
-          <div class="col-md-9 list-group-item list-group-item-action border-0 btn session-details" data-toggle="modal" data-target="#sessionModal" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}">
-            <h5 class="text-truncate">{{ task.task_obj.topic.title }}</h5>
+          <div class="col-md-9 list-group-item list-group-item-action border-0 btn session-details" data-toggle="modal" data-target="#sessionModal" data-session-id="{{ session.session_obj.uuid }}" data-session-title="{{ session.session_obj.topic.title }}">
+            <h5 class="text-truncate">{{ session.session_obj.topic.title }}</h5>
             <p class="mb-1 small text-truncate">
-              {% if task.task_obj.topic.description %}
-              {{ task.task_obj.topic.description }}
+              {% if session.session_obj.topic.description %}
+              {{ session.session_obj.topic.description }}
               {% else %}
               Topic description is unavailable.
               {% endif %}
             </p>
-            <p class="text-muted m-0" style="font-size: 65%;">Created {{ task.task_obj.created_at }}</p>
+            <p class="text-muted m-0" style="font-size: 65%;">Created {{ session.session_obj.created_at }}</p>
           </div>
           <div class="col-md-3 mt-3 mt-md-0 align-self-center center-text">
             <form action="" method="POST">
               {% csrf_token %}
-              {% if user.current_task != task.task_obj %}
-              <button type="submit" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" name="activate_sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary">Activate</button>
-              <a href="#" data-toggle="modal" data-target="#deleteSessionModal" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" class="btn btn-sm btn-outline-danger delete-modal">Delete</a>
+              {% if user.current_session != session.session_obj %}
+              <button type="submit" data-session-id="{{ session.session_obj.uuid }}" data-session-title="{{ session.session_obj.topic.title }}" name="activate_sessionid" value="{{ session.session_obj.uuid }}" class="btn btn-sm btn-outline-secondary">Activate</button>
               {% else %}
-              <button type="submit" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" name="activate_sessionid" value="{{ task.task_obj.uuid }}" class="btn btn-sm btn-outline-secondary disabled">Activated</button>
-              <a href="#" data-toggle="modal" data-target="#deleteSessionModal" data-session-id="{{ task.task_obj.uuid }}" data-session-title="{{ task.task_obj.topic.title }}" class="btn btn-sm btn-outline-danger delete-modal">Delete</a>{% endif %}
+              <button type="submit" data-session-id="{{ session.session_obj.uuid }}" data-session-title="{{ session.session_obj.topic.title }}" name="activate_sessionid" value="{{ session.session_obj.uuid }}" class="btn btn-sm btn-outline-secondary disabled">Activated</button>
+              {% endif %}
+              <a href="#" data-toggle="modal" data-target="#deleteSessionModal" data-session-id="{{ session.session_obj.uuid }}" data-session-title="{{ session.session_obj.topic.title }}" class="btn btn-sm btn-outline-danger delete-modal">Delete</a>
             </form>
           </div>
         </div>
         {% endfor %}
 
-        <!-- Session modal -->
+        <!-- Session details modal -->
         <div class="modal" id="sessionModal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
