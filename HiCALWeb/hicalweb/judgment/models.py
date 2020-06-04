@@ -3,7 +3,7 @@ from config.settings.base import AUTH_USER_MODEL as User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from hicalweb.progress.models import Task
+from hicalweb.progress.models import Session
 
 
 class Judgment(models.Model):
@@ -12,7 +12,7 @@ class Judgment(models.Model):
         index_together = ['user', 'doc_id', 'task']
 
     user = models.ForeignKey(User)
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Session)
 
     doc_id = models.CharField(null=False, blank=False, max_length=512)
     doc_title = models.TextField(null=False, blank=False)

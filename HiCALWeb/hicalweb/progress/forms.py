@@ -3,20 +3,20 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Column, Row, Field, Div
 from django import forms
 from django.db.models import Q
-from hicalweb.progress.models import Task
+from hicalweb.progress.models import Session
 from hicalweb.topic.models import Topic
 
 
-class TaskForm(forms.ModelForm):
+class SessionPredefinedTopicForm(forms.ModelForm):
     """
     Form for creating Task with pre-defined topic
 
     """
-    submit_name = 'submit-task-form'
+    submit_name = 'submit-session-predefine-topic-form'
     prefix = "predefined"
 
     class Meta:
-        model = Task
+        model = Session
         exclude = ["username", "setting", "timespent", "last_activity"]
         help_texts = {
             'max_number_of_judgments': '(Optional) Set max number of judgments.',
@@ -29,7 +29,7 @@ class TaskForm(forms.ModelForm):
                                                      'max_number_of_judgments'))
 
     def __init__(self, *args, **kwargs):
-        super(TaskForm, self).__init__(*args, **kwargs)
+        super(SessionPredefinedTopicForm, self).__init__(*args, **kwargs)
         self.fields['topic'].queryset = Topic.objects.filter(~Q(number=None)).order_by('number')
         self.helper = FormHelper(self)
 
@@ -58,12 +58,12 @@ class TaskForm(forms.ModelForm):
         return data
 
 
-class TopicForm(forms.ModelForm):
+class SessionForm(forms.ModelForm):
     """
-    Form for creating Topic
+    Form for creating Session
 
     """
-    submit_name = 'submit-topic-form'
+    submit_name = 'submit-session-form'
     prefix = "topic"
 
     class Meta:
@@ -72,14 +72,14 @@ class TopicForm(forms.ModelForm):
 
     max_number_of_judgments = forms.IntegerField(required=False,
                                                  label="Effort",
-                                                 help_text=TaskForm.Meta.help_texts.get('max_number_of_judgments'))
-    strategy = forms.ChoiceField(choices=Task.STRATEGY_CHOICES,
+                                                 help_text=SessionPredefinedTopicForm.Meta.help_texts.get('max_number_of_judgments'))
+    strategy = forms.ChoiceField(choices=Session.STRATEGY_CHOICES,
                                  required=True,
-                                 help_text=TaskForm.Meta.help_texts.get('strategy'))
+                                 help_text=SessionPredefinedTopicForm.Meta.help_texts.get('strategy'))
     show_full_document_content = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
-        super(TopicForm, self).__init__(*args, **kwargs)
+        super(SessionForm, self).__init__(*args, **kwargs)
         self.fields['description'].widget.attrs['rows'] = 2
         self.helper = FormHelper(self)
         self.helper.layout = Layout(

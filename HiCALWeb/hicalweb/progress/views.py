@@ -21,9 +21,9 @@ from django.views import generic
 from hicalweb.CAL.exceptions import CALError
 from hicalweb.interfaces.CAL import functions as CALFunctions
 from hicalweb.judgment.models import Judgment
-from hicalweb.progress.forms import TaskForm
-from hicalweb.progress.forms import TopicForm
-from hicalweb.progress.models import Task
+from hicalweb.progress.forms import SessionPredefinedTopicForm
+from hicalweb.progress.forms import SessionForm
+from hicalweb.progress.models import Session
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +34,8 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
         # FORMS
-        context['form'] = TaskForm()
-        context['form_topic'] = TopicForm()
+        context['form'] = SessionPredefinedTopicForm()
+        context['form_topic'] = SessionForm()
 
         # COUNTERS
         counters = Judgment.objects.filter(user=self.request.user,
@@ -70,8 +70,8 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
     def post(self, request, *args, **kwargs):
         success_message = 'Your topic has been initialized. ' \
                           'Choose a retrieval method to start judging.'
-        if 'submit-task-form' in request.POST:
-            form = TaskForm(request.POST)
+        if 'submit-session-predefine-topic-form' in request.POST:
+            form = SessionPredefinedTopicForm(request.POST)
             if form.is_valid():
                 f = form.save(commit=False)
                 f.username = request.user
@@ -81,8 +81,8 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 messages.add_message(request,
                                      messages.SUCCESS,
                                      success_message)
-        elif 'submit-topic-form' in request.POST:
-            form = TopicForm(request.POST)
+        elif 'submit-session-form' in request.POST:
+            form = SessionForm(request.POST)
             if form.is_valid():
 
                 f = form.save(commit=False)
@@ -90,7 +90,7 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
                 max_number_of_judgments = form.cleaned_data['max_number_of_judgments']
                 strategy = form.cleaned_data['strategy']
                 show_full_document_content = form.cleaned_data['show_full_document_content']
-                task = Task.objects.create(
+                task = Session.objects.create(
                     username=self.request.user,
                     topic=form.instance,
                     max_number_of_judgments=max_number_of_judgments,
@@ -109,12 +109,12 @@ class Home(views.LoginRequiredMixin, generic.TemplateView):
         return HttpResponseRedirect(reverse_lazy('progress:home'))
 
 
-class Sessions(views.LoginRequiredMixin, generic.TemplateView):
+class SessionListView(views.LoginRequiredMixin, generic.TemplateView):
     template_name = 'progress/sessions.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Sessions, self).get_context_data(**kwargs)
-        user_tasks = Task.objects.filter(username=self.request.user).order_by(
+        context = super(SessionListView, self).get_context_data(**kwargs)
+        user_tasks = Session.objects.filter(username=self.request.user).order_by(
             "created_at")
 
         tasks = []
@@ -142,7 +142,7 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
         return context
 
     def get(self, request, *args, **kwargs):
-        return super(Sessions, self).get(self, request, *args, **kwargs)
+        return super(SessionListView, self).get(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
 
@@ -150,9 +150,9 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
             session_id = request.POST.get("activate_sessionid")
 
             try:
-                task = Task.objects.get(username=self.request.user,
-                                        uuid=session_id)
-            except Task.DoesNotExist:
+                task = Session.objects.get(username=self.request.user,
+                                           uuid=session_id)
+            except Session.DoesNotExist:
                 message = 'Ops! your session cant be found.'
                 messages.add_message(request,
                                      messages.ERROR,
@@ -171,8 +171,8 @@ class Sessions(views.LoginRequiredMixin, generic.TemplateView):
 
         elif request.POST.get("delete_sessionid"):
             session_id = request.POST.get("delete_sessionid")
-            task = Task.objects.filter(username=self.request.user,
-                                       uuid=session_id)
+            task = Session.objects.filter(username=self.request.user,
+                                          uuid=session_id)
             if task.exists():
 
                 if self.request.user.current_task and str(self.request.user.current_task.uuid) == session_id:
@@ -224,7 +224,7 @@ class SessionDetailsAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         }
 
         try:
-            session_obj = Task.objects.get(username=self.request.user, uuid=session_id)
+            session_obj = Session.objects.get(username=self.request.user, uuid=session_id)
             session['topic_title'] = session_obj.topic.title
             session['topic_number'] = session_obj.topic.number
             session['topic_description'] = session_obj.topic.description
@@ -251,7 +251,7 @@ class SessionDetailsAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         except TimeoutError:
             error_msg = {u"message": u"Timeout error. Please check status of servers."}
             return JsonResponse(error_msg, status=408)
-        except Task.DoesNotExist:
+        except Session.DoesNotExist:
             return JsonResponse({"message": "Session not found."}, status=404)
 
         return self.render_json_response(session)

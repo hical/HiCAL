@@ -8,7 +8,7 @@ from hicalweb.interfaces.CAL import functions as CALFunctions
 from hicalweb.topic.models import Topic
 
 
-class Task(models.Model):
+class Session(models.Model):
     STRATEGY_CHOICES = (
         ('doc', 'Document (CAL)'),
         ('para', 'Paragraph (CAL)'),
@@ -48,7 +48,7 @@ class Task(models.Model):
             except (CALError, ConnectionRefusedError, Exception) as e:
                 # TODO: log error
                 pass
-        super(Task, self).save(*args, **kwargs)
+        super(Session, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return "<User:{}, Num:{}>".format(self.username, self.topic.number)

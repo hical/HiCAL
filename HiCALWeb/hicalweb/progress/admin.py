@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from hicalweb.progress.models import Task
+from hicalweb.progress.models import Session
 
 
 class NoAddNoDeleteAdmin(admin.ModelAdmin):
@@ -10,4 +10,5 @@ class NoAddNoDeleteAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-admin.site.register(Task, NoAddNoDeleteAdmin)
+
+admin.site.register(Session, NoAddNoDeleteAdmin)

@@ -5,7 +5,7 @@ from hicalweb.progress import views
 urlpatterns = [
     url(r'^$', views.Home.as_view(),
         name='home'),
-    url(r'^sessions/$', views.Sessions.as_view(),
+    url(r'^sessions/$', views.SessionListView.as_view(),
         name='sessions'),
     url(r'^practice/$',
         views.PracticeView.as_view(),

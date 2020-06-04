@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from hicalweb.judgment.models import Judgment
-from hicalweb.progress.models import Task
+from hicalweb.progress.models import Session
 from config.settings.base import CAL_SERVER_IP, CAL_SERVER_PORT
 import time
 import requests
@@ -15,7 +15,7 @@ class Command(BaseCommand):
         url = "http://{}:{}/CAL/begin".format(CAL_SERVER_IP, CAL_SERVER_PORT)
 
         judgments = {}
-        for row in Task.objects.all():
+        for row in Session.objects.all():
             session_id = str(row.uuid)
             seed_query = str(row.topic.seed_query)
             session_strategy = str(row.strategy)
