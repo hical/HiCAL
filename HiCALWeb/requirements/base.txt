@@ -1,48 +1,44 @@
+pytz==2020.1  # https://github.com/stub42/pytz
+python-slugify==4.0.0  # https://github.com/un33k/python-slugify
+Pillow==7.1.2  # https://github.com/python-pillow/Pillow
+argon2-cffi==19.2.0  # https://github.com/hynek/argon2_cffi
+
+
+# Django
+# ------------------------------------------------------------------------------
+django==3.0.5  # pyup: < 3.1  # https://www.djangoproject.com/
+django-environ==0.4.5  # https://github.com/joke2k/django-environ
+django-model-utils==4.0.0  # https://github.com/jazzband/django-model-utils
+django-allauth==0.41.0  # https://github.com/pennersr/django-allauth
+django-crispy-forms==1.9.0  # https://github.com/django-crispy-forms/django-crispy-forms
+
+
 # Wheel 0.25+ needed to install certain packages on CPython 3.5+
 # like Pillow and psycopg2
 # See http://bitly.com/wheel-building-fails-CPython-35
 # Verified bug on Python 3.5.1
-wheel==0.29.0
-
-
-# Bleeding edge Django
-django==1.10.7 # pyup: >=1.10,<1.11
-
-# Configuration
-django-environ==0.4.3
-
+#wheel==0.29.0
 
 
 # Forms
-django-braces==1.11.0
-django-crispy-forms==1.9.1
+django-braces==1.14.0
 
 # Models
-django-model-utils==3.0.0
-
-# Images
-Pillow==4.1.1
-
-# Password storage
-argon2-cffi==16.3.0
-
-# For user registration, either via email or social
-# Well-built with regular release cycles!
-django-allauth==0.32.0
+django-model-utils==4.0.0
 
 
 # Python-PostgreSQL Database Adapter
-psycopg2==2.8.0
+psycopg2==2.8.5 --no-binary psycopg2
 
 # Unicode slugification
-awesome-slugify==1.6.5
+#awesome-slugify==1.6.5
 
 # Time zones support
-pytz==2017.2
+#pytz==2017.2
 
 # Redis support
-django-redis==4.8.0
-redis>=2.10.5
+django-redis==4.11.0  # https://github.com/jazzband/django-redis
+redis==3.5.0  # https://github.com/andymccurdy/redis-py
 
 
 # Your custom requirements go here
@@ -50,7 +46,5 @@ httplib2
 xmltodict
 lxml
 raven
-
 uwsgi
-
 beautifulsoup4==4.4.0

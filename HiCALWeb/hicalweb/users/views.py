@@ -1,47 +1,41 @@
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse
-from django.views.generic import DetailView
-from django.views.generic import ListView
-from django.views.generic import RedirectView
-from django.views.generic import UpdateView
+from django.urls import reverse
+from django.utils.translation import ugettext_lazy as _
+from django.views.generic import DetailView, RedirectView, UpdateView
 
-from .models import User
+User = get_user_model()
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
+
     model = User
-    # These next two lines tell the view to index lookups by username
-    slug_field = 'username'
-    slug_url_kwarg = 'username'
-
-
-class UserRedirectView(LoginRequiredMixin, RedirectView):
-    permanent = False
-
-    def get_redirect_url(self):
-        return reverse('users:detail',
-                       kwargs={'username': self.request.user.username})
+    slug_field = "username"
+    slug_url_kwarg = "username"
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
 
-    fields = ['name', ]
-
-    # we already imported User in the view code above, remember?
     model = User
+    fields = ["name"]
 
-    # send the user back to their own page after a successful update
     def get_success_url(self):
-        return reverse('users:detail',
-                       kwargs={'username': self.request.user.username})
+        return reverse("users:detail", kwargs={"username": self.request.user.username})
 
     def get_object(self):
-        # Only get the User record for the user making the request
         return User.objects.get(username=self.request.user.username)
 
+    def form_valid(self, form):
+        messages.add_message(
+            self.request, messages.INFO, _("Infos successfully updated")
+        )
+        return super().form_valid(form)
 
-class UserListView(LoginRequiredMixin, ListView):
-    model = User
-    # These next two lines tell the view to index lookups by username
-    slug_field = 'username'
-    slug_url_kwarg = 'username'
+
+class UserRedirectView(LoginRequiredMixin, RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self):
+        return reverse("users:detail", kwargs={"username": self.request.user.username})

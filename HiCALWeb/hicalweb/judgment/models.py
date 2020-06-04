@@ -11,8 +11,8 @@ class Judgment(models.Model):
         unique_together = ['user', 'doc_id', 'task']
         index_together = ['user', 'doc_id', 'task']
 
-    user = models.ForeignKey(User)
-    task = models.ForeignKey(Session)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Session, on_delete=models.CASCADE)
 
     doc_id = models.CharField(null=False, blank=False, max_length=512)
     doc_title = models.TextField(null=False, blank=False)

@@ -2,28 +2,28 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.urls import path
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
-from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    url(r'^', include('hicalweb.progress.urls', namespace='progress')),
-    url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
+    path('', include('hicalweb.progress.urls', namespace='progress')),
+    path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about'),
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
 
     # User management
-    url(r'^users/', include('hicalweb.users.urls', namespace='users')),
+    path('users/', include('hicalweb.users.urls', namespace='users')),
 
-    url(r'^accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),
 
     # Custom urls includes go here
-    url(r'^CAL/', include('hicalweb.CAL.urls', namespace='CAL')),
-    url(r'^iterative/', include('hicalweb.iterative.urls', namespace='iterative')),
-    url(r'^search/', include('hicalweb.search.urls', namespace='search')),
-    url(r'^topic/', include('hicalweb.topic.urls', namespace='topic')),
-    url(r'^judgment/', include('hicalweb.judgment.urls', namespace='judgment')),
+    path('CAL/', include('hicalweb.CAL.urls', namespace='CAL')),
+    path('iterative/', include('hicalweb.iterative.urls', namespace='iterative')),
+    path('search/', include('hicalweb.search.urls', namespace='search')),
+    path('topic/', include('hicalweb.topic.urls', namespace='topic')),
+    path('judgment/', include('hicalweb.judgment.urls', namespace='judgment')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

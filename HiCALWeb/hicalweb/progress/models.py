@@ -16,8 +16,8 @@ class Session(models.Model):
         ('para_scal', 'Paragraph (S-CAL)'),
     )
 
-    username = models.ForeignKey(User)
-    topic = models.ForeignKey(Topic)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4,
                             editable=False)
 
