@@ -80,7 +80,7 @@
           </div>
           <hr>
           <div id="document_snippet"></div>
-          {% if request.user.current_task.show_full_document_content and request.user.current_task.strategy != 'doc' %}
+          {% if request.user.current_session.show_full_document_content and request.user.current_session.strategy != 'doc' %}
           <div class="row mt-3">
             <div class="col-12">
               <a id="show_full_doc_button" class="btn btn-sm btn-block btn-outline-secondary" href="#" onclick="return show_full_doc();">Show full document.</a>
@@ -177,11 +177,11 @@
         var queue = new Queue();
         var latestJudgedDocsQueue = new Queue();
         var judged_docs = {}; // dict of judged docs at the session level. Resets after refresh
-        {% if 'doc' in request.user.current_task.strategy %}
+        {% if 'doc' in request.user.current_session.strategy %}
         var para_show_full_doc_button = false;
         var show_full_document_content = true;
-        {% elif 'para' in request.user.current_task.strategy %}
-        {% if request.user.current_task.show_full_document_content %}
+        {% elif 'para' in request.user.current_session.strategy %}
+        {% if request.user.current_session.show_full_document_content %}
         var para_show_full_doc_button = true;
         var show_full_document_content = true;
         {% else %}

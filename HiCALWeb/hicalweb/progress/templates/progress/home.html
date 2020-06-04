@@ -13,7 +13,7 @@
   <div class="col-md-4">
     <div class="card border-0">
       <div class="card-block">
-        {% if user.current_task %}
+        {% if user.current_session %}
 
         <h2 class="text-secondary">Current session</h2>
         <hr class="d-none d-md-block">
@@ -21,14 +21,14 @@
         <div class="list-group">
           <div class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">{{ user.current_task.topic.title }}</h5>
-              {% if user.current_task.topic.number %}<small>#{{ user.current_task.topic.number }}</small>{% endif %}
+              <h5 class="mb-1">{{ user.current_session.topic.title }}</h5>
+              {% if user.current_session.topic.number %}<small>#{{ user.current_session.topic.number }}</small>{% endif %}
             </div>
-            {% if user.current_task.topic.description %}<p class="mb-1">{{ user.current_task.topic.description }}</p>{% endif %}
-            <p class="mb-1"><small><strong>Seed query:</strong> {{ user.current_task.topic.seed_query }}</small></p>
-            <p class="mb-1"><small><strong>Strategy:</strong> {{ user.current_task.get_strategy_display }}</small></p>
-            {% if task.task_obj.max_number_of_judgments > 0 %}<p class="mb-1"><small><strong>Effort (max judgments):</strong> {{ user.current_task.max_number_of_judgments }}</small></p>{% endif %}
-            <small>Created {{ user.current_task.created_at }}</small>
+            {% if user.current_session.topic.description %}<p class="mb-1">{{ user.current_session.topic.description }}</p>{% endif %}
+            <p class="mb-1"><small><strong>Seed query:</strong> {{ user.current_session.topic.seed_query }}</small></p>
+            <p class="mb-1"><small><strong>Strategy:</strong> {{ user.current_session.get_strategy_display }}</small></p>
+            {% if task.task_obj.max_number_of_judgments > 0 %}<p class="mb-1"><small><strong>Effort (max judgments):</strong> {{ user.current_session.max_number_of_judgments }}</small></p>{% endif %}
+            <small>Created {{ user.current_session.created_at }}</small>
           </div>
         </div>
 
@@ -45,7 +45,7 @@
       <div class="card border-0">
         <div class="card-block">
 
-          {% if user.current_task %}
+          {% if user.current_session %}
           <h2 class="text-secondary">Judgments</h2>
           <hr>
           <div class="row">

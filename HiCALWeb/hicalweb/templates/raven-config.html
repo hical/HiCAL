@@ -55,7 +55,7 @@
     Raven.config('{% sentry_public_dsn %}', ravenOptions).install();
     Raven.setUserContext({
         user: '{{ user }}',
-        topic_number: '{{ user.current_task.topic.number }}',
-        task_number: '{{ user.current_task.current_task_number }}'
+        topic_number: '{{ user.current_session.topic.number }}',
+        task_uuid: '{{ user.current_session.uuid }}'
     })
 </script>

@@ -66,8 +66,8 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             json_context, content_type=self.get_content_type(), status=502)
 
     def get_ajax(self, request, *args, **kwargs):
-        session = self.request.user.current_task.uuid
-        seed_query = self.request.user.current_task.topic.seed_query
+        session = self.request.user.current_session.uuid
+        seed_query = self.request.user.current_session.topic.seed_query
         try:
             docs_ids_to_judge = CALFunctions.get_documents(str(session), 5,
                                                            seed_query)
@@ -81,12 +81,12 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     doc['doc_id'], doc['para_id'] = doc_id.split('.')
                 doc_ids_hack.append(doc)
 
-            if 'doc' in self.request.user.current_task.strategy:
+            if 'doc' in self.request.user.current_session.strategy:
                 documents = DocEngine.get_documents(docs_ids_to_judge,
-                                                    self.request.user.current_task.topic.seed_query)
+                                                    self.request.user.current_session.topic.seed_query)
             else:
                 documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
-                                                    self.request.user.current_task.topic.seed_query)
+                                                                 self.request.user.current_session.topic.seed_query)
 
             return self.render_json_response(documents)
         except TimeoutError:

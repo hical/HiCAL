@@ -23,8 +23,8 @@ class Command(BaseCommand):
             judgments[(session_id, seed_query, session_strategy)] = []
 
         for row in Judgment.objects.all():
-            session_id = str(row.task.uuid)
-            seed_query = str(row.task.topic.seed_query)
+            session_id = str(row.session.uuid)
+            seed_query = str(row.session.topic.seed_query)
             session_strategy = str(row.strategy)
 
             judgments[(session_id, seed_query, session_strategy)].append((row.doc_id, -1 if row.relevance <= 0 else 1))

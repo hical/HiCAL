@@ -63,8 +63,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         # Check if a judgment exists already, if so, update the db row.
         exists = Judgment.objects.filter(user=self.request.user,
-                                          doc_id=doc_id,
-                                          task=self.request.user.current_task)
+                                         doc_id=doc_id,
+                                         session=self.request.user.current_session)
 
         if exists:
             exists = exists.first()
@@ -92,7 +92,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_title=doc_title,
                 doc_CAL_snippet=doc_CAL_snippet,
                 doc_search_snippet=doc_search_snippet,
-                task=self.request.user.current_task,
+                session=self.request.user.current_session,
                 query=query,
                 relevance=relevance,
                 source=source,
@@ -118,7 +118,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             context[u"next_docs"] = []
             try:
                 next_patch = CALFunctions.send_judgment(
-                    self.request.user.current_task.uuid,
+                    self.request.user.current_session.uuid,
                     doc_id,
                     rel_CAL)
                 if not next_patch:
@@ -131,12 +131,12 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                         doc['doc_id'], doc['para_id'] = doc_id.split('.')
                     doc_ids_hack.append(doc)
 
-                if 'doc' in self.request.user.current_task.strategy:
+                if 'doc' in self.request.user.current_session.strategy:
                     documents = DocEngine.get_documents(next_patch,
-                                                        self.request.user.current_task.topic.seed_query)
+                                                        self.request.user.current_session.topic.seed_query)
                 else:
                     documents = DocEngine.get_documents_with_snippet(doc_ids_hack,
-                                                        self.request.user.current_task.topic.seed_query)
+                                                                     self.request.user.current_session.topic.seed_query)
                 context[u"next_docs"] = documents
             except TimeoutError:
                 error_dict = {u"message": u"Timeout error. "
@@ -149,7 +149,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         elif is_from_search:
             try:
-                CALFunctions.send_judgment(self.request.user.current_task.uuid,
+                CALFunctions.send_judgment(self.request.user.current_session.uuid,
                                            doc_id,
                                            rel_CAL)
             except TimeoutError:
@@ -174,8 +174,8 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                     "doc_judgment": {
                         "doc_id": doc_id,
                         "doc_title": doc_title,
-                        "topic_number": self.request.user.current_task.topic.number,
-                        "session": str(self.request.user.current_task.uuid),
+                        "topic_number": self.request.user.current_session.topic.number,
+                        "session": str(self.request.user.current_session.uuid),
                         "query": query,
                         "relevance": relevance,
                         "source": source,
@@ -195,11 +195,11 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
         if not exists:
             # Check if user has judged `max_judged` documents in total.
             judgements = Judgment.objects.filter(user=self.request.user,
-                                                  task=self.request.user.current_task)
-            max_judged = self.request.user.current_task.max_number_of_judgments
+                                                 session=self.request.user.current_session)
+            max_judged = self.request.user.current_session.max_number_of_judgments
             # Exit task only if number of judgments reached max (and maxjudged is enabled)
             if len(judgements) >= max_judged > 0:
-                self.request.user.current_task = None
+                self.request.user.current_session = None
                 self.request.user.save()
 
                 message = 'You have judged >={} (max number of judgment you have ' \
@@ -232,8 +232,8 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
         # Check if a judgment exists already, if so, update the db row.
         exists = Judgment.objects.filter(user=self.request.user,
-                                          doc_id=doc_id,
-                                          task=self.request.user.current_task)
+                                         doc_id=doc_id,
+                                         session=self.request.user.current_session)
 
         if exists:
             exists = exists.first()
@@ -250,7 +250,7 @@ class NoJudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
                 doc_title=doc_title,
                 doc_CAL_snippet="",
                 doc_search_snippet=doc_search_snippet,
-                task=self.request.user.current_task,
+                session=self.request.user.current_session,
                 query=query,
                 relevance=None,
                 source=None,
@@ -275,7 +275,7 @@ class GetLatestAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
             return self.render_json_response([])
         latest = Judgment.objects.filter(
                     user=self.request.user,
-                    task=self.request.user.current_task,
+                    session=self.request.user.current_session,
                     source="CAL"
                  ).filter(
                     relevance__isnull=False
@@ -303,7 +303,7 @@ class JudgmentsView(views.LoginRequiredMixin, generic.TemplateView):
         context = super(JudgmentsView, self).get_context_data(**kwargs)
 
         judgments = Judgment.objects.filter(user=self.request.user,
-                                            task=self.request.user.current_task,
+                                            session=self.request.user.current_session,
                                             relevance__isnull=False)
 
         context["judgments"] = judgments
@@ -347,7 +347,7 @@ class JudgmentsView(views.LoginRequiredMixin, generic.TemplateView):
                 return HttpResponseRedirect(reverse_lazy('judgment:view'))
 
             # Check if docid is valid
-            if not CALFunctions.check_docid_exists(self.request.user.current_task.uuid,
+            if not CALFunctions.check_docid_exists(self.request.user.current_session.uuid,
                                                    docno):
                 failed += 1
                 continue
@@ -355,10 +355,10 @@ class JudgmentsView(views.LoginRequiredMixin, generic.TemplateView):
             # check if judged
             judged = Judgment.objects.filter(user=self.request.user,
                                               doc_id=docno,
-                                              task=self.request.user.current_task)
+                                              session=self.request.user.current_session)
             if train_model:
                 try:
-                    CALFunctions.send_judgment(self.request.user.current_task.uuid,
+                    CALFunctions.send_judgment(self.request.user.current_session.uuid,
                                                docno,
                                                1 if rel > 0 else -1)
                 except (TimeoutError, CALError):
@@ -378,7 +378,7 @@ class JudgmentsView(views.LoginRequiredMixin, generic.TemplateView):
                 Judgment.objects.create(
                     user=self.request.user,
                     doc_id=docno,
-                    task=self.request.user.current_task,
+                    session=self.request.user.current_session,
                     relevance=rel,
                     source="uploaded",
                 )
@@ -407,12 +407,12 @@ class JudgmentsView(views.LoginRequiredMixin, generic.TemplateView):
                     return value
 
             judgments = Judgment.objects.filter(user=self.request.user,
-                                                task=self.request.user.current_task,
+                                                session=self.request.user.current_session,
                                                 relevance__isnull=False)
             header = ["docno", "judgment"]
             rows = ([judgment.doc_id, judgment.relevance] for judgment in judgments)
             data = itertools.chain([header], rows)
-            filename = "{}.csv".format(str(self.request.user.current_task.uuid))
+            filename = "{}.csv".format(str(self.request.user.current_session.uuid))
             pseudo_buffer = Echo()
             writer = csv.writer(pseudo_buffer)
             response = StreamingHttpResponse((writer.writerow(row) for row in data),

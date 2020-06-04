@@ -25,7 +25,7 @@ class Command(BaseCommand):
                     continue
 
                 user = judgment.user
-                topic = judgment.task.topic.number
+                topic = judgment.session.topic.number
                 docid = judgment.doc_id
                 method = judgment.source
 

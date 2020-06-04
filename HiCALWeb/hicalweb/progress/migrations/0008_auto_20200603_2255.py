@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('progress', '0007_auto_20200528_1346'),
+        ('judgment', '0002_judgement_task'),
     ]
 
     operations = [
