@@ -5,9 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-W -Wall -Werror)
 
 if(NOT CMAKE_BUILD_TYPE)
-    message("Setting build type to 'Release' as none was specified.")
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-    # Set the possible values of build type for cmake-gui
+    message("Setting build type to 'RelWithDebInfo' as none was specified.")
+    set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build." FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
                                                          "MinSizeRel" "RelWithDebInfo")
 endif()
