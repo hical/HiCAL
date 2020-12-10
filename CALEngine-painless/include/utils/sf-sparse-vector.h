@@ -43,6 +43,7 @@
 #define SF_SPARSE_VECTOR_H__
 
 #include <float.h>
+
 #include <string>
 #include <vector>
 
@@ -54,43 +55,37 @@ using std::vector;
 // Each element of the SfSparseVector is represented as a FeatureValuePair.
 // Bundling these as a struct improves memory locality.
 struct FeatureValuePair {
-  uint32_t id_;
-  float value_;
+    uint32_t id_;
+    float value_;
 };
 
 class SfSparseVector {
-public:
-  // Construct a new vector from a string.  Input format is svm-light format:
-  // <label> <feature>:<value> ... <feature:value> # comment<\n>
-  // No bias term is used.
-  SfSparseVector(const string &doc_id);
-  SfSparseVector(const string &doc_id, const vector<FeatureValuePair> &features);
+   public:
+    SfSparseVector() = default;
+    SfSparseVector(const vector<FeatureValuePair> &features);
 
-  float GetSquaredNorm() const { return squared_norm_; }
+    float GetSquaredNorm() const { return squared_norm_; }
 
-  // Methods for interacting with features
-  inline int NumFeatures() const { return features_.size(); }
-  inline uint32_t FeatureAt(int i) const { return features_[i].id_; }
-  inline float ValueAt(int i) const { return features_[i].value_; }
+    // Methods for interacting with features
+    inline int NumFeatures() const { return features_.size(); }
+    inline uint32_t FeatureAt(int i) const { return features_[i].id_; }
+    inline float ValueAt(int i) const { return features_[i].value_; }
 
-  // Adds a new (id, value) FeatureValuePair to the end of the vector, and
-  // updates the internal squared_norm_ member.
-  void PushPair(FeatureValuePair feature_value_pair);
+    // Adds a new (id, value) FeatureValuePair to the end of the vector, and
+    // updates the internal squared_norm_ member.
+    void PushPair(FeatureValuePair feature_value_pair);
 
-  string doc_id;
+    // Typically, only non-zero valued features are stored.  This vector is
+    // assumed to hold feature id, feature value pairs in order sorted by
+    // feature id.  The special feature id 0 is always set to 1, encoding bias.
+    vector<FeatureValuePair> features_;
 
-  // Typically, only non-zero valued features are stored.  This vector is
-  // assumed to hold feature id, feature value pairs in order sorted by feature
-  // id.  The special feature id 0 is always set to 1, encoding bias.
-  vector<FeatureValuePair> features_;
+   private:
+    // Exits if the input format of the file is incorrect.
+    void DieFormat(const string &reason);
 
-private:
-
-  // Exits if the input format of the file is incorrect.
-  void DieFormat(const string &reason);
-
-  // Members.
-  float squared_norm_ = 0.0;
+    // Members.
+    float squared_norm_ = 0.0;
 };
 
-#endif // SF_SPARSE_VECTOR_H__
+#endif  // SF_SPARSE_VECTOR_H__

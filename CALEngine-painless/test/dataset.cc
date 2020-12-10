@@ -18,27 +18,26 @@ TEST(DatasetMemory, basic) {
     tfidf->fit(doc3);
     tfidf->finalize();
     DatasetMemory dataset(move(tfidf));
-    dataset.add_doc("doc1", doc1);
-    dataset.add_doc("doc2", doc2);
-    dataset.add_doc("doc3", doc3);
+    dataset.add("doc1", doc1);
+    dataset.add("doc2", doc2);
+    dataset.add("doc3", doc3);
 
     EXPECT_EQ(dataset.size(), 3);
-    auto spv = dataset.transform("doc13");
-    EXPECT_EQ(spv, nullptr);
+    EXPECT_THROW(dataset.get("doc13"), std::out_of_range);
 
-    spv = dataset.transform("doc1");
-    EXPECT_EQ(spv->doc_id, "doc1");
-    EXPECT_EQ(spv->features_.size(), 1);
+    auto item = dataset.get("doc1");
+    EXPECT_EQ(item.id, "doc1");
+    EXPECT_EQ(item.featureVector.features_.size(), 1);
 
-    spv = dataset.transform("doc2");
-    EXPECT_EQ(spv->doc_id, "doc2");
-    EXPECT_EQ(spv->features_.size(), 2);
+    item = dataset.get("doc2");
+    EXPECT_EQ(item.id, "doc2");
+    EXPECT_EQ(item.featureVector.features_.size(), 2);
 
-    spv = dataset.transform("doc3");
-    EXPECT_EQ(spv->doc_id, "doc3");
-    EXPECT_EQ(spv->features_.size(), 1);
+    item = dataset.get("doc3");
+    EXPECT_EQ(item.id, "doc3");
+    EXPECT_EQ(item.featureVector.features_.size(), 1);
 
-    EXPECT_FLOAT_EQ(spv->features_[0].value_, 0.0343256052304386);
+    EXPECT_FLOAT_EQ(item.featureVector.features_[0].value_, 0.0343256052304386);
 }
 
 TEST(DatasetMemory, svmlightio) {
@@ -51,8 +50,8 @@ TEST(DatasetMemory, svmlightio) {
     tfidf->finalize();
     tfidf->write("dataset.tfidf");
     DatasetMemory dataset(move(tfidf));
-    dataset.add_doc("doc1", doc1);
-    dataset.add_doc("doc2", doc2);
+    dataset.add("doc1", doc1);
+    dataset.add("doc2", doc2);
     dataset.write("dataset.svmlight", DatasetMemory::SVMLIGHT);
 
     unique_ptr<Featurizer> tfidf2 =
@@ -60,14 +59,14 @@ TEST(DatasetMemory, svmlightio) {
     DatasetMemory dataset2(move(tfidf), "dataset.svmlight",
                            DatasetMemory::SVMLIGHT);
     EXPECT_EQ(dataset.size(), dataset2.size());
-    for (size_t i = 0; i < dataset.size(); i++) {
-        auto spv1 = dataset.transform(i);
-        auto spv2 = dataset2.transform(i);
-        EXPECT_EQ(spv1->doc_id, spv2->doc_id);
-        EXPECT_EQ(spv1->features_.size(), spv2->features_.size());
-        for (size_t j = 0; j < spv1->features_.size(); j++) {
-            EXPECT_EQ(spv1->features_[j].id_, spv2->features_[j].id_);
-            EXPECT_NEAR(spv1->features_[j].value_, spv2->features_[j].value_,
+    for (auto item1 : dataset) {
+        auto item2 = dataset2.get(item1.id);
+        EXPECT_EQ(item1.id, item2.id);
+        auto& spv1 = item1.featureVector;
+        auto& spv2 = item2.featureVector;
+        EXPECT_EQ(spv1.features_.size(), spv2.features_.size());
+        for (size_t j = 0; j < spv1.features_.size(); j++) {
+            EXPECT_NEAR(spv1.features_[j].value_, spv2.features_[j].value_,
                         1e-6);
         }
     }

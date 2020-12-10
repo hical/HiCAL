@@ -19,25 +19,13 @@ DatasetMemory::DatasetMemory(unique_ptr<Featurizer> featurizer,
 DatasetMemory::DatasetMemory(unique_ptr<Featurizer> featurizer)
     : Dataset(move(featurizer)) {}
 
-size_t DatasetMemory::size() const { return docs_.size(); }
-
-void DatasetMemory::add_doc(const string &id, const string &text) {
-    doc_index_[id] = docs_.size();
-    auto fv = featurizer_->transform(text);
-    fv.doc_id = id;
-    docs_.push_back(fv);
+void DatasetMemory::add(const string &id, const string &text) {
+    index_[id] = items_.size();
+    items_.push_back({id, featurizer_->transform(text)});
 }
 
-const SfSparseVector *DatasetMemory::transform(const string &id) const {
-    try {
-        return &(docs_[doc_index_.at(id)]);
-    } catch (const out_of_range &exp) {
-        return nullptr;
-    }
-}
-
-const SfSparseVector *DatasetMemory::transform(int id) const {
-    return &docs_[id];
+const Dataset::DatasetItem &DatasetMemory::get(const string &id) const {
+    return items_[index_.at(id)];
 }
 
 void DatasetMemory::write(const string &filename,
@@ -51,9 +39,9 @@ void DatasetMemory::write(const string &filename,
 
 void DatasetMemory::write_to_svmlight(const string &filename) const {
     ofstream fout(filename);
-    for (auto &spv : docs_) {
-        fout << spv.doc_id;
-        for (auto &fpv : spv.features_) {
+    for (auto &item : items_) {
+        fout << item.id;
+        for (auto &fpv : item.featureVector.features_) {
             fout << " " << fpv.id_ << ":" << fpv.value_;
         }
         fout << "\n";
@@ -73,10 +61,10 @@ void DatasetMemory::load_from_svmlight(const string &filename) {
     while (getline(fin, line)) {
         istringstream iss(line);
         iss >> doc;
-        doc_index_[doc] = docs_.size();
-        docs_.push_back(SfSparseVector(doc));
+        index_[doc] = items_.size();
+        items_.push_back({doc, SfSparseVector()});
         while (iss >> f_id >> delim >> f_value) {
-            docs_.back().PushPair({f_id, f_value});
+            items_.back().featureVector.PushPair({f_id, f_value});
         }
     }
 }

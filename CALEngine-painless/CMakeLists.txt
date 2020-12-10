@@ -27,6 +27,5 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(src)
 
 # Testing
-add_subdirectory(lib/gtest-1.10)
 enable_testing()
 add_subdirectory(test)

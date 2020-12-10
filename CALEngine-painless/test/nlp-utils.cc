@@ -42,7 +42,6 @@ TEST_F(TFIDFTest, io) {
     auto sf1 = tfidf.transform("Ajdskjsd mate, dawg hello?");
     auto sf2 = tfidf2.transform("Ajdskjsd mate, dawg hello?");
     EXPECT_EQ(sf1.features_.size(), sf2.features_.size());
-    EXPECT_EQ(sf1.doc_id, sf2.doc_id);
     for (size_t i = 0; i < sf1.features_.size(); i++) {
         EXPECT_EQ(sf1.features_[i].id_, sf2.features_[i].id_);
         EXPECT_EQ(sf1.features_[i].value_, sf2.features_[i].value_);

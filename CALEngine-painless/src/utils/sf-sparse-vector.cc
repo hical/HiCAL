@@ -18,6 +18,7 @@
 // Implementation of sf-sparse-vector.h
 
 #include "utils/sf-sparse-vector.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -28,26 +29,20 @@
 //---------------- SfSparseVector Public Methods ----------------//
 //----------------------------------------------------------------//
 
-SfSparseVector::SfSparseVector(const string &doc_id)
-    : doc_id(doc_id) {
-}
-
-SfSparseVector::SfSparseVector(const string &doc_id, const vector<FeatureValuePair> &features)
-    : doc_id(doc_id) {
-  for(auto &fvp: features)
-      PushPair(fvp);
+SfSparseVector::SfSparseVector(const vector<FeatureValuePair> &features) {
+    for (auto &fvp : features) PushPair(fvp);
 }
 
 void SfSparseVector::PushPair(FeatureValuePair feature_value_pair) {
-  if (feature_value_pair.id_ > 0 && NumFeatures() > 0 &&
-      feature_value_pair.id_ <= FeatureAt(NumFeatures() - 1)) {
-    std::cerr << feature_value_pair.id_ << " vs. "
-              << FeatureAt(NumFeatures() - 1) << std::endl;
-    DieFormat("Features not in ascending sorted order.");
-  }
+    if (feature_value_pair.id_ > 0 && NumFeatures() > 0 &&
+        feature_value_pair.id_ <= FeatureAt(NumFeatures() - 1)) {
+        std::cerr << feature_value_pair.id_ << " vs. "
+                  << FeatureAt(NumFeatures() - 1) << std::endl;
+        DieFormat("Features not in ascending sorted order.");
+    }
 
-  features_.push_back(feature_value_pair);
-  squared_norm_ += feature_value_pair.value_ * feature_value_pair.value_;
+    features_.push_back(feature_value_pair);
+    squared_norm_ += feature_value_pair.value_ * feature_value_pair.value_;
 }
 
 //----------------------------------------------------------------//
@@ -55,6 +50,6 @@ void SfSparseVector::PushPair(FeatureValuePair feature_value_pair) {
 //----------------------------------------------------------------//
 
 void SfSparseVector::DieFormat(const string &reason) {
-  std::cerr << "Wrong format for input data:\n  " << reason << std::endl;
-  exit(1);
+    std::cerr << "Wrong format for input data:\n  " << reason << std::endl;
+    exit(1);
 }

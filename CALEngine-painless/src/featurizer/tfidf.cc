@@ -75,5 +75,5 @@ SfSparseVector TFIDFFeaturizer::transform(const std::string &text) const {
 
     sort(features.begin(), features.end(),
          [](auto &a, auto &b) { return a.id_ < b.id_; });
-    return SfSparseVector("", features);
+    return SfSparseVector(features);
 }

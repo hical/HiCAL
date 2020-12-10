@@ -13,14 +13,9 @@ int main() {
     tfidf->fit(doc2);
     tfidf->finalize();
     DatasetMemory dataset(move(tfidf));
-    dataset.add_doc("doc1", doc1);
-    dataset.add_doc("doc2", doc2);
+    dataset.add("doc1", doc1);
+    dataset.add("doc2", doc2);
     dataset.write("data.svmlight", DatasetMemory::SVMLIGHT);
-    auto spv = dataset.transform("doc1");
-    cout << spv->features_[0].id_ << endl;
-    /* auto sf = tfidf.get_features("Ajdskjsd mate, dawg hello?"); */
-    /* for(auto fv: sf.features_){ */
-    /* cout<<fv.id_<<" "<<fv.value_<<endl; */
-    /* } */
-    /* tfidf.write("tfidf.txt"); */
+    auto &item = dataset.get("doc1");
+    cout << item.featureVector.features_[0].id_ << endl;
 }
