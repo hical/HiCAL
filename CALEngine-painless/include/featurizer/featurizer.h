@@ -1,10 +1,10 @@
 #ifndef FEATURIZER_H
 #define FEATURIZER_H
 
-#include <string>
+#include <utils/logging.h>
+#include <utils/sf-sparse-vector.h>
 
-#include "utils/logging.h"
-#include "utils/sf-sparse-vector.h"
+#include <string>
 
 class Featurizer {
    public:

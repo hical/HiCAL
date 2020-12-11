@@ -1,12 +1,12 @@
 #ifndef DATASET_H
 #define DATASET_H
 
+#include <featurizer/featurizer.h>
+#include <utils/sf-sparse-vector.h>
+
 #include <cstddef>
 #include <memory>
 #include <string>
-
-#include "featurizer/featurizer.h"
-#include "utils/sf-sparse-vector.h"
 
 class Dataset {
    protected:

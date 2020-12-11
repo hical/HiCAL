@@ -2,8 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
-
-#include "utils/porter.c"
+#include <utils/porter.c>
 
 using namespace std;
 

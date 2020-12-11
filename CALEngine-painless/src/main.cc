@@ -1,7 +1,7 @@
-#include <iostream>
+#include <dataset/dataset-memory.h>
+#include <featurizer/tfidf.h>
 
-#include "dataset/dataset-memory.h"
-#include "featurizer/tfidf.h"
+#include <iostream>
 
 using namespace std;
 int main() {

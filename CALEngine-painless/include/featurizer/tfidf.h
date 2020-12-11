@@ -1,11 +1,11 @@
 #ifndef TFIDF_H
 #define TFIDF_H
 
+#include <featurizer/featurizer.h>
+#include <utils/text-utils.h>
+
 #include <functional>
 #include <unordered_map>
-
-#include "featurizer/featurizer.h"
-#include "utils/text-utils.h"
 
 struct TermInfo {
     uint32_t id;

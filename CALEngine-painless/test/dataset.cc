@@ -1,8 +1,7 @@
+#include <dataset/dataset-memory.h>
+#include <featurizer/tfidf.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include "dataset/dataset-memory.h"
-#include "featurizer/tfidf.h"
 
 using namespace std;
 using namespace testing;

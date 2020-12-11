@@ -1,12 +1,11 @@
 #include <archive.h>
 #include <archive_entry.h>
+#include <dataset/dataset-memory.h>
+#include <featurizer/tfidf.h>
+#include <utils/logging.h>
+#include <utils/simple-cmd-line-helper.h>
 
 #include <iostream>
-
-#include "dataset/dataset-memory.h"
-#include "featurizer/tfidf.h"
-#include "utils/logging.h"
-#include "utils/simple-cmd-line-helper.h"
 
 using namespace std;
 string read_content(archive *&a) {

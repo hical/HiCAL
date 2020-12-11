@@ -8,10 +8,6 @@ add_library(calengine STATIC
     )
 
 target_include_directories(calengine
-    PRIVATE
-    ./)
-
-target_include_directories(calengine
     PUBLIC
     ${CMAKE_SOURCE_DIR}/include)
 

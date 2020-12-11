@@ -17,7 +17,7 @@
 //
 // Implementation of sf-sparse-vector.h
 
-#include "utils/sf-sparse-vector.h"
+#include <utils/sf-sparse-vector.h>
 
 #include <cstdio>
 #include <cstdlib>

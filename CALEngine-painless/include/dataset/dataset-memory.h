@@ -1,9 +1,9 @@
 #ifndef DATASET_MEMORY_H
 #define DATASET_MEMORY_H
 
-#include <unordered_map>
+#include <dataset/dataset.h>
 
-#include "dataset/dataset.h"
+#include <unordered_map>
 
 class DatasetMemory : public Dataset {
     std::vector<DatasetItem> items_;

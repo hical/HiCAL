@@ -1,9 +1,8 @@
+#include <featurizer/tfidf.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include "featurizer/tfidf.h"
-#include "utils/sf-sparse-vector.h"
-#include "utils/text-utils.h"
+#include <utils/sf-sparse-vector.h>
+#include <utils/text-utils.h>
 
 using namespace testing;
 
