@@ -1,4 +1,5 @@
 #include <featurizer/tfidf.h>
+#include <utils/logging.h>
 
 #include <algorithm>
 #include <cmath>
